@@ -59,8 +59,8 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `keyboard` | `{ "capsLock": false, "numLock": true, "layout": "<hkl hex>", "layouts": [ { "id": "", "language": "", "name": "" } ] }` |
 | `idle` | `{ "seconds": 0 }`, published when it crosses 30 s and then every 5 s, and when input resumes |
 | `power` | `{ "keepAwake": false }` |
-| `shell` | `{ "taskbarHidden": true }` |
-| `config` | the full configuration object described in `docs/configuration.md` |
+| `shell` | `{ "taskbarHidden": true }`, driven by the `taskbar.hide` setting |
+| `config` | the full configuration object described in `docs/configuration.md`, flat keys plus `"version"` |
 
 ## Events
 
@@ -80,7 +80,7 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `audio.setDefault` | `{ "id" }` | none |
 | `clipboard.history` | `{ "limit": 40 }` | `{ "enabled", "items": [ { "id", "kind", "time", "text" } ] }` |
 | `clipboard.paste` | `{ "id" }` | none |
-| `config.set` | `{ "path": "launcher.favourites", "value": [] }` | the updated configuration |
+| `config.set` | `{ "path": "launcher.favourites", "value": [] }`, see `docs/configuration.md` for every setting | the updated configuration |
 | `folders.open` | `{ "name": "wallpapers" \| "screenshots" }` | none |
 | `display.brightness` | none | `{ "<device>": <0-100 or -1 when unsupported> }` |
 | `display.setBrightness` | `{ "monitor", "value" }` | none |
@@ -92,7 +92,6 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `radios.list` | none | `[ { "kind", "on", "name" } ]` |
 | `radios.set` | `{ "kind", "on" }` | the updated list |
 | `capture.record` | none | none |
-| `shell.taskbar` | `{ "hidden" }` | none |
 | `shell.openSettings` | `{ "page": "sound" \| "network-status" \| "regionlanguage" \| "display" \| "bluetooth" \| "personalization" }` | none |
 | `system.info` | none | `{ "name", "user", "picture", "cpu", "gpu", "os" }` |
 | `tasks.activate` | `{ "id" }` | none |
