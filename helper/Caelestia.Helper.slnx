@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Caelestia.Helper/Caelestia.Helper.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Caelestia.Helper.Tests/Caelestia.Helper.Tests.csproj" />
+  </Folder>
+</Solution>
