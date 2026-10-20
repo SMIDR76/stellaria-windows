@@ -1,0 +1,86 @@
+using Caelestia.Helper.Desktop;
+using Caelestia.Helper.Interop;
+using Caelestia.Helper.Tests.TestSupport;
+
+namespace Caelestia.Helper.Tests.Desktop;
+
+public sealed class AppBarRulesTests
+{
+    private static readonly Rect Monitor = new(0, 0, 3440, 1440);
+
+    [Fact]
+    public void Thin_windows_are_classified_by_the_edge_they_hug()
+    {
+        Assert.Equal(DockEdge.Left, AppBarRules.Classify(1, new Rect(0, 10, 48, 1430), Monitor)!.Edge);
+        Assert.Equal(DockEdge.Top, AppBarRules.Classify(1, new Rect(0, 0, 3440, 10), Monitor)!.Edge);
+        Assert.Equal(DockEdge.Right, AppBarRules.Classify(1, new Rect(3430, 10, 3440, 1430), Monitor)!.Edge);
+        Assert.Equal(DockEdge.Bottom, AppBarRules.Classify(1, new Rect(0, 1430, 3440, 1440), Monitor)!.Edge);
+    }
+
+    [Fact]
+    public void A_window_thicker_than_a_dock_is_never_treated_as_one()
+    {
+        Assert.Null(AppBarRules.Classify(1, new Rect(48, 240, 3488, 840), Monitor));
+    }
+
+    [Fact]
+    public void A_dock_is_reserved_when_the_work_area_stops_at_its_inner_side()
+    {
+        var bar = AppBarRules.Classify(1, new Rect(0, 10, 48, 1430), Monitor)!;
+
+        Assert.True(AppBarRules.IsReserved(bar, new Rect(48, 10, 3430, 1430)));
+        Assert.False(AppBarRules.IsReserved(bar, new Rect(0, 0, 3440, 1392)));
+    }
+
+    [Fact]
+    public void A_reservation_by_another_app_on_another_edge_does_not_hide_a_lost_dock()
+    {
+        var bottom = AppBarRules.Classify(1, new Rect(0, 1430, 3440, 1440), Monitor)!;
+        var left = AppBarRules.Classify(2, new Rect(0, 10, 48, 1430), Monitor)!;
+        var workWithOnlyTaskbar = new Rect(0, 0, 3440, 1392);
+
+        Assert.True(AppBarRules.IsReserved(bottom, workWithOnlyTaskbar));
+        Assert.False(AppBarRules.IsReserved(left, workWithOnlyTaskbar));
+    }
+
+    [Theory]
+    [InlineData("Zebar - caelestia / bar", true)]
+    [InlineData("Zebar - caelestia / edge", true)]
+    [InlineData("Zebar - caelestia / dashboard", false)]
+    [InlineData("caelestia / bar - Notepad", false)]
+    public void Only_bar_and_edge_widgets_are_docks(string title, bool dock)
+    {
+        Assert.Equal(dock, AppBarRules.IsDockTitle(title));
+    }
+
+    [Fact]
+    public void The_breaker_trips_on_the_fifth_repair_within_a_minute()
+    {
+        var time = new ManualTimeProvider(DateTimeOffset.UnixEpoch);
+        var breaker = new RepairBreaker(5, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(5), time);
+
+        for (var repair = 0; repair < 4; repair++)
+        {
+            Assert.False(breaker.RecordRepair());
+            time.Advance(TimeSpan.FromSeconds(2));
+        }
+
+        Assert.True(breaker.RecordRepair());
+        Assert.True(breaker.IsPaused);
+        time.Advance(TimeSpan.FromMinutes(5));
+        Assert.False(breaker.IsPaused);
+    }
+
+    [Fact]
+    public void Occasional_repairs_never_trip_the_breaker()
+    {
+        var time = new ManualTimeProvider(DateTimeOffset.UnixEpoch);
+        var breaker = new RepairBreaker(5, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(5), time);
+
+        for (var repair = 0; repair < 20; repair++)
+        {
+            Assert.False(breaker.RecordRepair());
+            time.Advance(TimeSpan.FromSeconds(20));
+        }
+    }
+}

@@ -22,6 +22,12 @@ public sealed class CommandLineTests
     }
 
     [Fact]
+    public void The_recovery_command_is_recognised()
+    {
+        Assert.True(CommandLine.Parse(["--restore-shell"]).RestoreShell);
+    }
+
+    [Fact]
     public void Unknown_arguments_are_refused()
     {
         Assert.Throws<ArgumentException>(() => CommandLine.Parse(["--fly"]));
