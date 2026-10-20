@@ -20,7 +20,7 @@ public sealed class HelperServerTests : IAsyncLifetime
     private HelperServer _server = null!;
     private Task _running = Task.CompletedTask;
 
-    public Task InitializeAsync()
+    public ValueTask InitializeAsync()
     {
         _log = new Log(_directory.Path, LogLevel.Debug);
         _hub = new StateHub();
@@ -30,10 +30,10 @@ public sealed class HelperServerTests : IAsyncLifetime
         _server = new HelperServer(_hub, router, _log, "9.9.9", TimeProvider.System);
         _server.Start(TestFirstPort, TestLastPort);
         _running = _server.RunAsync(_shutdown.Token);
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         await _shutdown.CancelAsync();
         await _running;
