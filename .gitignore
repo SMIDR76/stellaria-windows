@@ -1,0 +1,10 @@
+node_modules/
+artifacts/
+bin/
+obj/
+.vs/
+*.user
+*.suo
+TestResults/
+
+pack/runtime.json
