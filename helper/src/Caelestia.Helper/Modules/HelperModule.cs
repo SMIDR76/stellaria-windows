@@ -1,3 +1,4 @@
+using Caelestia.Helper.Configuration;
 using Caelestia.Helper.Desktop;
 using Caelestia.Helper.Hosting;
 using Caelestia.Helper.Interop;
@@ -11,6 +12,7 @@ internal sealed record ModuleContext(
     MessageLoop Loop,
     Log Log,
     AppPaths Paths,
+    ConfigStore Config,
     DesktopReader Desktop,
     ForegroundTracker Foreground,
     IconCache Icons,
