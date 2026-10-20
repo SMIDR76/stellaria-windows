@@ -116,6 +116,9 @@ internal static class Program
         new FocusModule(),
         new TasksModule(),
         new ShellModule(state),
+        new KeyboardModule(),
+        new IdleModule(),
+        new PowerModule(),
     ];
 
     private static int RestoreShell(HelperState state, Log log)
