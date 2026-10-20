@@ -1,5 +1,8 @@
 ﻿using System.Reflection;
+using Caelestia.Helper.Desktop;
 using Caelestia.Helper.Hosting;
+using Caelestia.Helper.Interop;
+using Caelestia.Helper.Modules;
 using Caelestia.Helper.Server;
 
 namespace Caelestia.Helper;
@@ -59,6 +62,13 @@ internal static class Program
         {
             var hub = new StateHub();
             var router = new RequestRouter(log);
+            using var loop = new MessageLoop(log);
+            await loop.StartAsync().ConfigureAwait(false);
+            await DesktopEventHooks.InstallAsync(loop).ConfigureAwait(false);
+            var desktop = new DesktopReader(new ProcessDirectory());
+            var context = new ModuleContext(hub, router, loop, log, paths, desktop, new ForegroundTracker(desktop), new IconCache(log), TimeProvider.System, shutdown.Token);
+            await new ModuleHost(log).StartAsync(CreateModules(), context).ConfigureAwait(false);
+
             await using var server = new HelperServer(hub, router, log, version, TimeProvider.System);
             server.Start();
             RuntimeFile.Write(paths.RuntimeFile, server.Port, server.Token, Environment.ProcessId);
@@ -77,6 +87,13 @@ internal static class Program
             registration.Unregister(null);
         }
     }
+
+    private static IEnumerable<IHelperModule> CreateModules() =>
+    [
+        new MonitorsModule(),
+        new FocusModule(),
+        new TasksModule(),
+    ];
 
     private static bool RequestQuit()
     {

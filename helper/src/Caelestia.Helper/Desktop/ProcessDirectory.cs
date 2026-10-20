@@ -1,6 +1,6 @@
 using Caelestia.Helper.Interop;
 
-namespace Caelestia.Helper.Windows;
+namespace Caelestia.Helper.Desktop;
 
 internal sealed record ProcessIdentity(uint Id, string ImagePath, long CreationTime)
 {

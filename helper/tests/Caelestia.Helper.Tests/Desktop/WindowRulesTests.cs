@@ -1,7 +1,7 @@
 using Caelestia.Helper.Interop;
-using Caelestia.Helper.Windows;
+using Caelestia.Helper.Desktop;
 
-namespace Caelestia.Helper.Tests.Windows;
+namespace Caelestia.Helper.Tests.Desktop;
 
 public sealed class WindowRulesTests
 {

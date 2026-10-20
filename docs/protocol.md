@@ -51,9 +51,10 @@ A client that connects or reconnects receives the full state again, so it can ne
 
 | Topic | Data |
 | --- | --- |
-| `focus` | `{ "monitors": { "<device>": { "title": "", "process": "", "icon": "<png base64 or null>" } }, "active": "<device>" }` |
+| `focus` | `{ "monitors": { "<device>": { "title": "", "process": "", "exe": "<image path>" } }, "active": "<device>" }`. Empty strings when the desktop has the focus. |
 | `monitors` | `{ "<device>": { "fullscreen": false, "covered": false, "bounds": [l, t, r, b], "work": [l, t, r, b], "primary": true } }` |
-| `tasks` | `{ "items": [ { "id": "<hwnd>", "title": "", "process": "", "exe": "", "monitor": "", "minimized": false, "active": false } ], "icons": { "<exe path>": "<png base64>" } }` |
+| `tasks` | `{ "items": [ { "id": "<hwnd>", "title": "", "process": "", "exe": "", "monitor": "", "minimized": false, "active": false } ] }` in a stable order: a window keeps its place, new windows are appended. |
+| `icons` | `{ "<exe path>": "<48 px png base64>" }` for the executables of the current tasks. Published only when that set changes, because task titles change far more often than the list of applications. |
 | `wallpaper` | `{ "path": "<file or null>", "sample": "<png base64, 160 px wide>", "source": "capture" }` or `"source": "file"` |
 | `keyboard` | `{ "capsLock": false, "numLock": true, "layout": "<hkl hex>", "layouts": [ { "id": "", "language": "", "name": "" } ] }` |
 | `idle` | `{ "seconds": 0 }`, published when it crosses 30 s and then every 5 s, and when input resumes |
