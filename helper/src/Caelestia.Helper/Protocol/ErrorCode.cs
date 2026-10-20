@@ -8,6 +8,7 @@ internal static class ErrorCode
     public const string NotFound = "not_found";
     public const string Unsupported = "unsupported";
     public const string Denied = "denied";
+    public const string RateLimited = "rate_limited";
     public const string Failed = "failed";
 }
 

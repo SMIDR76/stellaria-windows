@@ -7,7 +7,7 @@ internal sealed record HandshakeRequest(string Method, string Target, IReadOnlyD
 
 internal abstract record HandshakeDecision;
 
-internal sealed record HandshakeAccepted(string Widget, string Monitor, string AcceptKey) : HandshakeDecision;
+internal sealed record HandshakeAccepted(string AcceptKey) : HandshakeDecision;
 
 internal sealed record HandshakeRejected(int StatusCode, string Reason) : HandshakeDecision;
 
@@ -46,7 +46,7 @@ internal static class WebSocketHandshake
         return new HandshakeRequest(requestLine[0], requestLine[1], headers);
     }
 
-    public static HandshakeDecision Decide(HandshakeRequest request, string expectedToken)
+    public static HandshakeDecision Decide(HandshakeRequest request, int serverPort)
     {
         if (request.Method != "GET")
         {
@@ -73,16 +73,19 @@ internal static class WebSocketHandshake
             return new HandshakeRejected(403, "Origin is not a local Zebar widget.");
         }
 
-        var query = ParseQuery(request.Target);
-        if (!query.TryGetValue("token", out var token) || !TokensMatch(token, expectedToken))
+        if (!request.Headers.TryGetValue("Host", out var host) || !IsAllowedHost(host, serverPort))
         {
-            return new HandshakeRejected(403, "Invalid token.");
+            return new HandshakeRejected(403, "Host is not the local helper address.");
         }
 
-        query.TryGetValue("widget", out var widget);
-        query.TryGetValue("monitor", out var monitor);
-        return new HandshakeAccepted(widget ?? "unknown", monitor ?? "", ComputeAcceptKey(key));
+        return new HandshakeAccepted(ComputeAcceptKey(key));
     }
+
+    public static bool IsAllowedHost(string host, int serverPort) =>
+        host == $"127.0.0.1:{serverPort}" || host == $"localhost:{serverPort}";
+
+    public static bool TokensMatch(string provided, string expected) =>
+        CryptographicOperations.FixedTimeEquals(Encoding.UTF8.GetBytes(provided), Encoding.UTF8.GetBytes(expected));
 
     public static string ComputeAcceptKey(string key) =>
         Convert.ToBase64String(SHA1.HashData(Encoding.ASCII.GetBytes(key + Rfc6455Guid)));
@@ -97,26 +100,6 @@ internal static class WebSocketHandshake
         return uri.Host is "127.0.0.1" or "localhost" && uri.AbsolutePath == "/";
     }
 
-    public static Dictionary<string, string> ParseQuery(string target)
-    {
-        var result = new Dictionary<string, string>(StringComparer.Ordinal);
-        var start = target.IndexOf('?', StringComparison.Ordinal);
-        if (start < 0)
-        {
-            return result;
-        }
-
-        foreach (var pair in target[(start + 1)..].Split('&', StringSplitOptions.RemoveEmptyEntries))
-        {
-            var separator = pair.IndexOf('=', StringComparison.Ordinal);
-            var name = separator < 0 ? pair : pair[..separator];
-            var value = separator < 0 ? "" : pair[(separator + 1)..];
-            result[Uri.UnescapeDataString(name)] = Uri.UnescapeDataString(value.Replace('+', ' '));
-        }
-
-        return result;
-    }
-
     public static string AcceptResponse(string acceptKey) =>
         "HTTP/1.1 101 Switching Protocols\r\n" +
         "Upgrade: websocket\r\n" +
@@ -129,6 +112,7 @@ internal static class WebSocketHandshake
         {
             403 => "Forbidden",
             405 => "Method Not Allowed",
+            503 => "Service Unavailable",
             _ => "Bad Request",
         };
         var body = Encoding.UTF8.GetByteCount(rejection.Reason);
@@ -142,7 +126,4 @@ internal static class WebSocketHandshake
     private static bool HeaderContains(HandshakeRequest request, string name, string token) =>
         request.Headers.TryGetValue(name, out var value) &&
         value.Split(',').Any(part => part.Trim().Equals(token, StringComparison.OrdinalIgnoreCase));
-
-    private static bool TokensMatch(string provided, string expected) =>
-        CryptographicOperations.FixedTimeEquals(Encoding.UTF8.GetBytes(provided), Encoding.UTF8.GetBytes(expected));
 }
