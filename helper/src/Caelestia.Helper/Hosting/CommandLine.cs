@@ -1,11 +1,12 @@
 namespace Caelestia.Helper.Hosting;
 
-internal sealed record CommandLine(bool Quit, bool Verbose, string? PackDirectory)
+internal sealed record CommandLine(bool Quit, bool Verbose, string? PackDirectory, bool RestoreShell = false)
 {
     public static CommandLine Parse(IReadOnlyList<string> arguments)
     {
         var quit = false;
         var verbose = false;
+        var restoreShell = false;
         string? pack = null;
         for (var index = 0; index < arguments.Count; index++)
         {
@@ -13,6 +14,9 @@ internal sealed record CommandLine(bool Quit, bool Verbose, string? PackDirector
             {
                 case "--quit":
                     quit = true;
+                    break;
+                case "--restore-shell":
+                    restoreShell = true;
                     break;
                 case "--verbose":
                     verbose = true;
@@ -25,6 +29,6 @@ internal sealed record CommandLine(bool Quit, bool Verbose, string? PackDirector
             }
         }
 
-        return new CommandLine(quit, verbose, pack);
+        return new CommandLine(quit, verbose, pack, restoreShell);
     }
 }
