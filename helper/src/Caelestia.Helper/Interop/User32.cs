@@ -166,7 +166,7 @@ internal static unsafe partial class User32
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool PrintWindow(nint hwnd, nint hdc, uint flags);
 
-    [LibraryImport("user32.dll", EntryPoint = "RegisterClassExW")]
+    [LibraryImport("user32.dll", EntryPoint = "RegisterClassExW", SetLastError = true)]
     public static partial ushort RegisterClassEx(WndClassEx* windowClass);
 
     [LibraryImport("user32.dll", EntryPoint = "CreateWindowExW", StringMarshalling = StringMarshalling.Utf16)]

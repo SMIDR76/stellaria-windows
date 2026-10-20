@@ -135,9 +135,14 @@ internal sealed unsafe class MessageLoop : IDisposable
 
     private void Run()
     {
+        if (Interlocked.CompareExchange(ref s_current, this, null) is not null)
+        {
+            _ready.SetException(new InvalidOperationException("Only one message loop can run at a time in a process."));
+            return;
+        }
+
         try
         {
-            s_current = this;
             _threadId = Kernel32.GetCurrentThreadId();
             _window = CreateMessageWindow();
             _ready.SetResult();
