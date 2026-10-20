@@ -15,12 +15,14 @@ and bump `protocolVersion` when it is not backwards compatible.
   ```
 
   The token is regenerated at every start. Widgets read the file with `fetch('./runtime.json', { cache: 'no-store' })`.
-- A widget connects to `ws://127.0.0.1:<port>/?token=<token>&widget=<name>&monitor=<device>`.
-  `widget` is the Zebar widget name (`bar`, `dashboard`...). `monitor` is the Windows device name of the monitor the
-  widget runs on (`\\.\DISPLAY1`), URL encoded.
-- The helper rejects the upgrade with HTTP 403 when the token is wrong or when the `Origin` header is not an
-  `http://127.0.0.1:<any port>` or `http://localhost:<any port>` origin (Zebar serves widgets from such an origin).
-- Every frame is a UTF-8 text frame holding one JSON object.
+- A widget connects to `ws://127.0.0.1:<port>/`. The token is never part of the URL.
+- The helper rejects the upgrade with HTTP 403 when the `Origin` header is not an `http://127.0.0.1:<any port>` or
+  `http://localhost:<any port>` origin (Zebar serves widgets from such an origin) or when the `Host` header is not
+  `127.0.0.1:<helper port>` or `localhost:<helper port>`. It answers HTTP 503 when 64 connections are already open.
+- The first message of the client must be `auth` (see below). The helper sends nothing before a valid `auth`, closes the
+  socket with status 1008 (policy violation) on a wrong token, and closes it after 5 seconds without `auth`.
+- Every frame is a UTF-8 text frame holding one JSON object of at most 64 KB.
+- A connection may send at most 200 requests per 10 seconds. Requests above the limit get a `rate_limited` failure.
 
 ## Messages
 
@@ -28,6 +30,7 @@ and bump `protocolVersion` when it is not backwards compatible.
 
 | Kind | Shape | Purpose |
 | --- | --- | --- |
+| `auth` | `{ "kind": "auth", "token": "<token from runtime.json>", "widget": "bar", "monitor": "\\\\.\\DISPLAY1" }` | Must be the first message. `widget` is the Zebar widget name, `monitor` the Windows device name of the monitor the widget runs on. |
 | `request` | `{ "kind": "request", "id": "<unique string>", "method": "<name>", "params": { } }` | Ask the helper to do something or to return data. |
 | `heartbeat` | `{ "kind": "heartbeat", "visible": true }` | Sent by every widget once per second from `requestAnimationFrame`, so the helper can detect a widget whose rendering stopped. |
 
@@ -72,10 +75,12 @@ A client that connects or reconnects receives the full state again, so it can ne
 | Method | Params | Reply data |
 | --- | --- | --- |
 | `apps.list` | none | `[ { "name", "id", "icon" } ]` |
+| `apps.launch` | `{ "id" }`, an identifier returned by `apps.list` | none |
 | `audio.setDefault` | `{ "id" }` | none |
 | `clipboard.history` | `{ "limit": 40 }` | `{ "enabled", "items": [ { "id", "kind", "time", "text" } ] }` |
 | `clipboard.paste` | `{ "id" }` | none |
 | `config.set` | `{ "path": "launcher.favourites", "value": [] }` | the updated configuration |
+| `folders.open` | `{ "name": "wallpapers" \| "screenshots" }` | none |
 | `display.brightness` | none | `{ "<device>": <0-100 or -1 when unsupported> }` |
 | `display.setBrightness` | `{ "monitor", "value" }` | none |
 | `input.paste` | none | none |
@@ -87,6 +92,7 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `radios.set` | `{ "kind", "on" }` | the updated list |
 | `capture.record` | none | none |
 | `shell.taskbar` | `{ "hidden" }` | none |
+| `shell.openSettings` | `{ "page": "sound" \| "network-status" \| "regionlanguage" \| "display" \| "bluetooth" \| "personalization" }` | none |
 | `system.info` | none | `{ "name", "user", "picture", "cpu", "gpu", "os" }` |
 | `tasks.activate` | `{ "id" }` | none |
 | `tasks.close` | `{ "id" }` | none |
@@ -98,4 +104,4 @@ A client that connects or reconnects receives the full state again, so it can ne
 
 ## Error codes
 
-`invalid_request`, `unknown_method`, `invalid_params`, `not_found`, `unsupported`, `denied`, `failed`.
+`invalid_request`, `unknown_method`, `invalid_params`, `not_found`, `unsupported`, `denied`, `rate_limited`, `failed`.

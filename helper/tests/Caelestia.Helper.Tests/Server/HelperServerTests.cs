@@ -27,7 +27,7 @@ public sealed class HelperServerTests : IAsyncLifetime
         var router = new RequestRouter(_log);
         router.Register("echo.widget", (context, _) => Task.FromResult<JsonNode?>(new JsonObject { ["widget"] = context.Widget }));
         router.Register("always.fails", (_, _) => throw new HelperException(ErrorCode.NotFound, "Nothing here."));
-        _server = new HelperServer(_hub, router, _log, "9.9.9");
+        _server = new HelperServer(_hub, router, _log, "9.9.9", TimeProvider.System);
         _server.Start(TestFirstPort, TestLastPort);
         _running = _server.RunAsync(_shutdown.Token);
         return Task.CompletedTask;
@@ -44,10 +44,11 @@ public sealed class HelperServerTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task A_widget_receives_hello_then_the_current_state()
+    public async Task An_authenticated_widget_receives_hello_then_the_current_state()
     {
         _hub.Publish("idle", new JsonObject { ["seconds"] = 42 });
-        using var client = await ConnectAsync(_server.Token);
+        using var client = await ConnectAsync();
+        await AuthenticateAsync(client, _server.Token);
 
         var hello = await ReceiveAsync(client);
         var state = await ReceiveAsync(client);
@@ -61,7 +62,8 @@ public sealed class HelperServerTests : IAsyncLifetime
     [Fact]
     public async Task Later_state_changes_are_pushed_to_connected_widgets()
     {
-        using var client = await ConnectAsync(_server.Token);
+        using var client = await ConnectAsync();
+        await AuthenticateAsync(client, _server.Token);
         await ReceiveAsync(client);
         await WaitForSessionsAsync(1);
 
@@ -75,7 +77,8 @@ public sealed class HelperServerTests : IAsyncLifetime
     [Fact]
     public async Task Requests_are_answered_with_the_widget_identity()
     {
-        using var client = await ConnectAsync(_server.Token, widget: "dashboard");
+        using var client = await ConnectAsync();
+        await AuthenticateAsync(client, _server.Token, widget: "dashboard");
         await ReceiveAsync(client);
 
         await SendAsync(client, """{"kind":"request","id":"a1","method":"echo.widget"}""");
@@ -89,7 +92,8 @@ public sealed class HelperServerTests : IAsyncLifetime
     [Fact]
     public async Task Handler_errors_and_unknown_methods_become_failure_replies()
     {
-        using var client = await ConnectAsync(_server.Token);
+        using var client = await ConnectAsync();
+        await AuthenticateAsync(client, _server.Token);
         await ReceiveAsync(client);
 
         await SendAsync(client, """{"kind":"request","id":"b1","method":"always.fails"}""");
@@ -102,21 +106,50 @@ public sealed class HelperServerTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task A_connection_with_a_wrong_token_is_refused()
+    public async Task A_wrong_token_closes_the_connection_without_sending_any_state()
     {
-        var exception = await Assert.ThrowsAnyAsync<WebSocketException>(() => ConnectAsync("wrong-token"));
+        _hub.Publish("idle", new JsonObject { ["seconds"] = 42 });
+        using var client = await ConnectAsync();
+
+        await AuthenticateAsync(client, "wrong-token");
+
+        Assert.Equal(WebSocketCloseStatus.PolicyViolation, await ReceiveCloseAsync(client));
+    }
+
+    [Fact]
+    public async Task A_request_before_authentication_closes_the_connection()
+    {
+        using var client = await ConnectAsync();
+
+        await SendAsync(client, """{"kind":"request","id":"x","method":"echo.widget"}""");
+
+        Assert.Equal(WebSocketCloseStatus.PolicyViolation, await ReceiveCloseAsync(client));
+    }
+
+    [Fact]
+    public async Task A_silent_connection_is_closed_after_the_authentication_timeout()
+    {
+        using var client = await ConnectAsync();
+
+        Assert.Equal(WebSocketCloseStatus.PolicyViolation, await ReceiveCloseAsync(client, ClientSession.AuthenticationTimeout + TimeSpan.FromSeconds(3)));
+    }
+
+    [Fact]
+    public async Task A_foreign_origin_cannot_open_a_socket()
+    {
+        var exception = await Assert.ThrowsAnyAsync<WebSocketException>(() => ConnectAsync("http://evil.example"));
 
         Assert.Contains("403", exception.Message, StringComparison.Ordinal);
     }
 
-    private async Task<ClientWebSocket> ConnectAsync(string token, string widget = "bar")
+    private async Task<ClientWebSocket> ConnectAsync(string origin = "http://127.0.0.1:6124")
     {
         var client = new ClientWebSocket();
-        client.Options.SetRequestHeader("Origin", "http://127.0.0.1:6124");
+        client.Options.SetRequestHeader("Origin", origin);
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
         try
         {
-            await client.ConnectAsync(new Uri($"ws://127.0.0.1:{_server.Port}/?token={token}&widget={widget}"), timeout.Token);
+            await client.ConnectAsync(new Uri($"ws://127.0.0.1:{_server.Port}/"), timeout.Token);
             return client;
         }
         catch
@@ -125,6 +158,9 @@ public sealed class HelperServerTests : IAsyncLifetime
             throw;
         }
     }
+
+    private static Task AuthenticateAsync(ClientWebSocket client, string token, string widget = "bar") =>
+        SendAsync(client, new JsonObject { ["kind"] = "auth", ["token"] = token, ["widget"] = widget, ["monitor"] = "" }.ToJsonString());
 
     private async Task WaitForSessionsAsync(int count)
     {
@@ -152,6 +188,22 @@ public sealed class HelperServerTests : IAsyncLifetime
             {
                 return message;
             }
+        }
+    }
+
+    private static async Task<WebSocketCloseStatus?> ReceiveCloseAsync(ClientWebSocket client, TimeSpan? wait = null)
+    {
+        using var timeout = new CancellationTokenSource(wait ?? TimeSpan.FromSeconds(5));
+        var buffer = new byte[1024];
+        while (true)
+        {
+            var result = await client.ReceiveAsync(buffer, timeout.Token);
+            if (result.MessageType == WebSocketMessageType.Close)
+            {
+                return result.CloseStatus;
+            }
+
+            Assert.Fail($"Expected the server to close, but it sent: {Encoding.UTF8.GetString(buffer, 0, result.Count)}");
         }
     }
 }

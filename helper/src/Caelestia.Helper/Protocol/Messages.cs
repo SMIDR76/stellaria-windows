@@ -75,6 +75,11 @@ internal abstract record ClientMessage
         var kind = ReadString(root, "kind");
         switch (kind)
         {
+            case "auth":
+                var token = ReadString(root, "token");
+                return string.IsNullOrEmpty(token)
+                    ? new InvalidMessage(null, "Authentication needs a token.")
+                    : new AuthMessage(token, ReadString(root, "widget") ?? "unknown", ReadString(root, "monitor") ?? "");
             case "heartbeat":
                 return new HeartbeatMessage(root["visible"] is JsonValue visible && visible.TryGetValue<bool>(out var value) && value);
             case "request":
@@ -99,6 +104,8 @@ internal abstract record ClientMessage
     private static string? ReadString(JsonObject root, string name) =>
         root[name] is JsonValue value && value.TryGetValue<string>(out var text) ? text : null;
 }
+
+internal sealed record AuthMessage(string Token, string Widget, string Monitor) : ClientMessage;
 
 internal sealed record RequestMessage(string Id, string Method, JsonObject Params) : ClientMessage;
 

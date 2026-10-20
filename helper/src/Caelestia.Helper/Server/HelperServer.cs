@@ -7,16 +7,18 @@ using Caelestia.Helper.Protocol;
 
 namespace Caelestia.Helper.Server;
 
-internal sealed class HelperServer(StateHub hub, RequestRouter router, Log log, string helperVersion) : IAsyncDisposable
+internal sealed class HelperServer(StateHub hub, RequestRouter router, Log log, string helperVersion, TimeProvider time) : IAsyncDisposable
 {
     public const int FirstPort = 47610;
     public const int LastPort = 47619;
+    public const int MaxConnections = 64;
     public static readonly TimeSpan PingInterval = TimeSpan.FromSeconds(5);
     public static readonly TimeSpan HandshakeTimeout = TimeSpan.FromSeconds(5);
 
     private readonly List<Task> _sessionTasks = [];
     private readonly Lock _gate = new();
     private TcpListener? _listener;
+    private int _openConnections;
 
     public string Token { get; } = RuntimeFile.NewToken();
 
@@ -86,49 +88,74 @@ internal sealed class HelperServer(StateHub hub, RequestRouter router, Log log, 
 
     private async Task ServeAsync(TcpClient client, CancellationToken shutdown)
     {
-        using (client)
+        var admitted = Interlocked.Increment(ref _openConnections) <= MaxConnections;
+        try
         {
-            client.NoDelay = true;
-            var stream = client.GetStream();
-            HandshakeAccepted accepted;
-            try
+            using (client)
             {
-                using var timeout = CancellationTokenSource.CreateLinkedTokenSource(shutdown);
-                timeout.CancelAfter(HandshakeTimeout);
-                var header = await ReadHeaderAsync(stream, timeout.Token).ConfigureAwait(false);
-                var request = header is null ? null : WebSocketHandshake.Parse(header);
-                var decision = request is null
-                    ? new HandshakeRejected(400, "Malformed HTTP request.")
-                    : WebSocketHandshake.Decide(request, Token);
-                if (decision is HandshakeRejected rejected)
+                client.NoDelay = true;
+                var stream = client.GetStream();
+                if (!await HandshakeAsync(stream, admitted, shutdown).ConfigureAwait(false))
                 {
-                    log.Warning("server", $"Rejected a connection: {rejected.Reason}");
-                    await stream.WriteAsync(Encoding.UTF8.GetBytes(WebSocketHandshake.RejectResponse(rejected)), shutdown).ConfigureAwait(false);
                     return;
                 }
 
-                accepted = (HandshakeAccepted)decision;
-                await stream.WriteAsync(Encoding.ASCII.GetBytes(WebSocketHandshake.AcceptResponse(accepted.AcceptKey)), shutdown).ConfigureAwait(false);
+                var socket = WebSocket.CreateFromStream(stream, new WebSocketCreationOptions { IsServer = true, KeepAliveInterval = TimeSpan.Zero });
+                await using var session = new ClientSession(socket, Token, router, log, OnAuthenticated, time, shutdown);
+                try
+                {
+                    await session.RunAsync().ConfigureAwait(false);
+                }
+                finally
+                {
+                    if (session.IsAuthenticated)
+                    {
+                        hub.Detach(session);
+                        log.Info("server", $"{session.Describe()} disconnected.");
+                    }
+                }
             }
-            catch (Exception exception) when (exception is IOException or OperationCanceledException or SocketException)
+        }
+        finally
+        {
+            Interlocked.Decrement(ref _openConnections);
+        }
+    }
+
+    private void OnAuthenticated(ClientSession session)
+    {
+        session.Enqueue(Messages.Hello(helperVersion));
+        hub.Attach(session);
+        log.Info("server", $"{session.Describe()} connected.");
+    }
+
+    private async Task<bool> HandshakeAsync(NetworkStream stream, bool admitted, CancellationToken shutdown)
+    {
+        try
+        {
+            using var timeout = CancellationTokenSource.CreateLinkedTokenSource(shutdown);
+            timeout.CancelAfter(HandshakeTimeout);
+            var header = await ReadHeaderAsync(stream, timeout.Token).ConfigureAwait(false);
+            var request = header is null ? null : WebSocketHandshake.Parse(header);
+            HandshakeDecision decision = request is null
+                ? new HandshakeRejected(400, "Malformed HTTP request.")
+                : !admitted
+                    ? new HandshakeRejected(503, "Too many open connections.")
+                    : WebSocketHandshake.Decide(request, Port);
+            if (decision is HandshakeRejected rejected)
             {
-                return;
+                log.Warning("server", $"Rejected a connection: {rejected.Reason}");
+                await stream.WriteAsync(Encoding.UTF8.GetBytes(WebSocketHandshake.RejectResponse(rejected)), shutdown).ConfigureAwait(false);
+                return false;
             }
 
-            var socket = WebSocket.CreateFromStream(stream, new WebSocketCreationOptions { IsServer = true, KeepAliveInterval = TimeSpan.Zero });
-            await using var session = new ClientSession(socket, accepted.Widget, accepted.Monitor, router, log, shutdown);
-            session.Enqueue(Messages.Hello(helperVersion));
-            hub.Attach(session);
-            log.Info("server", $"{session.Describe()} connected.");
-            try
-            {
-                await session.RunAsync().ConfigureAwait(false);
-            }
-            finally
-            {
-                hub.Detach(session);
-                log.Info("server", $"{session.Describe()} disconnected.");
-            }
+            var accepted = (HandshakeAccepted)decision;
+            await stream.WriteAsync(Encoding.ASCII.GetBytes(WebSocketHandshake.AcceptResponse(accepted.AcceptKey)), shutdown).ConfigureAwait(false);
+            return true;
+        }
+        catch (Exception exception) when (exception is IOException or OperationCanceledException or SocketException)
+        {
+            return false;
         }
     }
 

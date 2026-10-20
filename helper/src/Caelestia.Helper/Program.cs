@@ -59,7 +59,7 @@ internal static class Program
         {
             var hub = new StateHub();
             var router = new RequestRouter(log);
-            await using var server = new HelperServer(hub, router, log, version);
+            await using var server = new HelperServer(hub, router, log, version, TimeProvider.System);
             server.Start();
             RuntimeFile.Write(paths.RuntimeFile, server.Port, server.Token, Environment.ProcessId);
             try

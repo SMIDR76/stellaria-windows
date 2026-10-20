@@ -25,6 +25,22 @@ public sealed class MessagesTests
     }
 
     [Fact]
+    public void An_auth_message_carries_token_and_identity()
+    {
+        var auth = Assert.IsType<AuthMessage>(ClientMessage.Parse("""{"kind":"auth","token":"t0k","widget":"bar","monitor":"\\\\.\\DISPLAY1"}"""));
+
+        Assert.Equal("t0k", auth.Token);
+        Assert.Equal("bar", auth.Widget);
+        Assert.Equal(@"\\.\DISPLAY1", auth.Monitor);
+    }
+
+    [Fact]
+    public void An_auth_message_without_token_is_invalid()
+    {
+        Assert.IsType<InvalidMessage>(ClientMessage.Parse("""{"kind":"auth","widget":"bar"}"""));
+    }
+
+    [Fact]
     public void A_heartbeat_reports_visibility()
     {
         var heartbeat = Assert.IsType<HeartbeatMessage>(ClientMessage.Parse("""{"kind":"heartbeat","visible":true}"""));

@@ -4,11 +4,11 @@ namespace Caelestia.Helper.Tests.Server;
 
 public sealed class WebSocketHandshakeTests
 {
-    private const string Token = "secret-token";
+    private const int Port = 47610;
 
-    private static string Request(string target, string origin = "http://127.0.0.1:6124") =>
-        $"GET {target} HTTP/1.1\r\n" +
-        "Host: 127.0.0.1:47610\r\n" +
+    private static string Request(string origin = "http://127.0.0.1:6124", string host = "127.0.0.1:47610") =>
+        "GET / HTTP/1.1\r\n" +
+        $"Host: {host}\r\n" +
         "Upgrade: websocket\r\n" +
         "Connection: keep-alive, Upgrade\r\n" +
         "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==\r\n" +
@@ -22,25 +22,11 @@ public sealed class WebSocketHandshakeTests
     }
 
     [Fact]
-    public void A_valid_widget_request_is_accepted_with_its_identity()
+    public void A_local_widget_request_is_accepted()
     {
-        var request = WebSocketHandshake.Parse(Request($"/?token={Token}&widget=bar&monitor=%5C%5C.%5CDISPLAY1"));
+        var decision = Assert.IsType<HandshakeAccepted>(WebSocketHandshake.Decide(WebSocketHandshake.Parse(Request())!, Port));
 
-        var decision = Assert.IsType<HandshakeAccepted>(WebSocketHandshake.Decide(request!, Token));
-
-        Assert.Equal("bar", decision.Widget);
-        Assert.Equal(@"\\.\DISPLAY1", decision.Monitor);
         Assert.Equal("s3pPLMBiTxaQ9kYGzzhZRbK+xOo=", decision.AcceptKey);
-    }
-
-    [Fact]
-    public void A_wrong_token_is_forbidden()
-    {
-        var request = WebSocketHandshake.Parse(Request("/?token=guess&widget=bar"));
-
-        var decision = Assert.IsType<HandshakeRejected>(WebSocketHandshake.Decide(request!, Token));
-
-        Assert.Equal(403, decision.StatusCode);
     }
 
     [Theory]
@@ -56,11 +42,28 @@ public sealed class WebSocketHandshakeTests
     }
 
     [Fact]
-    public void A_foreign_origin_is_forbidden_even_with_the_token()
+    public void A_foreign_origin_is_forbidden()
     {
-        var request = WebSocketHandshake.Parse(Request($"/?token={Token}", "http://evil.example"));
+        var decision = Assert.IsType<HandshakeRejected>(WebSocketHandshake.Decide(WebSocketHandshake.Parse(Request(origin: "http://evil.example"))!, Port));
 
-        var decision = Assert.IsType<HandshakeRejected>(WebSocketHandshake.Decide(request!, Token));
+        Assert.Equal(403, decision.StatusCode);
+    }
+
+    [Theory]
+    [InlineData("127.0.0.1:47610", true)]
+    [InlineData("localhost:47610", true)]
+    [InlineData("127.0.0.1:47611", false)]
+    [InlineData("evil.example:47610", false)]
+    [InlineData("127.0.0.1", false)]
+    public void Only_the_helper_address_is_a_valid_host(string host, bool allowed)
+    {
+        Assert.Equal(allowed, WebSocketHandshake.IsAllowedHost(host, Port));
+    }
+
+    [Fact]
+    public void A_rebound_domain_is_forbidden_even_from_a_local_origin()
+    {
+        var decision = Assert.IsType<HandshakeRejected>(WebSocketHandshake.Decide(WebSocketHandshake.Parse(Request(host: "attacker.example:47610"))!, Port));
 
         Assert.Equal(403, decision.StatusCode);
     }
@@ -68,9 +71,9 @@ public sealed class WebSocketHandshakeTests
     [Fact]
     public void A_request_without_upgrade_headers_is_a_bad_request()
     {
-        var request = WebSocketHandshake.Parse($"GET /?token={Token} HTTP/1.1\r\nHost: 127.0.0.1\r\nOrigin: http://127.0.0.1:6124\r\n\r\n");
+        var request = WebSocketHandshake.Parse("GET / HTTP/1.1\r\nHost: 127.0.0.1:47610\r\nOrigin: http://127.0.0.1:6124\r\n\r\n");
 
-        var decision = Assert.IsType<HandshakeRejected>(WebSocketHandshake.Decide(request!, Token));
+        var decision = Assert.IsType<HandshakeRejected>(WebSocketHandshake.Decide(request!, Port));
 
         Assert.Equal(400, decision.StatusCode);
     }
@@ -82,12 +85,10 @@ public sealed class WebSocketHandshakeTests
     }
 
     [Fact]
-    public void Query_values_are_url_decoded()
+    public void Tokens_are_compared_exactly()
     {
-        var query = WebSocketHandshake.ParseQuery("/?a=1&name=hello%20world&flag");
-
-        Assert.Equal("1", query["a"]);
-        Assert.Equal("hello world", query["name"]);
-        Assert.Equal("", query["flag"]);
+        Assert.True(WebSocketHandshake.TokensMatch("abc", "abc"));
+        Assert.False(WebSocketHandshake.TokensMatch("abd", "abc"));
+        Assert.False(WebSocketHandshake.TokensMatch("abcd", "abc"));
     }
 }
