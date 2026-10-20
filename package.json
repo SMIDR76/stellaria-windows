@@ -1,0 +1,33 @@
+{
+  "name": "caelestia-windows",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Unofficial Windows port of the Caelestia shell, built on Zebar.",
+  "license": "GPL-3.0-only",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "vendor": "node scripts/vendor.mjs",
+    "lint": "eslint scripts eslint.config.js",
+    "format": "prettier --write scripts",
+    "format:check": "prettier --check scripts",
+    "test": "node --test \"scripts/tests/*.test.mjs\""
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@fontsource-variable/google-sans-flex": "5.3.2",
+    "@fontsource-variable/rubik": "5.3.0",
+    "@material/material-color-utilities": "0.3.0",
+    "cldr-annotations-derived-full": "48.2.0",
+    "cldr-annotations-full": "48.2.0",
+    "esbuild": "0.28.2",
+    "eslint": "10.13.0",
+    "globals": "17.13.0",
+    "material-symbols": "0.48.0",
+    "prettier": "3.9.10",
+    "unicode-emoji-json": "0.9.0",
+    "zebar": "3.3.1"
+  }
+}
