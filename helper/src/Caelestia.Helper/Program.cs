@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Caelestia.Helper.Configuration;
 using Caelestia.Helper.Desktop;
 using Caelestia.Helper.Hosting;
 using Caelestia.Helper.Interop;
@@ -83,8 +84,10 @@ internal static class Program
             using var loop = new MessageLoop(log);
             await loop.StartAsync().ConfigureAwait(false);
             await DesktopEventHooks.InstallAsync(loop).ConfigureAwait(false);
+            var config = new ConfigStore(paths.ConfigFile, log);
+            config.Load();
             var desktop = new DesktopReader(new ProcessDirectory());
-            var context = new ModuleContext(hub, router, loop, log, paths, desktop, new ForegroundTracker(desktop), new IconCache(log), TimeProvider.System, shutdown.Token);
+            var context = new ModuleContext(hub, router, loop, log, paths, config, desktop, new ForegroundTracker(desktop), new IconCache(log), TimeProvider.System, shutdown.Token);
             await new ModuleHost(log).StartAsync(CreateModules(state), context).ConfigureAwait(false);
 
             await using var server = new HelperServer(hub, router, log, version, TimeProvider.System);
@@ -108,6 +111,7 @@ internal static class Program
 
     private static IEnumerable<IHelperModule> CreateModules(HelperState state) =>
     [
+        new ConfigModule(),
         new MonitorsModule(),
         new FocusModule(),
         new TasksModule(),

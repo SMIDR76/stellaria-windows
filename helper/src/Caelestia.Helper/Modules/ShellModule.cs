@@ -20,16 +20,21 @@ internal sealed class ShellModule(HelperState state) : IHelperModule
     {
         _context = context;
         _breaker = new RepairBreaker(5, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(5), context.Time);
-        context.Router.Register("shell.taskbar", async (request, _) =>
+        context.Config.Changed += _ =>
         {
-            var hidden = request.RequireBoolean("hidden");
-            await context.Loop.InvokeAsync(() => ApplyTaskbar(hidden)).ConfigureAwait(false);
-            return null;
-        });
+            var hidden = context.Config.GetFlag("taskbar.hide");
+            context.Loop.Post(() =>
+            {
+                if (hidden != _hideTaskbar)
+                {
+                    ApplyTaskbar(hidden);
+                }
+            });
+        };
         context.Loop.SessionEnding += () => ShellRecovery.ShowTaskbar(context.Log);
         _maintenance = new Timer(_ => context.Loop.Post(Maintain), null, MaintenanceInterval, MaintenanceInterval);
         context.Shutdown.Register(() => _maintenance.Dispose());
-        return context.Loop.InvokeAsync(PublishState);
+        return context.Loop.InvokeAsync(() => ApplyTaskbar(context.Config.GetFlag("taskbar.hide")));
     }
 
     private void ApplyTaskbar(bool hidden)
