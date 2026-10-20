@@ -91,13 +91,24 @@ No telemetry, analytics or crash reporting is collected.
 
 ## Recovery
 
-The helper hides the Windows taskbar while it runs. It is shown again:
+When the bar replaces the taskbar, the helper turns on taskbar auto-hide and hides the taskbar window. Before changing
+auto-hide the first time it saves the original value in `%LOCALAPPDATA%\Caelestia\state.json`.
+
+The taskbar window is shown again, still in auto-hide mode so it appears when the pointer reaches the screen edge:
 
 - when the helper exits normally, receives `--quit`, or the Windows session ends;
 - when the helper crashes, through its unhandled exception handler;
-- when Explorer restarts, because hiding is not persistent;
-- on demand with `caelestia-helper.exe --restore-shell`, also available as a Start menu shortcut created by the installer;
-- by `uninstall.ps1`, which also restores the original taskbar auto-hide setting saved at install time.
+- when Explorer restarts, because hiding is not persistent.
+
+Auto-hide stays on between sessions on purpose: turning it off at every exit would let Zebar dock its bars against a
+work area that still includes the taskbar at the next logon.
+
+The original auto-hide value is restored, and the taskbar shown, by `caelestia-helper.exe --restore-shell` (also
+available as a Start menu shortcut created by the installer) and by `uninstall.ps1`. `--restore-shell` first asks a
+running helper to quit so it cannot hide the taskbar again.
+
+These paths are verified on the NativeAOT build: the taskbar is visible right after `--quit`, and `--restore-shell`
+writes back the saved value and clears it.
 
 ## Supply chain
 
