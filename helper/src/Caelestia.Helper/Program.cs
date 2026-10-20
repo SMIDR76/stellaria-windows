@@ -119,6 +119,7 @@ internal static class Program
         new KeyboardModule(),
         new IdleModule(),
         new PowerModule(),
+        new HotkeysModule(),
     ];
 
     private static int RestoreShell(HelperState state, Log log)
