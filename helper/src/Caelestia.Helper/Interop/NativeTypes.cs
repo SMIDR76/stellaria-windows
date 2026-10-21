@@ -19,13 +19,17 @@ internal struct Rect
     }
 
     public readonly int Width => Right - Left;
+
     public readonly int Height => Bottom - Top;
+
     public readonly bool IsEmpty => Width <= 0 || Height <= 0;
+
     public readonly bool Intersects(Rect other) =>
         Left < other.Right && Right > other.Left && Top < other.Bottom && Bottom > other.Top;
+
     public readonly bool Covers(Rect other) =>
         Left <= other.Left && Top <= other.Top && Right >= other.Right && Bottom >= other.Bottom;
-    public readonly int[] ToArray() => [Left, Top, Right, Bottom];
+
     public override readonly string ToString() => $"{Left},{Top},{Right},{Bottom}";
 }
 
@@ -44,7 +48,7 @@ internal unsafe struct MonitorInfoEx
     public Rect Work;
     public uint Flags;
     public fixed char Device[32];
-    public static MonitorInfoEx Create() => new() { Size = sizeof(MonitorInfoEx) };
+
     public readonly bool IsPrimary => (Flags & 1) != 0;
 
     public readonly string DeviceName
@@ -57,6 +61,8 @@ internal unsafe struct MonitorInfoEx
             }
         }
     }
+
+    public static MonitorInfoEx Create() => new() { Size = sizeof(MonitorInfoEx) };
 }
 
 [StructLayout(LayoutKind.Sequential)]

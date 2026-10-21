@@ -56,14 +56,6 @@ internal sealed class ProcessDirectory
 
     public string NameOf(uint processId) => Find(processId)?.Name ?? "";
 
-    public void Forget(uint processId)
-    {
-        lock (_gate)
-        {
-            _cache.Remove(processId);
-        }
-    }
-
     private static unsafe string ImagePath(nint process)
     {
         var buffer = stackalloc char[1024];

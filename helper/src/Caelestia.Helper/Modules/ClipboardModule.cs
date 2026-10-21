@@ -85,11 +85,9 @@ internal sealed class ClipboardModule : IHelperModule
     {
         var operation = await context.Loop.InvokeAsync(Clipboard.GetHistoryItemsAsync).ConfigureAwait(false);
         var history = await operation;
-        var item = history.Status == ClipboardHistoryItemsResultStatus.Success ? history.Items.FirstOrDefault(candidate => candidate.Id == id) : null;
-        if (item is null)
-        {
-            throw new HelperException(ErrorCode.NotFound, "This clipboard entry no longer exists.");
-        }
+        IReadOnlyList<ClipboardHistoryItem> entries = history.Status == ClipboardHistoryItemsResultStatus.Success ? history.Items : [];
+        var item = entries.FirstOrDefault(candidate => candidate.Id == id)
+            ?? throw new HelperException(ErrorCode.NotFound, "This clipboard entry no longer exists.");
 
         var selected = await context.Loop.InvokeAsync(() => Clipboard.SetHistoryItemAsContent(item)).ConfigureAwait(false);
         if (selected != SetHistoryItemAsContentStatus.Success)

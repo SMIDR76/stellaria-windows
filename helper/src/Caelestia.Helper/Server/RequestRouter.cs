@@ -46,8 +46,6 @@ internal sealed class RequestRouter(Log log)
 {
     private readonly Dictionary<string, RequestHandler> _handlers = new(StringComparer.Ordinal);
 
-    public IReadOnlyCollection<string> Methods => _handlers.Keys;
-
     public void Register(string method, RequestHandler handler)
     {
         if (!_handlers.TryAdd(method, handler))

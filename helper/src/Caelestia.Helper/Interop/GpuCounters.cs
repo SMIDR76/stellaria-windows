@@ -29,7 +29,7 @@ internal sealed unsafe partial class GpuCounters : IDisposable
 
     private readonly Lock _gate = new();
     private nint _query;
-    private nint _counter;
+    private readonly nint _counter;
 
     public GpuCounters()
     {

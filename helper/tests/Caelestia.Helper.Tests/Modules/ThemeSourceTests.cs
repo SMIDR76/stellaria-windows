@@ -5,7 +5,7 @@ namespace Caelestia.Helper.Tests.Modules;
 
 public sealed class ThemeSourceTests
 {
-    private static int[] Print(int value) => Enumerable.Repeat(value, Fingerprint.Length).ToArray();
+    private static int[] Print(int value) => [.. Enumerable.Repeat(value, Fingerprint.Length)];
 
     [Fact]
     public void An_announced_change_is_always_published()

@@ -6,27 +6,27 @@ namespace Caelestia.Helper.Tests.Desktop;
 
 public sealed class AppBarRulesTests
 {
-    private static readonly Rect Monitor = new(0, 0, 3440, 1440);
+    private static readonly Rect s_monitor = new(0, 0, 3440, 1440);
 
     [Fact]
     public void Thin_windows_are_classified_by_the_edge_they_hug()
     {
-        Assert.Equal(DockEdge.Left, AppBarRules.Classify(1, new Rect(0, 10, 48, 1430), Monitor)!.Edge);
-        Assert.Equal(DockEdge.Top, AppBarRules.Classify(1, new Rect(0, 0, 3440, 10), Monitor)!.Edge);
-        Assert.Equal(DockEdge.Right, AppBarRules.Classify(1, new Rect(3430, 10, 3440, 1430), Monitor)!.Edge);
-        Assert.Equal(DockEdge.Bottom, AppBarRules.Classify(1, new Rect(0, 1430, 3440, 1440), Monitor)!.Edge);
+        Assert.Equal(DockEdge.Left, AppBarRules.Classify(1, new Rect(0, 10, 48, 1430), s_monitor)!.Edge);
+        Assert.Equal(DockEdge.Top, AppBarRules.Classify(1, new Rect(0, 0, 3440, 10), s_monitor)!.Edge);
+        Assert.Equal(DockEdge.Right, AppBarRules.Classify(1, new Rect(3430, 10, 3440, 1430), s_monitor)!.Edge);
+        Assert.Equal(DockEdge.Bottom, AppBarRules.Classify(1, new Rect(0, 1430, 3440, 1440), s_monitor)!.Edge);
     }
 
     [Fact]
     public void A_window_thicker_than_a_dock_is_never_treated_as_one()
     {
-        Assert.Null(AppBarRules.Classify(1, new Rect(48, 240, 3488, 840), Monitor));
+        Assert.Null(AppBarRules.Classify(1, new Rect(48, 240, 3488, 840), s_monitor));
     }
 
     [Fact]
     public void A_dock_is_reserved_when_the_work_area_stops_at_its_inner_side()
     {
-        var bar = AppBarRules.Classify(1, new Rect(0, 10, 48, 1430), Monitor)!;
+        var bar = AppBarRules.Classify(1, new Rect(0, 10, 48, 1430), s_monitor)!;
 
         Assert.True(AppBarRules.IsReserved(bar, new Rect(48, 10, 3430, 1430)));
         Assert.False(AppBarRules.IsReserved(bar, new Rect(0, 0, 3440, 1392)));
@@ -35,12 +35,23 @@ public sealed class AppBarRulesTests
     [Fact]
     public void A_reservation_by_another_app_on_another_edge_does_not_hide_a_lost_dock()
     {
-        var bottom = AppBarRules.Classify(1, new Rect(0, 1430, 3440, 1440), Monitor)!;
-        var left = AppBarRules.Classify(2, new Rect(0, 10, 48, 1430), Monitor)!;
+        var bottom = AppBarRules.Classify(1, new Rect(0, 1430, 3440, 1440), s_monitor)!;
+        var left = AppBarRules.Classify(2, new Rect(0, 10, 48, 1430), s_monitor)!;
         var workWithOnlyTaskbar = new Rect(0, 0, 3440, 1392);
 
         Assert.True(AppBarRules.IsReserved(bottom, workWithOnlyTaskbar));
         Assert.False(AppBarRules.IsReserved(left, workWithOnlyTaskbar));
+    }
+
+    [Fact]
+    public void A_dock_pushed_inward_by_stacked_reservations_no_longer_touches_its_edge()
+    {
+        var side = new Rect(-1920, 0, 0, 1080);
+        var healthy = AppBarRules.Classify(1, new Rect(-1920, 10, -1872, 1070), side)!;
+        var pushed = AppBarRules.Classify(2, new Rect(-1152, 160, -1104, 1220), side)!;
+
+        Assert.True(AppBarRules.TouchesItsEdge(healthy, side));
+        Assert.False(AppBarRules.TouchesItsEdge(pushed, side));
     }
 
     [Theory]

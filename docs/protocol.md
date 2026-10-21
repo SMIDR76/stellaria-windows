@@ -32,7 +32,7 @@ and bump `protocolVersion` when it is not backwards compatible.
 | --- | --- | --- |
 | `auth` | `{ "kind": "auth", "token": "<token from runtime.json>", "widget": "bar", "monitor": "\\\\.\\DISPLAY1" }` | Must be the first message. `widget` is the Zebar widget name, `monitor` the Windows device name of the monitor the widget runs on. |
 | `request` | `{ "kind": "request", "id": "<unique string>", "method": "<name>", "params": { } }` | Ask the helper to do something or to return data. |
-| `heartbeat` | `{ "kind": "heartbeat", "visible": true }` | Sent by every widget once per second from `requestAnimationFrame`, so the helper can detect a widget whose rendering stopped. |
+| `heartbeat` | `{ "kind": "heartbeat", "visible": true }` | Sent by every widget once per second from `requestAnimationFrame`, with `visible` from `document.visibilityState`. The helper logs a visible widget that sends no heartbeat for 10 seconds and logs again when it recovers, which documents rendering stalls. |
 
 ### Helper to client
 
@@ -55,8 +55,8 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `monitors` | `{ "<device>": { "fullscreen": false, "covered": false, "bounds": [l, t, r, b], "work": [l, t, r, b], "primary": true } }` |
 | `tasks` | `{ "items": [ { "id": "<hwnd>", "title": "", "process": "", "exe": "", "monitor": "", "minimized": false, "active": false } ] }` in a stable order: a window keeps its place, new windows are appended. |
 | `icons` | `{ "<exe path>": "<48 px png base64>" }` for the executables of the current tasks. Published only when that set changes, because task titles change far more often than the list of applications. |
-| `wallpaper` | `{ "path": "<file or null>", "sample": "<png base64, 160 px wide>", "source": "capture" }` or `"source": "file"` |
-| `keyboard` | `{ "capsLock": false, "numLock": true, "layout": "<hkl hex>", "layouts": [ { "id": "", "language": "", "name": "" } ] }` |
+| `wallpaper` | `{ "path": "<Windows wallpaper file or null>", "sample": "<png base64, at most 160 px wide>", "source": "capture" \| "file" }`. `capture` is the rendered desktop of the primary monitor, so it follows Wallpaper Engine; `file` is the fallback when the desktop cannot be captured. Published after every wallpaper change and when a 30 second check sees a visible difference. |
+| `keyboard` | `{ "capsLock": false, "numLock": true, "layout": "<hkl hex of the last user window>", "layouts": [ { "id": "<hkl hex>", "languageTag": "fr-FR", "name": "<layout name localized by Windows>" } ] }`. Widgets name the language with `Intl.DisplayNames` in the interface language. |
 | `idle` | `{ "seconds": 0 }`, published when it crosses 30 s and then every 5 s, and when input resumes |
 | `power` | `{ "keepAwake": false }` |
 | `shell` | `{ "taskbarHidden": true }`, driven by the `taskbar.hide` setting |
@@ -70,37 +70,40 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `hotkey.unavailable` | `{ "name": "dashboard", "shortcut": "Win+Alt+A" }` when another program already owns the shortcut |
 | `appbars.repaired` | `{ "count": 2 }` |
 | `appbars.paused` | `{ "minutes": 5 }` when repairs loop and the circuit breaker stops them |
+| `widgets.reload` | `{}`. Every widget reloads its page. Raised by the `widgets.reload` request, used by the settings app to recover a widget that stopped rendering. |
 
 ## Requests
 
 | Method | Params | Reply data |
 | --- | --- | --- |
-| `apps.list` | none | `[ { "name", "id", "icon" } ]` |
+| `apps.list` | none | `[ { "name", "id", "icon": "<48 px png base64 or null>" } ]` sorted by name, uninstallers and documents removed |
 | `apps.launch` | `{ "id" }`, an identifier returned by `apps.list` | none |
 | `audio.setDefault` | `{ "id" }` | none |
-| `clipboard.history` | `{ "limit": 40 }` | `{ "enabled", "items": [ { "id", "kind", "time", "text" } ] }` |
-| `clipboard.paste` | `{ "id" }` | none |
+| `clipboard.history` | `{ "limit": 1-100, default 40 }` | `{ "enabled", "items": [ { "id", "kind": "text", "time": <unix ms>, "text": "<at most 4096 characters>" } ] }`, text entries only |
+| `clipboard.paste` | `{ "id" }` from `clipboard.history` | none, the entry becomes the clipboard content and Ctrl+V is sent to the last user window |
 | `config.set` | `{ "path": "launcher.favourites", "value": [] }`, see `docs/configuration.md` for every setting | the updated configuration |
 | `folders.open` | `{ "name": "wallpapers" \| "screenshots" }` | none |
 | `display.brightness` | none | `{ "<device>": <0-100 or -1 when unsupported> }` |
-| `display.setBrightness` | `{ "monitor", "value" }` | none |
-| `input.paste` | none | none |
-| `keyboard.setLayout` | `{ "id" }` | none |
+| `display.setBrightness` | `{ "monitor": "<device>", "value": 0-100 }` | none, `unsupported` when the monitor does not answer DDC/CI |
+| `input.paste` | none | none, sends Ctrl+V to the last user window |
+| `keyboard.setLayout` | `{ "id" }`, one of the installed layouts | none |
 | `media.artwork` | none | `{ "app", "title", "artist", "album", "image" }` or `null` |
 | `power.keepAwake` | `{ "enabled" }` | none |
 | `power.run` | `{ "action": "lock" \| "sleep" \| "logout" \| "restart" \| "shutdown" }` | none |
 | `radios.list` | none | `[ { "kind", "on", "name" } ]` |
 | `radios.set` | `{ "kind", "on" }` | the updated list |
-| `capture.record` | none | none |
+| `capture.record` | none | none, sends the Game Bar Win+Alt+R shortcut to the last user window |
 | `shell.openSettings` | `{ "page": "sound" \| "network-status" \| "regionlanguage" \| "display" \| "bluetooth" \| "personalization" }` | none |
-| `system.info` | none | `{ "name", "user", "picture", "cpu", "gpu", "os" }` |
+| `system.info` | none | `{ "name", "user", "picture": "<192 px png base64 or null>", "cpu", "gpu", "os" }` |
+| `system.gpu` | none | `{ "name", "usage": <0-100 or null>, "temperature": <degrees or null> }`. Usage comes from Windows performance counters on every vendor; temperature only when nvidia-smi is installed. |
 | `tasks.activate` | `{ "id" }` | none |
 | `tasks.close` | `{ "id" }` | none |
-| `theme.publish` | `{ "roles": { "<role>": "#rrggbb" }, "transparent": false }` | none, used by the window switcher |
-| `wallpapers.apply` | `{ "path" }` | none |
-| `wallpapers.list` | none | `{ "current", "items": [ { "path", "name", "thumb" } ] }` from the configured directory |
+| `theme.publish` | `{ "roles": { "<role>": "#rrggbb" }, "transparent": false }`, 1 to 64 roles of 1 to 32 letters | none. Written to `%LOCALAPPDATA%\Caelestia\switcher-theme.json` for the optional window switcher. |
+| `wallpapers.apply` | `{ "path" }` inside the configured folder | none, `denied` for any other path |
+| `wallpapers.list` | none | `{ "directory", "current", "items": [ { "path", "name", "thumb": "<384 x 216 jpeg base64>" } ] }`, at most 500 images of the configured folder |
 | `window.act` | `{ "action": "close" \| "minimize" \| "maximize" \| "focus" }` on the last focused window | none |
 | `window.preview` | none | `{ "image": "<jpeg base64 or null>" }` |
+| `widgets.reload` | none | none, raises the `widgets.reload` event |
 
 ## Error codes
 
