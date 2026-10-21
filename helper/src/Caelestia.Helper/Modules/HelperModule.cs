@@ -28,10 +28,6 @@ internal interface IHelperModule
 
 internal sealed class ModuleHost(Log log)
 {
-    private readonly List<IHelperModule> _running = [];
-
-    public IReadOnlyList<IHelperModule> Running => _running;
-
     public async Task StartAsync(IEnumerable<IHelperModule> modules, ModuleContext context)
     {
         foreach (var module in modules)
@@ -39,7 +35,6 @@ internal sealed class ModuleHost(Log log)
             try
             {
                 await module.StartAsync(context).ConfigureAwait(false);
-                _running.Add(module);
                 log.Info("modules", $"{module.Name} started.");
             }
             catch (Exception exception)

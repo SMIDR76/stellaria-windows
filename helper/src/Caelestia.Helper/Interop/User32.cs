@@ -189,9 +189,6 @@ internal static unsafe partial class User32
     [LibraryImport("user32.dll", EntryPoint = "DispatchMessageW")]
     public static partial nint DispatchMessage(in Msg message);
 
-    [LibraryImport("user32.dll")]
-    public static partial void PostQuitMessage(int exitCode);
-
     [LibraryImport("user32.dll", EntryPoint = "SetWinEventHook")]
     public static partial nint SetWinEventHook(uint eventMin, uint eventMax, nint module, delegate* unmanaged<nint, uint, nint, int, int, uint, uint, void> callback, uint processId, uint threadId, uint flags);
 

@@ -3,10 +3,7 @@ using Windows.Storage.Streams;
 
 namespace Caelestia.Helper.Imaging;
 
-internal sealed record PixelImage(int Width, int Height, byte[] Bgra, bool Premultiplied)
-{
-    public int Stride => Width * 4;
-}
+internal sealed record PixelImage(int Width, int Height, byte[] Bgra, bool Premultiplied);
 
 internal enum ImageFit
 {

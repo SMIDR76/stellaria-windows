@@ -290,8 +290,6 @@ internal static class WinEvents
     public const uint SystemMinimizeStart = 0x0016;
     public const uint SystemMinimizeEnd = 0x0017;
     public const uint ObjectCreate = 0x8000;
-    public const uint ObjectDestroy = 0x8001;
-    public const uint ObjectShow = 0x8002;
     public const uint ObjectHide = 0x8003;
     public const uint ObjectLocationChange = 0x800B;
     public const uint ObjectNameChange = 0x800C;

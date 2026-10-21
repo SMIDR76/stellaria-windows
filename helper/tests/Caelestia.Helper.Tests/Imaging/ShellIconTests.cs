@@ -5,12 +5,12 @@ namespace Caelestia.Helper.Tests.Imaging;
 
 public sealed class ShellIconTests
 {
-    private static readonly string Explorer = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe");
+    private static readonly string s_explorer = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe");
 
     [Fact]
     public void The_explorer_icon_is_read_with_transparency()
     {
-        var icon = GdiBitmaps.ReadAndDelete(ShellItemImages.IconBitmap(Explorer, 48));
+        var icon = GdiBitmaps.ReadAndDelete(ShellItemImages.IconBitmap(s_explorer, 48));
 
         Assert.NotNull(icon);
         Assert.InRange(icon.Width, 32, 256);

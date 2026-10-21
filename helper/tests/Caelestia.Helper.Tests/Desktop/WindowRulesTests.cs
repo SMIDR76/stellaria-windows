@@ -1,12 +1,12 @@
-using Caelestia.Helper.Interop;
 using Caelestia.Helper.Desktop;
+using Caelestia.Helper.Interop;
 
 namespace Caelestia.Helper.Tests.Desktop;
 
 public sealed class WindowRulesTests
 {
-    private static readonly MonitorFacts Wide = new(@"\\.\DISPLAY1", new Rect(0, 0, 3440, 1440), new Rect(48, 10, 3430, 1430), true);
-    private static readonly MonitorFacts Side = new(@"\\.\DISPLAY2", new Rect(-1920, 0, 0, 1080), new Rect(-1872, 10, -10, 1070), false);
+    private static readonly MonitorFacts s_wide = new(@"\\.\DISPLAY1", new Rect(0, 0, 3440, 1440), new Rect(48, 10, 3430, 1430), true);
+    private static readonly MonitorFacts s_side = new(@"\\.\DISPLAY2", new Rect(-1920, 0, 0, 1080), new Rect(-1872, 10, -10, 1070), false);
 
     private static WindowFacts Window(
         string title = "Document",
@@ -57,10 +57,10 @@ public sealed class WindowRulesTests
         var game = Window(process: "game", bounds: new Rect(0, 0, 3440, 1440));
         var editor = Window(process: "code", maximized: true, bounds: new Rect(-1872, 10, -10, 1070));
 
-        var coverage = WindowRules.Coverage([game, editor], [Wide, Side]);
+        var coverage = WindowRules.Coverage([game, editor], [s_wide, s_side]);
 
-        Assert.Equal(MonitorCoverage.Fullscreen, coverage[Wide.Device]);
-        Assert.Equal(MonitorCoverage.Maximized, coverage[Side.Device]);
+        Assert.Equal(MonitorCoverage.Fullscreen, coverage[s_wide.Device]);
+        Assert.Equal(MonitorCoverage.Maximized, coverage[s_side.Device]);
     }
 
     [Fact]
@@ -69,9 +69,9 @@ public sealed class WindowRulesTests
         var small = Window(bounds: new Rect(200, 200, 600, 600));
         var fullscreenBehind = Window(process: "game", bounds: new Rect(0, 0, 3440, 1440));
 
-        var coverage = WindowRules.Coverage([small, fullscreenBehind], [Wide]);
+        var coverage = WindowRules.Coverage([small, fullscreenBehind], [s_wide]);
 
-        Assert.Equal(MonitorCoverage.Free, coverage[Wide.Device]);
+        Assert.Equal(MonitorCoverage.Free, coverage[s_wide.Device]);
     }
 
     [Fact]
@@ -81,15 +81,15 @@ public sealed class WindowRulesTests
         var overlay = Window(style: User32.WsExTransparent, bounds: new Rect(0, 0, 3440, 1440));
         var widget = Window(process: "zebar", bounds: new Rect(0, 0, 3440, 1440));
 
-        var coverage = WindowRules.Coverage([minimized, overlay, widget], [Wide]);
+        var coverage = WindowRules.Coverage([minimized, overlay, widget], [s_wide]);
 
-        Assert.Equal(MonitorCoverage.Free, coverage[Wide.Device]);
+        Assert.Equal(MonitorCoverage.Free, coverage[s_wide.Device]);
     }
 
     [Fact]
     public void Every_monitor_gets_a_value_even_without_windows()
     {
-        var coverage = WindowRules.Coverage([], [Wide, Side]);
+        var coverage = WindowRules.Coverage([], [s_wide, s_side]);
 
         Assert.Equal(2, coverage.Count);
         Assert.All(coverage.Values, value => Assert.Equal(MonitorCoverage.Free, value));
