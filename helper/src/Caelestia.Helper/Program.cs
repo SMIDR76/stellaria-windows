@@ -126,6 +126,8 @@ internal static class Program
         new ClipboardModule(),
         new MediaModule(),
         new WindowModule(),
+        new AppsModule(),
+        new WallpapersModule(),
     ];
 
     private static int RestoreShell(HelperState state, Log log)
