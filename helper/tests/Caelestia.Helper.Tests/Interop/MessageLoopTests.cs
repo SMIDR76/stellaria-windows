@@ -13,19 +13,19 @@ public sealed class MessageLoopTests : IAsyncLifetime
     private Log _log = null!;
     private MessageLoop _loop = null!;
 
-    public async Task InitializeAsync()
+    public async ValueTask InitializeAsync()
     {
         _log = new Log(_directory.Path, LogLevel.Debug);
         _loop = new MessageLoop(_log);
         await _loop.StartAsync();
     }
 
-    public Task DisposeAsync()
+    public ValueTask DisposeAsync()
     {
         _loop.Dispose();
         _log.Dispose();
         _directory.Dispose();
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public sealed class MessageLoopTests : IAsyncLifetime
         try
         {
             Press(0x11, 0x12, 0x10, (byte)F24);
-            var thread = await pressed.Task.WaitAsync(TimeSpan.FromSeconds(5));
+            var thread = await pressed.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
             Assert.Equal(loopThread, thread);
         }
         finally
