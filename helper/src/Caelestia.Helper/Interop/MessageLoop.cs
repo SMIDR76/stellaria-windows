@@ -29,7 +29,7 @@ internal sealed unsafe class MessageLoop : IDisposable
 
     public event Action<uint, nint, int, int>? WinEvent;
 
-    public event Action<uint>? BroadcastReceived;
+    public event Action<uint, nuint>? BroadcastReceived;
 
     public event Action? SessionEnding;
 
@@ -245,7 +245,7 @@ internal sealed unsafe class MessageLoop : IDisposable
                     return 0;
                 case User32.WmSettingChange:
                 case User32.WmDisplayChange:
-                    loop.BroadcastReceived?.Invoke(message);
+                    loop.BroadcastReceived?.Invoke(message, wParam);
                     break;
                 case User32.WmQueryEndSession:
                     return 1;
