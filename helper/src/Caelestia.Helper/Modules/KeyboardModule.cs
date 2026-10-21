@@ -27,7 +27,7 @@ internal sealed class KeyboardModule : IHelperModule
             await context.Loop.InvokeAsync(() => SetLayout(id)).ConfigureAwait(false);
             return null;
         });
-        context.Loop.BroadcastReceived += message =>
+        context.Loop.BroadcastReceived += (message, _) =>
         {
             if (message == User32.WmSettingChange)
             {

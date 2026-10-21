@@ -24,7 +24,7 @@ internal sealed class MonitorsModule : IHelperModule
                 _refresh.Schedule();
             }
         };
-        context.Loop.BroadcastReceived += _ => _refresh.Schedule();
+        context.Loop.BroadcastReceived += (_, _) => _refresh.Schedule();
         return context.Loop.InvokeAsync(Publish);
     }
 
