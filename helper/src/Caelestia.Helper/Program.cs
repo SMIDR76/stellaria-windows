@@ -130,6 +130,8 @@ internal static class Program
         new WallpapersModule(),
         new SystemModule(),
         new ThemeSourceModule(),
+        new ThemeModule(),
+        new HealthModule(),
     ];
 
     private static int RestoreShell(HelperState state, Log log)
