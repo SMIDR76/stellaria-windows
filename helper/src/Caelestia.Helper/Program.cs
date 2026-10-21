@@ -120,6 +120,7 @@ internal static class Program
         new IdleModule(),
         new PowerModule(),
         new HotkeysModule(),
+        new AudioModule(),
     ];
 
     private static int RestoreShell(HelperState state, Log log)
