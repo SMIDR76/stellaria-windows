@@ -35,6 +35,14 @@ internal static class AppBarRules
         return new Dock(handle, window, edge, thickness);
     }
 
+    public static bool TouchesItsEdge(Dock dock, Rect monitor) => dock.Edge switch
+    {
+        DockEdge.Left => dock.Bounds.Left == monitor.Left,
+        DockEdge.Top => dock.Bounds.Top == monitor.Top,
+        DockEdge.Right => dock.Bounds.Right == monitor.Right,
+        _ => dock.Bounds.Bottom == monitor.Bottom,
+    };
+
     public static bool IsReserved(Dock dock, Rect work) => dock.Edge switch
     {
         DockEdge.Left => work.Left >= dock.Bounds.Right,

@@ -110,6 +110,12 @@ internal sealed class ShellModule(HelperState state) : IHelperModule
                 continue;
             }
 
+            if (!AppBarRules.TouchesItsEdge(dock, info.Monitor))
+            {
+                _context.Log.Warning("shell", $"A Caelestia {dock.Edge} dock was pushed away from its screen edge; it is left alone so reservations cannot pile up. Restart Zebar to fix it.");
+                continue;
+            }
+
             var data = new AppBarData { Size = sizeof(AppBarData), Hwnd = hwnd, Edge = (uint)dock.Edge, Rect = dock.Bounds };
             Shell32.SHAppBarMessage(Shell32.AbmNew, ref data);
             data.Rect = dock.Bounds;
