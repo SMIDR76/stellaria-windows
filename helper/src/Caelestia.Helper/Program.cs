@@ -121,6 +121,11 @@ internal static class Program
         new PowerModule(),
         new HotkeysModule(),
         new AudioModule(),
+        new DisplayModule(),
+        new RadiosModule(),
+        new ClipboardModule(),
+        new MediaModule(),
+        new WindowModule(),
     ];
 
     private static int RestoreShell(HelperState state, Log log)
