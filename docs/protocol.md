@@ -79,6 +79,9 @@ A client that connects or reconnects receives the full state again, so it can ne
 | --- | --- | --- |
 | `apps.list` | none | `[ { "name", "id", "icon": "<48 px png base64 or null>" } ]` sorted by name, uninstallers and documents removed |
 | `apps.launch` | `{ "id" }`, an identifier returned by `apps.list` | none |
+| `audio.sessions` | none | `[ { "id", "name", "system": false, "volume": 0-100, "muted": false, "icon": "<48 px png base64 or null>" } ]`, the live sessions of the default playback device. `name` is the session or process name; `system` marks the Windows system sounds session. |
+| `audio.setSessionVolume` | `{ "id", "volume": 0-100 }` from `audio.sessions` | none, `not_found` when the session has ended |
+| `audio.setSessionMute` | `{ "id", "muted" }` from `audio.sessions` | none, `not_found` when the session has ended |
 | `audio.setDefault` | `{ "id" }` | none |
 | `clipboard.history` | `{ "limit": 1-100, default 40 }` | `{ "enabled", "items": [ { "id", "kind": "text", "time": <unix ms>, "text": "<at most 4096 characters>" } ] }`, text entries only |
 | `clipboard.paste` | `{ "id" }` from `clipboard.history` | none, the entry becomes the clipboard content and Ctrl+V is sent to the last user window |

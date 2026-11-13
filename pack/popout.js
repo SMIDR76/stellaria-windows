@@ -2,6 +2,7 @@ import {
   currentMonitorName,
   cursorPosition,
   element,
+  helperClient,
   hideOnFullscreen,
   icon,
   initTheme,
@@ -173,7 +174,69 @@ function createAudioView() {
   }, [icon('mic_off'), element('span', { text: 'Couper le micro' })]);
   const outputs = element('div', { class: 'options' });
   const inputs = element('div', { class: 'options' });
+  const apps = element('div', { class: 'app-volumes' }, element('span', { class: 'empty', text: 'Chargement…' }));
   const pending = { output: null, input: null };
+
+  // Volume par application (sessions Core Audio du périphérique de sortie par défaut).
+  const changeSession = (method, params) => helperClient.request(method, params)
+    .catch(error => {
+      console.error(`[caelestia] ${method}`, error);
+      loadSessions();
+    });
+
+  const sessionRow = session => {
+    const label = session.system ? 'Sons système' : session.name;
+    const symbol = () => (session.muted || session.volume === 0 ? 'volume_off' : 'volume_up');
+    const appSlider = createSlider((volume, delta) => {
+      session.volume = volume ?? Math.min(100, Math.max(0, session.volume + delta));
+      appSlider.set(session.muted ? 0 : session.volume, symbol());
+      for (const id of session.ids) changeSession('audio.setSessionVolume', { id, volume: session.volume });
+    });
+    const muteButton = element('button', {
+      class: `icon-button${session.muted ? ' active' : ''}`,
+      title: session.muted ? 'Rétablir le son' : 'Couper le son',
+      onClick: () => {
+        session.muted = !session.muted;
+        muteButton.classList.toggle('active', session.muted);
+        muteButton.firstChild.textContent = symbol();
+        appSlider.set(session.muted ? 0 : session.volume, symbol());
+        for (const id of session.ids) changeSession('audio.setSessionMute', { id, muted: session.muted });
+      },
+    }, icon(symbol()));
+    const picture = session.icon
+      ? element('img', { class: 'app-icon', src: `data:image/png;base64,${session.icon}`, alt: '' })
+      : icon(session.system ? 'notifications' : 'apps', { className: 'app-icon' });
+    const row = element('div', { class: 'app-volume', title: label }, [
+      picture,
+      element('div', { class: 'app-volume-body' }, [element('span', { class: 'app-name', text: label }), appSlider.node]),
+      muteButton,
+    ]);
+    requestAnimationFrame(() => appSlider.set(session.muted ? 0 : session.volume, symbol()));
+    return row;
+  };
+
+  const loadSessions = async () => {
+    try {
+      const sessions = await helperClient.request('audio.sessions');
+      // Une application peut ouvrir plusieurs sessions (Discord, navigateurs) : une seule ligne par nom.
+      const groups = new Map();
+      for (const session of sessions) {
+        const key = session.system ? '~system' : session.name.toLowerCase();
+        const group = groups.get(key);
+        if (group) group.ids.push(session.id);
+        else groups.set(key, { ...session, ids: [session.id] });
+      }
+      const merged = [...groups.values()];
+      const visible = merged.filter(session => !session.system).concat(merged.filter(session => session.system));
+      apps.replaceChildren(...(visible.length
+        ? visible.map(sessionRow)
+        : [element('span', { class: 'empty', text: 'Aucune application ne joue de son' })]));
+    } catch (error) {
+      console.error('[caelestia] audio.sessions', error);
+      apps.replaceChildren(element('span', { class: 'empty', text: 'Volumes indisponibles' }));
+    }
+    if (state.kind === 'audio') layoutPanel();
+  };
 
   const node = element('div', { class: 'view', style: { width: '340px' } }, [
     element('div', { class: 'view-header' }, [headerIcon, element('span', { class: 'view-title', text: 'Volume' }), value]),
@@ -183,6 +246,8 @@ function createAudioView() {
     outputs,
     element('span', { class: 'section-label', text: 'Entrée' }),
     inputs,
+    element('span', { class: 'section-label', text: 'Applications' }),
+    apps,
     element('button', { class: 'tonal-button', onClick: () => openSettings('sound') }, [icon('settings'), element('span', { text: 'Paramètres du son' })]),
   ]);
 
@@ -223,7 +288,7 @@ function createAudioView() {
     renderDevices(inputs, audio?.recordingDevices ?? [], 'isDefaultRecording', 'input');
   };
 
-  return { node, update };
+  return { node, update, onShow: loadSessions };
 }
 
 function createNetworkView() {

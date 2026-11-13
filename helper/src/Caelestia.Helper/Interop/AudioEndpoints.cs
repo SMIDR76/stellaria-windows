@@ -109,6 +109,12 @@ internal static unsafe partial class AudioEndpoints
         }
     }
 
+    public static IMMDevice? DefaultPlaybackDevice()
+    {
+        var enumerator = Create<IMMDeviceEnumerator>(s_enumeratorClass, s_enumeratorInterface);
+        return enumerator.GetDefaultAudioEndpoint(0, 0, out var device) == 0 ? device : null;
+    }
+
     public static int SetDefault(string id)
     {
         var policy = Create<IPolicyConfig>(s_policyConfigClass, s_policyConfigInterface);
