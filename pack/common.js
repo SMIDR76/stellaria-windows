@@ -609,6 +609,46 @@ export async function openLauncher(query = '', monitor) {
   await startPopup('launcher', monitor);
 }
 
+// Interpolation continue d'une valeur numérique, image par image, avec une courbe de décélération douce.
+// Une nouvelle cible repart de la valeur affichée : pas de saut quand les mesures arrivent pendant l'animation.
+const easeOutCubic = progress => 1 - (1 - progress) ** 3;
+
+export function smoothValue(apply, { duration = 900, initial = 0, animate = () => true } = {}) {
+  let from = initial;
+  let to = initial;
+  let current = initial;
+  let startedAt = 0;
+  let frame = 0;
+
+  const step = time => {
+    startedAt ||= time;
+    const progress = Math.min(1, (time - startedAt) / duration);
+    current = from + (to - from) * easeOutCubic(progress);
+    apply(current);
+    frame = progress < 1 ? requestAnimationFrame(step) : 0;
+  };
+
+  return {
+    get value() {
+      return current;
+    },
+    set(value) {
+      if (!Number.isFinite(value) || !animate()) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        from = to = current = value;
+        apply(value);
+        return;
+      }
+      if (value === to && frame) return;
+      from = Number.isFinite(current) ? current : value;
+      to = value;
+      startedAt = 0;
+      if (!frame) frame = requestAnimationFrame(step);
+    },
+  };
+}
+
 export function polarShapePath(size, lobes, amplitude, rotation = 0, steps = 240) {
   const center = size / 2;
   const radius = size / 2 / (1 + amplitude);

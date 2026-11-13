@@ -15,6 +15,7 @@ import {
   setShape,
   settings,
   shapeSvg,
+  smoothValue,
   store,
   windowOrigin,
   zebar,
@@ -68,13 +69,17 @@ function createRing({ size, stroke, start = -90, sweep = 360, color, className =
     svg('path', { class: 'ring-value', d: path, 'stroke-width': stroke, stroke: color, 'stroke-dasharray': `0 ${length + 1}` }),
   );
   const node = element('div', { class: `ring ${className}`.trim() }, [ringSvg, content]);
+  const fill = smoothValue(value => ringSvg.lastChild.setAttribute('stroke-dasharray', `${length * value} ${length + 1}`), { animate: () => isOpen });
   return {
     node,
     set(fraction) {
-      const value = Number.isFinite(fraction) ? Math.min(1, Math.max(0, fraction)) : 0;
-      ringSvg.lastChild.setAttribute('stroke-dasharray', `${length * value} ${length + 1}`);
+      fill.set(Number.isFinite(fraction) ? Math.min(1, Math.max(0, fraction)) : 0);
     },
   };
+}
+
+function smoothPercent(node, { suffix = '%' } = {}) {
+  return smoothValue(value => { node.textContent = Number.isFinite(value) ? `${Math.round(value)}${suffix}` : '…'; }, { animate: () => isOpen, initial: NaN });
 }
 
 function iconButton(symbol, { tonal = true, fill = false, small = false, title, onClick } = {}) {
@@ -326,6 +331,9 @@ function createHero({ symbol, label, accent }) {
   const usageValue = element('span', { class: 'hero-usage-value', text: '…' });
   usageValue.style.color = accent;
   let currentShape = 'cookie4';
+  const usageText = smoothPercent(usageValue);
+  const temperatureValue = smoothValue(value => { temperatureText.textContent = `${Math.round(value)} °C`; }, { animate: () => isOpen, initial: NaN });
+  const temperatureBar = smoothValue(value => { barFill.style.width = `${value}%`; }, { animate: () => isOpen });
 
   const node = element('article', { class: 'card hero' }, [
     ring.node,
@@ -340,7 +348,7 @@ function createHero({ symbol, label, accent }) {
     setUsage(percent) {
       const known = Number.isFinite(percent);
       ring.set(known ? percent / 100 : 0);
-      usageValue.textContent = known ? `${Math.round(percent)}%` : '…';
+      usageText.set(known ? percent : NaN);
       const shape = !known || percent < 40 ? 'cookie4' : percent < 80 ? 'sunny' : 'softBurst';
       if (shape !== currentShape) {
         currentShape = shape;
@@ -349,11 +357,16 @@ function createHero({ symbol, label, accent }) {
     },
     setTemperature(celsius) {
       const known = Number.isFinite(celsius);
-      temperatureText.textContent = known ? `${Math.round(celsius)} °C` : 'Température indisponible';
+      if (known) temperatureValue.set(celsius);
+      else {
+        temperatureValue.set(NaN);
+        temperatureText.textContent = 'Température indisponible';
+      }
       thermometer.textContent = known && celsius > 90 ? 'thermometer_alert' : 'thermometer';
       thermometer.style.color = known && celsius > 90 ? 'var(--m3-error)' : accent;
       barTrack.classList.toggle('indeterminate', !known);
-      barFill.style.width = known ? `${Math.min(100, celsius)}%` : '35%';
+      if (known) temperatureBar.set(Math.min(100, celsius));
+      else barFill.style.width = '35%';
     },
   };
 }
@@ -375,6 +388,7 @@ const storageRing = createRing({
   ]),
 });
 const storageUsage = element('span', { class: 'storage-usage', text: '—' });
+const storagePercent = smoothPercent(storageRing.node.querySelector('.big-ring-value'));
 const diskButton = element('button', { class: 'disk-button state-layer', title: 'Changer de disque' }, [icon('storage'), element('span', { text: 'C:\\' }), icon('unfold_more')]);
 const storageCard = element('article', { class: 'card storage' }, [
   element('div', { class: 'storage-row' }, [
@@ -385,6 +399,14 @@ const storageCard = element('article', { class: 'card storage' }, [
 ]);
 
 const graph = svg('svg', { preserveAspectRatio: 'none' });
+// Tracés créés une fois : seul leur attribut d change à chaque image.
+const graphPaths = {
+  upArea: svg('path', { fill: 'var(--m3-secondary)', 'fill-opacity': '0.15' }),
+  upLine: svg('path', { class: 'line', stroke: 'var(--m3-secondary)' }),
+  downArea: svg('path', { fill: 'var(--m3-tertiary)', 'fill-opacity': '0.2' }),
+  downLine: svg('path', { class: 'line', stroke: 'var(--m3-tertiary)' }),
+};
+graph.append(graphPaths.upArea, graphPaths.upLine, graphPaths.downArea, graphPaths.downLine);
 const collecting = element('span', { class: 'collecting', text: 'Collecte des données…' });
 const networkValues = {
   down: element('span', { class: 'value', style: { color: 'var(--m3-tertiary)' }, text: '0 o/s' }),
@@ -407,6 +429,7 @@ const memoryRing = createRing({
   ]),
 });
 const memoryUsage = element('span', { class: 'memory-usage', text: '—' });
+const memoryPercent = smoothPercent($('memory-percent') ?? memoryRing.node.querySelector('.big-ring-value'));
 const memoryCard = element('article', { class: 'card memory' }, [
   element('div', { class: 'perf-card-header' }, [icon('memory_alt', { filled: true, className: 'tertiary' }), element('span', { text: 'Mémoire' })]),
   memoryRing.node,
@@ -419,30 +442,39 @@ const historyLength = 40;
 const history = { down: [], up: [] };
 let graphMax = 1024;
 
-function sparkline(values, max, width, height) {
+let lastSampleAt = 0;
+let graphFrame = 0;
+
+function sparkline(values, max, width, height, shift = 0) {
   if (values.length < 2) return { line: '', area: '' };
-  const step = width / (historyLength - 1);
+  const step = width / (historyLength - 2);
   const offset = (historyLength - values.length) * step;
-  const points = values.map((value, index) => [offset + index * step, height - (value / max) * (height - 4) - 2]);
+  const points = values.map((value, index) => [offset + index * step + shift - step, height - (value / max) * (height - 4) - 2]);
   const line = points.map(([x, y], index) => `${index ? 'L' : 'M'}${x.toFixed(1)} ${y.toFixed(1)}`).join('');
   const area = `${line}L${points.at(-1)[0].toFixed(1)} ${height}L${points[0][0].toFixed(1)} ${height}Z`;
   return { line, area };
 }
 
 function renderGraph() {
+  if (!graphFrame) graphFrame = requestAnimationFrame(drawGraph);
+}
+
+function drawGraph(time) {
+  graphFrame = isOpen && activeTab === 'performance' ? requestAnimationFrame(drawGraph) : 0;
   const width = graph.clientWidth || 358;
   const height = graph.clientHeight || 90;
   graph.setAttribute('viewBox', `0 0 ${width} ${height}`);
   const target = Math.max(1024, ...history.down, ...history.up);
-  graphMax += (target - graphMax) * 0.35;
-  const up = sparkline(history.up, graphMax, width, height);
-  const down = sparkline(history.down, graphMax, width, height);
-  graph.replaceChildren(
-    svg('path', { d: up.area, fill: 'var(--m3-secondary)', 'fill-opacity': '0.15' }),
-    svg('path', { d: up.line, class: 'line', stroke: 'var(--m3-secondary)' }),
-    svg('path', { d: down.area, fill: 'var(--m3-tertiary)', 'fill-opacity': '0.2' }),
-    svg('path', { d: down.line, class: 'line', stroke: 'var(--m3-tertiary)' }),
-  );
+  graphMax += (target - graphMax) * 0.08;
+  // La dernière mesure entre par la droite pendant la seconde qui suit son arrivée.
+  const progress = Math.min(1, (performance.now() - lastSampleAt) / 1000);
+  const shift = (1 - progress) * (width / (historyLength - 2));
+  const up = sparkline(history.up, graphMax, width, height, shift);
+  const down = sparkline(history.down, graphMax, width, height, shift);
+  graphPaths.upArea.setAttribute('d', up.area);
+  graphPaths.upLine.setAttribute('d', up.line);
+  graphPaths.downArea.setAttribute('d', down.area);
+  graphPaths.downLine.setAttribute('d', down.line);
   collecting.hidden = history.down.length >= 2;
 }
 
@@ -462,7 +494,7 @@ function renderDisks() {
   const used = disk.totalSpace.bytes - disk.availableSpace.bytes;
   const fraction = used / disk.totalSpace.bytes;
   storageRing.set(fraction);
-  $('storage-percent').textContent = `${Math.round(fraction * 100)}%`;
+  storagePercent.set(fraction * 100);
   storageUsage.textContent = `${formatGib(used)} / ${formatGib(disk.totalSpace.bytes)} Gio`;
   diskButton.children[1].textContent = disk.mountPoint;
   if (disk.mountPoint.toUpperCase().startsWith('C:')) resources.disk.set(fraction);
@@ -837,7 +869,7 @@ function render(output) {
     const fraction = output.memory.usedMemory / output.memory.totalMemory;
     resources.ram.set(fraction);
     memoryRing.set(fraction);
-    $('memory-percent').textContent = `${Math.round(fraction * 100)}%`;
+    memoryPercent.set(fraction * 100);
     memoryUsage.textContent = `${formatGib(output.memory.usedMemory)} / ${formatGib(output.memory.totalMemory)} Gio`;
   }
 
@@ -853,6 +885,7 @@ function render(output) {
     history.up.push(traffic.transmitted.bytes);
     if (history.down.length > historyLength) history.down.shift();
     if (history.up.length > historyLength) history.up.shift();
+    lastSampleAt = performance.now();
     networkValues.down.textContent = formatBytes(traffic.received.bytes, true);
     networkValues.up.textContent = formatBytes(traffic.transmitted.bytes, true);
     networkValues.total.textContent = `↓${formatBytes(traffic.totalReceived.bytes)} ↑${formatBytes(traffic.totalTransmitted.bytes)}`;
@@ -906,14 +939,16 @@ function syncGpuPolling() {
 
 async function openDashboard(trigger) {
   clearTimeout(closeTimer);
-  const origin = await windowOrigin();
-  session = { trigger, origin, openedAt: Date.now(), lastInside: Date.now(), entered: false };
-  if (isOpen) return;
+  if (isOpen) {
+    session = { ...session, trigger, openedAt: Date.now(), lastInside: Date.now() };
+    return;
+  }
   isOpen = true;
-  await widgetWindow.setIgnoreCursorEvents(false);
   layoutTabs();
   document.body.classList.remove('closing');
   document.body.classList.add('open');
+  const [origin] = await Promise.all([windowOrigin(), widgetWindow.setIgnoreCursorEvents(false)]);
+  session = { trigger, origin, openedAt: Date.now(), lastInside: Date.now(), entered: false };
   syncGpuPolling();
   watchCursor();
 }

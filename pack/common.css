@@ -189,6 +189,7 @@ input {
   position: absolute;
   display: flex;
   opacity: 0;
+  will-change: transform, opacity;
   transition:
     transform var(--duration-spatial) var(--ease-spatial),
     opacity var(--duration-effects) var(--ease-effects);
