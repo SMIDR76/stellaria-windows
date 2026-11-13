@@ -207,7 +207,6 @@ function desktopPage() {
   return [
     section('Bureau', [
       optionRow('desktopClock', true, 'schedule', 'Horloge de bureau', "Grande horloge en bas à droite du fond d'écran"),
-      optionRow('visualiser', true, 'graphic_eq', 'Visualiseur audio', "Barres qui suivent le son en bas du fond d'écran"),
       optionRow('clockSeconds', false, 'timer', 'Afficher les secondes', 'Horloges de la barre et du tableau de bord'),
       optionRow('hideTaskbar', true, 'dock_to_left', 'Remplacer la barre des tâches', 'Masque la barre Windows : la barre Caelestia liste les fenêtres ouvertes'),
     ]),

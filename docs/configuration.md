@@ -36,7 +36,6 @@ The file is written atomically (temporary file then rename), so a crash while sa
 | `notifications.theme` | boolean | `true` | Small confirmations from the theme itself. |
 | `notifications.system` | boolean | `true` | Notifications for audio device, keyboard layout, Caps Lock and Num Lock changes and the track now playing. |
 | `media.lyrics` | boolean | `true` | Synchronised lyrics from LRCLIB in the media tab. Sends the track title and artist to lrclib.net. |
-| `visualiser.enabled` | boolean | `true` | Audio visualiser at the bottom of the desktop. When off, the helper stops capturing the sound. |
 | `weather.enabled` | boolean | `true` | Weather in the bar and dashboard, from Open-Meteo. |
 | `weather.location` | `null` or `{ "name", "latitude", "longitude" }` | `null` | Fixed location. When `null`, the approximate location is looked up from the public IP address through ipinfo.io. |
 | `launcher.winKey` | boolean | `true` | Pressing a Windows key on its own opens the launcher instead of the Start menu. Win+S and every Win+key shortcut keep working. |

@@ -71,7 +71,6 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `hotkey.unavailable` | `{ "name": "dashboard", "shortcut": "Win+Alt+A" }` when another program already owns the shortcut |
 | `appbars.repaired` | `{ "count": 2 }` |
 | `appbars.paused` | `{ "minutes": 5 }` when repairs loop and the circuit breaker stops them |
-| `visualiser` | `{ "bars": [0-100, …] }`, 45 levels from 40 Hz to 16 kHz, about 30 times a second while sound plays and once with zeros when it stops. Sent only to the `desktop-clock` widget, and only while `visualiser.enabled` is on: the loopback capture runs only then. |
 | `widgets.reload` | `{}`. Every widget reloads its page. Raised by the `widgets.reload` request, used by the settings app to recover a widget that stopped rendering. |
 
 ## Requests

@@ -197,7 +197,6 @@ function actionEntries() {
     ...[
       ['transparency', false, 'opacity', 'Transparence', 'Surfaces translucides façon Caelestia'],
       ['desktopClock', true, 'schedule', 'Horloge de bureau', "Grande horloge sur le fond d'écran"],
-      ['visualiser', true, 'graphic_eq', 'Visualiseur audio', "Barres qui suivent le son sur le fond d'écran"],
       ['gameMode', false, 'sports_esports', 'Mode jeu', 'Coupe les animations'],
       ['idleScreen', true, 'nightlight', "Écran d'inactivité", 'Horloge et météo après quelques minutes sans activité'],
     ].map(([name, fallback, symbol, title, description]) => {

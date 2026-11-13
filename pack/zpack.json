@@ -379,11 +379,11 @@
       "presets": [
         {
           "name": "default",
-          "anchor": "top_left",
-          "offsetX": "0px",
-          "offsetY": "0px",
-          "width": "100%",
-          "height": "100%",
+          "anchor": "bottom_right",
+          "offsetX": "-10px",
+          "offsetY": "-10px",
+          "width": "720px",
+          "height": "230px",
           "monitorSelection": {
             "type": "all"
           },
