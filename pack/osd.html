@@ -19,6 +19,12 @@
         padding: 16px 12px 16px 16px;
       }
 
+      /* La règle des panneaux sortant du bord droit réduit la marge droite à la bordure : le dernier curseur
+         touchait le cadre. Même marge des deux côtés, en plus de la bordure. */
+      .drawer.from-right .drawer-panel.osd {
+        padding-right: calc(var(--border) + 16px);
+      }
+
       .osd-content {
         display: flex;
         gap: 12px;

@@ -426,7 +426,7 @@
           "anchor": "center_right",
           "offsetX": "0px",
           "offsetY": "0px",
-          "width": "130px",
+          "width": "200px",
           "height": "560px",
           "monitorSelection": {
             "type": "all"
