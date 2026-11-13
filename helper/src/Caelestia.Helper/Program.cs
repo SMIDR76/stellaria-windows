@@ -126,6 +126,7 @@ internal static class Program
         new RadiosModule(),
         new ClipboardModule(),
         new MediaModule(),
+        new VisualiserModule(),
         new WindowModule(),
         new AppsModule(),
         new WallpapersModule(),

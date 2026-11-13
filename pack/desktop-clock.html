@@ -8,13 +8,28 @@
     <style>
       body {
         pointer-events: none;
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-end;
-        padding: 24px;
+        overflow: hidden;
+      }
+
+      .visualiser {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 24vh;
+        opacity: 0;
+        transition: opacity var(--duration-effects-slow) var(--ease-effects);
+      }
+
+      .visualiser.visible {
+        opacity: 1;
       }
 
       .clock {
+        position: fixed;
+        right: calc(var(--border) + 24px);
+        bottom: calc(var(--border) + 24px);
         display: flex;
         align-items: stretch;
         gap: 16px;
@@ -113,6 +128,7 @@
     </style>
   </head>
   <body>
+    <canvas class="visualiser" id="visualiser"></canvas>
     <div class="clock" id="clock">
       <div class="time">
         <span class="hours" id="hours">00</span>
@@ -128,7 +144,7 @@
     </div>
 
     <script type="module">
-      import { initTheme, option, settings, zebar } from './common.js';
+      import { helperClient, initTheme, layout, option, settings, zebar } from './common.js';
 
       initTheme();
       const clock = document.getElementById('clock');
@@ -146,6 +162,72 @@
       render();
 
       option('desktopClock', true, enabled => clock.classList.toggle('visible', enabled));
+
+      // Visualiseur audio : barres le long du bas de l'écran, sous les fenêtres, comme le fond de Caelestia.
+      const canvas = document.getElementById('visualiser');
+      const context = canvas.getContext('2d');
+      let targets = [];
+      let heights = [];
+      let enabled = true;
+      let lastFrame = 0;
+
+      const resize = () => {
+        const scale = window.devicePixelRatio || 1;
+        canvas.width = Math.round(canvas.clientWidth * scale);
+        canvas.height = Math.round(canvas.clientHeight * scale);
+        context.setTransform(scale, 0, 0, scale, 0, 0);
+      };
+      window.addEventListener('resize', resize);
+      resize();
+
+      const draw = time => {
+        requestAnimationFrame(draw);
+        // 30 images par seconde suffisent : le helper n'envoie pas plus de spectres.
+        if (time - lastFrame < 30) return;
+        const step = Math.min(1, (time - lastFrame) / 60);
+        lastFrame = time;
+        if (heights.length !== targets.length) heights = targets.map(() => 0);
+        let moving = false;
+        for (let index = 0; index < targets.length; index++) {
+          const next = heights[index] + (targets[index] - heights[index]) * step;
+          if (Math.abs(next - heights[index]) > 0.05) moving = true;
+          heights[index] = next;
+        }
+        if (!moving && heights.every(height => height < 0.5)) {
+          context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+          return;
+        }
+
+        const style = getComputedStyle(document.documentElement);
+        const left = layout.bar + layout.rounding;
+        const right = window.innerWidth - layout.border - layout.rounding;
+        const bottom = canvas.clientHeight - layout.border;
+        const maximum = window.innerHeight * 0.22;
+        const count = heights.length;
+        const slot = (right - left) / count;
+        const width = Math.max(2, slot * 0.6);
+        context.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+        context.globalAlpha = 0.55;
+        context.fillStyle = style.getPropertyValue('--m3-primary').trim() || '#d0bcff';
+        for (let index = 0; index < count; index++) {
+          const height = Math.max(0, heights[index] / 100 * maximum);
+          if (height < 1) continue;
+          const x = left + index * slot + (slot - width) / 2;
+          context.beginPath();
+          context.roundRect(x, bottom - height, width, height + width / 2, [width / 2, width / 2, 0, 0]);
+          context.fill();
+        }
+      };
+      requestAnimationFrame(draw);
+
+      helperClient.onEvent('visualiser', data => {
+        if (enabled) targets = data.bars ?? [];
+      });
+      option('visualiser', true, value => {
+        enabled = Boolean(value);
+        canvas.classList.toggle('visible', enabled);
+        if (!enabled) targets = targets.map(() => 0);
+      });
       zebar.currentWidget().tauriWindow.setIgnoreCursorEvents(true)
         .catch(error => console.error('[caelestia] Horloge non traversable', error));
     </script>

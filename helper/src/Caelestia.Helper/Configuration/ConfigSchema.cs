@@ -39,6 +39,7 @@ internal static partial class ConfigSchema
         Flag("notifications.theme", true),
         Flag("notifications.system", true),
         Flag("media.lyrics", true),
+        Flag("visualiser.enabled", true),
         Flag("weather.enabled", true),
         new("weather.location", () => null, ValidateLocation),
         Flag("launcher.winKey", true),

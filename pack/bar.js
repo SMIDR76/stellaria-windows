@@ -521,4 +521,5 @@ if (await isPrimaryMonitor()) {
     .catch(error => console.error(`[caelestia] ${path}`, error));
   option('wallpaperDirectory', settings.wallpaperDirectory, directory => configure('wallpapers.directory', directory || null));
   configure('screenshots.directory', settings.screenshotsDirectory);
+  option('visualiser', true, enabled => configure('visualiser.enabled', Boolean(enabled)));
 }
