@@ -38,6 +38,7 @@ The file is written atomically (temporary file then rename), so a crash while sa
 | `media.lyrics` | boolean | `true` | Synchronised lyrics from LRCLIB in the media tab. Sends the track title and artist to lrclib.net. |
 | `weather.enabled` | boolean | `true` | Weather in the bar and dashboard, from Open-Meteo. |
 | `weather.location` | `null` or `{ "name", "latitude", "longitude" }` | `null` | Fixed location. When `null`, the approximate location is looked up from the public IP address through ipinfo.io. |
+| `launcher.winKey` | boolean | `true` | Pressing a Windows key on its own opens the launcher instead of the Start menu. Win+S and every Win+key shortcut keep working. |
 | `launcher.favourites` | list of application identifiers | `[]` | Applications pinned at the top of the launcher. |
 | `launcher.hidden` | list of application identifiers | `[]` | Applications hidden from the launcher. |
 | `wallpapers.directory` | `null` or an existing absolute folder | `null` | Folder listed by the wallpaper picker. `null` means `Pictures\Wallpapers`, or `Pictures` when that folder does not exist. |

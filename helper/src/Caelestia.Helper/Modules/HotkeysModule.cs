@@ -33,12 +33,28 @@ internal sealed class HotkeysModule : IHelperModule
 
     public string Name => "hotkeys";
 
-    public Task StartAsync(ModuleContext context)
+    public static readonly TimeSpan WinTapMaximumHold = TimeSpan.FromMilliseconds(400);
+
+    public async Task StartAsync(ModuleContext context)
     {
         _context = context;
         _retry = new Timer(_ => context.Loop.Post(RegisterMissing), null, RetryInterval, RetryInterval);
         context.Shutdown.Register(() => _retry.Dispose());
-        return context.Loop.InvokeAsync(RegisterMissing);
+        await context.Loop.InvokeAsync(RegisterMissing).ConfigureAwait(false);
+
+        var tap = new WinKeyTap(WinTapMaximumHold);
+        var launcher = Shortcuts.Single(hotkey => hotkey.Name == "launcher");
+        await context.Loop.InvokeAsync(() => context.Loop.HookKeyboard((key, down, injected) =>
+        {
+            if (injected || !tap.Handle(key, down, Environment.TickCount64) || !context.Config.GetFlag("launcher.winKey"))
+            {
+                return false;
+            }
+
+            KeyboardInput.MaskWindowsKey();
+            Pressed(launcher);
+            return false;
+        })).ConfigureAwait(false);
     }
 
     private void RegisterMissing()

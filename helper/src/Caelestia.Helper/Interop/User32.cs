@@ -196,6 +196,19 @@ internal static unsafe partial class User32
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool UnhookWinEvent(nint hook);
 
+    public const int WhKeyboardLowLevel = 13;
+    public const uint KeyboardHookInjected = 0x10;
+
+    [LibraryImport("user32.dll", EntryPoint = "SetWindowsHookExW", SetLastError = true)]
+    public static partial nint SetWindowsHookEx(int hookId, delegate* unmanaged<int, nuint, nint, nint> callback, nint module, uint threadId);
+
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool UnhookWindowsHookEx(nint hook);
+
+    [LibraryImport("user32.dll")]
+    public static partial nint CallNextHookEx(nint hook, int code, nuint wParam, nint lParam);
+
     public static List<nint> TopLevelWindows()
     {
         var windows = new List<nint>(512);

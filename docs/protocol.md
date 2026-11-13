@@ -57,6 +57,7 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `icons` | `{ "<exe path>": "<48 px png base64>" }` for the executables of the current tasks. Published only when that set changes, because task titles change far more often than the list of applications. |
 | `wallpaper` | `{ "path": "<Windows wallpaper file or null>", "sample": "<png base64, at most 160 px wide>", "source": "capture" \| "file" }`. `capture` is the rendered desktop of the primary monitor, so it follows Wallpaper Engine; `file` is the fallback when the desktop cannot be captured. Published after every wallpaper change and when a 30 second check sees a visible difference. |
 | `keyboard` | `{ "capsLock": false, "numLock": true, "layout": "<hkl hex of the last user window>", "layouts": [ { "id": "<hkl hex>", "languageTag": "fr-FR", "name": "<layout name localized by Windows>" } ] }`. Widgets name the language with `Intl.DisplayNames` in the interface language. |
+| `desktops` | `{ "items": [ { "id": "<guid>", "name": "<name or null>" } ], "current": 0 }`, the Windows virtual desktops in Task View order. A single unnamed desktop until the user creates a second one. |
 | `idle` | `{ "seconds": 0 }`, published when it crosses 30 s and then every 5 s, and when input resumes |
 | `power` | `{ "keepAwake": false }` |
 | `shell` | `{ "taskbarHidden": true }`, driven by the `taskbar.hide` setting |
@@ -83,6 +84,7 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `clipboard.paste` | `{ "id" }` from `clipboard.history` | none, the entry becomes the clipboard content and Ctrl+V is sent to the last user window |
 | `config.set` | `{ "path": "launcher.favourites", "value": [] }`, see `docs/configuration.md` for every setting | the updated configuration |
 | `folders.open` | `{ "name": "wallpapers" \| "screenshots" }` | none |
+| `desktops.switch` | `{ "index" }` | none, switches with Ctrl+Win+Left/Right; `not_found` for an index past the last desktop |
 | `display.brightness` | none | `{ "<device>": <0-100 or -1 when unsupported> }` |
 | `display.setBrightness` | `{ "monitor": "<device>", "value": 0-100 }` | none, `unsupported` when the monitor does not answer DDC/CI |
 | `input.paste` | none | none, sends Ctrl+V to the last user window |

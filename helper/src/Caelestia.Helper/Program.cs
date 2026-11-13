@@ -117,6 +117,7 @@ internal static class Program
         new TasksModule(),
         new ShellModule(state),
         new KeyboardModule(),
+        new DesktopsModule(),
         new IdleModule(),
         new PowerModule(),
         new HotkeysModule(),

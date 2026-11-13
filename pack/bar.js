@@ -309,30 +309,29 @@ for (const [node, kind] of popoutTargets) {
 }
 nodes.keyboard.addEventListener('click', () => openSettings('regionlanguage'));
 
-const glazewm = zebar.createProvider({ type: 'glazewm' });
-
-function renderWorkspaces(output) {
-  const workspaces = output?.currentWorkspaces ?? [];
-  nodes.workspaces.hidden = workspaces.length === 0;
-  nodes.workspaces.replaceChildren(...workspaces.map(workspace => element('button', {
-    class: [
-      'workspace',
-      workspace.hasFocus ? 'focused' : '',
-      workspace.children?.length ? 'occupied' : '',
-    ].join(' ').trim(),
-    title: workspace.displayName ?? workspace.name,
-    onClick: () => output.runCommand(`focus --workspace ${workspace.name}`),
+// Bureaux virtuels de Windows, affichés à la place des espaces de travail d'un gestionnaire de fenêtres.
+function renderDesktops(desktops) {
+  const items = desktops?.items ?? [];
+  nodes.workspaces.hidden = items.length === 0;
+  nodes.workspaces.replaceChildren(...items.map((desktop, index) => element('button', {
+    class: ['workspace', index === desktops.current ? 'focused' : ''].join(' ').trim(),
+    title: desktop.name ?? `Bureau ${index + 1}`,
+    onClick: () => switchDesktop(index),
   }, element('span', { class: 'workspace-dot' }))));
 }
 
-glazewm.onOutput(renderWorkspaces);
-glazewm.onError(() => {
-  nodes.workspaces.hidden = true;
-});
+function switchDesktop(index) {
+  helperClient.request('desktops.switch', { index }).catch(error => console.error('[caelestia] Bureau virtuel', error));
+}
+
+helperClient.onState('desktops', renderDesktops);
 
 nodes.workspaces.addEventListener('wheel', event => {
   event.preventDefault();
-  glazewm.output?.runCommand(event.deltaY < 0 ? 'focus --prev-workspace' : 'focus --next-workspace');
+  const desktops = helperClient.state('desktops');
+  if (!desktops) return;
+  const next = desktops.current + (event.deltaY < 0 ? -1 : 1);
+  if (next >= 0 && next < desktops.items.length) switchDesktop(next);
 }, { passive: false });
 
 function showActiveWindow(title, process, iconData) {

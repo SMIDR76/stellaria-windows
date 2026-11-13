@@ -15,6 +15,8 @@ internal sealed unsafe class MessageLoop : IDisposable
     private readonly ConcurrentQueue<Action> _actions = new();
     private readonly List<nint> _hooks = [];
     private readonly Dictionary<int, Action> _hotkeys = [];
+    private Func<uint, bool, bool, bool>? _keyboard;
+    private nint _keyboardHook;
     private readonly TaskCompletionSource _ready = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private readonly Thread _thread;
     private nint _window;
@@ -95,6 +97,27 @@ internal sealed unsafe class MessageLoop : IDisposable
         _hooks.Add(hook);
     }
 
+    /// <summary>
+    /// Installs a low level keyboard hook. The handler receives the virtual key, whether it is a press and whether the
+    /// event was injected by a program, and returns true to swallow the key. It runs on the loop thread and must be fast:
+    /// Windows drops hooks that take longer than about a second.
+    /// </summary>
+    public void HookKeyboard(Func<uint, bool, bool, bool> handler)
+    {
+        EnsureOnLoop();
+        _keyboard = handler;
+        if (_keyboardHook != 0)
+        {
+            return;
+        }
+
+        _keyboardHook = User32.SetWindowsHookEx(User32.WhKeyboardLowLevel, &OnLowLevelKeyboard, Kernel32.GetModuleHandle(null), 0);
+        if (_keyboardHook == 0)
+        {
+            throw new InvalidOperationException("SetWindowsHookEx failed for the keyboard hook.");
+        }
+    }
+
     public bool RegisterHotkey(int id, uint modifiers, uint virtualKey, Action pressed)
     {
         EnsureOnLoop();
@@ -162,6 +185,11 @@ internal sealed unsafe class MessageLoop : IDisposable
             foreach (var hook in _hooks)
             {
                 User32.UnhookWinEvent(hook);
+            }
+
+            if (_keyboardHook != 0)
+            {
+                User32.UnhookWindowsHookEx(_keyboardHook);
             }
 
             foreach (var id in _hotkeys.Keys)
@@ -260,6 +288,43 @@ internal sealed unsafe class MessageLoop : IDisposable
         }
 
         return User32.DefWindowProc(hwnd, message, wParam, lParam);
+    }
+
+    [UnmanagedCallersOnly]
+    private static nint OnLowLevelKeyboard(int code, nuint wParam, nint lParam)
+    {
+        var loop = s_current;
+        if (code >= 0 && loop?._keyboard is { } handler)
+        {
+            var data = (KeyboardHookData*)lParam;
+            var down = wParam is KeyDown or SystemKeyDown;
+            try
+            {
+                if (handler(data->VirtualKey, down, (data->Flags & User32.KeyboardHookInjected) != 0))
+                {
+                    return 1;
+                }
+            }
+            catch (Exception exception)
+            {
+                loop._log.Error("message-loop", "Handling a key event failed.", exception);
+            }
+        }
+
+        return User32.CallNextHookEx(0, code, wParam, lParam);
+    }
+
+    private const nuint KeyDown = 0x0100;
+    private const nuint SystemKeyDown = 0x0104;
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct KeyboardHookData
+    {
+        public uint VirtualKey;
+        public uint ScanCode;
+        public uint Flags;
+        public uint Time;
+        public nuint ExtraInfo;
     }
 
     [UnmanagedCallersOnly]

@@ -41,6 +41,7 @@ internal static partial class ConfigSchema
         Flag("media.lyrics", true),
         Flag("weather.enabled", true),
         new("weather.location", () => null, ValidateLocation),
+        Flag("launcher.winKey", true),
         IdentifierList("launcher.favourites"),
         IdentifierList("launcher.hidden"),
         new("wallpapers.directory", () => null, ValidateDirectory),
