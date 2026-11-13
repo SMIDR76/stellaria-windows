@@ -438,7 +438,16 @@ function relayHelperState() {
     store.set(keys.tasks, tasks?.items ?? []);
     renderTasks();
   });
-  helperClient.onState('idle', idle => store.set(keys.idle, { seconds: idle?.seconds ?? 0, at: Date.now() }));
+  helperClient.onState('idle', idle => {
+    const seconds = idle?.seconds ?? 0;
+    store.set(keys.idle, { seconds, at: Date.now() });
+    const threshold = Math.max(1, Number(getOption('idleMinutes', 10)) || 10) * 60 - 15;
+    const running = Date.now() - store.get('caelestia:idle:running', 0) < 3000;
+    if (getOption('idleScreen', true) && seconds >= threshold && !running) {
+      store.set('caelestia:idle:running', Date.now());
+      zebar.startWidgetPreset('idle', 'default').catch(error => console.error('[caelestia] Écran de veille', error));
+    }
+  });
   helperClient.onState('keyboard', keyboard => {
     if (locks) {
       if (keyboard.capsLock !== locks.capsLock) systemToast(keyboard.capsLock ? 'Verr. Maj activé' : 'Verr. Maj désactivé', '', 'keyboard_capslock');

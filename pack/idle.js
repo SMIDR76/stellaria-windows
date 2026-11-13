@@ -18,6 +18,25 @@ const widgetWindow = zebar.currentWidget().tauriWindow;
 const monitor = await currentMonitorName();
 await widgetWindow.setIgnoreCursorEvents(true);
 
+// L'écran de veille n'est plus lancé au démarrage : la barre le crée peu avant le délai d'inactivité
+// et il se ferme tout seul au retour de l'utilisateur, pour ne pas garder deux fenêtres plein écran en mémoire.
+const startedAt = Date.now();
+const runningKey = 'caelestia:idle:running';
+let wasActive = false;
+let closing = false;
+store.set(runningKey, Date.now());
+setInterval(() => store.set(runningKey, Date.now()), 1000);
+
+const closeWhenUnused = () => {
+  if (closing || state.active) return;
+  if (wasActive || Date.now() - startedAt > 90000) {
+    closing = true;
+    store.set(runningKey, 0);
+    setTimeout(() => zebar.currentWidget().close(), 400);
+  }
+};
+setInterval(closeWhenUnused, 2000);
+
 const state = {
   enabled: true,
   minutes: 10,
@@ -100,6 +119,7 @@ async function evaluate() {
     renderWeather();
     await widgetWindow.setIgnoreCursorEvents(false);
     document.body.classList.add('active');
+    wasActive = true;
   } else {
     document.body.classList.remove('active');
     setTimeout(() => {
