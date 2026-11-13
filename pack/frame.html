@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Caelestia frame</title>
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      body {
+        pointer-events: none;
+      }
+
+      .corner {
+        position: fixed;
+        width: var(--rounding);
+        height: var(--rounding);
+        transition: background var(--duration) var(--ease-standard);
+      }
+
+      .corner.top-left {
+        left: var(--bar);
+        top: var(--border);
+        background: radial-gradient(circle at 100% 100%, transparent calc(var(--rounding) - 0.5px), var(--surface-base) var(--rounding));
+      }
+
+      .corner.top-right {
+        right: var(--border);
+        top: var(--border);
+        background: radial-gradient(circle at 0 100%, transparent calc(var(--rounding) - 0.5px), var(--surface-base) var(--rounding));
+      }
+
+      .corner.bottom-left {
+        left: var(--bar);
+        bottom: var(--border);
+        background: radial-gradient(circle at 100% 0, transparent calc(var(--rounding) - 0.5px), var(--surface-base) var(--rounding));
+      }
+
+      .corner.bottom-right {
+        right: var(--border);
+        bottom: var(--border);
+        background: radial-gradient(circle at 0 0, transparent calc(var(--rounding) - 0.5px), var(--surface-base) var(--rounding));
+      }
+    </style>
+  </head>
+  <body>
+    <div class="corner top-left"></div>
+    <div class="corner top-right"></div>
+    <div class="corner bottom-left"></div>
+    <div class="corner bottom-right"></div>
+
+    <script type="module">
+      import { hideOnFullscreen, initTheme, zebar } from './common.js';
+
+      initTheme();
+      hideOnFullscreen();
+      zebar.currentWidget().tauriWindow.setIgnoreCursorEvents(true)
+        .catch(error => console.error('[caelestia] Cadre non traversable', error));
+    </script>
+  </body>
+</html>

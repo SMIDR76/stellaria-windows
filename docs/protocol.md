@@ -93,7 +93,8 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `radios.list` | none | `[ { "kind", "on", "name" } ]` |
 | `radios.set` | `{ "kind", "on" }` | the updated list |
 | `capture.record` | none | none, sends the Game Bar Win+Alt+R shortcut to the last user window |
-| `shell.openSettings` | `{ "page": "sound" \| "network-status" \| "regionlanguage" \| "display" \| "bluetooth" \| "personalization" }` | none |
+| `capture.region` | none | none, opens the Windows snipping overlay (`ms-screenclip:`) |
+| `shell.openSettings` | `{ "page": "home" \| "sound" \| "network-status" \| "regionlanguage" \| "display" \| "bluetooth" \| "personalization" }` | none |
 | `system.info` | none | `{ "name", "user", "picture": "<192 px png base64 or null>", "cpu", "gpu", "os" }` |
 | `system.gpu` | none | `{ "name", "usage": <0-100 or null>, "temperature": <degrees or null> }`. Usage comes from Windows performance counters on every vendor; temperature only when nvidia-smi is installed. |
 | `tasks.activate` | `{ "id" }` | none |

@@ -1,0 +1,525 @@
+import {
+  analyzeImage,
+  applyTheme,
+  currentMonitorName,
+  dashboardState,
+  describeWeather,
+  element,
+  getOption,
+  helperClient,
+  hideOnFullscreen,
+  icon,
+  initTheme,
+  isPopupOpen,
+  isPrimaryMonitor,
+  keys,
+  loadWeather,
+  monitorAtCursor,
+  onDaemonEvent,
+  openLauncher,
+  openSettings,
+  option,
+  sendCommand,
+  settings,
+  store,
+  toast,
+  toggleDashboard,
+  toggleDrawer,
+  togglePopup,
+  zebar,
+} from './common.js';
+
+initTheme();
+hideOnFullscreen();
+const monitor = await currentMonitorName();
+
+const nodes = {
+  logo: document.getElementById('logo'),
+  workspaces: document.getElementById('workspaces'),
+  tasks: document.getElementById('tasks'),
+  activeWindow: document.getElementById('active-window'),
+  activeTitle: document.getElementById('active-title'),
+  tray: document.getElementById('tray'),
+  clock: document.getElementById('clock'),
+  hours: document.getElementById('clock-hours'),
+  minutes: document.getElementById('clock-minutes'),
+  seconds: document.getElementById('clock-seconds'),
+  keyboard: document.getElementById('keyboard'),
+  volume: document.getElementById('volume'),
+  volumeIcon: document.getElementById('volume-icon'),
+  network: document.getElementById('network'),
+  networkIcon: document.getElementById('network-icon'),
+  power: document.getElementById('power'),
+};
+
+const popupButtons = { launcher: nodes.logo, session: nodes.power };
+
+for (const [name, button] of Object.entries(popupButtons)) {
+  button.addEventListener('click', () => togglePopup(name, monitor).catch(error => console.error(`[caelestia] ${name}`, error)));
+}
+
+nodes.clock.addEventListener('click', () => toggleDashboard(monitor));
+
+const weatherNodes = {
+  button: document.getElementById('weather'),
+  icon: document.getElementById('weather-icon'),
+  temp: document.getElementById('weather-temp'),
+};
+
+weatherNodes.button.addEventListener('click', () => {
+  store.set(keys.dashboardTab, { tab: 'weather', at: Date.now() });
+  toggleDashboard(monitor);
+});
+
+function renderWeather(weather) {
+  if (!weather?.current) return;
+  const now = describeWeather(weather.current.code, weather.current.isDay);
+  weatherNodes.button.hidden = false;
+  weatherNodes.icon.textContent = now.icon;
+  weatherNodes.temp.textContent = `${Math.round(weather.current.temperature)}°`;
+  weatherNodes.button.title = `${weather.city ?? 'Météo'} : ${now.label}, ${Math.round(weather.current.temperature)} °C`;
+}
+
+async function refreshWeather() {
+  try {
+    renderWeather(await loadWeather());
+  } catch (error) {
+    console.error('[caelestia] Météo indisponible', error);
+  }
+}
+
+renderWeather(store.get(keys.weather));
+store.watch(keys.weather, renderWeather, 2000);
+refreshWeather();
+setInterval(refreshWeather, 15 * 60 * 1000);
+
+function applyAutoMode() {
+  if (!store.get(keys.autoMode, false)) return;
+  const weather = store.get(keys.weather);
+  if (!weather?.sunrise || !weather?.sunset) return;
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const sunrise = new Date(`${today}T${weather.sunrise.slice(11, 16)}:00`);
+  const sunset = new Date(`${today}T${weather.sunset.slice(11, 16)}:00`);
+  const mode = now >= sunrise && now < sunset ? 'light' : 'dark';
+  if (store.get(keys.mode, 'dark') !== mode) {
+    store.set(keys.mode, mode);
+    applyTheme();
+    toast(mode === 'light' ? 'Mode clair' : 'Mode sombre', { message: mode === 'light' ? 'Le soleil est levé' : 'Le soleil est couché', icon: mode === 'light' ? 'light_mode' : 'dark_mode' });
+  }
+}
+
+setInterval(() => {
+  for (const [name, button] of Object.entries(popupButtons)) {
+    button.classList.toggle('active', isPopupOpen(name));
+  }
+  nodes.clock.classList.toggle('active', dashboardState(monitor).open);
+}, 250);
+
+const clockState = { seconds: false, timer: 0 };
+
+function renderClock() {
+  clearTimeout(clockState.timer);
+  const now = new Date();
+  nodes.hours.textContent = String(now.getHours()).padStart(2, '0');
+  nodes.minutes.textContent = String(now.getMinutes()).padStart(2, '0');
+  nodes.seconds.textContent = String(now.getSeconds()).padStart(2, '0');
+  nodes.clock.title = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const elapsed = (clockState.seconds ? 0 : now.getSeconds() * 1000) + now.getMilliseconds();
+  clockState.timer = setTimeout(renderClock, (clockState.seconds ? 1000 : 60000) - elapsed + 20);
+}
+
+option('clockSeconds', false, value => {
+  clockState.seconds = Boolean(value);
+  nodes.seconds.hidden = !clockState.seconds;
+  renderClock();
+});
+
+const providers = zebar.createProviderGroup({
+  audio: { type: 'audio' },
+  network: { type: 'network', refreshInterval: 5000 },
+  keyboard: { type: 'keyboard', refreshInterval: 1000 },
+  systray: { type: 'systray' },
+  media: { type: 'media' },
+});
+
+const systemEvents = { since: 0, playback: null, recording: null, layout: null, track: null, trackTimer: 0 };
+
+function systemToast(title, message, symbol) {
+  if (systemEvents.since && Date.now() - systemEvents.since > 5000 && getOption('systemToasts', true)) toast(title, { message, icon: symbol });
+}
+
+function watchSystemEvents(output) {
+  const playback = output.audio?.defaultPlaybackDevice;
+  const recording = output.audio?.defaultRecordingDevice;
+  const layout = output.keyboard?.layout;
+  if (playback) {
+    if (systemEvents.playback && playback.deviceId !== systemEvents.playback) systemToast('Sortie audio', playback.name, 'speaker');
+    systemEvents.playback = playback.deviceId;
+  }
+  if (recording) {
+    if (systemEvents.recording && recording.deviceId !== systemEvents.recording) systemToast('Entrée audio', recording.name, 'mic');
+    systemEvents.recording = recording.deviceId;
+  }
+  if (layout) {
+    if (systemEvents.layout && layout !== systemEvents.layout) systemToast('Disposition du clavier', layout, 'keyboard');
+    systemEvents.layout = layout;
+  }
+
+  const session = output.media?.currentSession;
+  const track = session?.title ? `${session.title}${session.artist ? ` — ${session.artist}` : ''}` : null;
+  if (session?.isPlaying && track && track !== systemEvents.track) {
+    systemEvents.track = track;
+    clearTimeout(systemEvents.trackTimer);
+    systemEvents.trackTimer = setTimeout(() => {
+      if (systemEvents.track === track) systemToast('En lecture', track, 'music_note');
+    }, 1500);
+  }
+}
+
+function volumeIcon(device) {
+  if (!device) return 'volume_off';
+  if (device.isMuted || device.volume === 0) return 'volume_off';
+  if (device.volume < 34) return 'volume_mute';
+  if (device.volume < 67) return 'volume_down';
+  return 'volume_up';
+}
+
+function networkIcon(network) {
+  const type = network?.defaultInterface?.type;
+  if (type === 'ethernet') return 'lan';
+  if (type === 'proprietary_virtual') return 'vpn_lock';
+  if (type === 'wifi') {
+    const strength = network.defaultGateway?.signalStrength ?? 0;
+    if (strength >= 80) return 'signal_wifi_4_bar';
+    if (strength >= 60) return 'network_wifi_3_bar';
+    if (strength >= 40) return 'network_wifi_2_bar';
+    if (strength >= 20) return 'network_wifi_1_bar';
+    return 'signal_wifi_0_bar';
+  }
+  return 'signal_wifi_off';
+}
+
+const trayNodes = new Map();
+
+function renderTray(systray) {
+  const icons = systray?.icons ?? [];
+  nodes.tray.hidden = icons.length === 0;
+  const seen = new Set();
+
+  icons.forEach((trayIcon, index) => {
+    seen.add(trayIcon.id);
+    let entry = trayNodes.get(trayIcon.id);
+    if (!entry) {
+      const image = element('img', { alt: '' });
+      const button = element('button', {
+        class: 'tray-item state-layer',
+        onClick: () => providers.outputMap.systray?.onLeftClick(trayIcon.id),
+        onContextmenu: event => {
+          event.preventDefault();
+          providers.outputMap.systray?.onRightClick(trayIcon.id);
+        },
+        onAuxclick: event => {
+          if (event.button === 1) providers.outputMap.systray?.onMiddleClick(trayIcon.id);
+        },
+        onMouseenter: () => providers.outputMap.systray?.onHoverEnter(trayIcon.id),
+        onMouseleave: () => providers.outputMap.systray?.onHoverLeave(trayIcon.id),
+      }, image);
+      entry = { button, image, hash: null };
+      trayNodes.set(trayIcon.id, entry);
+    }
+    if (entry.hash !== trayIcon.iconHash) {
+      entry.hash = trayIcon.iconHash;
+      entry.image.src = trayIcon.iconUrl;
+    }
+    entry.button.title = trayIcon.tooltip ?? '';
+    if (nodes.tray.children[index] !== entry.button) nodes.tray.insertBefore(entry.button, nodes.tray.children[index] ?? null);
+  });
+
+  for (const [id, entry] of trayNodes) {
+    if (seen.has(id)) continue;
+    entry.button.remove();
+    trayNodes.delete(id);
+  }
+}
+
+function render(output) {
+  const device = output.audio?.defaultPlaybackDevice;
+  nodes.volumeIcon.textContent = volumeIcon(device);
+  nodes.volume.classList.toggle('muted', Boolean(device?.isMuted));
+  nodes.volume.title = device ? `${device.name} — ${device.isMuted ? 'muet' : `${Math.round(device.volume)} %`}` : 'Aucune sortie audio';
+
+  nodes.networkIcon.textContent = networkIcon(output.network);
+  const gateway = output.network?.defaultGateway;
+  nodes.network.title = gateway?.ssid ? `Wi-Fi : ${gateway.ssid}` : output.network?.defaultInterface ? 'Ethernet connecté' : 'Hors ligne';
+
+  const layout = output.keyboard?.layout ?? '';
+  nodes.keyboard.textContent = (layout.split('-').pop() || layout || '--').slice(0, 2).toUpperCase();
+  nodes.keyboard.title = layout ? `Disposition : ${layout}` : 'Disposition du clavier';
+
+  renderTray(output.systray);
+  watchSystemEvents(output);
+}
+
+render(providers.outputMap);
+providers.onOutput(render);
+providers.onError(errors => console.error('[caelestia] providers', JSON.stringify(errors)));
+
+nodes.volume.addEventListener('click', () => {
+  const audio = providers.outputMap.audio;
+  const device = audio?.defaultPlaybackDevice;
+  if (device) audio.setMute(!device.isMuted);
+});
+
+nodes.volume.addEventListener('contextmenu', event => {
+  event.preventDefault();
+  openSettings('sound');
+});
+
+nodes.volume.addEventListener('wheel', event => {
+  event.preventDefault();
+  const audio = providers.outputMap.audio;
+  const device = audio?.defaultPlaybackDevice;
+  if (!device) return;
+  const step = event.deltaY < 0 ? 2 : -2;
+  audio.setVolume(Math.min(100, Math.max(0, Math.round(device.volume) + step)));
+}, { passive: false });
+
+nodes.network.addEventListener('click', () => openSettings('network-status'));
+
+const popoutTargets = [
+  [nodes.activeWindow, 'window'],
+  [nodes.volume, 'audio'],
+  [nodes.network, 'network'],
+  [nodes.keyboard, 'keyboard'],
+];
+
+for (const [node, kind] of popoutTargets) {
+  node.addEventListener('mouseenter', () => {
+    if (!getOption('hoverPopouts', true)) return;
+    const rect = node.getBoundingClientRect();
+    store.set(keys.popout(monitor), {
+      kind,
+      open: true,
+      top: window.screenY + rect.top,
+      bottom: window.screenY + rect.bottom,
+      at: Date.now(),
+    });
+  });
+}
+nodes.keyboard.addEventListener('click', () => openSettings('regionlanguage'));
+
+const glazewm = zebar.createProvider({ type: 'glazewm' });
+
+function renderWorkspaces(output) {
+  const workspaces = output?.currentWorkspaces ?? [];
+  nodes.workspaces.hidden = workspaces.length === 0;
+  nodes.workspaces.replaceChildren(...workspaces.map(workspace => element('button', {
+    class: [
+      'workspace',
+      workspace.hasFocus ? 'focused' : '',
+      workspace.children?.length ? 'occupied' : '',
+    ].join(' ').trim(),
+    title: workspace.displayName ?? workspace.name,
+    onClick: () => output.runCommand(`focus --workspace ${workspace.name}`),
+  }, element('span', { class: 'workspace-dot' }))));
+}
+
+glazewm.onOutput(renderWorkspaces);
+glazewm.onError(() => {
+  nodes.workspaces.hidden = true;
+});
+
+nodes.workspaces.addEventListener('wheel', event => {
+  event.preventDefault();
+  glazewm.output?.runCommand(event.deltaY < 0 ? 'focus --prev-workspace' : 'focus --next-workspace');
+}, { passive: false });
+
+function showActiveWindow(title, process, iconData) {
+  const label = title?.trim() || process || '';
+  nodes.activeWindow.hidden = !label;
+  nodes.activeTitle.textContent = label;
+  nodes.activeWindow.title = process ? `${label} (${process})` : label;
+  const current = nodes.activeWindow.querySelector('.active-icon');
+  if (iconData) {
+    const source = `data:image/png;base64,${iconData}`;
+    if (current?.tagName === 'IMG' && current.src === source) return;
+    current.replaceWith(element('img', { class: 'active-icon', src: source, alt: '' }));
+  } else if (current?.tagName === 'IMG') {
+    current.replaceWith(element('span', { class: 'icon active-icon', text: 'select_window' }));
+  }
+}
+
+function renderFocus(focus) {
+  const entry = focus?.byMonitor?.[monitor];
+  showActiveWindow(entry?.title, entry?.process, entry?.icon);
+}
+
+renderFocus(store.get(keys.focus));
+store.watch(keys.focus, renderFocus, 300);
+
+function taskButton(task, icons) {
+  const iconData = icons[task.exe];
+  return element('button', {
+    class: ['task', 'state-layer', task.active ? 'active' : '', task.minimized ? 'minimized' : ''].join(' ').trim(),
+    title: task.title,
+    onClick: () => sendCommand(`task activate ${task.id}`),
+    onAuxClick: event => {
+      if (event.button === 1) sendCommand(`task close ${task.id}`);
+    },
+  }, iconData
+    ? element('img', { src: `data:image/png;base64,${iconData}`, alt: '' })
+    : icon('select_window'));
+}
+
+function renderTasks() {
+  const tasks = (store.get(keys.tasks, []) ?? []).filter(task => task.monitor === monitor);
+  const icons = store.get(keys.taskIcons, {}) ?? {};
+  nodes.tasks.hidden = tasks.length === 0;
+  nodes.tasks.replaceChildren(...tasks.map(task => taskButton(task, icons)));
+}
+
+renderTasks();
+store.watch(keys.tasks, renderTasks, 150);
+
+function iconFor(exe) {
+  return exe ? (store.get(keys.taskIcons, {}) ?? {})[exe] : undefined;
+}
+
+function publishFocus(focus) {
+  if (!focus) return;
+  const byMonitor = {};
+  for (const [device, entry] of Object.entries(focus.monitors ?? {})) {
+    byMonitor[device] = { title: entry.title, process: entry.process, icon: iconFor(entry.exe) };
+  }
+  const value = { byMonitor, active: focus.active };
+  store.set(keys.focus, value);
+  renderFocus(value);
+}
+
+async function applyWallpaperSample(wallpaper) {
+  if (!wallpaper?.sample) return;
+  const { source, achromatic } = await analyzeImage(wallpaper.sample);
+  store.set('caelestia:wallpaper', wallpaper.path);
+  store.set(keys.wallpaperSample, wallpaper.sample);
+  if (store.get(keys.source) !== source || store.get(keys.achromatic, false) !== achromatic) {
+    store.set(keys.source, source);
+    store.set(keys.achromatic, achromatic);
+    applyTheme();
+  }
+}
+
+async function runHotkey(name, target) {
+  target ||= await monitorAtCursor();
+  const actions = {
+    wallpapers: () => openLauncher('>fond ', target),
+    launcher: () => openLauncher('', target),
+    clipboard: () => openLauncher('>clip ', target),
+    emoji: () => openLauncher('>emoji ', target),
+    dashboard: () => toggleDashboard(target),
+    session: () => togglePopup('session', target),
+    utilities: () => toggleDrawer('utilities', target),
+    settings: () => togglePopup('settings', target),
+  };
+  await actions[name]?.();
+}
+
+// La barre de l'écran principal relaie l'état du helper aux autres widgets et exécute les raccourcis,
+// pour qu'un raccourci reçu par chaque barre ne s'exécute qu'une fois.
+function relayHelperState() {
+  let locks = null;
+
+  helperClient.onState('icons', icons => {
+    store.set(keys.taskIcons, icons ?? {});
+    renderTasks();
+    publishFocus(helperClient.state('focus'));
+  });
+  helperClient.onState('focus', publishFocus);
+  helperClient.onState('tasks', tasks => {
+    store.set(keys.tasks, tasks?.items ?? []);
+    renderTasks();
+  });
+  helperClient.onState('idle', idle => store.set(keys.idle, { seconds: idle?.seconds ?? 0, at: Date.now() }));
+  helperClient.onState('keyboard', keyboard => {
+    if (locks) {
+      if (keyboard.capsLock !== locks.capsLock) systemToast(keyboard.capsLock ? 'Verr. Maj activé' : 'Verr. Maj désactivé', '', 'keyboard_capslock');
+      if (keyboard.numLock !== locks.numLock) systemToast(keyboard.numLock ? 'Verr. Num activé' : 'Verr. Num désactivé', '', 'dialpad');
+    }
+    locks = { capsLock: keyboard.capsLock, numLock: keyboard.numLock };
+  });
+  helperClient.onState('monitors', monitors => {
+    const fullscreen = {};
+    const covered = {};
+    for (const [device, info] of Object.entries(monitors ?? {})) {
+      fullscreen[device] = Boolean(info.fullscreen);
+      covered[device] = Boolean(info.covered);
+    }
+    store.set(keys.fullscreen, { monitors: fullscreen, covered });
+  });
+  helperClient.onState('wallpaper', wallpaper => {
+    applyWallpaperSample(wallpaper).catch(error => console.error('[caelestia] Fond d\'écran', error));
+  });
+  helperClient.onEvent('hotkey', event => {
+    runHotkey(event.name, event.monitor).catch(error => console.error('[caelestia] Raccourci', error));
+  });
+  helperClient.onEvent('hotkey.unavailable', event => {
+    toast('Raccourci indisponible', { message: `${event.shortcut} est déjà utilisé par une autre application.`, icon: 'keyboard', kind: 'warning', duration: 6000 });
+  });
+  helperClient.onEvent('appbars.paused', event => {
+    toast('Barres Caelestia', { message: `Réparations suspendues ${event.minutes} min.`, icon: 'warning', kind: 'warning', duration: 8000 });
+  });
+}
+
+const switcherRoles = [
+  'surface',
+  'surfaceContainer',
+  'surfaceContainerHigh',
+  'surfaceContainerHighest',
+  'secondaryContainer',
+  'onSecondaryContainer',
+  'primaryContainer',
+  'onPrimaryContainer',
+  'onSurface',
+  'onSurfaceVariant',
+  'shadow',
+];
+const switcherTheme = { payload: '', confirmed: '', sentAt: 0, timer: 0 };
+
+function syncSwitcherTheme() {
+  clearTimeout(switcherTheme.timer);
+  switcherTheme.timer = setTimeout(() => {
+    const style = getComputedStyle(document.documentElement);
+    const theme = {};
+    for (const role of switcherRoles) {
+      const value = style.getPropertyValue(`--m3-${role.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`)}`).trim();
+      if (!/^#[0-9a-f]{6}$/i.test(value)) return;
+      theme[role] = value;
+    }
+    theme.transparent = document.documentElement.classList.contains('transparent');
+    const payload = JSON.stringify(theme);
+    if (payload === switcherTheme.confirmed) return;
+    if (payload === switcherTheme.payload && Date.now() - switcherTheme.sentAt < 5000) return;
+    switcherTheme.payload = payload;
+    switcherTheme.sentAt = Date.now();
+    sendCommand(`switcher-theme ${payload}`);
+  }, 400);
+}
+
+if (await isPrimaryMonitor()) {
+  systemEvents.since = Date.now();
+  relayHelperState();
+  onDaemonEvent('switcher-theme', () => {
+    switcherTheme.confirmed = switcherTheme.payload;
+  });
+  new MutationObserver(syncSwitcherTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'data-mode', 'class'] });
+  setInterval(syncSwitcherTheme, 6000);
+  syncSwitcherTheme();
+  applyAutoMode();
+  setInterval(applyAutoMode, 60000);
+  store.watch(keys.autoMode, applyAutoMode, 1000);
+  option('hideTaskbar', true, hidden => sendCommand(`taskbar ${hidden ? 'hide' : 'show'}`));
+  const configure = (path, value) => helperClient.request('config.set', { path, value })
+    .catch(error => console.error(`[caelestia] ${path}`, error));
+  option('wallpaperDirectory', settings.wallpaperDirectory, directory => configure('wallpapers.directory', directory || null));
+  configure('screenshots.directory', settings.screenshotsDirectory);
+}

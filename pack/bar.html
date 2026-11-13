@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Caelestia bar</title>
+    <link rel="stylesheet" href="./common.css" />
+    <link rel="stylesheet" href="./bar.css" />
+  </head>
+  <body>
+    <nav class="bar">
+      <div class="section start">
+        <button class="logo state-layer" id="logo" title="Lanceur d'applications">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 5.1 10.1 4.1v6.8H3zM11 4l10-1.4v8.3H11zM3 11.9h7.1v6.9L3 17.8zM11 11.9h10v8.4L11 18.9z" />
+          </svg>
+        </button>
+        <div class="group workspaces" id="workspaces" hidden></div>
+        <div class="group tasks" id="tasks" hidden></div>
+        <div class="active-window" id="active-window" hidden>
+          <span class="icon active-icon">select_window</span>
+          <span class="active-title" id="active-title"></span>
+        </div>
+      </div>
+
+      <div class="section end">
+        <div class="group tray" id="tray" hidden></div>
+
+        <button class="group weather state-layer" id="weather" title="Météo" hidden>
+          <span class="icon" id="weather-icon">cloud</span>
+          <span class="weather-temp" id="weather-temp">--°</span>
+        </button>
+
+        <button class="group clock state-layer" id="clock" title="Tableau de bord">
+          <span class="icon">calendar_month</span>
+          <span class="clock-digits" id="clock-hours">00</span>
+          <span class="clock-digits" id="clock-minutes">00</span>
+          <span class="clock-digits clock-seconds" id="clock-seconds" hidden>00</span>
+        </button>
+
+        <div class="group status">
+          <button class="status-item keyboard state-layer" id="keyboard" title="Disposition du clavier">FR</button>
+          <button class="status-item state-layer" id="volume" title="Volume">
+            <span class="icon" id="volume-icon">volume_up</span>
+          </button>
+          <button class="status-item state-layer" id="network" title="Réseau">
+            <span class="icon" id="network-icon">lan</span>
+          </button>
+        </div>
+
+        <button class="power state-layer" id="power" title="Session">
+          <span class="icon">power_settings_new</span>
+        </button>
+      </div>
+    </nav>
+
+    <script type="module" src="./bar.js"></script>
+  </body>
+</html>

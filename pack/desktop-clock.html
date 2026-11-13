@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Caelestia desktop clock</title>
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      body {
+        pointer-events: none;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+        padding: 24px;
+      }
+
+      .clock {
+        display: flex;
+        align-items: stretch;
+        gap: 16px;
+        font-family: var(--font-clock);
+        filter: drop-shadow(0 4px 14px color-mix(in srgb, var(--m3-shadow) 70%, transparent));
+        opacity: 0;
+        transform: translateY(12px);
+        transition:
+          opacity var(--duration-effects-slow) var(--ease-effects),
+          transform var(--duration-spatial) var(--ease-spatial);
+      }
+
+      .clock.visible {
+        opacity: 1;
+        transform: none;
+      }
+
+      .time {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 104px;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .hours {
+        font-weight: 700;
+        color: var(--m3-primary);
+      }
+
+      .colon {
+        color: var(--m3-tertiary);
+        opacity: 0.8;
+        margin-top: -16px;
+      }
+
+      .minutes {
+        font-weight: 700;
+        color: var(--m3-secondary);
+      }
+
+      .divider {
+        width: 4px;
+        margin: 16px 0;
+        border-radius: 2px;
+        background: var(--m3-primary);
+        opacity: 0.8;
+      }
+
+      .date {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .month {
+        font-size: 21px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        color: var(--m3-secondary);
+      }
+
+      .day {
+        font-size: 40px;
+        font-weight: 500;
+        letter-spacing: 2px;
+        line-height: 1.05;
+        color: var(--m3-primary);
+      }
+
+      .weekday {
+        font-size: 18px;
+        letter-spacing: 2px;
+        color: var(--m3-secondary);
+      }
+
+      html[data-mode='light'] .hours,
+      html[data-mode='light'] .day {
+        color: var(--m3-primary-container);
+      }
+
+      html[data-mode='light'] .minutes,
+      html[data-mode='light'] .month,
+      html[data-mode='light'] .weekday {
+        color: var(--m3-secondary-container);
+      }
+
+      html[data-mode='light'] .colon {
+        color: var(--m3-tertiary-container);
+      }
+
+      html[data-mode='light'] .divider {
+        background: var(--m3-primary-container);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="clock" id="clock">
+      <div class="time">
+        <span class="hours" id="hours">00</span>
+        <span class="colon">:</span>
+        <span class="minutes" id="minutes">00</span>
+      </div>
+      <span class="divider"></span>
+      <div class="date">
+        <span class="month" id="month"></span>
+        <span class="day" id="day"></span>
+        <span class="weekday" id="weekday"></span>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initTheme, option, settings, zebar } from './common.js';
+
+      initTheme();
+      const clock = document.getElementById('clock');
+      const capitalize = value => value.charAt(0).toUpperCase() + value.slice(1);
+
+      const render = () => {
+        const now = new Date();
+        document.getElementById('hours').textContent = String(now.getHours()).padStart(2, '0');
+        document.getElementById('minutes').textContent = String(now.getMinutes()).padStart(2, '0');
+        document.getElementById('month').textContent = now.toLocaleDateString(settings.locale, { month: 'long' }).toUpperCase();
+        document.getElementById('day').textContent = String(now.getDate()).padStart(2, '0');
+        document.getElementById('weekday').textContent = capitalize(now.toLocaleDateString(settings.locale, { weekday: 'long' }));
+        setTimeout(render, 60000 - (now.getSeconds() * 1000 + now.getMilliseconds()) + 20);
+      };
+      render();
+
+      option('desktopClock', true, enabled => clock.classList.toggle('visible', enabled));
+      zebar.currentWidget().tauriWindow.setIgnoreCursorEvents(true)
+        .catch(error => console.error('[caelestia] Horloge non traversable', error));
+    </script>
+  </body>
+</html>

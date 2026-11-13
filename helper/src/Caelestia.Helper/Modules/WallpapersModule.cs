@@ -20,6 +20,7 @@ internal sealed class WallpapersModule : IHelperModule
 
     public static readonly IReadOnlyDictionary<string, string> SettingsPages = new Dictionary<string, string>(StringComparer.Ordinal)
     {
+        ["home"] = "ms-settings:",
         ["sound"] = "ms-settings:sound",
         ["network-status"] = "ms-settings:network-status",
         ["regionlanguage"] = "ms-settings:regionlanguage",

@@ -42,6 +42,15 @@ internal sealed class WindowModule : IHelperModule
 
             return null;
         });
+        context.Router.Register("capture.region", (_, _) =>
+        {
+            if (!ShellExecute.Open("ms-screenclip:"))
+            {
+                throw new HelperException(ErrorCode.Failed, "Windows could not open the snipping tool.");
+            }
+
+            return Task.FromResult<JsonNode?>(null);
+        });
         return Task.CompletedTask;
     }
 

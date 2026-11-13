@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Caelestia utilities</title>
+    <link rel="stylesheet" href="./common.css" />
+    <style>
+      body {
+        pointer-events: none;
+      }
+
+      body.open .drawer,
+      body.open .drawer * {
+        pointer-events: auto;
+      }
+
+      .drawer.from-bottom.corner {
+        justify-content: flex-end;
+        padding-right: var(--border);
+      }
+
+      .drawer.from-bottom.corner .drawer-panel {
+        border-radius: var(--rounding) 0 0 0;
+      }
+
+      .drawer.from-bottom.corner .drawer-panel::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 100%;
+        width: var(--border);
+        background: var(--surface-base);
+      }
+
+      html.transparent .drawer.from-bottom.corner .drawer-panel::after {
+        display: none;
+      }
+
+      .drawer.from-bottom.corner .flare.end {
+        left: auto;
+        right: 0;
+        bottom: 100%;
+        background: radial-gradient(circle at 0 0, transparent calc(var(--rounding) - 0.5px), var(--surface-base) var(--rounding));
+      }
+
+      .utilities {
+        width: 400px;
+        padding: 16px 16px calc(16px + var(--border));
+      }
+
+      .utilities-content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .card {
+        background: var(--surface-layer);
+        border-radius: 16px;
+        padding: 14px 16px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .card-title {
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .toggle-row {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .toggle {
+        width: 52px;
+        height: 52px;
+        border-radius: 26px;
+        display: grid;
+        place-items: center;
+        background: var(--m3-secondary-container);
+        color: var(--m3-on-secondary-container);
+        transition:
+          border-radius var(--duration-spatial-fast) var(--ease-spatial-fast),
+          background var(--duration-effects) var(--ease-effects),
+          color var(--duration-effects) var(--ease-effects);
+      }
+
+      .toggle .icon {
+        font-size: 22px;
+      }
+
+      .toggle.checked {
+        border-radius: 16px;
+        background: var(--m3-primary);
+        color: var(--m3-on-primary);
+      }
+
+      .toggle.checked .icon {
+        font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+
+      .toggle:active {
+        border-radius: 12px;
+      }
+
+      .toggle:disabled {
+        opacity: 0.38;
+        pointer-events: none;
+      }
+
+      .switch-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .switch-row > .icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 22px;
+        display: grid;
+        place-items: center;
+        background: var(--m3-tertiary-container);
+        color: var(--m3-on-tertiary-container);
+        font-size: 22px;
+      }
+
+      .switch-text {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+      }
+
+      .switch-text span:first-child {
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .switch-text span:last-child {
+        font-size: 12px;
+        color: var(--m3-on-surface-variant);
+      }
+
+      .switch {
+        position: relative;
+        width: 52px;
+        height: 32px;
+        border-radius: 16px;
+        background: var(--m3-surface-container-highest);
+        border: 2px solid var(--m3-outline);
+        transition: background var(--duration-effects) var(--ease-effects), border-color var(--duration-effects) var(--ease-effects);
+      }
+
+      .switch::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 6px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--m3-outline);
+        transform: translateY(-50%);
+        transition:
+          left var(--duration-spatial-fast) var(--ease-spatial-fast),
+          width var(--duration-spatial-fast) var(--ease-spatial-fast),
+          height var(--duration-spatial-fast) var(--ease-spatial-fast),
+          background var(--duration-effects) var(--ease-effects);
+      }
+
+      .switch.checked {
+        background: var(--m3-primary);
+        border-color: var(--m3-primary);
+      }
+
+      .switch.checked::after {
+        left: 22px;
+        width: 24px;
+        height: 24px;
+        background: var(--m3-on-primary);
+      }
+
+      .actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .action {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 12px 6px;
+        border-radius: 16px;
+        background: var(--m3-secondary-container);
+        color: var(--m3-on-secondary-container);
+        font-size: 12px;
+        font-weight: 500;
+        transition: border-radius var(--duration-spatial-fast) var(--ease-spatial-fast);
+      }
+
+      .action:active {
+        border-radius: 10px;
+      }
+
+      .action .icon {
+        font-size: 24px;
+      }
+
+      .action.danger {
+        background: var(--m3-error-container);
+        color: var(--m3-on-error-container);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="drawer from-bottom corner">
+      <div class="drawer-anchor">
+        <div class="flare start"></div>
+        <section class="drawer-panel utilities" id="panel">
+          <div class="drawer-content utilities-content">
+            <article class="card">
+              <span class="card-title">Raccourcis</span>
+              <div class="toggle-row" id="toggles"></div>
+            </article>
+            <article class="card">
+              <div class="switch-row">
+                <span class="icon">coffee</span>
+                <span class="switch-text"><span>Garder éveillé</span><span id="awake-text">Le PC peut se mettre en veille</span></span>
+                <button class="switch" id="awake" title="Empêcher la mise en veille"></button>
+              </div>
+            </article>
+            <article class="card">
+              <span class="card-title">Capture d'écran</span>
+              <div class="actions" id="captures"></div>
+            </article>
+          </div>
+        </section>
+        <div class="flare end"></div>
+      </div>
+    </div>
+
+    <script type="module" src="./utilities.js"></script>
+  </body>
+</html>
