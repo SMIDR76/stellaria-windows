@@ -465,9 +465,9 @@ async function open(request) {
   showView(request.kind, !wasOpen);
   if (wasOpen) return;
   state.open = true;
-  await widgetWindow.setIgnoreCursorEvents(false);
   document.body.classList.remove('closing');
   requestAnimationFrame(() => document.body.classList.add('open'));
+  await widgetWindow.setIgnoreCursorEvents(false);
   watchCursor();
 }
 

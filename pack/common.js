@@ -67,6 +67,10 @@ export const keys = {
   popupOpen: name => `caelestia:popup:${name}:open`,
   popupClosed: name => `caelestia:popup:${name}:closed`,
   popupDismiss: name => `caelestia:popup:${name}:dismiss`,
+  popupRequest: name => `caelestia:popup:${name}:request`,
+  popupAck: name => `caelestia:popup:${name}:ack`,
+  popupState: name => `caelestia:popup:${name}:state`,
+  popupSpawn: name => `caelestia:popup:${name}:spawn`,
 };
 
 export const variants = {
@@ -108,11 +112,15 @@ export const store = {
   set(key, value) {
     try {
       localStorage.setItem(key, JSON.stringify(value));
+      // L'événement storage ne prévient que les autres fenêtres : on prévient aussi celle-ci.
+      window.dispatchEvent(new CustomEvent('caelestia-store', { detail: key }));
     } catch (error) {
       console.error(`[caelestia] Impossible d'écrire ${key}`, error);
     }
   },
 
+  // Les changements arrivent par événement, immédiatement. La relecture périodique n'est qu'un filet de sécurité
+  // (l'intervalle demandé par l'appelant est gardé comme borne basse), pour ne plus réveiller chaque widget en boucle.
   watch(key, callback, interval = 600) {
     let last = localStorage.getItem(key);
     const check = () => {
@@ -124,7 +132,10 @@ export const store = {
     window.addEventListener('storage', event => {
       if (event.key === key) check();
     });
-    setInterval(check, interval);
+    window.addEventListener('caelestia-store', event => {
+      if (event.detail === key) check();
+    });
+    setInterval(check, Math.max(interval, 2000));
   },
 };
 
@@ -420,10 +431,10 @@ export async function edgeDrawer(name, { panel, side, autoCloseMs = 1600, onOpen
     }
     state.open = true;
     state.entered = false;
-    await widgetWindow.setIgnoreCursorEvents(false);
     onOpen?.(trigger);
     document.body.classList.remove('closing');
     requestAnimationFrame(() => document.body.classList.add('open'));
+    await widgetWindow.setIgnoreCursorEvents(false);
     watch();
   };
 
@@ -590,8 +601,23 @@ const popupPlacements = {
   settings: { anchor: 'center', offsetX: '19px', offsetY: '0px', width: '980px', height: '680px' },
 };
 
+// Le lanceur, le menu d'alimentation et les réglages restent chargés, masqués, sur l'écran principal : les ouvrir
+// revient à afficher une fenêtre existante, sans recréer de page. La fenêtre résidente accuse réception de la
+// demande ; sans réponse (autre écran, fenêtre absente), une instance est créée à la demande comme avant.
+// Rien ne dépend d'une minuterie : Chrome les ralentit fortement dans les fenêtres masquées.
+async function askResident(name, monitor) {
+  const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  store.set(keys.popupRequest(name), { id, monitor: monitor ?? 'primary', at: Date.now() });
+  for (let waited = 0; waited < 400; waited += 25) {
+    await new Promise(resolve => setTimeout(resolve, 25));
+    if (store.get(keys.popupAck(name)) === id) return true;
+  }
+  return false;
+}
+
 async function startPopup(name, monitor) {
-  store.set(keys.popupOpen(name), Date.now());
+  if (await askResident(name, monitor)) return;
+  store.set(keys.popupSpawn(name), { monitor: monitor ?? 'primary', at: Date.now() });
   if (!monitor) {
     await zebar.startWidgetPreset(name, 'default');
     return;
@@ -613,6 +639,9 @@ export async function openLauncher(query = '', monitor) {
 // Une nouvelle cible repart de la valeur affichée : pas de saut quand les mesures arrivent pendant l'animation.
 const easeOutCubic = progress => 1 - (1 - progress) ** 3;
 
+// Réglage Windows « Effets d'animation » désactivé : les valeurs sautent directement à leur cible.
+export const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
 export function smoothValue(apply, { duration = 900, initial = 0, animate = () => true } = {}) {
   let from = initial;
   let to = initial;
@@ -632,8 +661,14 @@ export function smoothValue(apply, { duration = 900, initial = 0, animate = () =
     get value() {
       return current;
     },
+    get duration() {
+      return duration;
+    },
+    set duration(value) {
+      duration = value;
+    },
     set(value) {
-      if (!Number.isFinite(value) || !animate()) {
+      if (!Number.isFinite(value) || !animate() || reducedMotion.matches) {
         cancelAnimationFrame(frame);
         frame = 0;
         from = to = current = value;
@@ -833,8 +868,7 @@ export async function startApp(id) {
 }
 
 export function isPopupOpen(name) {
-  const heartbeat = store.get(keys.popupOpen(name), 0);
-  return Date.now() - heartbeat < 1500;
+  return store.get(keys.popupState(name), false) === true;
 }
 
 export async function togglePopup(name, monitor) {
@@ -849,62 +883,137 @@ export async function togglePopup(name, monitor) {
 export function setupPopup(name, { panel, onOpen } = {}) {
   const widget = zebar.currentWidget();
   const window_ = widget.tauriWindow;
-  let closing = false;
+  const loadedAt = Date.now();
+  const spawn = store.get(keys.popupSpawn(name), null);
+  // Une instance créée à la demande se détruit en se fermant ; l'instance résidente se masque seulement.
+  const transient = Boolean(spawn && loadedAt - spawn.at < 8000);
+  if (transient) store.set(keys.popupSpawn(name), null);
+  let monitorName = null;
+  let primary = false;
+  let open = false;
+  let openedAt = 0;
+  let hideTimer = 0;
 
-  const heartbeat = () => store.set(keys.popupOpen(name), Date.now());
-  heartbeat();
-  const heartbeatTimer = setInterval(heartbeat, 500);
+  const located = Promise.all([currentMonitorName(), isPrimaryMonitor()]).then(([monitor, isPrimary]) => {
+    monitorName = monitor;
+    primary = isPrimary;
+  });
 
-  const close = async () => {
-    if (closing) return;
-    closing = true;
-    clearInterval(heartbeatTimer);
-    store.set(keys.popupOpen(name), 0);
+  const show = async () => {
+    clearTimeout(hideTimer);
+    openedAt = Date.now();
+    if (open) {
+      onOpen?.();
+      return;
+    }
+    open = true;
+    store.set(keys.popupState(name), true);
+    document.body.classList.remove('closing');
+    await window_.show().catch(() => {});
+    await window_.setFocus().catch(() => {});
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      document.body.classList.add('open');
+      onOpen?.();
+    }));
+  };
+
+  const close = () => {
+    if (!open) return;
+    open = false;
+    store.set(keys.popupState(name), false);
     store.set(keys.popupClosed(name), Date.now());
     document.body.classList.remove('open');
     document.body.classList.add('closing');
-    await new Promise(resolve => setTimeout(resolve, 380));
-    await widget.close();
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => {
+      if (open) return;
+      document.body.classList.remove('closing');
+      if (transient) widget.close();
+      else window_.hide().catch(() => {});
+    }, 380);
   };
 
-  const openedAt = Date.now();
+  store.watch(keys.popupRequest(name), async request => {
+    if (transient || !request || request.at <= loadedAt) return;
+    await located;
+    if (request.monitor !== monitorName && !(request.monitor === 'primary' && primary)) return;
+    store.set(keys.popupAck(name), request.id);
+    show();
+  }, 150);
+
   store.watch(keys.popupDismiss(name), value => {
     if (value > openedAt) close();
   }, 150);
 
   // Juste après l'ouverture, Windows peut encore donner le focus à la fenêtre d'où vient le raccourci : on le reprend
-  // au lieu de fermer aussitôt, ce qui créait et détruisait la fenêtre en moins de deux secondes.
+  // au lieu de fermer aussitôt.
   window_.onFocusChanged(({ payload: focused }) => {
-    if (focused) return;
+    if (focused || !open) return;
     if (Date.now() - openedAt < 1000) {
-      window_.setFocus?.().catch(() => {});
+      window_.setFocus().catch(() => {});
       return;
     }
     close();
   });
 
   window.addEventListener('keydown', event => {
-    if (event.key === 'Escape') {
+    if (event.key === 'Escape' && open) {
       event.preventDefault();
       close();
     }
   });
 
   document.addEventListener('mousedown', event => {
-    if (panel && !panel.contains(event.target)) close();
+    if (open && panel && !panel.contains(event.target)) close();
   });
 
-  document.fonts.ready.then(() => {
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      document.body.classList.add('open');
-      onOpen?.();
-    }));
-  });
+  if (transient) document.fonts.ready.then(show);
+  else {
+    store.set(keys.popupState(name), false);
+    window_.hide().catch(() => {});
+  }
 
-  window_.setFocus?.().catch(() => {});
-
-  return { close };
+  return { close, show };
 }
+
+// Onde au clic façon Material 3 : un cercle part du point de clic, couvre l'élément puis s'efface au relâchement.
+// Animée en transform et opacity uniquement, donc entièrement par le compositeur.
+const rippleTargets = '.state-layer, .tonal-button, .icon-button, .option, .action, .button, .toggle, .tab, .disk-button';
+
+document.addEventListener('pointerdown', event => {
+  if (event.button !== 0 || reducedMotion.matches) return;
+  const host = event.target.closest?.(rippleTargets);
+  if (!host || host.disabled) return;
+  if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+  let clip = host.querySelector(':scope > .ripple-clip');
+  if (!clip) {
+    clip = document.createElement('span');
+    clip.className = 'ripple-clip';
+    host.append(clip);
+  }
+  const rect = host.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  const radius = Math.hypot(Math.max(x, rect.width - x), Math.max(y, rect.height - y));
+  const ripple = document.createElement('span');
+  ripple.className = 'ripple';
+  Object.assign(ripple.style, { left: `${x - radius}px`, top: `${y - radius}px`, width: `${radius * 2}px`, height: `${radius * 2}px` });
+  clip.append(ripple);
+  const grow = ripple.animate(
+    [{ transform: 'scale(0.1)', opacity: 0.16 }, { transform: 'scale(1)', opacity: 0.12 }],
+    { duration: 450, easing: 'cubic-bezier(0.2, 0, 0, 1)', fill: 'forwards' },
+  );
+  const release = () => {
+    window.removeEventListener('pointerup', release);
+    window.removeEventListener('pointercancel', release);
+    grow.finished.catch(() => {}).finally(() => {
+      ripple.animate([{ opacity: 0.12 }, { opacity: 0 }], { duration: 300, easing: 'linear', fill: 'forwards' })
+        .finished.then(() => ripple.remove(), () => ripple.remove());
+    });
+  };
+  window.addEventListener('pointerup', release);
+  window.addEventListener('pointercancel', release);
+}, { passive: true });
 
 export function element(tag, attributes = {}, children = []) {
   const node = document.createElement(tag);

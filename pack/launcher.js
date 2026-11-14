@@ -37,7 +37,17 @@ const nodes = {
   loading: document.getElementById('loading'),
 };
 
-const popup = setupPopup('launcher', { panel: nodes.panel, onOpen: () => nodes.query.focus() });
+// Le lanceur reste chargé entre deux ouvertures : chaque ouverture repart d'une recherche vide, sauf si un raccourci
+// vient de demander un mode précis (fonds d'écran, presse-papiers, emojis).
+let lastQueryAt = 0;
+const popup = setupPopup('launcher', {
+  panel: nodes.panel,
+  onOpen: () => {
+    if (Date.now() - lastQueryAt > 1500) setQuery('');
+    nodes.query.focus();
+    loadApps();
+  },
+});
 
 const maxResults = 40;
 const launchCountsKey = 'caelestia:launch-counts';
@@ -743,6 +753,7 @@ store.watch('caelestia:wallpaper', path => {
 function consumeQuery(request) {
   if (!request || Date.now() - request.at > 5000) return;
   store.set(keys.launcherQuery, null);
+  lastQueryAt = Date.now();
   setQuery(request.query ?? '');
 }
 

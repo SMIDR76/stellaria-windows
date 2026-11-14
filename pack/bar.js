@@ -21,6 +21,7 @@ import {
   option,
   sendCommand,
   settings,
+  smoothValue,
   store,
   toast,
   toggleDashboard,
@@ -109,12 +110,16 @@ function applyAutoMode() {
   }
 }
 
-setInterval(() => {
+// Boutons allumés tant que leur panneau est ouvert, mis à jour par notification plutôt qu'en boucle.
+const syncActiveButtons = () => {
   for (const [name, button] of Object.entries(popupButtons)) {
     button.classList.toggle('active', isPopupOpen(name));
   }
   nodes.clock.classList.toggle('active', dashboardState(monitor).open);
-}, 250);
+};
+syncActiveButtons();
+for (const name of Object.keys(popupButtons)) store.watch(keys.popupState(name), syncActiveButtons, 2000);
+store.watch(keys.dashboard(monitor), syncActiveButtons, 2000);
 
 const clockState = { seconds: false, timer: 0 };
 
@@ -202,6 +207,11 @@ function networkIcon(network) {
 
 const trayNodes = new Map();
 
+// Une application peut retirer son icône entre le survol et l'appel : Zebar rejette alors l'appel, sans conséquence.
+function trayCall(method, id) {
+  Promise.resolve(providers.outputMap.systray?.[method](id)).catch(() => {});
+}
+
 function renderTray(systray) {
   const icons = systray?.icons ?? [];
   nodes.tray.hidden = icons.length === 0;
@@ -214,16 +224,16 @@ function renderTray(systray) {
       const image = element('img', { alt: '' });
       const button = element('button', {
         class: 'tray-item state-layer',
-        onClick: () => providers.outputMap.systray?.onLeftClick(trayIcon.id),
+        onClick: () => trayCall('onLeftClick', trayIcon.id),
         onContextmenu: event => {
           event.preventDefault();
-          providers.outputMap.systray?.onRightClick(trayIcon.id);
+          trayCall('onRightClick', trayIcon.id);
         },
         onAuxclick: event => {
-          if (event.button === 1) providers.outputMap.systray?.onMiddleClick(trayIcon.id);
+          if (event.button === 1) trayCall('onMiddleClick', trayIcon.id);
         },
-        onMouseenter: () => providers.outputMap.systray?.onHoverEnter(trayIcon.id),
-        onMouseleave: () => providers.outputMap.systray?.onHoverLeave(trayIcon.id),
+        onMouseenter: () => trayCall('onHoverEnter', trayIcon.id),
+        onMouseleave: () => trayCall('onHoverLeave', trayIcon.id),
       }, image);
       entry = { button, image, hash: null };
       trayNodes.set(trayIcon.id, entry);
@@ -310,14 +320,54 @@ for (const [node, kind] of popoutTargets) {
 nodes.keyboard.addEventListener('click', () => openSettings('regionlanguage'));
 
 // Bureaux virtuels de Windows, affichés à la place des espaces de travail d'un gestionnaire de fenêtres.
+const desktopIndicator = element('span', { class: 'workspace-indicator' });
+const indicatorEdges = { start: 0, end: 0 };
+const paintIndicator = () => {
+  desktopIndicator.style.top = `${indicatorEdges.start}px`;
+  desktopIndicator.style.height = `${Math.max(0, indicatorEdges.end - indicatorEdges.start)}px`;
+};
+const indicatorStart = smoothValue(value => { indicatorEdges.start = value; paintIndicator(); }, { duration: 200 });
+const indicatorEnd = smoothValue(value => { indicatorEdges.end = value; paintIndicator(); }, { duration: 200 });
+let indicatorPlaced = false;
+
+function placeIndicator(target) {
+  const top = target.offsetTop - 4;
+  const bottom = target.offsetTop + target.offsetHeight + 4;
+  if (!indicatorPlaced) {
+    indicatorPlaced = true;
+    indicatorStart.set(NaN);
+    indicatorEnd.set(NaN);
+    indicatorEdges.start = top;
+    indicatorEdges.end = bottom;
+    paintIndicator();
+    indicatorStart.set(top);
+    indicatorEnd.set(bottom);
+    return;
+  }
+  // Vers le haut, le bord haut mène ; vers le bas, c'est le bord bas.
+  const goingUp = top < indicatorEdges.start;
+  indicatorStart.duration = goingUp ? 200 : 450;
+  indicatorEnd.duration = goingUp ? 450 : 200;
+  indicatorStart.set(top);
+  indicatorEnd.set(bottom);
+}
+
 function renderDesktops(desktops) {
   const items = desktops?.items ?? [];
   nodes.workspaces.hidden = items.length === 0;
-  nodes.workspaces.replaceChildren(...items.map((desktop, index) => element('button', {
-    class: ['workspace', index === desktops.current ? 'focused' : ''].join(' ').trim(),
-    title: desktop.name ?? `Bureau ${index + 1}`,
-    onClick: () => switchDesktop(index),
-  }, element('span', { class: 'workspace-dot' }))));
+  const buttons = [...nodes.workspaces.querySelectorAll('.workspace')];
+  if (buttons.length !== items.length) {
+    nodes.workspaces.replaceChildren(desktopIndicator, ...items.map((_, index) => element('button', {
+      class: 'workspace state-layer',
+      onClick: () => switchDesktop(index),
+    }, element('span', { class: 'workspace-dot' }))));
+  }
+  const current = [...nodes.workspaces.querySelectorAll('.workspace')];
+  current.forEach((button, index) => {
+    button.classList.toggle('focused', index === desktops.current);
+    button.title = items[index].name ?? `Bureau ${index + 1}`;
+  });
+  if (current[desktops.current]) requestAnimationFrame(() => placeIndicator(current[desktops.current]));
 }
 
 function switchDesktop(index) {
