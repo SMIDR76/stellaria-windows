@@ -218,6 +218,45 @@
         background: var(--m3-error-container);
         color: var(--m3-on-error-container);
       }
+      .pomodoro-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+      }
+
+      .pomodoro-time {
+        font-size: 26px;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        color: var(--m3-primary);
+      }
+
+      .pomodoro-track {
+        height: 6px;
+        margin: 8px 0 10px;
+        border-radius: var(--rounding-full);
+        background: var(--m3-secondary-container);
+        overflow: hidden;
+      }
+
+      .pomodoro-fill {
+        display: block;
+        height: 100%;
+        width: 100%;
+        border-radius: inherit;
+        background: var(--m3-primary);
+        transform-origin: left center;
+        transform: scaleX(0);
+      }
+
+      .pomodoro-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      .pomodoro-actions .action {
+        flex: 1;
+      }
     </style>
   </head>
   <body>
@@ -236,6 +275,14 @@
                 <span class="switch-text"><span>Garder éveillé</span><span id="awake-text">Le PC peut se mettre en veille</span></span>
                 <button class="switch" id="awake" title="Empêcher la mise en veille"></button>
               </div>
+            </article>
+            <article class="card pomodoro">
+              <div class="pomodoro-head">
+                <span class="card-title" id="pomodoro-phase">Minuteur</span>
+                <span class="pomodoro-time" id="pomodoro-time">25:00</span>
+              </div>
+              <div class="pomodoro-track"><span class="pomodoro-fill" id="pomodoro-fill"></span></div>
+              <div class="pomodoro-actions" id="pomodoro-actions"></div>
             </article>
             <article class="card">
               <span class="card-title">Capture d'écran</span>

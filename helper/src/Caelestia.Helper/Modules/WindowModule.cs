@@ -42,6 +42,11 @@ internal sealed class WindowModule : IHelperModule
 
             return null;
         });
+        context.Router.Register("shell.taskView", async (_, _) =>
+        {
+            await context.Loop.InvokeAsync(() => KeyboardInput.Press(KeyboardInput.TaskView)).ConfigureAwait(false);
+            return null;
+        });
         context.Router.Register("capture.region", (_, _) =>
         {
             if (!ShellExecute.Open("ms-screenclip:"))

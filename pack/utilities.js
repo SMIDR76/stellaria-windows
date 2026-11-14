@@ -1,6 +1,7 @@
 import {
   edgeDrawer,
   helperClient,
+  isPrimaryMonitor,
   openFolder,
   element,
   getOption,
@@ -117,6 +118,76 @@ document.getElementById('captures').append(
   }, 'danger'),
   capture('photo_library', 'Mes captures', () => openFolder('screenshots')),
 );
+
+// Minuteur Pomodoro : 25 minutes de concentration, 5 de pause. L'état vit dans le stockage partagé, donc le minuteur
+// continue quand le panneau est fermé, et la fin est annoncée par une notification du thème.
+const pomodoroKey = 'caelestia:pomodoro';
+const phases = { focus: { label: 'Concentration', minutes: 25 }, break: { label: 'Pause', minutes: 5 } };
+const pomodoroNodes = {
+  phase: document.getElementById('pomodoro-phase'),
+  time: document.getElementById('pomodoro-time'),
+  fill: document.getElementById('pomodoro-fill'),
+  actions: document.getElementById('pomodoro-actions'),
+};
+let pomodoroTimer = 0;
+let pomodoroEnd = 0;
+
+const pomodoroState = () => store.get(pomodoroKey, { phase: 'focus', endsAt: 0, remaining: phases.focus.minutes * 60000 });
+const remainingOf = value => (value.endsAt ? Math.max(0, value.endsAt - Date.now()) : value.remaining);
+const formatClock = milliseconds => {
+  const seconds = Math.ceil(milliseconds / 1000);
+  return `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+};
+
+function renderPomodoro() {
+  const value = pomodoroState();
+  const phase = phases[value.phase] ?? phases.focus;
+  const total = phase.minutes * 60000;
+  const remaining = remainingOf(value);
+  pomodoroNodes.phase.textContent = value.endsAt || remaining < total ? phase.label : 'Minuteur';
+  pomodoroNodes.time.textContent = formatClock(remaining);
+  pomodoroNodes.fill.style.transform = `scaleX(${1 - remaining / total})`;
+  pomodoroNodes.actions.replaceChildren(
+    capture(value.endsAt ? 'pause' : 'play_arrow', value.endsAt ? 'Pause' : 'Démarrer', () => {
+      const current = pomodoroState();
+      store.set(pomodoroKey, current.endsAt
+        ? { ...current, endsAt: 0, remaining: remainingOf(current) }
+        : { ...current, endsAt: Date.now() + current.remaining });
+      syncPomodoro();
+    }),
+    capture('restart_alt', 'Réinitialiser', () => {
+      store.set(pomodoroKey, { phase: 'focus', endsAt: 0, remaining: phases.focus.minutes * 60000 });
+      syncPomodoro();
+    }),
+  );
+}
+
+function syncPomodoro() {
+  const value = pomodoroState();
+  clearInterval(pomodoroTimer);
+  clearTimeout(pomodoroEnd);
+  renderPomodoro();
+  if (!value.endsAt) return;
+  pomodoroTimer = setInterval(renderPomodoro, 1000);
+  pomodoroEnd = setTimeout(() => {
+    const current = pomodoroState();
+    if (!current.endsAt || current.endsAt > Date.now() + 500) return syncPomodoro();
+    const next = current.phase === 'focus' ? 'break' : 'focus';
+    store.set(pomodoroKey, { phase: next, endsAt: Date.now() + phases[next].minutes * 60000, remaining: phases[next].minutes * 60000 });
+    if (monitorIsPrimary) {
+      toast(next === 'break' ? 'Pause !' : 'On reprend', {
+        message: next === 'break' ? `${phases.break.minutes} minutes pour souffler` : `${phases.focus.minutes} minutes de concentration`,
+        icon: 'timer',
+        duration: 6000,
+      });
+    }
+    syncPomodoro();
+  }, Math.max(0, value.endsAt - Date.now()) + 50);
+}
+
+const monitorIsPrimary = await isPrimaryMonitor();
+store.watch(pomodoroKey, syncPomodoro, 2000);
+syncPomodoro();
 
 const drawer = await edgeDrawer('utilities', {
   panel: document.getElementById('panel'),

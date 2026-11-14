@@ -20,6 +20,7 @@
         dashboardState,
         drawerKey,
         getOption,
+        helperClient,
         hideOnFullscreen,
         initTheme,
         keys,
@@ -50,8 +51,22 @@
       const isBottomEdge = () => window.innerWidth > window.innerHeight * 20 && !isTopEdge();
       const recent = name => Date.now() - (store.get(drawerKey(name, monitor))?.at ?? 0) < 250;
 
+      // Coin actif (comme Noctalia) : le coin haut droit ouvre la vue des tâches de Windows (bureaux et fenêtres).
+      let cornerAt = 0;
+      const inTopRightCorner = event =>
+        (isTopEdge() && event.clientX >= window.innerWidth - 14) || (isRightEdge() && event.clientY <= 14);
+      const triggerCorner = () => {
+        if (!getOption('hotCorner', true) || Date.now() - cornerAt < 1200) return;
+        cornerAt = Date.now();
+        helperClient.request('shell.taskView').catch(error => console.error('[caelestia] Coin actif', error));
+      };
+
       document.addEventListener('mousemove', event => {
         if (suppressed) return;
+        if (inTopRightCorner(event)) {
+          triggerCorner();
+          return;
+        }
         if (isTopEdge() && inDashboardZone(event.clientX) && getOption('hoverDashboard', true)) {
           const state = dashboardState(monitor);
           if (!state.open && Date.now() - state.at > 250) requestDashboard(monitor, true, 'hover');

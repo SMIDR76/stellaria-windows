@@ -323,6 +323,17 @@ body.closing .drawer-content {
   width: 48px;
 }
 
+/* Tiroir de coin (utilitaires) : l'arrondi du haut est accroché au bord droit et le longe pendant le glissement ; son
+   prolongement part donc vers la droite, sous la bordure, et non vers le bas où il mordrait sur le contenu. */
+.drawer.from-bottom.corner .flare.end::before {
+  top: 0;
+  bottom: 0;
+  left: 100%;
+  right: auto;
+  height: auto;
+  width: 48px;
+}
+
 .drawer-anchor {
   position: relative;
   display: flex;

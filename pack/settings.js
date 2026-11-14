@@ -206,6 +206,7 @@ function desktopPage() {
 
   return [
     section('Bureau', [
+      optionRow('hotCorner', true, 'select_window', 'Coin actif', 'Le coin haut droit ouvre la vue des tâches'),
       optionRow('island', true, 'smart_display', 'Île dynamique', 'Morceau en cours et notifications en haut de l\'écran'),
       optionRow('tintIcons', true, 'palette', 'Icônes aux couleurs du thème', "Teinte les icônes d'applications avec la couleur principale"),
       optionRow('desktopClock', true, 'schedule', 'Horloge de bureau', "Grande horloge en bas à droite du fond d'écran"),

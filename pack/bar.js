@@ -486,6 +486,7 @@ async function runHotkey(name, target) {
     launcher: () => openLauncher('', target),
     clipboard: () => openLauncher('>clip ', target),
     emoji: () => openLauncher('>emoji ', target),
+    shortcuts: () => openLauncher('>raccourcis ', target),
     dashboard: () => toggleDashboard(target),
     session: () => togglePopup('session', target),
     utilities: () => toggleDrawer('utilities', target),

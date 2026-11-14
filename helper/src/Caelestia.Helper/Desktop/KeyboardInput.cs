@@ -13,6 +13,8 @@ internal static class KeyboardInput
 
     public static readonly byte[] Paste = [Control, V];
     public static readonly byte[] RecordClip = [LeftWindows, Alt, R];
+    public static readonly byte[] TaskView = [LeftWindows, Tab];
+    public const byte Tab = 0x09;
 
     public static async Task<bool> SendToWindowAsync(MessageLoop loop, nint window, byte[] chord)
     {

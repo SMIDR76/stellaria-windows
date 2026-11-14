@@ -24,6 +24,7 @@ internal sealed class HotkeysModule : IHelperModule
         new(6, "clipboard", Win | Alt, 0x56, "Win+Alt+V", "Zebar - caelestia / launcher"),
         new(7, "emoji", Win | Alt, 0xBE, "Win+Alt+.", "Zebar - caelestia / launcher"),
         new(8, "settings", Win | Alt, 0x53, "Win+Alt+S", "Zebar - caelestia / settings"),
+        new(9, "shortcuts", Win | Alt, 0x4B, "Win+Alt+K", "Zebar - caelestia / launcher"),
     ];
 
     private readonly HashSet<int> _registered = [];

@@ -3,6 +3,7 @@ import {
   element,
   getOption,
   helper,
+  helperClient,
   icon,
   initTheme,
   loadSchemes,
@@ -179,6 +180,7 @@ async function runPower(action) {
 function actionEntries() {
   const dark = store.get(keys.mode, 'dark') !== 'light';
   return [
+    { icon: 'keyboard', title: 'Raccourcis', subtitle: 'Antisèche de tous les raccourcis', keepOpen: true, run: () => setQuery('>raccourcis ') },
     { icon: 'wallpaper', title: "Fond d'écran", subtitle: 'Choisir parmi tes fonds d\'écran', keepOpen: true, run: () => setQuery('>fond ') },
     { icon: 'shuffle', title: "Fond d'écran au hasard", subtitle: 'Choisir un fond au hasard dans ton dossier', run: () => randomWallpaper() },
     { icon: 'content_paste', title: 'Presse-papiers', subtitle: 'Historique des éléments copiés (Win+Alt+V)', keepOpen: true, run: () => setQuery('>clip ') },
@@ -426,6 +428,63 @@ async function randomWallpaper() {
   await popup.close();
 }
 
+// Antisèche des raccourcis du thème et de Windows (comme celle d'end-4), filtrable par mot.
+const shortcutList = [
+  ['Win', 'Ouvrir le lanceur'],
+  ['Alt + Espace', 'Ouvrir le lanceur'],
+  ['Win + Alt + A', 'Tableau de bord'],
+  ['Win + Alt + U', 'Utilitaires (Wi-Fi, Bluetooth, mode jeu, captures)'],
+  ['Win + Alt + P', "Menu d'alimentation"],
+  ['Win + Alt + V', 'Historique du presse-papiers'],
+  ['Win + Alt + .', 'Emojis'],
+  ['Win + Alt + S', 'Réglages du thème'],
+  ['Win + Alt + K', 'Cette antisèche'],
+  ['Alt + E', "Fonds d'écran"],
+  ['Alt + Tab', 'Sélecteur de fenêtres (Suppr ferme la fenêtre choisie)'],
+  ['Survol du haut', 'Tableau de bord'],
+  ['Survol du bord droit', 'Volume, micro et luminosité'],
+  ['Coin bas droit', 'Utilitaires'],
+  ['Coin haut droit', 'Vue des tâches et bureaux virtuels'],
+  ['Clic molette sur une fenêtre', 'Fermer la fenêtre depuis la barre'],
+  ['Molette sur les bureaux', 'Changer de bureau virtuel'],
+  ['Win + Ctrl + D', 'Nouveau bureau virtuel'],
+  ['Win + Ctrl + ← →', 'Bureau virtuel précédent ou suivant'],
+  ['Win + ← → ↑ ↓', 'Ancrer, agrandir ou réduire la fenêtre'],
+  ['Win + Z', "Dispositions d'ancrage"],
+  ['Win + Maj + S', "Capture d'une zone"],
+  ['Win + Alt + R', "Enregistrer l'écran (Xbox Game Bar)"],
+  ['> dans le lanceur', 'Actions, fonds, variantes, schémas, presse-papiers'],
+  [': dans le lanceur', 'Rechercher un emoji'],
+];
+
+function shortcutEntries(text) {
+  const needle = normalize(text);
+  return shortcutList
+    .filter(([keys, label]) => !needle || normalize(`${keys} ${label}`).includes(needle))
+    .map(([keys, label]) => ({ icon: 'keyboard', title: keys, subtitle: label, keepOpen: true, run: () => {} }));
+}
+
+// Fenêtres ouvertes correspondant à la recherche, en tête des résultats.
+function windowEntries(query) {
+  if (!query) return [];
+  const icons = helperClient.state('icons') ?? {};
+  return (helperClient.state('tasks')?.items ?? [])
+    .map(task => ({ task, score: Math.max(fuzzyScore(task.title, query), fuzzyScore(task.process, query)) }))
+    .filter(entry => entry.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 4)
+    .map(({ task }) => ({
+      image: icons[task.exe] ? `data:image/png;base64,${icons[task.exe]}` : null,
+      icon: 'select_window',
+      title: task.title,
+      subtitle: `Fenêtre ouverte · ${task.process}`,
+      run: async () => {
+        await helperClient.request('tasks.activate', { id: task.id }).catch(() => {});
+        await popup.close();
+      },
+    }));
+}
+
 function appEntries(query) {
   const counts = store.get(launchCountsKey, {});
   const favourites = new Set(getOption('favouriteApps', []));
@@ -486,6 +545,9 @@ function parseQuery(raw) {
   }
   if (/^(clip|presse|copie)/.test(keyword) && (rest.includes(' ') || keyword.length >= 4)) {
     return { mode: 'clipboard', text: others.join(' ') };
+  }
+  if (/^(raccourci|shortcut|touche|keys)/.test(keyword) && (rest.includes(' ') || keyword.length >= 4)) {
+    return { mode: 'shortcuts', text: others.join(' ') };
   }
   if (/^(variant|variante)/.test(keyword) && (rest.includes(' ') || keyword.length >= 7)) {
     return { mode: 'variants', text: others.join(' ') };
@@ -601,6 +663,7 @@ function render() {
     wallpapers: 'wallpaper',
     variants: 'tune',
     schemes: 'palette',
+    shortcuts: 'keyboard',
     emoji: 'mood',
     clipboard: 'content_paste',
   }[parsed.mode];
@@ -625,6 +688,8 @@ function render() {
     entries = variantEntries().filter(entry => fuzzyScore(entry.title, parsed.text) > 0);
   } else if (parsed.mode === 'schemes') {
     entries = schemeEntries().filter(entry => fuzzyScore(entry.title, parsed.text) > 0);
+  } else if (parsed.mode === 'shortcuts') {
+    entries = shortcutEntries(parsed.text);
   } else if (parsed.mode === 'emoji') {
     entries = emojiEntries(parsed.text);
   } else if (parsed.mode === 'clipboard') {
@@ -634,7 +699,7 @@ function render() {
     }
     entries = clipboardEntries(parsed.text);
   } else {
-    entries = appEntries(parsed.text);
+    entries = [...windowEntries(parsed.text), ...appEntries(parsed.text)];
     const result = /[\d)]\s*[-+*/%^×÷]|^\s*[-(]?\d/.test(parsed.text) && /[-+*/%^×÷]/.test(parsed.text) ? evaluate(parsed.text) : null;
     if (result !== null) {
       const formatted = formatNumber(result);
