@@ -10,6 +10,46 @@
         pointer-events: none;
       }
 
+      /* Le cadre recouvre les 2 premiers pixels de la zone des fenêtres : certaines applications (Chrome…) dessinent un
+         liseré sur leurs bords quand elles sont agrandies, qui tranchait avec la couleur du cadre. */
+      .seam {
+        position: fixed;
+        background: var(--surface-base);
+        transition: background var(--duration) var(--ease-standard);
+      }
+
+      .seam.top {
+        top: var(--border);
+        left: calc(var(--bar) + var(--rounding));
+        right: calc(var(--border) + var(--rounding));
+        height: var(--seam);
+      }
+
+      .seam.bottom {
+        bottom: var(--border);
+        left: calc(var(--bar) + var(--rounding));
+        right: calc(var(--border) + var(--rounding));
+        height: var(--seam);
+      }
+
+      .seam.left {
+        top: calc(var(--border) + var(--rounding));
+        bottom: calc(var(--border) + var(--rounding));
+        left: var(--bar);
+        width: var(--seam);
+      }
+
+      .seam.right {
+        top: calc(var(--border) + var(--rounding));
+        bottom: calc(var(--border) + var(--rounding));
+        right: var(--border);
+        width: var(--seam);
+      }
+
+      :root {
+        --seam: 2px;
+      }
+
       .corner {
         position: fixed;
         width: var(--rounding);
@@ -43,6 +83,10 @@
     </style>
   </head>
   <body>
+    <div class="seam top"></div>
+    <div class="seam bottom"></div>
+    <div class="seam left"></div>
+    <div class="seam right"></div>
     <div class="corner top-left"></div>
     <div class="corner top-right"></div>
     <div class="corner bottom-left"></div>

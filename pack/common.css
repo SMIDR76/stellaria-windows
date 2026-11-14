@@ -230,8 +230,10 @@ html.tint-icons .app-volume img.app-icon {
   display: flex;
   opacity: 0;
   will-change: transform, opacity;
+  /* Un tiroir est accroché au bord de l'écran : une courbe qui dépasse sa cible l'en détacherait un instant (les
+     arrondis qui le relient au cadre se décollent puis reviennent). On décélère donc sans dépasser. */
   transition:
-    transform var(--duration-spatial) var(--ease-spatial),
+    transform var(--duration-emphasized) var(--ease-emphasized-full),
     opacity var(--duration-effects) var(--ease-effects);
 }
 

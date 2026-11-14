@@ -9,14 +9,14 @@ body.open .drawer * {
 
 .drawer.from-left {
   transition:
-    transform var(--duration-spatial) var(--ease-spatial),
+    transform var(--duration-emphasized) var(--ease-emphasized-full),
     opacity var(--duration-effects) var(--ease-effects),
     top var(--duration-spatial) var(--ease-spatial);
 }
 
 .drawer.no-move {
   transition:
-    transform var(--duration-spatial) var(--ease-spatial),
+    transform var(--duration-emphasized) var(--ease-emphasized-full),
     opacity var(--duration-effects) var(--ease-effects);
 }
 
