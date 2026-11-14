@@ -87,6 +87,32 @@ function section(label, children) {
   return element('div', { class: 'section' }, [element('span', { class: 'section-title', text: label }), ...children]);
 }
 
+// En-tête de page commun (style de la page À propos) : carte en dégradé aux couleurs du thème, forme animée,
+// titre, phrase d'accroche, pastilles d'état et actions.
+function pageHero({ symbol, shape = 'cookie9', heading, text, chips = [], actions = [], art = null, backdrop = null }) {
+  return element('div', { class: 'page-hero' }, [
+    backdrop,
+    element('div', { class: 'page-hero-ornament' }, shapeSvg(shape === 'flower' ? 'softBurst' : 'flower')),
+    art ?? element('div', { class: 'page-hero-mark' }, [shapeSvg(shape), icon(symbol)]),
+    element('div', { class: 'page-hero-text' }, [
+      element('h2', { text: heading }),
+      element('p', { text }),
+      chips.length ? element('div', { class: 'about-chips' }, chips) : null,
+      actions.length ? element('div', { class: 'page-hero-actions' }, actions) : null,
+    ]),
+  ]);
+}
+
+// Chaque touche dans sa propre pastille, comme sur un clavier (« 2+2 » reste un calcul).
+function keysOf(text) {
+  const parts = /^[0-9]/.test(text) ? [text] : text.split('+').map(part => part.trim()).filter(Boolean);
+  return element('span', { class: 'keys' }, parts.flatMap((key, index) => [index ? element('span', { class: 'plus', text: '+' }) : null, element('kbd', { text: key })]));
+}
+
+function heroChip(text, symbol = null, className = '') {
+  return element('span', { class: `about-chip${className ? ` ${className}` : ''}` }, [symbol ? icon(symbol) : null, element('span', { text })]);
+}
+
 function optionRow(name, fallback, symbol, label, description) {
   return row({
     symbol,
@@ -166,7 +192,23 @@ function appearancePage() {
   };
   renderSchemes();
 
+  const selection = store.get(keys.scheme, null);
+  const schemeLabel = selection
+    ? `${schemeNames[selection.name] ?? capitalize(selection.name)}${selection.flavour === 'default' || selection.flavour === 'medium' ? '' : ` ${capitalize(selection.flavour)}`}`
+    : `Dynamique · ${variants[store.get(keys.variant, 'tonalspot')]?.label ?? ''}`;
+  const modeLabel = { dark: 'Sombre', light: 'Clair', auto: 'Auto' }[mode];
   return [
+    pageHero({
+      symbol: 'palette',
+      shape: 'flower',
+      heading: 'Couleurs et mode',
+      text: "Une palette Material You complète, tirée de votre fond d'écran ou d'un schéma fixe, appliquée à tout le thème.",
+      chips: [
+        element('span', { class: 'about-chip hero-swatches' }, [element('i', { class: 'primary' }), element('i', { class: 'secondary' }), element('i', { class: 'tertiary' })]),
+        heroChip(modeLabel, mode === 'light' ? 'light_mode' : mode === 'auto' ? 'brightness_auto' : 'dark_mode'),
+        heroChip(schemeLabel, 'colors'),
+      ],
+    }),
     section('Mode', [row({ symbol: 'contrast', label: 'Clair ou sombre', description: 'Auto suit le lever et le coucher du soleil', control: segmented })]),
     section('Schéma de couleurs', [grid]),
     section('Variante du schéma dynamique', [
@@ -192,7 +234,19 @@ function wallpaperPage() {
     },
   }, [icon('save'), element('span', { text: 'Enregistrer' })]);
 
+  const sample = store.get(keys.wallpaperSample, null);
+  const image = sample ? `url(data:image/png;base64,${sample})` : null;
+  const folder = getOption('wallpaperDirectory', settings.wallpaperDirectory);
   return [
+    pageHero({
+      symbol: 'wallpaper',
+      heading: 'Votre fond, vos couleurs',
+      text: "Chaque fond d'écran redonne au thème une palette assortie. Wallpaper Engine est pris en compte. Raccourci : Alt+E.",
+      art: image ? element('div', { class: 'page-hero-thumb', style: { backgroundImage: image } }) : null,
+      backdrop: image ? element('div', { class: 'page-hero-backdrop', style: { backgroundImage: image } }) : null,
+      chips: [heroChip(folder.split('\\').filter(Boolean).pop() ?? folder, 'folder')],
+      actions: [element('button', { class: 'button filled', onClick: async () => { await popup.close(); openLauncher('>fond '); } }, [icon('photo_library'), element('span', { text: 'Choisir un fond' })])],
+    }),
     section("Dossier des fonds d'écran", [
       element('div', { class: 'row' }, [field, save]),
       row({
@@ -200,14 +254,6 @@ function wallpaperPage() {
         label: 'Ouvrir le dossier',
         description: "Ajoute ou retire des images, le sélecteur se met à jour tout seul",
         control: element('button', { class: 'button', onClick: () => openFolder('wallpapers') }, [icon('open_in_new'), element('span', { text: 'Ouvrir' })]),
-      }),
-    ]),
-    section('Changer de fond', [
-      row({
-        symbol: 'wallpaper',
-        label: 'Sélecteur de fonds',
-        description: 'Aussi avec Alt+E',
-        control: element('button', { class: 'button', onClick: async () => { await popup.close(); openLauncher('>fond '); } }, [icon('photo_library'), element('span', { text: 'Choisir' })]),
       }),
     ]),
   ];
@@ -220,7 +266,15 @@ function desktopPage() {
   slider.addEventListener('input', () => { label.textContent = `${slider.value} min`; });
   slider.addEventListener('change', () => setOption('idleMinutes', Number(slider.value)));
 
+  const state = (name, fallback, label) => heroChip(label, getOption(name, fallback) ? 'check_circle' : 'do_not_disturb_on', getOption(name, fallback) ? '' : 'off');
   return [
+    pageHero({
+      symbol: 'desktop_windows',
+      shape: 'gem',
+      heading: 'Votre bureau',
+      text: "Ce que le thème ajoute autour de vos fenêtres : île dynamique, horloge, coin actif et écran d'inactivité.",
+      chips: [state('island', true, 'Île dynamique'), state('desktopClock', true, 'Horloge'), state('idleScreen', true, 'Inactivité'), state('gameMode', false, 'Mode jeu')],
+    }),
     section('Bureau', [
       optionRow('hotCorner', true, 'select_window', 'Coin actif', 'Le coin haut droit ouvre la vue des tâches'),
       optionRow('island', true, 'smart_display', 'Île dynamique', 'Morceau en cours et notifications en haut de l\'écran'),
@@ -241,6 +295,13 @@ function desktopPage() {
 
 function panelsPage() {
   return [
+    pageHero({
+      symbol: 'dock_to_left',
+      shape: 'softBurst',
+      heading: 'Tiroirs et panneaux',
+      text: "Les tiroirs sortent des bords de l'écran au survol ou au clavier. Choisissez ce qui s'ouvre tout seul.",
+      chips: [heroChip('Haut : tableau de bord', 'north'), heroChip('Droite : volume', 'east'), heroChip('Coin bas droit : utilitaires', 'south_east')],
+    }),
     section('Ouverture au survol', [
       optionRow('hoverDashboard', true, 'dashboard', 'Tableau de bord', "Survol du centre du bord haut"),
       optionRow('hoverOsd', true, 'volume_up', 'Volume et micro', 'Survol du milieu du bord droit'),
@@ -306,8 +367,18 @@ function shortcutsPage() {
     [':', 'Emojis'],
     ['2+2', 'Calculatrice'],
   ];
-  const grid = list => element('div', { class: 'shortcuts' }, list.flatMap(([keysText, label]) => [element('kbd', { text: keysText }), element('span', { text: label })]));
+  const grid = list => element('div', { class: 'shortcuts' }, list.map(([keysText, label]) => element('div', { class: 'shortcut' }, [
+    keysOf(keysText),
+    element('span', { class: 'shortcut-label', text: label }),
+  ])));
   return [
+    pageHero({
+      symbol: 'keyboard',
+      shape: 'cookie4',
+      heading: 'Tout au clavier',
+      text: 'Chaque panneau a son raccourci. Un appui sur Win ouvre le lanceur, Win+Alt+K affiche cette aide partout.',
+      chips: [heroChip('Win : lanceur', 'keyboard_command_key'), heroChip('Win+Alt+K : aide', 'help')],
+    }),
     section('Raccourcis globaux', [grid(shortcuts)]),
     section('Dans le lanceur', [grid(prefixes)]),
   ];
@@ -326,20 +397,18 @@ function welcomePage() {
     ['Win + Alt + K', 'Tous les raccourcis'],
   ];
   return [
-    element('div', { class: 'welcome-hero' }, [
-      element('div', { class: 'about-logo' }, [shapeSvg('cookie9'), icon('auto_awesome')]),
-      element('div', {}, [
-        element('h2', { text: 'Bienvenue dans Caelestia' }),
-        element('p', { text: 'Quatre étapes rapides pour régler le thème à votre goût. Tout reste modifiable plus tard dans ces réglages.' }),
-      ]),
-    ]),
+    pageHero({
+      symbol: 'auto_awesome',
+      heading: 'Bienvenue dans Caelestia',
+      text: 'Quatre étapes rapides pour régler le thème à votre goût. Tout reste modifiable plus tard dans ces réglages.',
+    }),
     step(1, "Fond d'écran", [
       element('p', { class: 'welcome-text', text: "Les couleurs de tout le thème viennent de votre fond d'écran." }),
       element('button', { class: 'button', onClick: async () => { await popup.close(); openLauncher('>fond '); } }, [icon('photo_library'), element('span', { text: 'Choisir un fond' })]),
     ]),
     step(2, 'Raccourcis essentiels', [
       element('div', { class: 'welcome-keys' }, essentials.map(([keys, label]) => element('div', { class: 'welcome-key' }, [
-        element('kbd', { text: keys }),
+        keysOf(keys),
         element('span', { text: label }),
       ]))),
     ]),
@@ -398,19 +467,16 @@ function aboutPage() {
   const stack = ['Zebar', '.NET 10', 'Material Color Utilities', 'Open-Meteo', 'LRCLIB', 'Google Sans Flex', 'Rubik', 'Material Symbols'];
 
   return [
-    element('div', { class: 'about-hero' }, [
-      element('div', { class: 'about-ornament' }, shapeSvg('flower')),
-      element('div', { class: 'about-mark' }, [shapeSvg('cookie9'), icon('auto_awesome')]),
-      element('div', { class: 'about-hero-text' }, [
-        element('h2', { text: 'Caelestia pour Windows' }),
-        element('p', { text: 'Le shell Material You de Caelestia, recréé pour Windows 11 : barre, tiroirs et animations expressives autour de vos fenêtres habituelles.' }),
-        element('div', { class: 'about-chips' }, [
-          element('span', { class: 'about-chip about-version', text: packVersion ? `Version ${packVersion}` : 'Version' }),
-          element('span', { class: 'about-chip', text: 'Licence GPL-3.0' }),
-          status,
-        ]),
-      ]),
-    ]),
+    pageHero({
+      symbol: 'auto_awesome',
+      heading: 'Caelestia pour Windows',
+      text: 'Le shell Material You de Caelestia, recréé pour Windows 11 : barre, tiroirs et animations expressives autour de vos fenêtres habituelles.',
+      chips: [
+        element('span', { class: 'about-chip about-version', text: packVersion ? `Version ${packVersion}` : 'Version' }),
+        element('span', { class: 'about-chip', text: 'Licence GPL-3.0' }),
+        status,
+      ],
+    }),
     element('div', { class: 'about-tiles' }, [
       highlight('palette', 'Material You', "Une palette complète tirée de votre fond d'écran, en clair comme en sombre."),
       highlight('animation', 'Mouvement expressif', 'Les courbes et les rebonds de Material 3 Expressive, fluides à chaque ouverture.'),

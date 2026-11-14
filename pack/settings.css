@@ -156,8 +156,19 @@ body.closing .window {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  animation: page-in var(--duration-spatial) var(--ease-spatial);
 }
+
+.page > * {
+  animation: card-in var(--duration-emphasized) var(--ease-emphasized-full) both;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+
+.page > :nth-child(2) { --i: 1; }
+.page > :nth-child(3) { --i: 2; }
+.page > :nth-child(4) { --i: 3; }
+.page > :nth-child(5) { --i: 4; }
+.page > :nth-child(6) { --i: 5; }
+.page > :nth-child(n + 7) { --i: 6; }
 
 .section {
   display: flex;
@@ -185,8 +196,15 @@ body.closing .window {
 }
 
 .row > .icon {
-  font-size: 22px;
-  color: var(--m3-on-surface-variant);
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 20px;
+  background: var(--m3-secondary-container);
+  color: var(--m3-on-secondary-container);
 }
 
 .row-text {
@@ -440,8 +458,8 @@ kbd {
 }
 
 .about-logo .shape,
-.about-mark .shape,
-.about-ornament .shape {
+.page-hero-mark .shape,
+.page-hero-ornament .shape {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -455,7 +473,7 @@ kbd {
 }
 
 /* Page À propos : une carte d'en-tête aux couleurs du thème, trois points forts, puis crédits et outils. */
-.about-hero {
+.page-hero {
   position: relative;
   display: flex;
   align-items: center;
@@ -468,10 +486,9 @@ kbd {
     radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--m3-primary-container) 75%, transparent), transparent 60%),
     radial-gradient(90% 120% at 100% 100%, color-mix(in srgb, var(--m3-tertiary-container) 70%, transparent), transparent 65%),
     var(--m3-surface-container-high);
-  animation: card-in var(--duration-emphasized) var(--ease-emphasized-full) both;
 }
 
-.about-ornament {
+.page-hero-ornament {
   position: absolute;
   z-index: -1;
   right: -60px;
@@ -482,22 +499,22 @@ kbd {
   animation: about-spin 60s linear infinite;
 }
 
-.about-mark {
+.page-hero-mark {
   position: relative;
   flex: 0 0 auto;
-  width: 104px;
-  height: 104px;
+  width: 96px;
+  height: 96px;
   display: grid;
   place-items: center;
   color: var(--m3-primary);
   filter: drop-shadow(0 8px 18px color-mix(in srgb, var(--m3-shadow) 30%, transparent));
 }
 
-.about-mark .shape {
+.page-hero-mark .shape {
   animation: welcome-logo 700ms var(--ease-spatial) both, about-spin 40s linear 700ms infinite;
 }
 
-.about-mark .icon {
+.page-hero-mark .icon {
   position: relative;
   font-size: 48px;
   color: var(--m3-on-primary);
@@ -505,14 +522,14 @@ kbd {
   animation: welcome-spark 450ms var(--ease-spatial) 250ms both;
 }
 
-.about-hero-text h2 {
+.page-hero-text h2 {
   margin: 0 0 6px;
   font-size: 26px;
   font-weight: 500;
   color: var(--m3-on-surface);
 }
 
-.about-hero-text p {
+.page-hero-text p {
   margin: 0 0 14px;
   max-width: 520px;
   font-size: 13.5px;
@@ -566,7 +583,7 @@ kbd {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
-  margin: 14px 0;
+  margin: 0;
 }
 
 .about-tile {
@@ -605,10 +622,7 @@ kbd {
   color: var(--m3-on-surface-variant);
 }
 
-.about-hero ~ .section {
-  margin-bottom: 14px;
-  animation: card-in var(--duration-emphasized) var(--ease-emphasized-full) 260ms both;
-}
+
 
 .about-credit {
   display: flex;
@@ -637,7 +651,6 @@ kbd {
   display: flex;
   gap: 10px;
   padding-bottom: 6px;
-  animation: card-in var(--duration-emphasized) var(--ease-emphasized-full) 320ms both;
 }
 
 @keyframes about-spin {
@@ -673,8 +686,10 @@ kbd {
 .welcome-step {
   display: grid;
   grid-template-columns: 34px 1fr;
-  gap: 14px;
-  padding: 12px 0;
+  gap: 16px;
+  padding: 18px 18px 18px 16px;
+  border-radius: 20px;
+  background: var(--surface-layer);
   animation: card-in var(--duration-emphasized) var(--ease-emphasized-full) both;
   animation-delay: calc(280ms + var(--step, 0) * 70ms);
 }
@@ -754,7 +769,7 @@ kbd {
   gap: 10px;
 }
 
-.welcome-key kbd {
+.welcome-key .keys kbd {
   padding: 3px 8px;
   border-radius: 8px;
   background: var(--m3-surface-container-highest);
@@ -774,4 +789,105 @@ kbd {
 .button.primary {
   background: var(--m3-primary);
   color: var(--m3-on-primary);
+}
+
+/* En-tête : pastilles des couleurs du thème, aperçu du fond d'écran et actions. */
+.page-hero-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.page-hero-text p:last-child {
+  margin-bottom: 0;
+}
+
+.about-chip .icon {
+  font-size: 16px;
+  color: var(--m3-primary);
+}
+
+.about-chip.off {
+  color: var(--m3-on-surface-variant);
+}
+
+.about-chip.off .icon {
+  color: var(--m3-outline);
+}
+
+.hero-swatches {
+  gap: 0;
+  padding: 0 8px;
+}
+
+.hero-swatches i {
+  width: 16px;
+  height: 16px;
+  margin-left: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--m3-surface-container-high);
+}
+
+.hero-swatches i:first-child {
+  margin-left: 0;
+}
+
+.hero-swatches .primary { background: var(--m3-primary); }
+.hero-swatches .secondary { background: var(--m3-secondary); }
+.hero-swatches .tertiary { background: var(--m3-tertiary); }
+
+.page-hero-thumb {
+  flex: 0 0 auto;
+  width: 176px;
+  aspect-ratio: 16 / 10;
+  border-radius: 18px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--m3-shadow) 35%, transparent), 0 0 0 1px color-mix(in srgb, var(--m3-on-surface) 10%, transparent);
+  animation: welcome-spark 500ms var(--ease-spatial) 120ms both;
+}
+
+.page-hero-backdrop {
+  position: absolute;
+  inset: -30px;
+  z-index: -2;
+  background-size: cover;
+  background-position: center;
+  filter: blur(28px) saturate(1.2);
+  opacity: 0.35;
+}
+
+/* Raccourcis : une carte par raccourci, chaque touche dans sa pastille. */
+.shortcuts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 6px 10px 12px;
+}
+
+.shortcut {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 52px;
+  padding: 8px 14px;
+  border-radius: 16px;
+  background: var(--m3-surface-container-high);
+}
+
+.keys {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.keys .plus {
+  font-size: 12px;
+  color: var(--m3-outline);
+}
+
+.shortcut-label {
+  font-size: 13.5px;
+  color: var(--m3-on-surface);
 }
