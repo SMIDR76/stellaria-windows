@@ -872,8 +872,15 @@ export function setupPopup(name, { panel, onOpen } = {}) {
     if (value > openedAt) close();
   }, 150);
 
+  // Juste après l'ouverture, Windows peut encore donner le focus à la fenêtre d'où vient le raccourci : on le reprend
+  // au lieu de fermer aussitôt, ce qui créait et détruisait la fenêtre en moins de deux secondes.
   window_.onFocusChanged(({ payload: focused }) => {
-    if (!focused) close();
+    if (focused) return;
+    if (Date.now() - openedAt < 1000) {
+      window_.setFocus?.().catch(() => {});
+      return;
+    }
+    close();
   });
 
   window.addEventListener('keydown', event => {

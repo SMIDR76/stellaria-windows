@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using Caelestia.Helper.Desktop;
 using Caelestia.Helper.Server;
 
 namespace Caelestia.Helper.Modules;
@@ -10,6 +11,7 @@ internal sealed class HealthModule : IHelperModule
 
     private readonly HashSet<ClientSession> _stalled = [];
     private Timer? _check;
+    private ZebarWatchdog? _watchdog;
 
     public string Name => "health";
 
@@ -21,6 +23,7 @@ internal sealed class HealthModule : IHelperModule
             context.Hub.Raise("widgets.reload", new JsonObject());
             return Task.FromResult<JsonNode?>(null);
         });
+        _watchdog = new ZebarWatchdog(context.Log, context.Desktop.Processes);
         _check = new Timer(_ => Check(context), null, CheckInterval, CheckInterval);
         context.Shutdown.Register(() => _check.Dispose());
         return Task.CompletedTask;
@@ -32,6 +35,7 @@ internal sealed class HealthModule : IHelperModule
     private void Check(ModuleContext context)
     {
         var now = context.Time.GetUtcNow();
+        _watchdog?.Check(now);
         var sessions = context.Hub.Sessions;
         lock (_stalled)
         {

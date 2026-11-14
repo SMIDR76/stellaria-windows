@@ -5,6 +5,11 @@ namespace Caelestia.Helper.Interop;
 internal static unsafe partial class Kernel32
 {
     public const uint ProcessQueryLimitedInformation = 0x1000;
+    public const uint ProcessTerminate = 0x0001;
+
+    [LibraryImport("kernel32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool TerminateProcess(nint process, uint exitCode);
     public const uint EsContinuous = 0x80000000;
     public const uint EsSystemRequired = 0x00000001;
     public const uint EsDisplayRequired = 0x00000002;

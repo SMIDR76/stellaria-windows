@@ -196,6 +196,16 @@ internal static unsafe partial class User32
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool UnhookWinEvent(nint hook);
 
+    public const uint SpiSetWorkArea = 0x002F;
+
+    [LibraryImport("user32.dll", EntryPoint = "SystemParametersInfoW")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool SystemParametersInfo(uint action, uint parameter, ref Rect value, uint winIni);
+
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool IsHungAppWindow(nint hwnd);
+
     public const int WhKeyboardLowLevel = 13;
     public const uint KeyboardHookInjected = 0x10;
 

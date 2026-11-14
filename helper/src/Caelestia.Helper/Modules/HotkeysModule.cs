@@ -52,7 +52,7 @@ internal sealed class HotkeysModule : IHelperModule
             }
 
             KeyboardInput.MaskWindowsKey();
-            Pressed(launcher);
+            Pressed(launcher, "Windows key");
             return false;
         })).ConfigureAwait(false);
     }
@@ -61,7 +61,7 @@ internal sealed class HotkeysModule : IHelperModule
     {
         foreach (var hotkey in Shortcuts.Where(hotkey => !_registered.Contains(hotkey.Id)))
         {
-            if (_context.Loop.RegisterHotkey(hotkey.Id, hotkey.Modifiers, hotkey.Key, () => Pressed(hotkey)))
+            if (_context.Loop.RegisterHotkey(hotkey.Id, hotkey.Modifiers, hotkey.Key, () => Pressed(hotkey, hotkey.Shortcut)))
             {
                 _registered.Add(hotkey.Id);
                 continue;
@@ -75,8 +75,9 @@ internal sealed class HotkeysModule : IHelperModule
         }
     }
 
-    private void Pressed(Hotkey hotkey)
+    private void Pressed(Hotkey hotkey, string source)
     {
+        _context.Log.Info("hotkeys", $"{hotkey.Name} opened by {source}.");
         _context.Hub.Raise("hotkey", new JsonObject { ["name"] = hotkey.Name, ["monitor"] = DesktopReader.MonitorUnderCursor() });
         if (hotkey.FocusWindowTitle is { } title)
         {
