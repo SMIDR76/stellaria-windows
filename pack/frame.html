@@ -11,7 +11,12 @@
       }
 
       /* Le cadre recouvre les 2 premiers pixels de la zone des fenêtres : certaines applications (Chrome…) dessinent un
-         liseré sur leurs bords quand elles sont agrandies, qui tranchait avec la couleur du cadre. */
+         liseré sur leurs bords quand elles sont agrandies, qui tranchait avec la couleur du cadre. Les bandes courent sur
+         toute la longueur et les arrondis sont décalés d'autant vers l'intérieur : l'arc rejoint le bord sans marche. */
+      :root {
+        --seam: 2px;
+      }
+
       .seam {
         position: fixed;
         background: var(--surface-base);
@@ -20,34 +25,30 @@
 
       .seam.top {
         top: var(--border);
-        left: calc(var(--bar) + var(--rounding));
-        right: calc(var(--border) + var(--rounding));
+        left: var(--bar);
+        right: var(--border);
         height: var(--seam);
       }
 
       .seam.bottom {
         bottom: var(--border);
-        left: calc(var(--bar) + var(--rounding));
-        right: calc(var(--border) + var(--rounding));
+        left: var(--bar);
+        right: var(--border);
         height: var(--seam);
       }
 
       .seam.left {
-        top: calc(var(--border) + var(--rounding));
-        bottom: calc(var(--border) + var(--rounding));
+        top: var(--border);
+        bottom: var(--border);
         left: var(--bar);
         width: var(--seam);
       }
 
       .seam.right {
-        top: calc(var(--border) + var(--rounding));
-        bottom: calc(var(--border) + var(--rounding));
+        top: var(--border);
+        bottom: var(--border);
         right: var(--border);
         width: var(--seam);
-      }
-
-      :root {
-        --seam: 2px;
       }
 
       .corner {
@@ -58,26 +59,26 @@
       }
 
       .corner.top-left {
-        left: var(--bar);
-        top: var(--border);
+        left: calc(var(--bar) + var(--seam));
+        top: calc(var(--border) + var(--seam));
         background: radial-gradient(circle at 100% 100%, transparent calc(var(--rounding) - 0.5px), var(--surface-base) var(--rounding));
       }
 
       .corner.top-right {
-        right: var(--border);
-        top: var(--border);
+        right: calc(var(--border) + var(--seam));
+        top: calc(var(--border) + var(--seam));
         background: radial-gradient(circle at 0 100%, transparent calc(var(--rounding) - 0.5px), var(--surface-base) var(--rounding));
       }
 
       .corner.bottom-left {
-        left: var(--bar);
-        bottom: var(--border);
+        left: calc(var(--bar) + var(--seam));
+        bottom: calc(var(--border) + var(--seam));
         background: radial-gradient(circle at 100% 0, transparent calc(var(--rounding) - 0.5px), var(--surface-base) var(--rounding));
       }
 
       .corner.bottom-right {
-        right: var(--border);
-        bottom: var(--border);
+        right: calc(var(--border) + var(--seam));
+        bottom: calc(var(--border) + var(--seam));
         background: radial-gradient(circle at 0 0, transparent calc(var(--rounding) - 0.5px), var(--surface-base) var(--rounding));
       }
     </style>
