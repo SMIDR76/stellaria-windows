@@ -25,6 +25,7 @@ body.open .drawer * {
 }
 
 .popout-viewport {
+  position: relative;
   overflow: hidden;
   transition:
     width var(--duration-spatial) var(--ease-spatial),
@@ -33,7 +34,8 @@ body.open .drawer * {
 
 .popout-page {
   width: max-content;
-  animation: page-in var(--duration-effects-slow) var(--ease-effects);
+  transform-origin: top left;
+  animation: page-in var(--duration-effects-slow) var(--ease-effects) 60ms both;
 }
 
 .view {
@@ -346,9 +348,17 @@ body.open .drawer * {
   padding: 0 6px;
 }
 
+.popout-ghost {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
 @keyframes page-in {
   from {
     opacity: 0;
+    transform: scale(0.97);
   }
 }
 

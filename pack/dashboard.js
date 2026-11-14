@@ -945,6 +945,7 @@ async function openDashboard(trigger) {
   }
   isOpen = true;
   layoutTabs();
+  for (const page of pages) [...page.querySelectorAll('.card')].forEach((card, index) => card.style.setProperty('--stagger', index));
   document.body.classList.remove('closing');
   document.body.classList.add('open');
   const [origin] = await Promise.all([windowOrigin(), widgetWindow.setIgnoreCursorEvents(false)]);

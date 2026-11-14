@@ -1515,3 +1515,16 @@ body.open .drawer * {
     transform: translateX(calc(var(--direction, 1) * 28px));
   }
 }
+
+/* Cascade à l'ouverture : chaque carte de l'onglet affiché arrive un peu après la précédente. */
+body.open .page .card {
+  animation: card-in var(--duration-emphasized) var(--ease-emphasized-full) both;
+  animation-delay: calc(80ms + var(--stagger, 0) * 32ms);
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+}

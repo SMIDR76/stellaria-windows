@@ -8,6 +8,11 @@
   --bar: 48px;
 
   --ease-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
+  /* Courbe « emphasized » complète de Material 3 (deux segments de Bézier, comme dans Caelestia), échantillonnée. */
+  --ease-emphasized-full: linear(0, 0.007 2.9%, 0.027 5.7%, 0.064 8.5%, 0.124 11.2%, 0.21 13.8%, 0.375 16.4%, 0.599 19.2%,
+    0.715 22.3%, 0.774 25.1%, 0.827 28.7%, 0.858 31.8%, 0.885 35.3%, 0.91 39.5%, 0.931 44.2%, 0.95 49.7%, 0.965 55.9%,
+    0.978 62.9%, 0.988 70.8%, 0.995 79.5%, 0.999 89.3%, 1);
+  --duration-emphasized: 500ms;
   --ease-emphasized-accel: cubic-bezier(0.3, 0, 0.8, 0.15);
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-spatial-fast: cubic-bezier(0.42, 1.67, 0.21, 0.9);
@@ -67,19 +72,11 @@
   --surface-layer: var(--m3-surface-container);
 }
 
-html.transparent {
-  --surface-base: color-mix(in srgb, var(--m3-surface) 85%, transparent);
-  --surface-layer: color-mix(in srgb, var(--m3-surface-container) 40%, transparent);
-}
-
-html.transparent .drawer.from-top .drawer-panel,
-html.transparent .drawer.from-bottom .drawer-panel,
-html.transparent .drawer.from-right .drawer-panel {
-  background-clip: content-box;
-}
-
-html.transparent .drawer-panel::before {
-  display: none;
+/* Transparence : seules la barre, les bords et les coins du cadre deviennent translucides. Windows floute ce qu'il y a
+   derrière la barre et les bords (effet acrylique, comme YASB) ; les panneaux restent opaques, car Windows ne peut pas
+   flouter derrière une fenêtre aux formes arrondies sans flouter tout son rectangle. */
+html.transparent.backdrop {
+  --surface-base: color-mix(in srgb, var(--m3-surface) 72%, transparent);
 }
 
 html.game-mode *,
@@ -183,6 +180,19 @@ input {
 
 .state-layer:active::after {
   opacity: 0.14;
+}
+
+/* Icônes d'applications teintées par le thème (option « Icônes aux couleurs du thème »). */
+.tint-flood {
+  flood-color: var(--m3-primary);
+}
+
+html.tint-icons .task img,
+html.tint-icons img.active-icon,
+html.tint-icons .tray-item img,
+html.tint-icons .item-visual img,
+html.tint-icons .app-volume img.app-icon {
+  filter: url(#caelestia-tint);
 }
 
 .ripple-clip {

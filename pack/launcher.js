@@ -40,12 +40,18 @@ const nodes = {
 // Le lanceur reste chargé entre deux ouvertures : chaque ouverture repart d'une recherche vide, sauf si un raccourci
 // vient de demander un mode précis (fonds d'écran, presse-papiers, emojis).
 let lastQueryAt = 0;
+let enteringTimer = 0;
 const popup = setupPopup('launcher', {
   panel: nodes.panel,
   onOpen: () => {
     if (Date.now() - lastQueryAt > 1500) setQuery('');
     nodes.query.focus();
     loadApps();
+    nodes.list.classList.remove('entering');
+    void nodes.list.offsetWidth;
+    nodes.list.classList.add('entering');
+    clearTimeout(enteringTimer);
+    enteringTimer = setTimeout(() => nodes.list.classList.remove('entering'), 900);
   },
 });
 
@@ -206,6 +212,7 @@ function actionEntries() {
     },
     ...[
       ['transparency', false, 'opacity', 'Transparence', 'Surfaces translucides façon Caelestia'],
+      ['tintIcons', true, 'palette', 'Icônes aux couleurs du thème', "Icônes d'applications teintées par le thème"],
       ['desktopClock', true, 'schedule', 'Horloge de bureau', "Grande horloge sur le fond d'écran"],
       ['gameMode', false, 'sports_esports', 'Mode jeu', 'Coupe les animations'],
       ['idleScreen', true, 'nightlight', "Écran d'inactivité", 'Horloge et météo après quelques minutes sans activité'],

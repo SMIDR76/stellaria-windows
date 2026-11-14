@@ -15,7 +15,8 @@ body {
   transform: scale(0.94) translateY(16px);
   transition:
     opacity var(--duration-effects-slow) var(--ease-effects),
-    transform var(--duration-spatial) var(--ease-spatial);
+    transform var(--duration-emphasized) var(--ease-emphasized-full);
+  will-change: transform, opacity;
 }
 
 body.open .window {

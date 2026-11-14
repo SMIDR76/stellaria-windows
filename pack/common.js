@@ -240,8 +240,51 @@ export function initTheme() {
     setOption('transparency', false);
     store.set('caelestia:migration:transparency-off', true);
   }
-  option('transparency', false, enabled => document.documentElement.classList.toggle('transparent', Boolean(enabled)));
+  option('transparency', false, enabled => {
+    document.documentElement.classList.toggle('transparent', Boolean(enabled));
+    applyBackdrop(Boolean(enabled));
+  });
   option('gameMode', false, enabled => document.documentElement.classList.toggle('game-mode', Boolean(enabled)));
+  installIconTint();
+  option('tintIcons', true, enabled => document.documentElement.classList.toggle('tint-icons', Boolean(enabled)));
+}
+
+// Flou acrylique de Windows derrière la barre et les bords (fenêtres rectangulaires) ; les coins du cadre suivent la même
+// translucidité sans flou, sur quelques pixels seulement.
+const backdropWidgets = { bar: true, edge: true, frame: false };
+
+function applyBackdrop(enabled) {
+  const name = widgetName();
+  if (!(name in backdropWidgets)) return;
+  document.documentElement.classList.add('backdrop');
+  if (!backdropWidgets[name]) return;
+  const window_ = zebar.currentWidget().tauriWindow;
+  const request = enabled ? window_.setEffects({ effects: ['acrylic'] }) : window_.clearEffects();
+  request.catch(error => console.error('[caelestia] Effet de fond', error));
+}
+
+// Icônes d'applications aux couleurs du thème (comme Noctalia) : l'icône passe en niveaux de gris puis prend la teinte
+// de la couleur principale, en gardant son relief. Le filtre lit la couleur du thème en direct.
+function installIconTint() {
+  if (document.getElementById('caelestia-tint')) return;
+  const ns = 'http://www.w3.org/2000/svg';
+  const make = (tag, attributes) => {
+    const node = document.createElementNS(ns, tag);
+    for (const [name, value] of Object.entries(attributes)) node.setAttribute(name, value);
+    return node;
+  };
+  const host = make('svg', { width: '0', height: '0', 'aria-hidden': 'true', style: 'position:absolute' });
+  const filter = make('filter', { id: 'caelestia-tint', 'color-interpolation-filters': 'sRGB' });
+  filter.append(
+    make('feColorMatrix', { type: 'saturate', values: '0', result: 'gray' }),
+    make('feFlood', { class: 'tint-flood', result: 'color' }),
+    make('feBlend', { in: 'color', in2: 'gray', mode: 'color', result: 'tinted' }),
+    make('feComposite', { in: 'tinted', in2: 'SourceAlpha', operator: 'in' }),
+  );
+  host.append(filter);
+  const attach = () => document.body.append(host);
+  if (document.body) attach();
+  else document.addEventListener('DOMContentLoaded', attach, { once: true });
 }
 
 export async function analyzeImage(base64) {

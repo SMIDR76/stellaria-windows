@@ -4,6 +4,7 @@ import {
   element,
   helperClient,
   hideOnFullscreen,
+  reducedMotion,
   icon,
   initTheme,
   keys,
@@ -449,8 +450,21 @@ function showView(kind, instant) {
   const view = views[kind];
   if (!view) return;
   if (state.kind !== kind) {
+    // Fondu croisé : une copie figée de l'ancien contenu s'efface pendant que le nouveau apparaît et que le panneau
+    // change de taille.
+    const previous = page.firstElementChild;
+    if (previous && state.open && !reducedMotion.matches) {
+      const ghost = previous.cloneNode(true);
+      ghost.classList.add('popout-ghost');
+      page.parentElement.append(ghost);
+      ghost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 150, easing: 'cubic-bezier(0.31, 0.94, 0.34, 1)', fill: 'forwards' })
+        .finished.then(() => ghost.remove(), () => ghost.remove());
+    }
     state.kind = kind;
     page.replaceChildren(view.node);
+    page.style.animation = 'none';
+    void page.offsetWidth;
+    page.style.animation = '';
     view.onShow?.();
   }
   view.update(providers.outputMap);

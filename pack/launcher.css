@@ -331,3 +331,27 @@
   line-height: 1;
   font-family: 'Segoe UI Emoji', var(--font-sans);
 }
+/* Cascade à l'ouverture : les résultats les plus proches du champ de recherche arrivent en premier. */
+.list.entering .item {
+  animation: item-in var(--duration-emphasized) var(--ease-emphasized-full) both;
+}
+.list.entering .item:nth-child(1) { animation-delay: 40ms; }
+.list.entering .item:nth-child(2) { animation-delay: 62ms; }
+.list.entering .item:nth-child(3) { animation-delay: 84ms; }
+.list.entering .item:nth-child(4) { animation-delay: 106ms; }
+.list.entering .item:nth-child(5) { animation-delay: 128ms; }
+.list.entering .item:nth-child(6) { animation-delay: 150ms; }
+.list.entering .item:nth-child(7) { animation-delay: 172ms; }
+.list.entering .item:nth-child(8) { animation-delay: 194ms; }
+.list.entering .item:nth-child(9) { animation-delay: 216ms; }
+.list.entering .item:nth-child(10) { animation-delay: 238ms; }
+.list.entering .item:nth-child(n + 11) {
+  animation-delay: 260ms;
+}
+
+@keyframes item-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
