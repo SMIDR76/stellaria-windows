@@ -340,3 +340,30 @@ body {
     opacity: 0;
   }
 }
+
+.status-item.notifications {
+  position: relative;
+}
+
+.status-item .badge {
+  position: absolute;
+  top: 1px;
+  right: 0;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  border-radius: var(--rounding-full);
+  background: var(--m3-primary);
+  color: var(--m3-on-primary);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
+  animation: badge-in var(--duration-spatial-fast) var(--ease-spatial-fast);
+}
+
+@keyframes badge-in {
+  from {
+    transform: scale(0);
+  }
+}

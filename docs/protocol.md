@@ -58,6 +58,7 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `wallpaper` | `{ "path": "<Windows wallpaper file or null>", "sample": "<png base64, at most 160 px wide>", "source": "capture" \| "file" }`. `capture` is the rendered desktop of the primary monitor, so it follows Wallpaper Engine; `file` is the fallback when the desktop cannot be captured. Published after every wallpaper change and when a 30 second check sees a visible difference. |
 | `keyboard` | `{ "capsLock": false, "numLock": true, "layout": "<hkl hex of the last user window>", "layouts": [ { "id": "<hkl hex>", "languageTag": "fr-FR", "name": "<layout name localized by Windows>" } ] }`. Widgets name the language with `Intl.DisplayNames` in the interface language. |
 | `desktops` | `{ "items": [ { "id": "<guid>", "name": "<name or null>" } ], "current": 0 }`, the Windows virtual desktops in Task View order. A single unnamed desktop until the user creates a second one. |
+| `notifications` | `{ "items": [ { "id", "appId", "time": <unix ms>, "title", "body" } ] }`, the 50 latest Windows toasts from the Action Center history, newest first. Empty while `notifications.history` is off. |
 | `idle` | `{ "seconds": 0 }`, published when it crosses 30 s and then every 5 s, and when input resumes |
 | `power` | `{ "keepAwake": false }` |
 | `shell` | `{ "taskbarHidden": true }`, driven by the `taskbar.hide` setting |
@@ -71,6 +72,7 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `hotkey.unavailable` | `{ "name": "dashboard", "shortcut": "Win+Alt+A" }` when another program already owns the shortcut |
 | `appbars.repaired` | `{ "count": 2 }` |
 | `appbars.paused` | `{ "minutes": 5 }` when repairs loop and the circuit breaker stops them |
+| `notification` | one item of the `notifications` topic, when a toast arrived in the last 30 seconds |
 | `widgets.reload` | `{}`. Every widget reloads its page. Raised by the `widgets.reload` request, used by the settings app to recover a widget that stopped rendering. |
 
 ## Requests
@@ -92,7 +94,8 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `display.setBrightness` | `{ "monitor": "<device>", "value": 0-100 }` | none, `unsupported` when the monitor does not answer DDC/CI |
 | `input.paste` | none | none, sends Ctrl+V to the last user window |
 | `keyboard.setLayout` | `{ "id" }`, one of the installed layouts | none |
-| `media.artwork` | none | `{ "app", "title", "artist", "album", "image" }` or `null` |
+| `media.artwork` | none | `{ "app", "title", "artist", "album", "image", "playing", "shuffle", "repeat": "none" \| "list" \| "track", "canShuffle", "canRepeat" }` or `null` |
+| `media.control` | `{ "action": "playPause" \| "next" \| "previous" \| "shuffle" \| "repeat" }` | none, `unsupported` when the player refuses; repeat cycles off, list, track |
 | `power.keepAwake` | `{ "enabled" }` | none |
 | `power.run` | `{ "action": "lock" \| "sleep" \| "logout" \| "restart" \| "shutdown" }` | none |
 | `radios.list` | none | `[ { "kind", "on", "name" } ]` |

@@ -49,6 +49,9 @@ const nodes = {
   volume: document.getElementById('volume'),
   volumeIcon: document.getElementById('volume-icon'),
   network: document.getElementById('network'),
+  notifications: document.getElementById('notifications'),
+  notificationsIcon: document.getElementById('notifications-icon'),
+  notificationsBadge: document.getElementById('notifications-badge'),
   networkIcon: document.getElementById('network-icon'),
   power: document.getElementById('power'),
 };
@@ -302,6 +305,7 @@ const popoutTargets = [
   [nodes.volume, 'audio'],
   [nodes.network, 'network'],
   [nodes.keyboard, 'keyboard'],
+  [nodes.notifications, 'notifications'],
 ];
 
 for (const [node, kind] of popoutTargets) {
@@ -318,6 +322,23 @@ for (const [node, kind] of popoutTargets) {
   });
 }
 nodes.keyboard.addEventListener('click', () => openSettings('regionlanguage'));
+
+// Compteur des notifications arrivées depuis la dernière ouverture du centre de notifications.
+const notificationKeys = { dismissed: 'caelestia:notifications:dismissed', seenAt: 'caelestia:notifications:seen-at' };
+function renderNotificationBadge() {
+  const items = helperClient.state('notifications')?.items ?? [];
+  const dismissed = new Set(store.get(notificationKeys.dismissed, []));
+  const seenAt = store.get(notificationKeys.seenAt, 0);
+  const visible = items.filter(item => !dismissed.has(item.id));
+  const unread = visible.filter(item => item.time > seenAt).length;
+  nodes.notificationsBadge.hidden = unread === 0;
+  nodes.notificationsBadge.textContent = unread > 9 ? '9+' : String(unread);
+  nodes.notificationsIcon.textContent = unread ? 'notifications_unread' : visible.length ? 'notifications' : 'notifications_none';
+  nodes.notifications.title = unread ? `Notifications (${unread} non lues)` : 'Notifications';
+}
+helperClient.onState('notifications', renderNotificationBadge);
+store.watch(notificationKeys.dismissed, renderNotificationBadge, 2000);
+store.watch(notificationKeys.seenAt, renderNotificationBadge, 2000);
 
 // Bureaux virtuels de Windows, affichés à la place des espaces de travail d'un gestionnaire de fenêtres.
 const desktopIndicator = element('span', { class: 'workspace-indicator' });

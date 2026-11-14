@@ -69,6 +69,7 @@ widget page would gain that widget's abilities.
 | `clipboard.history` | Leaking secrets copied by the user | Read on request only, never logged, never cached, limited to text entries, and only when Windows clipboard history is enabled by the user. |
 | `window.preview` | Screenshots of private windows | Image of the last focused window only, kept in memory and sent to local widgets, never written to disk. |
 | `input.paste`, `capture.record` | Simulated key presses | Fixed key sequences (Ctrl+V, Win+Alt+R) sent to the window the user was using, only after a click in the interface. |
+| `notifications` topic | Notification contents are personal | Read only, from the user's own Action Center database (`wpndatabase.db`), 50 latest toasts, kept in memory, never logged or written anywhere. Turned off with `notifications.history`. Dismissing in the theme only hides entries; Windows' history is never modified. |
 | `power.run` | Unwanted shutdown | Fixed actions only; the session menu asks for confirmation before restart and shutdown. |
 
 ### Resource exhaustion

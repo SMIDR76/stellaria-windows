@@ -128,6 +128,7 @@ internal static class Program
         new BluetoothModule(),
         new ClipboardModule(),
         new MediaModule(),
+        new NotificationsModule(),
         new WindowModule(),
         new AppsModule(),
         new WallpapersModule(),

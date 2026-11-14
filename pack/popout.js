@@ -420,11 +420,119 @@ function createWindowView() {
   };
 }
 
+// Centre de notifications : historique Windows lu par le helper, regroupé par application.
+const notificationKeys = { dismissed: 'caelestia:notifications:dismissed', seenAt: 'caelestia:notifications:seen-at' };
+let appDirectory = null;
+
+function loadAppDirectory() {
+  appDirectory ??= helperClient.request('apps.list')
+    .then(apps => new Map(apps.map(app => [app.id.toLowerCase(), app])))
+    .catch(() => new Map());
+  return appDirectory;
+}
+
+function fallbackAppName(appId) {
+  const base = appId.split('!')[0].split('_')[0];
+  const last = base.split('.').pop() ?? appId;
+  return last.replace(/[-_]+/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2');
+}
+
+function relativeTime(time) {
+  const minutes = Math.round((Date.now() - time) / 60000);
+  if (minutes < 1) return "à l'instant";
+  if (minutes < 60) return `il y a ${minutes} min`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `il y a ${hours} h`;
+  return new Date(time).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+}
+
+function createNotificationsView() {
+  const count = element('span', { class: 'view-value', text: '' });
+  const list = element('div', { class: 'notification-list' });
+  const clear = element('button', {
+    class: 'tonal-button',
+    onClick: () => {
+      const items = helperClient.state('notifications')?.items ?? [];
+      store.set(notificationKeys.dismissed, [...new Set([...store.get(notificationKeys.dismissed, []), ...items.map(item => item.id)])].slice(-300));
+      render();
+    },
+  }, [icon('clear_all'), element('span', { text: 'Tout effacer' })]);
+  const node = element('div', { class: 'view notifications-view', style: { width: '360px' } }, [
+    element('div', { class: 'view-header' }, [icon('notifications'), element('span', { class: 'view-title', text: 'Notifications' }), count]),
+    list,
+    clear,
+  ]);
+
+  const dismiss = id => {
+    store.set(notificationKeys.dismissed, [...store.get(notificationKeys.dismissed, []), id].slice(-300));
+    render();
+  };
+
+  async function render() {
+    const directory = await loadAppDirectory();
+    const dismissed = new Set(store.get(notificationKeys.dismissed, []));
+    const items = (helperClient.state('notifications')?.items ?? []).filter(item => !dismissed.has(item.id));
+    count.textContent = items.length ? String(items.length) : '';
+    clear.hidden = items.length === 0;
+    if (!items.length) {
+      list.replaceChildren(element('div', { class: 'notification-empty' }, [icon('notifications_off'), element('span', { text: 'Aucune notification' })]));
+    } else {
+      const groups = new Map();
+      for (const item of items) {
+        if (!groups.has(item.appId)) groups.set(item.appId, []);
+        groups.get(item.appId).push(item);
+      }
+      list.replaceChildren(...[...groups.entries()].map(([appId, entries]) => {
+        const app = directory.get(appId.toLowerCase());
+        const name = app?.name ?? fallbackAppName(appId);
+        const launch = app ? () => helperClient.request('apps.launch', { id: app.id }).then(close, () => {}) : null;
+        return element('section', { class: 'notification-group' }, [
+          element('div', { class: 'notification-app' }, [
+            app?.icon ? element('img', { class: 'app-icon', src: `data:image/png;base64,${app.icon}`, alt: '' }) : icon('apps', { className: 'app-icon' }),
+            element('span', { text: name }),
+            entries.length > 1 ? element('span', { class: 'notification-count', text: String(entries.length) }) : null,
+          ]),
+          ...entries.slice(0, 5).map(entry => element('article', { class: `notification${launch ? ' state-layer' : ''}`, onClick: launch }, [
+            element('div', { class: 'notification-text' }, [
+              element('span', { class: 'notification-title', text: entry.title }),
+              entry.body ? element('span', { class: 'notification-body', text: entry.body }) : null,
+              element('span', { class: 'notification-time', text: relativeTime(entry.time) }),
+            ]),
+            element('button', {
+              class: 'icon-button notification-dismiss',
+              title: 'Supprimer',
+              onClick: event => {
+                event.stopPropagation();
+                dismiss(entry.id);
+              },
+            }, icon('close')),
+          ])),
+        ]);
+      }));
+    }
+    if (state.kind === 'notifications') layoutPanel();
+  }
+
+  helperClient.onState('notifications', () => {
+    if (state.kind === 'notifications') render();
+  });
+
+  return {
+    node,
+    update: () => {},
+    onShow: () => {
+      store.set(notificationKeys.seenAt, Date.now());
+      render();
+    },
+  };
+}
+
 const views = {
   audio: createAudioView(),
   network: createNetworkView(),
   keyboard: createKeyboardView(),
   window: createWindowView(),
+  notifications: createNotificationsView(),
 };
 
 function layoutPanel(instant = false) {

@@ -38,6 +38,7 @@ internal static partial class ConfigSchema
         Flag("osd.onVolume", true),
         Flag("notifications.theme", true),
         Flag("notifications.system", true),
+        Flag("notifications.history", true),
         Flag("media.lyrics", true),
         Flag("weather.enabled", true),
         new("weather.location", () => null, ValidateLocation),

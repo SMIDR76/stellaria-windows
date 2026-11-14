@@ -212,6 +212,7 @@ function actionEntries() {
     },
     ...[
       ['transparency', false, 'opacity', 'Transparence', 'Surfaces translucides façon Caelestia'],
+      ['island', true, 'smart_display', 'Île dynamique', 'Morceau en cours et notifications en haut de l\'écran'],
       ['tintIcons', true, 'palette', 'Icônes aux couleurs du thème', "Icônes d'applications teintées par le thème"],
       ['desktopClock', true, 'schedule', 'Horloge de bureau', "Grande horloge sur le fond d'écran"],
       ['gameMode', false, 'sports_esports', 'Mode jeu', 'Coupe les animations'],
