@@ -230,10 +230,8 @@ html.tint-icons .app-volume img.app-icon {
   display: flex;
   opacity: 0;
   will-change: transform, opacity;
-  /* Un tiroir est accroché au bord de l'écran : une courbe qui dépasse sa cible l'en détacherait un instant (les
-     arrondis qui le relient au cadre se décollent puis reviennent). On décélère donc sans dépasser. */
   transition:
-    transform var(--duration-emphasized) var(--ease-emphasized-full),
+    transform var(--duration-spatial) var(--ease-spatial),
     opacity var(--duration-effects) var(--ease-effects);
 }
 
@@ -286,6 +284,43 @@ body.closing .drawer-content {
   width: var(--rounding);
   height: var(--rounding);
   pointer-events: none;
+}
+
+/* Le rebond d'ouverture éloigne un instant le panneau du bord. Comme son fond (::before du panneau), chaque arrondi de
+   raccord se prolonge vers le bord avec la couleur du cadre : l'espace qui s'ouvre reste rempli et le raccord ne se
+   décolle plus. Au repos, ce prolongement est caché sous la bordure du cadre ou hors de la fenêtre. */
+.flare::before {
+  content: '';
+  position: absolute;
+  background: var(--surface-base);
+}
+
+.drawer.from-bottom .flare::before {
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 48px;
+}
+
+.drawer.from-top .flare::before {
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 48px;
+}
+
+.drawer.from-right .flare::before {
+  top: 0;
+  bottom: 0;
+  left: 100%;
+  width: 48px;
+}
+
+.drawer.from-left .flare::before {
+  top: 0;
+  bottom: 0;
+  right: 100%;
+  width: 48px;
 }
 
 .drawer-anchor {
