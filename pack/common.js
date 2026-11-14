@@ -641,7 +641,7 @@ export function toggleDashboard(monitor) {
 const popupPlacements = {
   launcher: { anchor: 'bottom_center', offsetX: '19px', offsetY: '0px', width: '740px', height: '640px' },
   session: { anchor: 'center_right', offsetX: '0px', offsetY: '0px', width: '170px', height: '590px' },
-  settings: { anchor: 'center', offsetX: '19px', offsetY: '0px', width: '980px', height: '680px' },
+  settings: { anchor: 'center', offsetX: '19px', offsetY: '0px', width: '1060px', height: '780px' },
 };
 
 // Le lanceur, le menu d'alimentation et les réglages restent chargés, masqués, sur l'écran principal : les ouvrir

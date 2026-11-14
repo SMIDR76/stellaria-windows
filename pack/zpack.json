@@ -602,8 +602,8 @@
           "anchor": "center",
           "offsetX": "19px",
           "offsetY": "0px",
-          "width": "980px",
-          "height": "680px",
+          "width": "1060px",
+          "height": "780px",
           "monitorSelection": {
             "type": "primary"
           },

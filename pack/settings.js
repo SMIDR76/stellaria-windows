@@ -35,6 +35,11 @@ const popup = setupPopup('settings', {
   },
 });
 document.getElementById('close').addEventListener('click', () => popup.close());
+// La marge transparente qui laisse place à l'ombre fait partie de la fenêtre : un clic dedans ferme, comme un clic
+// à l'extérieur.
+document.body.addEventListener('pointerdown', event => {
+  if (event.target === document.body) popup.close();
+});
 
 const schemeNames = {
   caelestia: 'Caelestia',
