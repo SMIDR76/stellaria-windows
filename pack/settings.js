@@ -23,7 +23,17 @@ initTheme();
 const panel = document.getElementById('panel');
 const pagesNode = document.getElementById('pages');
 const title = document.getElementById('page-title');
-const popup = setupPopup('settings', { panel });
+// Une page peut être demandée à l'ouverture (premier lancement : page Bienvenue).
+const popup = setupPopup('settings', {
+  panel,
+  onOpen: () => {
+    const request = store.get('caelestia:settings:page');
+    if (request && Date.now() - request.at < 5000) {
+      store.set('caelestia:settings:page', null);
+      showPage(request.page);
+    }
+  },
+});
 document.getElementById('close').addEventListener('click', () => popup.close());
 
 const schemeNames = {
@@ -297,6 +307,54 @@ function shortcutsPage() {
   ];
 }
 
+// Assistant de premier lancement (comme Noctalia) : l'essentiel pour bien démarrer, sur une seule page.
+function welcomePage() {
+  const step = (number, label, children) => element('div', { class: 'welcome-step' }, [
+    element('span', { class: 'welcome-number', text: String(number) }),
+    element('div', { class: 'welcome-body' }, [element('span', { class: 'section-title', text: label }), ...children]),
+  ]);
+  const essentials = [
+    ['Win', 'Lanceur'],
+    ['Win + Alt + A', 'Tableau de bord'],
+    ['Win + Alt + U', 'Utilitaires'],
+    ['Win + Alt + K', 'Tous les raccourcis'],
+  ];
+  return [
+    element('div', { class: 'welcome-hero' }, [
+      element('div', { class: 'about-logo' }, [shapeSvg('cookie9'), icon('auto_awesome')]),
+      element('div', {}, [
+        element('h2', { text: 'Bienvenue dans Caelestia' }),
+        element('p', { text: 'Quatre étapes rapides pour régler le thème à votre goût. Tout reste modifiable plus tard dans ces réglages.' }),
+      ]),
+    ]),
+    step(1, "Fond d'écran", [
+      element('p', { class: 'welcome-text', text: "Les couleurs de tout le thème viennent de votre fond d'écran." }),
+      element('button', { class: 'button', onClick: async () => { await popup.close(); openLauncher('>fond '); } }, [icon('photo_library'), element('span', { text: 'Choisir un fond' })]),
+    ]),
+    step(2, 'Raccourcis essentiels', [
+      element('div', { class: 'welcome-keys' }, essentials.map(([keys, label]) => element('div', { class: 'welcome-key' }, [
+        element('kbd', { text: keys }),
+        element('span', { text: label }),
+      ]))),
+    ]),
+    step(3, 'Apparence', [
+      optionRow('transparency', false, 'opacity', 'Transparence', 'Flou acrylique derrière la barre et les bords'),
+      optionRow('tintIcons', true, 'palette', 'Icônes aux couleurs du thème', "Teinte les icônes d'applications"),
+      optionRow('island', true, 'smart_display', 'Île dynamique', 'Morceau en cours et notifications en haut de l\'écran'),
+    ]),
+    step(4, 'Démarrage', [
+      element('p', { class: 'welcome-text', text: "Caelestia se lance à chaque ouverture de session. En cas de souci, le menu Démarrer contient « Caelestia - Rétablir la barre des tâches »." }),
+      element('button', {
+        class: 'button primary',
+        onClick: () => {
+          setOption('welcomed', true);
+          showPage('appearance');
+        },
+      }, [icon('check'), element('span', { text: "C'est parti" })]),
+    ]),
+  ];
+}
+
 function aboutPage() {
   const logo = element('div', { class: 'about-logo' }, [shapeSvg('cookie9'), icon('auto_awesome')]);
   return [
@@ -314,6 +372,7 @@ function aboutPage() {
 }
 
 const pages = [
+  ['welcome', 'waving_hand', 'Bienvenue', welcomePage],
   ['appearance', 'palette', 'Apparence', appearancePage],
   ['wallpaper', 'wallpaper', "Fond d'écran", wallpaperPage],
   ['desktop', 'desktop_windows', 'Bureau', desktopPage],

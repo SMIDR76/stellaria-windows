@@ -598,6 +598,12 @@ if (await isPrimaryMonitor()) {
   setInterval(applyAutoMode, 60000);
   store.watch(keys.autoMode, applyAutoMode, 1000);
   option('hideTaskbar', true, hidden => sendCommand(`taskbar ${hidden ? 'hide' : 'show'}`));
+  if (!getOption('welcomed', false)) {
+    setTimeout(() => {
+      store.set('caelestia:settings:page', { page: 'welcome', at: Date.now() });
+      togglePopup('settings').catch(error => console.error('[caelestia] Bienvenue', error));
+    }, 4000);
+  }
   const configure = (path, value) => helperClient.request('config.set', { path, value })
     .catch(error => console.error(`[caelestia] ${path}`, error));
   option('wallpaperDirectory', settings.wallpaperDirectory, directory => configure('wallpapers.directory', directory || null));

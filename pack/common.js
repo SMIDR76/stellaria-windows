@@ -658,6 +658,27 @@ async function askResident(name, monitor) {
   return false;
 }
 
+// Même règle de placement que les préréglages de zpack.json, appliquée à l'écran visé.
+async function placePopup(name, monitorName) {
+  const placement = popupPlacements[name];
+  const monitors = await tauriInvoke('plugin:window|available_monitors');
+  const monitor = monitors.find(candidate => candidate.name === monitorName);
+  if (!placement || !monitor) return;
+  const scale = monitor.scaleFactor || 1;
+  const width = parseFloat(placement.width) * scale;
+  const height = parseFloat(placement.height) * scale;
+  const offsetX = parseFloat(placement.offsetX) * scale;
+  const { x, y } = monitor.position;
+  const { width: screenWidth, height: screenHeight } = monitor.size;
+  const positions = {
+    bottom_center: [x + (screenWidth - width) / 2 + offsetX, y + screenHeight - height],
+    center_right: [x + screenWidth - width, y + (screenHeight - height) / 2],
+    center: [x + (screenWidth - width) / 2 + offsetX, y + (screenHeight - height) / 2],
+  };
+  const [left, top] = positions[placement.anchor] ?? positions.center;
+  await tauriInvoke('plugin:window|set_position', { value: { Physical: { x: Math.round(left), y: Math.round(top) } } });
+}
+
 async function startPopup(name, monitor) {
   if (await askResident(name, monitor)) return;
   store.set(keys.popupSpawn(name), { monitor: monitor ?? 'primary', at: Date.now() });
@@ -976,13 +997,20 @@ export function setupPopup(name, { panel, onOpen } = {}) {
     }, 380);
   };
 
+  // L'instance résidente répond pour tous les écrans : elle se déplace sur l'écran demandé au lieu d'en créer une autre.
+  let placedOn = null;
   store.watch(keys.popupRequest(name), async request => {
     if (transient || !request || request.at <= loadedAt) return;
     await located;
-    if (request.monitor !== monitorName && !(request.monitor === 'primary' && primary)) return;
     store.set(keys.popupAck(name), request.id);
+    const target = request.monitor === 'primary' ? monitorName : request.monitor;
+    if (target !== placedOn) {
+      await placePopup(name, target).catch(error => console.error(`[caelestia] Placement de ${name}`, error));
+      placedOn = target;
+    }
     show();
   }, 150);
+  located.then(() => { placedOn = monitorName; });
 
   store.watch(keys.popupDismiss(name), value => {
     if (value > openedAt) close();
