@@ -124,6 +124,8 @@ internal static class Program
         new AudioModule(),
         new DisplayModule(),
         new RadiosModule(),
+        new WifiModule(),
+        new BluetoothModule(),
         new ClipboardModule(),
         new MediaModule(),
         new WindowModule(),
