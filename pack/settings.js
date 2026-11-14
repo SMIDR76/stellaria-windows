@@ -2,6 +2,7 @@ import {
   applyTheme,
   element,
   getOption,
+  helperClient,
   icon,
   initTheme,
   keys,
@@ -360,18 +361,72 @@ function welcomePage() {
   ];
 }
 
+// État du helper, partagé par toutes les pastilles « À propos » affichées.
+let helperConnected = false;
+helperClient.onConnection(connected => {
+  helperConnected = connected;
+  document.querySelectorAll('.about-status').forEach(paintStatus);
+});
+
+function paintStatus(node) {
+  node.classList.toggle('online', helperConnected);
+  node.lastChild.textContent = helperConnected ? 'Helper connecté' : 'Helper hors ligne';
+}
+
+// Version du pack, lue une fois dans zpack.json.
+let packVersion = '';
+fetch('./zpack.json').then(response => response.json()).then(pack => {
+  packVersion = pack.version ?? '';
+  document.querySelectorAll('.about-version').forEach(node => { node.textContent = `Version ${packVersion}`; });
+}).catch(() => {});
+
 function aboutPage() {
-  const logo = element('div', { class: 'about-logo' }, [shapeSvg('cookie9'), icon('auto_awesome')]);
+  const status = element('span', { class: 'about-chip about-status' }, [element('span', { class: 'about-dot' }), element('span', {})]);
+  paintStatus(status);
+  const highlight = (symbol, label, text) => element('div', { class: 'about-tile' }, [
+    element('span', { class: 'about-tile-icon' }, icon(symbol)),
+    element('span', { class: 'about-tile-title', text: label }),
+    element('span', { class: 'about-tile-text', text }),
+  ]);
+  const credit = (symbol, label, text) => element('div', { class: 'about-credit' }, [
+    element('span', { class: 'about-credit-icon' }, icon(symbol)),
+    element('div', { class: 'row-text' }, [
+      element('span', { class: 'row-title', text: label }),
+      element('span', { class: 'row-subtitle', text }),
+    ]),
+  ]);
+  const stack = ['Zebar', '.NET 10', 'Material Color Utilities', 'Open-Meteo', 'LRCLIB', 'Google Sans Flex', 'Rubik', 'Material Symbols'];
+
   return [
-    section('À propos', [
-      element('div', { class: 'about' }, [
-        logo,
-        element('div', {}, [
-          element('h2', { text: 'Caelestia pour Windows' }),
-          element('p', { text: "Recréation sous Windows 11 du shell Caelestia (caelestia-dots), propulsée par Zebar. Couleurs Material You, formes et animations Material 3 Expressive." }),
-          element('p', { text: 'Polices : Google Sans Flex, Rubik, Material Symbols Rounded. Météo : Open-Meteo.' }),
+    element('div', { class: 'about-hero' }, [
+      element('div', { class: 'about-ornament' }, shapeSvg('flower')),
+      element('div', { class: 'about-mark' }, [shapeSvg('cookie9'), icon('auto_awesome')]),
+      element('div', { class: 'about-hero-text' }, [
+        element('h2', { text: 'Caelestia pour Windows' }),
+        element('p', { text: 'Le shell Material You de Caelestia, recréé pour Windows 11 : barre, tiroirs et animations expressives autour de vos fenêtres habituelles.' }),
+        element('div', { class: 'about-chips' }, [
+          element('span', { class: 'about-chip about-version', text: packVersion ? `Version ${packVersion}` : 'Version' }),
+          element('span', { class: 'about-chip', text: 'Licence GPL-3.0' }),
+          status,
         ]),
       ]),
+    ]),
+    element('div', { class: 'about-tiles' }, [
+      highlight('palette', 'Material You', "Une palette complète tirée de votre fond d'écran, en clair comme en sombre."),
+      highlight('animation', 'Mouvement expressif', 'Les courbes et les rebonds de Material 3 Expressive, fluides à chaque ouverture.'),
+      highlight('desktop_windows', 'Pensé pour Windows', 'Fenêtres, raccourcis et notifications Windows restent comme vous les connaissez.'),
+    ]),
+    section('Crédits', [
+      credit('favorite', 'Caelestia', "soramanew et les contributeurs : design, couleurs et animations d'origine"),
+      credit('widgets', 'Zebar', 'glzr-io : moteur des widgets'),
+      credit('lightbulb', 'Inspirations', "DankMaterialShell, Noctalia, end-4's dots, YASB, FluentFlyout"),
+    ]),
+    section('Construit avec', [
+      element('div', { class: 'about-stack' }, stack.map(name => element('span', { class: 'about-chip quiet', text: name }))),
+    ]),
+    element('div', { class: 'about-actions' }, [
+      element('button', { class: 'button', onClick: () => showPage('welcome') }, [icon('waving_hand'), element('span', { text: "Revoir l'accueil" })]),
+      element('button', { class: 'button', onClick: () => showPage('shortcuts') }, [icon('keyboard'), element('span', { text: 'Raccourcis' })]),
     ]),
   ];
 }
