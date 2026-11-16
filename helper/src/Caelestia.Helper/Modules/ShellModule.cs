@@ -9,6 +9,14 @@ internal sealed class ShellModule(HelperState state) : IHelperModule
 {
     public static readonly TimeSpan MaintenanceInterval = TimeSpan.FromSeconds(2);
 
+    /// <summary>
+    /// How long docks may stay away from their screen edge before Zebar is restarted. A game or a driver that resets
+    /// the display configuration renames the screens and leaves Zebar's bars docked in the wrong place.
+    /// </summary>
+    public static readonly TimeSpan PushedLimit = TimeSpan.FromSeconds(6);
+
+    private DateTimeOffset? _pushedSince;
+
     private ModuleContext _context = null!;
     private RepairBreaker _breaker = null!;
     private Timer? _maintenance;
@@ -69,7 +77,8 @@ internal sealed class ShellModule(HelperState state) : IHelperModule
             return;
         }
 
-        var repaired = RepairAppBars();
+        var repaired = RepairAppBars(out var pushedZebar);
+        HandlePushedDocks(pushedZebar);
         if (repaired == 0)
         {
             return;
@@ -84,8 +93,41 @@ internal sealed class ShellModule(HelperState state) : IHelperModule
         }
     }
 
-    private unsafe int RepairAppBars()
+    /// <summary>Decides from successive observations whether pushed docks have lasted long enough to restart Zebar.</summary>
+    public static bool ShouldRestartForPushedDocks(DateTimeOffset? pushedSince, DateTimeOffset now) =>
+        pushedSince is { } since && now - since >= PushedLimit;
+
+    private void HandlePushedDocks(uint pushedZebar)
     {
+        var now = _context.Time.GetUtcNow();
+        if (pushedZebar == 0)
+        {
+            if (_pushedSince is not null)
+            {
+                _context.Log.Info("shell", "Caelestia docks are back against their screen edges.");
+            }
+
+            _pushedSince = null;
+            return;
+        }
+
+        if (_pushedSince is null)
+        {
+            _pushedSince = now;
+            _context.Log.Warning("shell", "Caelestia docks were pushed away from their screen edges (display change?); Zebar is restarted if this lasts.");
+            return;
+        }
+
+        if (ShouldRestartForPushedDocks(_pushedSince, now) &&
+            ZebarWatchdog.TryRestart(_context.Log, _context.Desktop.Processes, pushedZebar, now, "Caelestia docks stayed away from their screen edges"))
+        {
+            _pushedSince = null;
+        }
+    }
+
+    private unsafe int RepairAppBars(out uint pushedZebar)
+    {
+        pushedZebar = 0;
         var repaired = 0;
         foreach (var hwnd in User32.TopLevelWindows())
         {
@@ -112,7 +154,8 @@ internal sealed class ShellModule(HelperState state) : IHelperModule
 
             if (!AppBarRules.TouchesItsEdge(dock, info.Monitor))
             {
-                _context.Log.Warning("shell", $"A Caelestia {dock.Edge} dock was pushed away from its screen edge; it is left alone so reservations cannot pile up. Restart Zebar to fix it.");
+                // Re-registering a pushed dock would pile up reservations; restarting Zebar fixes it (see above).
+                pushedZebar = User32.ProcessId(hwnd);
                 continue;
             }
 

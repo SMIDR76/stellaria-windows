@@ -14,8 +14,11 @@ internal sealed class ZebarWatchdog(Log log, ProcessDirectory processes)
     public static readonly TimeSpan HungLimit = TimeSpan.FromSeconds(15);
     public static readonly TimeSpan RestartCooldown = TimeSpan.FromMinutes(10);
 
+    // Shared by every cause (hung Zebar, docks pushed away after a display change) so they cannot chain restarts.
+    private static readonly Lock s_gate = new();
+    private static DateTimeOffset s_lastRestart = DateTimeOffset.MinValue;
+
     private DateTimeOffset? _hungSince;
-    private DateTimeOffset _lastRestart = DateTimeOffset.MinValue;
 
     /// <summary>Decides from successive observations whether Zebar should be restarted now.</summary>
     public static bool ShouldRestart(DateTimeOffset? hungSince, DateTimeOffset now, DateTimeOffset lastRestart) =>
@@ -41,25 +44,57 @@ internal sealed class ZebarWatchdog(Log log, ProcessDirectory processes)
             log.Warning("watchdog", "Zebar stopped answering; it is restarted if this lasts 15 seconds.");
         }
 
-        if (!ShouldRestart(_hungSince, now, _lastRestart))
+        if (!ShouldRestart(_hungSince, now, LastRestart))
         {
             return;
         }
 
         User32.GetWindowThreadProcessId(window, out var processId);
-        if (processes.Find(processId) is not { } zebar || !zebar.Name.Equals("zebar", StringComparison.OrdinalIgnoreCase))
+        if (TryRestart(log, processes, processId, now, "Zebar has not answered for 15 seconds"))
         {
-            return;
+            _hungSince = null;
         }
+    }
 
-        _lastRestart = now;
-        _hungSince = null;
-        log.Warning("watchdog", "Zebar has not answered for 15 seconds, restarting it.");
-        Terminate(processId);
-        ReleaseWorkAreas();
-        if (!ShellExecute.Open(zebar.ImagePath))
+    public static DateTimeOffset LastRestart
+    {
+        get
         {
-            log.Error("watchdog", "Zebar could not be started again.");
+            lock (s_gate)
+            {
+                return s_lastRestart;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Ends the given Zebar process, gives the screens their full area back and starts Zebar again, at most once per
+    /// <see cref="RestartCooldown"/>. Returns false when the cooldown is running or the process is not Zebar.
+    /// </summary>
+    public static bool TryRestart(Log log, ProcessDirectory processes, uint processId, DateTimeOffset now, string reason)
+    {
+        lock (s_gate)
+        {
+            if (now - s_lastRestart < RestartCooldown)
+            {
+                return false;
+            }
+
+            if (processes.Find(processId) is not { } zebar || !zebar.Name.Equals("zebar", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            s_lastRestart = now;
+            log.Warning("watchdog", $"{reason}, restarting Zebar.");
+            Terminate(processId);
+            ReleaseWorkAreas();
+            if (!ShellExecute.Open(zebar.ImagePath))
+            {
+                log.Error("watchdog", "Zebar could not be started again.");
+            }
+
+            return true;
         }
     }
 

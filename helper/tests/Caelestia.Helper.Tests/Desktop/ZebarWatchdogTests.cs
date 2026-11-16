@@ -1,4 +1,5 @@
 using Caelestia.Helper.Desktop;
+using Caelestia.Helper.Modules;
 
 namespace Caelestia.Helper.Tests.Desktop;
 
@@ -29,5 +30,13 @@ public sealed class ZebarWatchdogTests
     {
         Assert.False(ZebarWatchdog.ShouldRestart(Now.AddSeconds(-20), Now, Now.AddMinutes(-5)));
         Assert.True(ZebarWatchdog.ShouldRestart(Now.AddSeconds(-20), Now, Now.AddMinutes(-11)));
+    }
+
+    [Fact]
+    public void Docks_pushed_away_for_six_seconds_after_a_display_change_trigger_a_restart()
+    {
+        Assert.False(ShellModule.ShouldRestartForPushedDocks(null, Now));
+        Assert.False(ShellModule.ShouldRestartForPushedDocks(Now.AddSeconds(-4), Now));
+        Assert.True(ShellModule.ShouldRestartForPushedDocks(Now.AddSeconds(-6), Now));
     }
 }
