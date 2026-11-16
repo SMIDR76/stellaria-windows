@@ -35,6 +35,10 @@ internal sealed unsafe class MessageLoop : IDisposable
 
     public event Action? SessionEnding;
 
+    public event Action? Resumed;
+
+    internal nint Window => _window;
+
     public Task StartAsync()
     {
         _thread.Start();
@@ -275,6 +279,9 @@ internal sealed unsafe class MessageLoop : IDisposable
                 case User32.WmEndSession when wParam != 0:
                     loop.SessionEnding?.Invoke();
                     return 0;
+                case User32.WmPowerBroadcast when wParam == User32.PbtResumeAutomatic:
+                    loop.Resumed?.Invoke();
+                    return 1;
             }
         }
         catch (Exception exception)

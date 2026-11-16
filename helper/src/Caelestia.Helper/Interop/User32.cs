@@ -20,6 +20,8 @@ internal static unsafe partial class User32
     public const uint WmClose = 0x0010;
     public const uint WmQueryEndSession = 0x0011;
     public const uint WmEndSession = 0x0016;
+    public const uint WmPowerBroadcast = 0x0218;
+    public const nuint PbtResumeAutomatic = 0x0012;
     public const uint WmSettingChange = 0x001A;
     public const uint WmDisplayChange = 0x007E;
     public const uint WmInputLangChangeRequest = 0x0050;

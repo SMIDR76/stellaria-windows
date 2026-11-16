@@ -219,9 +219,9 @@ function evaluate(expression) {
 const formatNumber = value => value.toLocaleString(settings.locale, { maximumFractionDigits: 10 });
 
 async function runPower(action) {
-  const request = helperClient.request('power.run', { action });
-  await Promise.race([request, new Promise(resolve => setTimeout(resolve, 500))]);
-  await popup.close();
+  popup.close();
+  await new Promise(resolve => setTimeout(resolve, 420));
+  await helperClient.request('power.run', { action }).catch(error => console.error('[caelestia] Alimentation', error));
 }
 
 function actionEntries() {

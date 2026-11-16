@@ -8,6 +8,7 @@ namespace Caelestia.Helper.Modules;
 internal sealed class ShellModule(HelperState state) : IHelperModule
 {
     public static readonly TimeSpan MaintenanceInterval = TimeSpan.FromSeconds(2);
+    public static readonly TimeSpan ResumeDelay = TimeSpan.FromSeconds(4);
 
     public static readonly TimeSpan PushedLimit = TimeSpan.FromSeconds(6);
 
@@ -36,9 +37,25 @@ internal sealed class ShellModule(HelperState state) : IHelperModule
             });
         };
         context.Loop.SessionEnding += () => ShellRecovery.ShowTaskbar(context.Log);
+        context.Loop.Resumed += () => _ = RestartAfterResumeAsync();
         _maintenance = new Timer(_ => context.Loop.Post(Maintain), null, MaintenanceInterval, MaintenanceInterval);
         context.Shutdown.Register(() => _maintenance.Dispose());
         return context.Loop.InvokeAsync(() => ApplyTaskbar(context.Config.GetFlag("taskbar.hide")));
+    }
+
+    private async Task RestartAfterResumeAsync()
+    {
+        _context.Log.Info("shell", "The PC woke up from sleep; Zebar is restarted so its windows draw again.");
+        try
+        {
+            await Task.Delay(ResumeDelay, _context.Shutdown).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+        ZebarWatchdog.TryRestartRunning(_context.Log, _context.Desktop.Processes, _context.Time.GetUtcNow(), "The PC woke up from sleep", ignoreCooldown: true);
     }
 
     private void ApplyTaskbar(bool hidden)

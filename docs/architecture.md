@@ -76,4 +76,7 @@ The helper is published with NativeAOT when the Visual Studio C++ build tools ar
 
 - A hung Zebar (15 s) or Caelestia docks pushed away from their screen edges after a display change (6 s) restart
   Zebar, at most once every 10 minutes, after giving every screen its full work area back.
+- Waking from sleep restarts Zebar 4 seconds later whatever the cooldown: after a resume, WebView2 windows can keep
+  running their pages while no longer drawing on screen.
+- The session menu and the launcher's power actions close their window before asking Windows to sleep or shut down.
 - `--restore-shell` shows the Windows taskbar and puts back the Windows colours saved before the colour sync.

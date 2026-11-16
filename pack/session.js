@@ -19,9 +19,9 @@ const popup = setupPopup('session', {
 });
 
 const run = async action => {
-  const request = helperClient.request('power.run', { action });
-  await Promise.race([request, new Promise(resolve => setTimeout(resolve, 500))]);
-  await popup.close();
+  popup.close();
+  await new Promise(resolve => setTimeout(resolve, 420));
+  await helperClient.request('power.run', { action }).catch(error => console.error('[caelestia] Alimentation', error));
 };
 
 buttons.forEach((button, index) => {

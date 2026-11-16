@@ -49,6 +49,18 @@ internal sealed class ZebarWatchdog(Log log, ProcessDirectory processes)
         }
     }
 
+    public static bool TryRestartRunning(Log log, ProcessDirectory processes, DateTimeOffset now, string reason, bool ignoreCooldown = false)
+    {
+        var window = User32.FindWindow(null, ProbeWindowTitle);
+        if (window == 0)
+        {
+            return false;
+        }
+
+        User32.GetWindowThreadProcessId(window, out var processId);
+        return TryRestart(log, processes, processId, now, reason, ignoreCooldown);
+    }
+
     public static DateTimeOffset LastRestart
     {
         get
@@ -60,11 +72,11 @@ internal sealed class ZebarWatchdog(Log log, ProcessDirectory processes)
         }
     }
 
-    public static bool TryRestart(Log log, ProcessDirectory processes, uint processId, DateTimeOffset now, string reason)
+    public static bool TryRestart(Log log, ProcessDirectory processes, uint processId, DateTimeOffset now, string reason, bool ignoreCooldown = false)
     {
         lock (s_gate)
         {
-            if (now - s_lastRestart < RestartCooldown)
+            if (!ignoreCooldown && now - s_lastRestart < RestartCooldown)
             {
                 return false;
             }

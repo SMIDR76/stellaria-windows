@@ -83,4 +83,15 @@ public sealed class MessageLoopTests : IAsyncLifetime
             User32.keybd_event(key, 0, User32.KeyEventKeyUp, 0);
         }
     }
+
+    [Fact]
+    public async Task Waking_from_sleep_raises_the_resumed_event()
+    {
+        var resumed = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        _loop.Resumed += () => resumed.TrySetResult();
+
+        Assert.True(User32.PostMessage(_loop.Window, User32.WmPowerBroadcast, User32.PbtResumeAutomatic, 0));
+
+        await resumed.Task.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
+    }
 }
