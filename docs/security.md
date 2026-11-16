@@ -111,6 +111,11 @@ running helper to quit so it cannot hide the taskbar again.
 These paths are verified on the NativeAOT build: the taskbar is visible right after `--quit`, and `--restore-shell`
 writes back the saved value and clears it.
 
+The optional Windows colour sync (`windows.setColors`) only writes the current user's personalisation values under
+`HKCU` (`Explorer\Accent`, `DWM`, `Themes\Personalize`) and the accent preference Settings itself uses. It saves the
+previous values first; turning the option off, `--restore-shell` and `uninstall.ps1` write them back. Values that did
+not exist before are removed again, so Windows falls back to its defaults.
+
 ## Supply chain
 
 - Every JavaScript dependency is pinned to an exact version in `package.json`, with integrity hashes in

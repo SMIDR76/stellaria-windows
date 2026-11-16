@@ -195,6 +195,15 @@ const terminalBases = {
   cyan: '#12a594',
 };
 
+// Sept nuances pour Windows (de Light3 à Dark3), tirées de la couleur principale du thème. Windows utilise les nuances
+// claires en mode sombre (interrupteurs des Paramètres, sélections) et les foncées en mode clair ; une chroma minimale
+// garde un accent lisible quand le fond d'écran est presque gris.
+export function windowsPalette(primaryHex) {
+  const primary = Hct.fromInt(argbFromHex(primaryHex));
+  const chroma = Math.max(primary.chroma, 36);
+  return [90, 76, 62, 48, 40, 28, 16].map(tone => hexFromArgb(Hct.from(primary.hue, chroma, tone).toInt()));
+}
+
 export function paletteExport() {
   const source = store.get(keys.source, argbFromHex(settings.defaultSource));
   const mode = store.get(keys.mode, 'dark');

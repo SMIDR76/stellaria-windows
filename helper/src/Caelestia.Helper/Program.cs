@@ -39,7 +39,7 @@ internal static class Program
 
         if (options.RestoreShell)
         {
-            return RestoreShell(state, log);
+            return RestoreShell(state, log, paths);
         }
 
         using var instance = SingleInstance.Acquire(InstanceName);
@@ -135,10 +135,11 @@ internal static class Program
         new SystemModule(),
         new ThemeSourceModule(),
         new ThemeModule(),
+        new WindowsColorsModule(),
         new HealthModule(),
     ];
 
-    private static int RestoreShell(HelperState state, Log log)
+    private static int RestoreShell(HelperState state, Log log, AppPaths paths)
     {
         RequestQuit();
         var deadline = DateTime.UtcNow + QuitWait;
@@ -154,6 +155,7 @@ internal static class Program
         }
 
         ShellRecovery.RestoreOriginalTaskbar(state, log);
+        WindowsColorsModule.RestoreFromBackup(paths.DataDirectory, log);
         log.Info("recovery", "Shell restored on request.");
         return 0;
     }

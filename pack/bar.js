@@ -27,6 +27,7 @@ import {
   toggleDashboard,
   toggleDrawer,
   togglePopup,
+  windowsPalette,
   zebar,
 } from './common.js';
 
@@ -585,8 +586,52 @@ function syncSwitcherTheme() {
   }, 400);
 }
 
+// Couleurs de Windows (option « Accorder Windows au thème ») : l'accent et le mode clair ou sombre suivent le thème.
+// Seule la barre de l'écran principal parle au helper ; il garde les couleurs d'avant et les remet quand on désactive.
+const windowsColors = { sent: '', timer: 0 };
+
+function syncWindowsColors() {
+  clearTimeout(windowsColors.timer);
+  windowsColors.timer = setTimeout(() => {
+    if (!getOption('windowsColors', false)) {
+      if (store.get('caelestia:windows-colors:applied', false)) {
+        helperClient.request('windows.restoreColors')
+          .then(() => store.set('caelestia:windows-colors:applied', false))
+          .catch(error => console.error('[caelestia] Couleurs Windows', error));
+      }
+      windowsColors.sent = '';
+      return;
+    }
+    const primary = getComputedStyle(document.documentElement).getPropertyValue('--m3-primary').trim();
+    if (!/^#[0-9a-f]{6}$/i.test(primary)) return;
+    const request = {
+      palette: windowsPalette(primary),
+      dark: document.documentElement.dataset.mode !== 'light',
+      titleBars: Boolean(getOption('windowsTitleBars', false)),
+    };
+    const payload = JSON.stringify(request);
+    if (payload === windowsColors.sent) return;
+    windowsColors.sent = payload;
+    helperClient.request('windows.setColors', request)
+      .then(() => store.set('caelestia:windows-colors:applied', true))
+      .catch(error => {
+        windowsColors.sent = '';
+        console.error('[caelestia] Couleurs Windows', error);
+      });
+  }, 700);
+}
+
 if (await isPrimaryMonitor()) {
   systemEvents.since = Date.now();
+  new MutationObserver(syncWindowsColors).observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'data-mode'] });
+  option('windowsColors', false, syncWindowsColors);
+  option('windowsTitleBars', false, syncWindowsColors);
+  helperClient.onConnection(connected => {
+    if (connected) {
+      windowsColors.sent = '';
+      syncWindowsColors();
+    }
+  });
   relayHelperState();
   onDaemonEvent('switcher-theme', () => {
     switcherTheme.confirmed = switcherTheme.payload;
