@@ -19,6 +19,7 @@ import {
   store,
   windowOrigin,
   zebar,
+  heroOrnament,
 } from './common.js';
 
 initTheme();
@@ -280,6 +281,12 @@ $('resources').replaceChildren(resources.cpu.node, resources.ram.node, resources
 resources.cpu.node.title = 'Processeur';
 resources.ram.node.title = 'Mémoire';
 resources.disk.node.title = 'Disque';
+
+// Style de la carte d'accueil : grandes formes décoratives qui tournent lentement derrière la météo, l'heure et le
+// média (seulement tableau de bord ouvert).
+document.querySelector('.dash-weather').prepend(heroOrnament('flower'));
+document.querySelector('.dash-time').prepend(heroOrnament('cookie4'));
+document.getElementById('dash-media').prepend(heroOrnament('softBurst'));
 
 const logo = shapeSvg('gem');
 $('user-logo').append(logo, element('span', { class: 'logo-mark' }));

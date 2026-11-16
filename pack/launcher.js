@@ -4,6 +4,9 @@ import {
   getOption,
   helper,
   helperClient,
+  heroMark,
+  heroOrnament,
+  setShape,
   icon,
   initTheme,
   loadSchemes,
@@ -36,7 +39,57 @@ const nodes = {
   query: document.getElementById('query'),
   searchIcon: document.getElementById('search-icon'),
   loading: document.getElementById('loading'),
+  hero: document.getElementById('hero'),
+  heroTitle: document.getElementById('hero-title'),
+  heroSubtitle: document.getElementById('hero-subtitle'),
+  heroModes: document.getElementById('hero-modes'),
 };
+
+// En-tête du lanceur : la forme change avec le mode (fondu de forme), le titre dit où l'on est, et des boutons
+// passent d'un mode à l'autre sans retenir les préfixes.
+const heroModes = {
+  apps: { shape: 'cookie9', symbol: 'apps', prefix: '', label: 'Applications' },
+  actions: { shape: 'gem', symbol: 'terminal', prefix: '>', label: 'Actions', subtitle: 'Thème, session et outils' },
+  wallpapers: { shape: 'flower', symbol: 'wallpaper', prefix: '>fond ', label: "Fonds d'écran", subtitle: 'Les couleurs du thème suivent le fond choisi' },
+  variants: { shape: 'softBurst', symbol: 'tune', label: 'Variantes', subtitle: 'Palettes dynamiques Material You' },
+  schemes: { shape: 'flower', symbol: 'palette', label: 'Schémas de couleurs', subtitle: 'Palettes fixes, en clair ou en sombre' },
+  shortcuts: { shape: 'cookie4', symbol: 'keyboard', prefix: '>raccourcis ', label: 'Raccourcis', subtitle: 'Tout le thème au clavier' },
+  emoji: { shape: 'sunny', symbol: 'mood', prefix: ':', label: 'Emojis', subtitle: 'Entrée pour copier' },
+  clipboard: { shape: 'clamShell', symbol: 'content_paste', prefix: '>clip ', label: 'Presse-papiers', subtitle: 'Historique de Windows, Entrée pour coller' },
+};
+const heroMarkNode = heroMark('cookie9', 'apps');
+nodes.hero.prepend(heroOrnament('softBurst'), heroMarkNode);
+const modeButtons = Object.entries(heroModes).filter(([, mode]) => mode.prefix !== undefined).map(([id, mode]) => {
+  const button = element('button', {
+    class: 'hero-mode state-layer',
+    title: mode.label,
+    'data-mode': id,
+    onMousedown: event => event.preventDefault(),
+    onClick: () => setQuery(mode.prefix),
+  }, icon(mode.symbol));
+  return button;
+});
+nodes.heroModes.replaceChildren(...modeButtons);
+let heroShownMode = null;
+
+function greeting() {
+  const hour = new Date().getHours();
+  return hour < 5 ? 'Bonne nuit' : hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
+}
+
+function paintHero(modeId) {
+  const mode = heroModes[modeId] ?? heroModes.apps;
+  const date = new Date().toLocaleDateString(settings.locale, { weekday: 'long', day: 'numeric', month: 'long' });
+  nodes.heroTitle.textContent = modeId === 'apps' ? greeting() : mode.label;
+  nodes.heroSubtitle.textContent = modeId === 'apps' ? date.charAt(0).toUpperCase() + date.slice(1) : mode.subtitle;
+  for (const button of modeButtons) button.classList.toggle('selected', button.dataset.mode === modeId);
+  if (modeId === heroShownMode) return;
+  heroShownMode = modeId;
+  setShape(heroMarkNode.querySelector('.shape'), mode.shape);
+  const symbol = heroMarkNode.querySelector('.icon');
+  symbol.textContent = mode.symbol;
+  symbol.animate?.([{ opacity: 0, transform: 'scale(0.4)' }, { opacity: 1, transform: 'none' }], { duration: 380, easing: 'cubic-bezier(0.38, 1.21, 0.22, 1)' });
+}
 
 // Le lanceur reste chargé entre deux ouvertures : chaque ouverture repart d'une recherche vide, sauf si un raccourci
 // vient de demander un mode précis (fonds d'écran, presse-papiers, emojis).
@@ -657,6 +710,7 @@ function render() {
   state.mode = parsed.mode;
   if (modeChanged) state.selected = 0;
 
+  paintHero(parsed.mode);
   nodes.searchIcon.textContent = {
     apps: 'search',
     actions: 'terminal',

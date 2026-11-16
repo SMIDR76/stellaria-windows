@@ -1,6 +1,8 @@
 import {
   edgeDrawer,
   helperClient,
+  heroMark,
+  heroOrnament,
   isPrimaryMonitor,
   openFolder,
   element,
@@ -89,11 +91,26 @@ providers.onOutput(renderAudio);
 option('gameMode', false, enabled => toggles.game.set(enabled, false, `Mode jeu : ${enabled ? 'activé' : 'désactivé'}`));
 toggles.settings.set(false);
 
+// En-tête : date du jour, état de la mise en veille et minuteur en cours.
+const hero = {
+  node: document.getElementById('hero'),
+  date: document.getElementById('hero-date'),
+  awake: document.getElementById('hero-awake'),
+  timer: document.getElementById('hero-timer'),
+};
+hero.node.prepend(heroOrnament('flower'), heroMark('softBurst', 'widgets'));
+const paintDate = () => {
+  const date = new Date().toLocaleDateString(settings.locale, { weekday: 'long', day: 'numeric', month: 'long' });
+  hero.date.textContent = date.charAt(0).toUpperCase() + date.slice(1);
+};
+
 const awake = document.getElementById('awake');
 const awakeText = document.getElementById('awake-text');
 const renderAwake = enabled => {
   awake.classList.toggle('checked', Boolean(enabled));
   awakeText.textContent = enabled ? "L'écran et le PC restent allumés" : 'Le PC peut se mettre en veille';
+  hero.awake.firstChild.textContent = enabled ? 'coffee' : 'bedtime';
+  hero.awake.lastChild.textContent = enabled ? 'Toujours éveillé' : 'Veille autorisée';
 };
 renderAwake(store.get(keys.event('awake'))?.enabled);
 onDaemonEvent('awake', event => {
@@ -146,6 +163,8 @@ function renderPomodoro() {
   const remaining = remainingOf(value);
   pomodoroNodes.phase.textContent = value.endsAt || remaining < total ? phase.label : 'Minuteur';
   pomodoroNodes.time.textContent = formatClock(remaining);
+  hero.timer.hidden = !value.endsAt;
+  hero.timer.lastChild.textContent = `${phase.label} · ${formatClock(remaining)}`;
   pomodoroNodes.fill.style.transform = `scaleX(${1 - remaining / total})`;
   pomodoroNodes.actions.replaceChildren(
     capture(value.endsAt ? 'pause' : 'play_arrow', value.endsAt ? 'Pause' : 'Démarrer', () => {
@@ -192,5 +211,8 @@ syncPomodoro();
 const drawer = await edgeDrawer('utilities', {
   panel: document.getElementById('panel'),
   side: 'bottom',
-  onOpen: () => sendCommand('radios'),
+  onOpen: () => {
+    paintDate();
+    sendCommand('radios');
+  },
 });

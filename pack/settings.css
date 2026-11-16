@@ -496,6 +496,9 @@ kbd {
   width: 260px;
   height: 260px;
   color: color-mix(in srgb, var(--m3-primary) 10%, transparent);
+}
+
+body.open .page-hero-ornament {
   animation: about-spin 60s linear infinite;
 }
 
@@ -510,7 +513,7 @@ kbd {
   filter: drop-shadow(0 8px 18px color-mix(in srgb, var(--m3-shadow) 30%, transparent));
 }
 
-.page-hero-mark .shape {
+body.open .page-hero-mark .shape {
   animation: welcome-logo 700ms var(--ease-spatial) both, about-spin 40s linear 700ms infinite;
 }
 

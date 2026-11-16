@@ -433,34 +433,70 @@ body.open .drawer * {
   scrollbar-width: thin;
 }
 
+.notifications-hero {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+}
+
+.notifications-hero .hero-mark {
+  width: 54px;
+  height: 54px;
+}
+
+.notifications-hero .hero-mark .icon {
+  font-size: 26px;
+}
+
 .notification-empty {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 18px 6px;
+  gap: 12px;
+  padding: 14px 12px;
+  border-radius: 20px;
+  background: var(--surface-layer);
   color: var(--m3-on-surface-variant);
+  font-size: 13px;
 }
 
+/* Une carte par application, qui arrive en cascade. */
 .notification-group {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  padding: 8px;
+  border-radius: 20px;
+  background: var(--surface-layer);
+  animation: hero-in var(--duration-emphasized) var(--ease-emphasized-full) both;
+  animation-delay: calc(var(--i, 0) * 55ms);
 }
 
 .notification-app {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0 4px 2px;
-  font-size: 12px;
+  gap: 10px;
+  padding: 2px 4px 4px;
+  font-size: 12.5px;
   font-weight: 600;
-  color: var(--m3-on-surface-variant);
+  color: var(--m3-on-surface);
+}
+
+.notification-app-icon {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--m3-secondary-container);
+  color: var(--m3-on-secondary-container);
 }
 
 .notification-app .app-icon {
   width: 18px;
   height: 18px;
-  font-size: 18px;
+  font-size: 17px;
   object-fit: contain;
 }
 
@@ -480,10 +516,9 @@ body.open .drawer * {
   align-items: flex-start;
   gap: 8px;
   padding: 10px 8px 10px 12px;
-  border-radius: 16px;
+  border-radius: 14px;
   background: var(--m3-surface-container-high);
   cursor: default;
-  animation: page-in var(--duration-effects-slow) var(--ease-effects);
 }
 
 .notification.state-layer {

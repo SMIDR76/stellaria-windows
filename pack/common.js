@@ -1103,6 +1103,10 @@ export function element(tag, attributes = {}, children = []) {
   return node;
 }
 
+// Éléments du style « carte d'accueil » (voir .hero dans common.css).
+export const heroMark = (shape, symbol) => element('div', { class: 'hero-mark' }, [shapeSvg(shape), icon(symbol)]);
+export const heroOrnament = (shape = 'flower') => element('div', { class: 'hero-ornament' }, shapeSvg(shape));
+
 export const icon = (name, { filled = false, className = '' } = {}) =>
   element('span', { class: `icon${filled ? ' filled' : ''}${className ? ` ${className}` : ''}`, text: name });
 

@@ -15,6 +15,8 @@ import {
   store,
   toast,
   zebar,
+  heroMark,
+  heroOrnament,
 } from './common.js';
 
 initTheme();
@@ -447,7 +449,7 @@ function relativeTime(time) {
 }
 
 function createNotificationsView() {
-  const count = element('span', { class: 'view-value', text: '' });
+  const subtitle = element('span', { class: 'hero-subtitle', text: '' });
   const list = element('div', { class: 'notification-list' });
   const clear = element('button', {
     class: 'tonal-button',
@@ -457,8 +459,13 @@ function createNotificationsView() {
       render();
     },
   }, [icon('clear_all'), element('span', { text: 'Tout effacer' })]);
+  // En-tête au style de la carte d'accueil : la cloche dans une forme, le nombre de notifications en sous-titre.
   const node = element('div', { class: 'view notifications-view', style: { width: '360px' } }, [
-    element('div', { class: 'view-header' }, [icon('notifications'), element('span', { class: 'view-title', text: 'Notifications' }), count]),
+    element('div', { class: 'hero notifications-hero' }, [
+      heroOrnament('flower'),
+      heroMark('cookie9', 'notifications'),
+      element('div', { class: 'hero-text' }, [element('span', { class: 'hero-title', text: 'Notifications' }), subtitle]),
+    ]),
     list,
     clear,
   ]);
@@ -472,23 +479,23 @@ function createNotificationsView() {
     const directory = await loadAppDirectory();
     const dismissed = new Set(store.get(notificationKeys.dismissed, []));
     const items = (helperClient.state('notifications')?.items ?? []).filter(item => !dismissed.has(item.id));
-    count.textContent = items.length ? String(items.length) : '';
+    subtitle.textContent = items.length ? `${items.length} notification${items.length > 1 ? 's' : ''}` : 'Tout est calme';
     clear.hidden = items.length === 0;
     if (!items.length) {
-      list.replaceChildren(element('div', { class: 'notification-empty' }, [icon('notifications_off'), element('span', { text: 'Aucune notification' })]));
+      list.replaceChildren(element('div', { class: 'notification-empty' }, [icon('notifications_paused', { className: 'tonal-icon' }), element('span', { text: 'Aucune notification pour le moment' })]));
     } else {
       const groups = new Map();
       for (const item of items) {
         if (!groups.has(item.appId)) groups.set(item.appId, []);
         groups.get(item.appId).push(item);
       }
-      list.replaceChildren(...[...groups.entries()].map(([appId, entries]) => {
+      list.replaceChildren(...[...groups.entries()].map(([appId, entries], index) => {
         const app = directory.get(appId.toLowerCase());
         const name = app?.name ?? fallbackAppName(appId);
         const launch = app ? () => helperClient.request('apps.launch', { id: app.id }).then(close, () => {}) : null;
-        return element('section', { class: 'notification-group' }, [
+        return element('section', { class: 'notification-group', style: { '--i': String(Math.min(index, 6)) } }, [
           element('div', { class: 'notification-app' }, [
-            app?.icon ? element('img', { class: 'app-icon', src: `data:image/png;base64,${app.icon}`, alt: '' }) : icon('apps', { className: 'app-icon' }),
+            element('span', { class: 'notification-app-icon' }, app?.icon ? element('img', { class: 'app-icon', src: `data:image/png;base64,${app.icon}`, alt: '' }) : icon('apps', { className: 'app-icon' })),
             element('span', { text: name }),
             entries.length > 1 ? element('span', { class: 'notification-count', text: String(entries.length) }) : null,
           ]),

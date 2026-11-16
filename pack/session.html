@@ -30,13 +30,52 @@
           color var(--duration-short) var(--ease-standard);
       }
 
+      .session-button {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+      }
+
       .session-button .icon {
+        position: relative;
         font-size: 30px;
+      }
+
+      /* Bouton choisi : dégradé de la carte d'accueil et forme qui éclot en tournant derrière l'icône. */
+      .session-button .shape {
+        position: absolute;
+        z-index: -1;
+        width: 70px;
+        height: 70px;
+        left: 7px;
+        top: 7px;
+        color: color-mix(in srgb, var(--m3-primary) 22%, transparent);
+        opacity: 0;
+        transform: rotate(-120deg) scale(0.3);
+        transition:
+          opacity var(--duration-effects) var(--ease-effects),
+          transform var(--duration-spatial) var(--ease-spatial);
+      }
+
+      .session-button .shape path {
+        fill: currentColor;
+      }
+
+      .session-button.focused .shape {
+        opacity: 1;
+        transform: none;
+      }
+
+      .session-button.danger .shape {
+        color: color-mix(in srgb, var(--m3-error) 26%, transparent);
       }
 
       .session-button:focus-visible,
       .session-button.focused {
-        background: var(--m3-secondary-container);
+        background:
+          radial-gradient(120% 120% at 0% 0%, color-mix(in srgb, var(--m3-primary-container) 80%, transparent), transparent 70%),
+          radial-gradient(100% 100% at 100% 100%, color-mix(in srgb, var(--m3-tertiary-container) 75%, transparent), transparent 70%),
+          var(--m3-secondary-container);
         color: var(--m3-on-secondary-container);
         border-radius: calc(var(--rounding) * 1.6);
       }
@@ -57,7 +96,7 @@
       <div class="drawer-anchor">
         <div class="flare start"></div>
         <section class="drawer-panel session" id="panel">
-          <div class="drawer-content session-content" id="buttons">
+          <div class="drawer-content session-content cascade" id="buttons">
             <button class="session-button state-layer" data-action="lock" title="Verrouiller"><span class="icon">lock</span></button>
             <button class="session-button state-layer" data-action="sleep" title="Veille"><span class="icon">bedtime</span></button>
             <button class="session-button state-layer" data-action="logout" title="Déconnexion"><span class="icon">logout</span></button>
@@ -70,11 +109,13 @@
     </div>
 
     <script type="module">
-      import { helper, initTheme, setupPopup } from './common.js';
+      import { helper, initTheme, setupPopup, shapeSvg } from './common.js';
 
       initTheme();
 
       const buttons = [...document.querySelectorAll('.session-button')];
+      const shapes = ['cookie9', 'sunny', 'gem', 'softBurst', 'flower'];
+      buttons.forEach((button, index) => button.prepend(shapeSvg(shapes[index % shapes.length])));
       let focused = 0;
 
       const focus = index => {
