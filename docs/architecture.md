@@ -72,6 +72,21 @@ list and their parameters are in `protocol.md`.
 The helper is published with NativeAOT when the Visual Studio C++ build tools are installed, which keeps it near
 35 MB of memory; otherwise the installer falls back to a self-contained single file.
 
+### Setup commands
+
+Installers only copy files and call the helper, so every way of installing shares the same logic:
+
+| Command | Effect |
+| --- | --- |
+| `--install [--zebar <path>] [--switcher <path>]` | Adds the pack's widgets (`pack/startup.json`) to Zebar's start-up list (backup, atomic write, UTF-8 without BOM) and registers the logon tasks from XML, for the current user without elevation. Zebar is found in Program Files, the uninstall entries or Scoop. |
+| `--start` | Runs the logon tasks now. |
+| `--shutdown` | Ends the tasks, asks the running helper to quit (then stops it), stops Zebar and the switcher and gives the screens their full work area back. |
+| `--uninstall` | `--shutdown`, then restores the taskbar and Windows colours from the saved state, removes the tasks, the old Run entries and the Caelestia start-up entries of Zebar. Works even if the helper was killed. |
+| `--restore-shell` | `--shutdown`, then shows the taskbar and restores the Windows colours. |
+
+`installer/caelestia.iss` (Inno Setup) and `scripts/install.ps1` call these commands; `scripts/build-release.ps1` and
+the Release workflow build the release files (see `releasing.md`).
+
 ### Recovery
 
 - A hung Zebar (15 s) or Caelestia docks pushed away from their screen edges after a display change (6 s) restart

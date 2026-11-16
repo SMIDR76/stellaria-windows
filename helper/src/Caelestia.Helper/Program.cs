@@ -1,10 +1,11 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Caelestia.Helper.Configuration;
 using Caelestia.Helper.Desktop;
 using Caelestia.Helper.Hosting;
 using Caelestia.Helper.Interop;
 using Caelestia.Helper.Modules;
 using Caelestia.Helper.Server;
+using Caelestia.Helper.Setup;
 
 namespace Caelestia.Helper;
 
@@ -40,6 +41,11 @@ internal static class Program
         if (options.RestoreShell)
         {
             return RestoreShell(state, log, paths);
+        }
+
+        if (options.Setup is { } verb)
+        {
+            return RunSetup(verb, options, paths, state, log);
         }
 
         using var instance = SingleInstance.Acquire(InstanceName);
@@ -139,7 +145,29 @@ internal static class Program
         new HealthModule(),
     ];
 
-    private static int RestoreShell(HelperState state, Log log, AppPaths paths)
+    private static int RunSetup(string verb, CommandLine options, AppPaths paths, HelperState state, Log log)
+    {
+        var setup = new SetupCommands(paths, state, log);
+        try
+        {
+            return verb switch
+            {
+                "install" => setup.Install(options.Zebar, options.Switcher),
+                "uninstall" => setup.Uninstall(),
+                "shutdown" => setup.Shutdown(),
+                "start" => setup.Start(),
+                _ => 2,
+            };
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException or InvalidDataException or System.Text.Json.JsonException)
+        {
+            Console.Error.WriteLine(exception.Message);
+            log.Error("setup", $"--{verb} failed.", exception);
+            return 1;
+        }
+    }
+
+    public static void StopRunningHelper()
     {
         RequestQuit();
         var deadline = DateTime.UtcNow + QuitWait;
@@ -148,12 +176,37 @@ internal static class Program
             using var probe = SingleInstance.Acquire(InstanceName);
             if (probe.IsOwner)
             {
-                break;
+                return;
             }
 
             Thread.Sleep(100);
         }
 
+        foreach (var process in System.Diagnostics.Process.GetProcessesByName("caelestia-helper"))
+        {
+            using (process)
+            {
+                if (process.Id == Environment.ProcessId)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    process.Kill();
+                    process.WaitForExit(QuitWait);
+                }
+                catch (Exception exception) when (exception is InvalidOperationException or System.ComponentModel.Win32Exception)
+                {
+                    Console.Error.WriteLine($"The running helper could not be stopped: {exception.Message}");
+                }
+            }
+        }
+    }
+
+    private static int RestoreShell(HelperState state, Log log, AppPaths paths)
+    {
+        new SetupCommands(paths, state, log).Shutdown();
         ShellRecovery.RestoreOriginalTaskbar(state, log);
         WindowsColorsModule.RestoreFromBackup(paths.DataDirectory, log);
         log.Info("recovery", "Shell restored on request.");

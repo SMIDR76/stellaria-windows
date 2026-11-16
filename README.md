@@ -37,20 +37,40 @@ No administrator rights are needed: everything installs in your user profile.
 
 ## Install
 
+Download `CaelestiaSetup-<version>.exe` from the [latest release](https://github.com/SMIDR76/caelestia-windows/releases/latest)
+and run it. It installs for your account only, without administrator rights, in English or French. It shows what it
+changes on your PC before installing, installs Zebar and WebView2 when they are missing (Zebar installs for the whole
+machine, so Windows asks for permission once), and starts the theme.
+
+The setup is not code-signed yet, so Windows may warn about it:
+
+- **SmartScreen** ("Windows protected your PC"): choose **More info**, then **Run anyway**.
+- **Smart App Control** (Windows 11) blocks unsigned programs and has no exception: turn it off in Windows Security >
+  App & browser control > Smart App Control, or wait for a signed release.
+
+To check a download, compare its SHA-256 with `SHA256SUMS.txt` from the same release, or verify its build provenance
+with the GitHub CLI: `gh attestation verify CaelestiaSetup-<version>.exe -R SMIDR76/caelestia-windows`.
+
+Silent install: `CaelestiaSetup-<version>.exe /VERYSILENT /SUPPRESSMSGBOXES`. Add `/TASKS="startnow"` to leave the
+Alt+Tab switcher out, and `/LANG=fr` or `/LANG=en` to force the language.
+
+Uninstall from **Settings > Apps > Installed apps**, or with the Start menu entry. It stops the theme, gives the
+Windows taskbar and colours back (even if the helper was closed by force), removes the logon tasks and Zebar's
+start-up entries, and asks whether to keep your settings (silent uninstalls keep them).
+
+### Portable archive and building from source
+
+`Caelestia-<version>-portable.zip` holds the same files and the `scripts\install.ps1` / `scripts\uninstall.ps1`
+pair. From a clone, the same scripts build the helper first:
+
 ```powershell
 git clone https://github.com/SMIDR76/caelestia-windows
 cd caelestia-windows
 powershell -ExecutionPolicy Bypass -File scripts\install.ps1
 ```
 
-The installer copies the pack, builds the helper, registers three logon tasks (helper, switcher, Zebar) and adds a
-**Caelestia** folder to the Start menu. On first launch the settings open on a short welcome page.
-
-To remove everything and get the Windows taskbar back:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\uninstall.ps1
-```
+`scripts\build-release.ps1` builds the helper, the switcher, the portable archive, the setup (with Inno Setup 6.7 or
+later) and the checksums into `artifacts\`. Releases are described in [docs/releasing.md](docs/releasing.md).
 
 ## Shortcuts
 

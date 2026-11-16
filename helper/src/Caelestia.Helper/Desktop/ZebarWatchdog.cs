@@ -119,7 +119,7 @@ internal sealed class ZebarWatchdog(Log log, ProcessDirectory processes)
         Thread.Sleep(1500);
     }
 
-    private static void ReleaseWorkAreas()
+    public static void ReleaseWorkAreas()
     {
         foreach (var monitor in DesktopReader.Monitors())
         {
