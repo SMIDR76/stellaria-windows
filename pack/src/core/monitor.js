@@ -20,6 +20,10 @@ export async function currentMonitorName() {
   return (await currentMonitor())?.name ?? '';
 }
 
+export async function primaryMonitorName() {
+  return (await tauriInvoke('plugin:window|primary_monitor'))?.name ?? '';
+}
+
 export async function isPrimaryMonitor() {
   const [mine, primary] = await Promise.all([currentMonitor(), tauriInvoke('plugin:window|primary_monitor')]);
   return Boolean(mine && primary && mine.name === primary.name);

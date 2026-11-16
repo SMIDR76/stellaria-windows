@@ -17,6 +17,8 @@ import {
   store,
   toast,
   zebar,
+  answerPanelPings,
+  pendingRequest,
 } from './common.js';
 
 initTheme();
@@ -320,7 +322,7 @@ function createNetworkView() {
       ['DNS', iface.dnsServers?.join(', ') || '—'],
       ['Vitesse', formatLinkSpeed(iface.receiveSpeed)],
       ['MAC', iface.macAddress?.toUpperCase() ?? '—'],
-      gateway?.signalStrength != null ? ['Signal', `${gateway.signalStrength} %`] : null,
+      Number.isFinite(gateway?.signalStrength) ? ['Signal', `${gateway.signalStrength} %`] : null,
     ].filter(Boolean) : [['État', 'Aucune connexion']];
     const signature = JSON.stringify(rows);
     if (grid.dataset.signature !== signature) {
@@ -645,8 +647,11 @@ hideOnFullscreen(value => {
 });
 
 await widgetWindow.setIgnoreCursorEvents(true);
-store.set(keys.popout(monitor), { open: false, at: Date.now() });
+answerPanelPings('popout', monitor);
+const pendingOpen = pendingRequest(keys.popout(monitor));
+if (!pendingOpen) store.set(keys.popout(monitor), { open: false, at: Date.now() });
 
 store.watch(keys.popout(monitor), request => {
   if (request?.open && !state.suppressed) open(request);
 }, 60);
+if (pendingOpen && !state.suppressed) open(pendingOpen);

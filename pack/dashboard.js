@@ -12,6 +12,8 @@ import {
   layout,
   loadWeather,
   option,
+  answerPanelPings,
+  pendingRequest,
   requestDashboard,
   setShape,
   settings,
@@ -97,7 +99,6 @@ function iconButton(symbol, { tonal = true, fill = false, small = false, title, 
   };
 }
 
-const formatClock = date => date.toLocaleTimeString(settings.locale, { hour: '2-digit', minute: '2-digit' });
 
 function formatBytes(bytes, perSecond = false) {
   const units = ['o', 'Ko', 'Mo', 'Go', 'To'];
@@ -463,7 +464,7 @@ function renderGraph() {
   if (!graphFrame) graphFrame = requestAnimationFrame(drawGraph);
 }
 
-function drawGraph(time) {
+function drawGraph() {
   graphFrame = isOpen && activeTab === 'performance' ? requestAnimationFrame(drawGraph) : 0;
   const width = graph.clientWidth || 358;
   const height = graph.clientHeight || 90;
@@ -1028,8 +1029,11 @@ hideOnFullscreen(value => {
 });
 
 await widgetWindow.setIgnoreCursorEvents(true);
-requestDashboard(monitor, false);
+answerPanelPings('dashboard', monitor);
+const pendingOpen = pendingRequest(keys.dashboard(monitor));
+if (!pendingOpen) requestDashboard(monitor, false);
 store.watch(keys.dashboard(monitor), applyRequest, 80);
+if (pendingOpen) applyRequest(pendingOpen);
 store.watch(keys.dashboardTab, request => {
   if (request && Date.now() - request.at < 2000) showTab(request.tab);
 }, 100);

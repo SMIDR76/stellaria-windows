@@ -65,10 +65,8 @@ async function refreshMedia() {
 
 async function appIcon(appId) {
   if (!appIcons.size) {
-    try {
-      for (const app of await helperClient.request('apps.list')) appIcons.set(app.id.toLowerCase(), app);
-    } catch {
-    }
+    const apps = await helperClient.request('apps.list').catch(() => []);
+    for (const app of apps) appIcons.set(app.id.toLowerCase(), app);
   }
   return appIcons.get(appId.toLowerCase());
 }

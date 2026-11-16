@@ -20,7 +20,6 @@ import {
   openLauncher,
   openSettings,
   option,
-  settings,
   smoothValue,
   store,
   toast,
@@ -29,6 +28,7 @@ import {
   togglePopup,
   windowsPalette,
   zebar,
+  requestPopout,
 } from './common.js';
 
 initTheme();
@@ -311,7 +311,7 @@ for (const [node, kind] of popoutTargets) {
   node.addEventListener('mouseenter', () => {
     if (!getOption('hoverPopouts', true)) return;
     const rect = node.getBoundingClientRect();
-    store.set(keys.popout(monitor), {
+    requestPopout(monitor, {
       kind,
       open: true,
       top: window.screenY + rect.top,

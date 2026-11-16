@@ -12,7 +12,6 @@ import {
   openFolder,
   openLauncher,
   setOption,
-  settings,
   setupPopup,
   shapeSvg,
   store,

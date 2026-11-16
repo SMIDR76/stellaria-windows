@@ -1,6 +1,49 @@
 import * as zebar from '../../vendor/zebar.mjs';
-import { currentMonitorName, cursorPosition, hideOnFullscreen, isPrimaryMonitor, layout, tauriInvoke } from './monitor.js';
+import { currentMonitorName, cursorPosition, hideOnFullscreen, layout, primaryMonitorName, tauriInvoke } from './monitor.js';
 import { keys, store } from './store.js';
+
+const lazyPanels = new Set(['dashboard', 'utilities', 'popout']);
+const pendingWindow = 5000;
+const spawnedAt = new Map();
+let packManifest = null;
+
+const panelKey = (name, monitor, kind) => `caelestia:panel:${name}:${monitor}:${kind}`;
+
+export function answerPanelPings(name, monitor) {
+  store.watch(panelKey(name, monitor, 'ping'), ping => {
+    if (ping?.id) store.set(panelKey(name, monitor, 'pong'), ping.id);
+  }, 100);
+}
+
+export function pendingRequest(key) {
+  const request = store.get(key);
+  return request?.open && Date.now() - request.at < pendingWindow ? request : null;
+}
+
+async function presetFor(name) {
+  packManifest ??= fetch(new URL('../../zpack.json', import.meta.url)).then(response => response.json());
+  const widget = (await packManifest).widgets.find(candidate => candidate.name === name);
+  const { name: _preset, ...placement } = widget.presets[0];
+  return placement;
+}
+
+async function ensurePanel(name, monitor) {
+  if (!lazyPanels.has(name) || !monitor || monitor === await primaryMonitorName()) return;
+  const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  store.set(panelKey(name, monitor, 'ping'), { id, at: Date.now() });
+  for (let waited = 0; waited < 300; waited += 25) {
+    await new Promise(resolve => setTimeout(resolve, 25));
+    if (store.get(panelKey(name, monitor, 'pong')) === id) return;
+  }
+  const key = `${name}:${monitor}`;
+  if (Date.now() - (spawnedAt.get(key) ?? 0) < 10000) return;
+  spawnedAt.set(key, Date.now());
+  await zebar.startWidget(name, { ...(await presetFor(name)), monitorSelection: { type: 'name', match: monitor } });
+}
+
+function ensureInBackground(name, monitor) {
+  ensurePanel(name, monitor).catch(error => console.error(`[caelestia] Chargement de ${name}`, error));
+}
 
 export function drawerKey(name, monitor) {
   return `caelestia:${name}:${monitor}`;
@@ -8,6 +51,12 @@ export function drawerKey(name, monitor) {
 
 export function requestDrawer(name, monitor, open, trigger = 'hover') {
   store.set(drawerKey(name, monitor), { open, trigger, at: Date.now() });
+  if (open) ensureInBackground(name, monitor);
+}
+
+export function requestPopout(monitor, request) {
+  store.set(keys.popout(monitor), request);
+  if (request.open) ensureInBackground('popout', monitor);
 }
 
 export async function edgeDrawer(name, { panel, side, autoCloseMs = 1600, onOpen, onClose }) {
@@ -91,11 +140,14 @@ export async function edgeDrawer(name, { panel, side, autoCloseMs = 1600, onOpen
   });
 
   await widgetWindow.setIgnoreCursorEvents(true);
-  store.set(key, { open: false, at: Date.now() });
+  answerPanelPings(name, monitorName);
+  const pending = pendingRequest(key);
+  if (!pending) store.set(key, { open: false, at: Date.now() });
   store.watch(key, request => {
     if (request?.open && !state.suppressed) show(request.trigger ?? 'hover');
     else if (request && !request.open && request.trigger === 'pinned') hide();
   }, 60);
+  if (pending && !state.suppressed) show(pending.trigger ?? 'hover');
 
   return {
     monitor: monitorName,
@@ -113,6 +165,7 @@ export function toggleDrawer(name, monitor) {
 
 export function requestDashboard(monitor, open, trigger = 'click') {
   store.set(keys.dashboard(monitor), { open, trigger, at: Date.now() });
+  if (open) ensureInBackground('dashboard', monitor);
 }
 
 export function dashboardState(monitor) {
@@ -201,14 +254,12 @@ export function setupPopup(name, { panel, onOpen } = {}) {
   const transient = Boolean(spawn && loadedAt - spawn.at < 8000);
   if (transient) store.set(keys.popupSpawn(name), null);
   let monitorName = null;
-  let primary = false;
   let open = false;
   let openedAt = 0;
   let hideTimer = 0;
 
-  const located = Promise.all([currentMonitorName(), isPrimaryMonitor()]).then(([monitor, isPrimary]) => {
+  const located = currentMonitorName().then(monitor => {
     monitorName = monitor;
-    primary = isPrimary;
   });
 
   const show = async () => {
