@@ -23,7 +23,8 @@ export function pendingRequest(key) {
 async function presetFor(name) {
   packManifest ??= fetch(new URL('../../zpack.json', import.meta.url)).then(response => response.json());
   const widget = (await packManifest).widgets.find(candidate => candidate.name === name);
-  const { name: _preset, ...placement } = widget.presets[0];
+  const placement = { ...widget.presets[0] };
+  delete placement.name;
   return placement;
 }
 
