@@ -3,9 +3,6 @@ using System.Runtime.InteropServices.Marshalling;
 
 namespace Caelestia.Helper.Interop;
 
-// Core Audio session interfaces (audiopolicy.h). Methods are declared in vtable order; the ones the helper never calls
-// keep pointer sized placeholders.
-
 [GeneratedComInterface]
 [Guid("77AA99A0-1BD6-484F-8BC7-2C654C9A9B6F")]
 internal partial interface IAudioSessionManager2
@@ -103,7 +100,6 @@ internal static unsafe partial class AudioSessions
     private const uint ClassContextAll = 0x17;
     private static readonly Guid s_managerInterface = new("77AA99A0-1BD6-484F-8BC7-2C654C9A9B6F");
 
-    /// <summary>Lists the live sessions of the default playback device. Must run on an STA or MTA COM thread.</summary>
     public static List<AudioSession> List()
     {
         var sessions = new List<AudioSession>();

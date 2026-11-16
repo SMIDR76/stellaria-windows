@@ -72,7 +72,6 @@ internal sealed class MediaModule : IHelperModule
         _ => "none",
     };
 
-    /// <summary>Repeat cycles like media players do: off, then the whole list, then the current track.</summary>
     public static Windows.Media.MediaPlaybackAutoRepeatMode NextRepeat(Windows.Media.MediaPlaybackAutoRepeatMode? mode) => mode switch
     {
         Windows.Media.MediaPlaybackAutoRepeatMode.List => Windows.Media.MediaPlaybackAutoRepeatMode.Track,

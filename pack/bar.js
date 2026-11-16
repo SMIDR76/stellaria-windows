@@ -1,4 +1,5 @@
 import {
+  actions,
   analyzeImage,
   applyTheme,
   currentMonitorName,
@@ -15,11 +16,10 @@ import {
   keys,
   loadWeather,
   monitorAtCursor,
-  onDaemonEvent,
+  onShared,
   openLauncher,
   openSettings,
   option,
-  sendCommand,
   settings,
   smoothValue,
   store,
@@ -114,7 +114,6 @@ function applyAutoMode() {
   }
 }
 
-// Boutons allumés tant que leur panneau est ouvert, mis à jour par notification plutôt qu'en boucle.
 const syncActiveButtons = () => {
   for (const [name, button] of Object.entries(popupButtons)) {
     button.classList.toggle('active', isPopupOpen(name));
@@ -211,7 +210,6 @@ function networkIcon(network) {
 
 const trayNodes = new Map();
 
-// Une application peut retirer son icône entre le survol et l'appel : Zebar rejette alors l'appel, sans conséquence.
 function trayCall(method, id) {
   Promise.resolve(providers.outputMap.systray?.[method](id)).catch(() => {});
 }
@@ -324,7 +322,6 @@ for (const [node, kind] of popoutTargets) {
 }
 nodes.keyboard.addEventListener('click', () => openSettings('regionlanguage'));
 
-// Compteur des notifications arrivées depuis la dernière ouverture du centre de notifications.
 const notificationKeys = { dismissed: 'caelestia:notifications:dismissed', seenAt: 'caelestia:notifications:seen-at' };
 function renderNotificationBadge() {
   const items = helperClient.state('notifications')?.items ?? [];
@@ -341,7 +338,6 @@ helperClient.onState('notifications', renderNotificationBadge);
 store.watch(notificationKeys.dismissed, renderNotificationBadge, 2000);
 store.watch(notificationKeys.seenAt, renderNotificationBadge, 2000);
 
-// Bureaux virtuels de Windows, affichés à la place des espaces de travail d'un gestionnaire de fenêtres.
 const desktopIndicator = element('span', { class: 'workspace-indicator' });
 const indicatorEdges = { start: 0, end: 0 };
 const paintIndicator = () => {
@@ -366,7 +362,6 @@ function placeIndicator(target) {
     indicatorEnd.set(bottom);
     return;
   }
-  // Vers le haut, le bord haut mène ; vers le bas, c'est le bord bas.
   const goingUp = top < indicatorEdges.start;
   indicatorStart.duration = goingUp ? 200 : 450;
   indicatorEnd.duration = goingUp ? 450 : 200;
@@ -434,9 +429,9 @@ function taskButton(task, icons) {
   return element('button', {
     class: ['task', 'state-layer', task.active ? 'active' : '', task.minimized ? 'minimized' : ''].join(' ').trim(),
     title: task.title,
-    onClick: () => sendCommand(`task activate ${task.id}`),
+    onClick: () => actions.activateTask(task.id),
     onAuxClick: event => {
-      if (event.button === 1) sendCommand(`task close ${task.id}`);
+      if (event.button === 1) actions.closeTask(task.id);
     },
   }, iconData
     ? element('img', { src: `data:image/png;base64,${iconData}`, alt: '' })
@@ -496,8 +491,6 @@ async function runHotkey(name, target) {
   await actions[name]?.();
 }
 
-// La barre de l'écran principal relaie l'état du helper aux autres widgets et exécute les raccourcis,
-// pour qu'un raccourci reçu par chaque barre ne s'exécute qu'une fois.
 function relayHelperState() {
   let locks = null;
 
@@ -582,12 +575,10 @@ function syncSwitcherTheme() {
     if (payload === switcherTheme.payload && Date.now() - switcherTheme.sentAt < 5000) return;
     switcherTheme.payload = payload;
     switcherTheme.sentAt = Date.now();
-    sendCommand(`switcher-theme ${payload}`);
+    actions.publishSwitcherTheme(theme).catch(error => console.error('[caelestia] Thème du sélecteur', error));
   }, 400);
 }
 
-// Couleurs de Windows (option « Accorder Windows au thème ») : l'accent et le mode clair ou sombre suivent le thème.
-// Seule la barre de l'écran principal parle au helper ; il garde les couleurs d'avant et les remet quand on désactive.
 const windowsColors = { sent: '', timer: 0 };
 
 function syncWindowsColors() {
@@ -633,7 +624,7 @@ if (await isPrimaryMonitor()) {
     }
   });
   relayHelperState();
-  onDaemonEvent('switcher-theme', () => {
+  onShared('switcher-theme', () => {
     switcherTheme.confirmed = switcherTheme.payload;
   });
   new MutationObserver(syncSwitcherTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'data-mode', 'class'] });
@@ -642,7 +633,7 @@ if (await isPrimaryMonitor()) {
   applyAutoMode();
   setInterval(applyAutoMode, 60000);
   store.watch(keys.autoMode, applyAutoMode, 1000);
-  option('hideTaskbar', true, hidden => sendCommand(`taskbar ${hidden ? 'hide' : 'show'}`));
+  option('hideTaskbar', true, hidden => actions.setTaskbarHidden(Boolean(hidden)));
   if (!getOption('welcomed', false)) {
     setTimeout(() => {
       store.set('caelestia:settings:page', { page: 'welcome', at: Date.now() });
@@ -651,6 +642,5 @@ if (await isPrimaryMonitor()) {
   }
   const configure = (path, value) => helperClient.request('config.set', { path, value })
     .catch(error => console.error(`[caelestia] ${path}`, error));
-  option('wallpaperDirectory', settings.wallpaperDirectory, directory => configure('wallpapers.directory', directory || null));
-  configure('screenshots.directory', settings.screenshotsDirectory);
+  option('wallpaperDirectory', '', directory => configure('wallpapers.directory', directory || null));
 }

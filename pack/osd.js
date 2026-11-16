@@ -1,12 +1,12 @@
 import {
+  actions,
   cursorOnCurrentMonitor,
   edgeDrawer,
   element,
   getOption,
   icon,
   initTheme,
-  onDaemonEvent,
-  sendCommand,
+  onShared,
   zebar,
 } from './common.js';
 
@@ -105,7 +105,7 @@ const brightness = createVerticalSlider('Luminosité', (value, delta) => {
   brightnessValue = value ?? Math.min(100, Math.max(0, brightnessValue + delta * 2));
   brightness.set(brightnessValue, `brightness_${Math.min(7, Math.round(brightnessValue / 100 * 6) + 1)}`);
   clearTimeout(brightnessTimer);
-  brightnessTimer = setTimeout(() => sendCommand(`brightness-set ${drawer.monitor} ${brightnessValue}`), 120);
+  brightnessTimer = setTimeout(() => actions.setBrightness(drawer.monitor, brightnessValue), 120);
 });
 brightness.node.hidden = true;
 
@@ -115,10 +115,10 @@ const drawer = await edgeDrawer('osd', {
   panel: document.getElementById('panel'),
   side: 'right',
   autoCloseMs: 1600,
-  onOpen: () => sendCommand('brightness'),
+  onOpen: () => actions.refreshBrightness().catch(error => console.error('[caelestia] Luminosité', error)),
 });
 
-onDaemonEvent('brightness', event => {
+onShared('brightness', event => {
   const value = event.monitors?.[drawer.monitor];
   brightnessValue = Number.isFinite(value) ? value : -1;
   brightness.node.hidden = brightnessValue < 0;

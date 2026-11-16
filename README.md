@@ -28,7 +28,10 @@ Built on [Zebar](https://github.com/glzr-io/zebar) for the widgets and a small n
 - Windows 11 (Windows 10 22H2 may work, untested)
 - [Zebar](https://github.com/glzr-io/zebar) 3.3 or later: `winget install -e --id glzr-io.zebar`
 - To build the helper: the [.NET 10 SDK](https://dotnet.microsoft.com/download) (`winget install -e --id Microsoft.DotNet.SDK.10`).
-  Release archives ship a prebuilt helper instead.
+  Release archives ship a prebuilt helper instead. With the Visual Studio C++ build tools also installed, the helper
+  is compiled natively (NativeAOT) and uses about ten times less memory.
+
+How the pieces fit together is described in [docs/architecture.md](docs/architecture.md).
 
 No administrator rights are needed: everything installs in your user profile.
 

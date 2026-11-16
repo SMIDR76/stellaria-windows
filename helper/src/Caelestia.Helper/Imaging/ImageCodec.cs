@@ -41,21 +41,6 @@ internal static class ImageCodec
     public static Task<byte[]> EncodeJpegAsync(PixelImage image, int maxWidth = int.MaxValue, int maxHeight = int.MaxValue) =>
         EncodeAsync(image, BitmapEncoder.JpegEncoderId, JpegQuality, maxWidth, maxHeight);
 
-    public static PixelImage Crop(PixelImage image, int x, int y, int width, int height)
-    {
-        x = Math.Clamp(x, 0, image.Width);
-        y = Math.Clamp(y, 0, image.Height);
-        width = Math.Clamp(width, 0, image.Width - x);
-        height = Math.Clamp(height, 0, image.Height - y);
-        var result = new byte[width * height * 4];
-        for (var row = 0; row < height; row++)
-        {
-            System.Buffer.BlockCopy(image.Bgra, ((y + row) * image.Width + x) * 4, result, row * width * 4, width * 4);
-        }
-
-        return image with { Width = width, Height = height, Bgra = result };
-    }
-
     public static (int Width, int Height) Scale(int sourceWidth, int sourceHeight, int maxWidth, int maxHeight, ImageFit fit)
     {
         if (sourceWidth <= 0 || sourceHeight <= 0)

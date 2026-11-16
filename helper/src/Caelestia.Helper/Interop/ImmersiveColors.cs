@@ -2,18 +2,11 @@ using System.Runtime.InteropServices;
 
 namespace Caelestia.Helper.Interop;
 
-/// <summary>
-/// The colour preference Windows Settings writes when the user picks an accent colour. uxtheme exports it by ordinal
-/// only (120 and 122); it is what makes the Start menu, Settings and the title bars take a new accent immediately
-/// instead of at the next sign-in.
-/// </summary>
 [StructLayout(LayoutKind.Sequential)]
 internal struct ImmersiveColorPreference
 {
-    /// <summary>COLORREF (0x00BBGGRR) of the Start menu and taskbar background.</summary>
     public uint StartColor;
 
-    /// <summary>COLORREF (0x00BBGGRR) of the accent.</summary>
     public uint AccentColor;
 }
 
@@ -37,7 +30,6 @@ internal static partial class ImmersiveColors
 
     public static bool Write(ImmersiveColorPreference preference) => SetUserColorPreference(preference, true) >= 0;
 
-    /// <summary>Tells running applications that the colour set and light or dark mode changed.</summary>
     public static void Broadcast()
     {
         var text = Marshal.StringToHGlobalUni("ImmersiveColorSet");

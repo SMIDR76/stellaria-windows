@@ -9,10 +9,6 @@ namespace Caelestia.Helper.Modules;
 
 internal sealed record WifiNetwork(string Ssid, int Bars, bool Secured);
 
-/// <summary>
-/// Lists nearby Wi-Fi networks and connects to them, like the network panel of Caelestia. Windows only returns scan
-/// results to desktop apps that the user allowed to use the location (Settings, Privacy, Location).
-/// </summary>
 internal sealed class WifiModule : IHelperModule
 {
     public const int MaxSsidLength = 32;
@@ -109,7 +105,6 @@ internal sealed class WifiModule : IHelperModule
         }
     }
 
-    /// <summary>One entry per network name, keeping the strongest access point, strongest first.</summary>
     public static IEnumerable<WifiNetwork> Merge(IEnumerable<WifiNetwork> networks) =>
         networks
             .Where(network => network.Ssid.Length > 0)

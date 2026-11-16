@@ -9,8 +9,6 @@ body {
   display: flex;
   border-radius: 28px;
   background: var(--surface-base);
-  /* Deux couches, comme l'élévation 3 de Material : une ombre de contact nette et une ombre portée diffuse. La fenêtre
-     garde 60 px de marge autour du panneau pour que l'ombre s'estompe entièrement, sans bord coupé. */
   box-shadow:
     0 2px 6px color-mix(in srgb, var(--m3-shadow) 22%, transparent),
     0 14px 38px color-mix(in srgb, var(--m3-shadow) 34%, transparent);
@@ -159,7 +157,7 @@ body.closing .window {
 }
 
 .page > * {
-  animation: card-in var(--duration-emphasized) var(--ease-emphasized-full) both;
+  animation: hero-in var(--duration-emphasized) var(--ease-emphasized-full) both;
   animation-delay: calc(var(--i, 0) * 55ms);
 }
 
@@ -447,82 +445,28 @@ kbd {
   white-space: nowrap;
 }
 
-.about-logo {
-  width: 72px;
-  height: 72px;
-  position: relative;
-  color: var(--m3-primary-container);
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
-}
-
-.about-logo .shape,
-.page-hero-mark .shape,
-.page-hero-ornament .shape {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.about-logo .icon {
-  position: relative;
-  font-size: 36px;
-  color: var(--m3-on-primary-container);
-}
-
-/* Page À propos : une carte d'en-tête aux couleurs du thème, trois points forts, puis crédits et outils. */
 .page-hero {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 24px;
   padding: 28px;
   border-radius: 28px;
-  overflow: hidden;
-  isolation: isolate;
-  background:
-    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--m3-primary-container) 75%, transparent), transparent 60%),
-    radial-gradient(90% 120% at 100% 100%, color-mix(in srgb, var(--m3-tertiary-container) 70%, transparent), transparent 65%),
-    var(--m3-surface-container-high);
 }
 
-.page-hero-ornament {
-  position: absolute;
-  z-index: -1;
-  right: -60px;
-  top: -70px;
+.page-hero .hero-ornament {
   width: 260px;
   height: 260px;
-  color: color-mix(in srgb, var(--m3-primary) 10%, transparent);
 }
 
-body.open .page-hero-ornament {
-  animation: about-spin 60s linear infinite;
-}
-
-.page-hero-mark {
-  position: relative;
-  flex: 0 0 auto;
+.page-hero .hero-mark {
   width: 96px;
   height: 96px;
-  display: grid;
-  place-items: center;
-  color: var(--m3-primary);
   filter: drop-shadow(0 8px 18px color-mix(in srgb, var(--m3-shadow) 30%, transparent));
 }
 
-body.open .page-hero-mark .shape {
-  animation: welcome-logo 700ms var(--ease-spatial) both, about-spin 40s linear 700ms infinite;
-}
-
-.page-hero-mark .icon {
-  position: relative;
+.page-hero .hero-mark .icon {
   font-size: 48px;
-  color: var(--m3-on-primary);
   font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 48;
-  animation: welcome-spark 450ms var(--ease-spatial) 250ms both;
 }
 
 .page-hero-text h2 {
@@ -540,7 +484,7 @@ body.open .page-hero-mark .shape {
   color: var(--m3-on-surface-variant);
 }
 
-.about-chips,
+.hero-chips,
 .about-stack {
   display: flex;
   flex-wrap: wrap;
@@ -551,22 +495,17 @@ body.open .page-hero-mark .shape {
   padding: 4px 14px 12px;
 }
 
-.about-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  height: 30px;
-  padding: 0 13px;
-  border-radius: var(--rounding-full);
-  background: color-mix(in srgb, var(--m3-surface) 55%, transparent);
-  color: var(--m3-on-surface);
-  font-size: 12.5px;
-  font-weight: 500;
-}
-
-.about-chip.quiet {
+.hero-chip.quiet {
   background: var(--m3-surface-container-highest);
   color: var(--m3-on-surface-variant);
+}
+
+.hero-chip.off {
+  color: var(--m3-on-surface-variant);
+}
+
+.hero-chip.off .icon {
+  color: var(--m3-outline);
 }
 
 .about-dot {
@@ -596,7 +535,7 @@ body.open .page-hero-mark .shape {
   padding: 18px;
   border-radius: 22px;
   background: var(--surface-layer);
-  animation: card-in var(--duration-emphasized) var(--ease-emphasized-full) both;
+  animation: hero-in var(--duration-emphasized) var(--ease-emphasized-full) both;
 }
 
 .about-tile:nth-child(1) { animation-delay: 80ms; }
@@ -624,8 +563,6 @@ body.open .page-hero-mark .shape {
   line-height: 1.45;
   color: var(--m3-on-surface-variant);
 }
-
-
 
 .about-credit {
   display: flex;
@@ -656,31 +593,6 @@ body.open .page-hero-mark .shape {
   padding-bottom: 6px;
 }
 
-@keyframes about-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes page-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-}
-
-.welcome-hero {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 10px;
-}
-
-.welcome-hero h2 {
-  margin: 0 0 4px;
-}
-
-.welcome-hero p,
 .welcome-text {
   margin: 0 0 8px;
   color: var(--m3-on-surface-variant);
@@ -693,7 +605,7 @@ body.open .page-hero-mark .shape {
   padding: 18px 18px 18px 16px;
   border-radius: 20px;
   background: var(--surface-layer);
-  animation: card-in var(--duration-emphasized) var(--ease-emphasized-full) both;
+  animation: hero-in var(--duration-emphasized) var(--ease-emphasized-full) both;
   animation-delay: calc(280ms + var(--step, 0) * 70ms);
 }
 
@@ -702,43 +614,9 @@ body.open .page-hero-mark .shape {
 .welcome-step:nth-child(4) { --step: 2; }
 .welcome-step:nth-child(5) { --step: 3; }
 
-/* Entrée de la page Bienvenue : le logo tourne et rebondit en place (courbe spatiale de Caelestia), l'étoile éclot
-   juste après, puis le titre monte et les étapes arrivent en cascade. */
-.welcome-hero .about-logo .shape {
-  animation: welcome-logo 700ms var(--ease-spatial) both;
-  animation-delay: 80ms;
-}
-
-.welcome-hero .about-logo .icon {
-  animation: welcome-spark 450ms var(--ease-spatial) both;
-  animation-delay: 300ms;
-}
-
-.welcome-hero > div:last-child {
-  animation: card-in var(--duration-emphasized) var(--ease-emphasized-full) both;
-  animation-delay: 160ms;
-}
-
 .welcome-number {
-  animation: welcome-spark 420ms var(--ease-spatial) both;
+  animation: pop-in 420ms var(--ease-spatial) both;
   animation-delay: calc(380ms + var(--step, 0) * 70ms);
-}
-
-@keyframes welcome-logo {
-  from {
-    opacity: 0;
-    transform: rotate(-150deg) scale(0.3);
-  }
-}
-
-@keyframes welcome-spark {
-  from {
-    opacity: 0;
-    transform: scale(0.2);
-  }
-}
-
-.welcome-number {
   width: 34px;
   height: 34px;
   display: grid;
@@ -782,19 +660,11 @@ body.open .page-hero-mark .shape {
   font-weight: 600;
 }
 
-@keyframes card-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-}
-
 .button.primary {
   background: var(--m3-primary);
   color: var(--m3-on-primary);
 }
 
-/* En-tête : pastilles des couleurs du thème, aperçu du fond d'écran et actions. */
 .page-hero-actions {
   display: flex;
   gap: 10px;
@@ -803,19 +673,6 @@ body.open .page-hero-mark .shape {
 
 .page-hero-text p:last-child {
   margin-bottom: 0;
-}
-
-.about-chip .icon {
-  font-size: 16px;
-  color: var(--m3-primary);
-}
-
-.about-chip.off {
-  color: var(--m3-on-surface-variant);
-}
-
-.about-chip.off .icon {
-  color: var(--m3-outline);
 }
 
 .hero-swatches {
@@ -847,7 +704,7 @@ body.open .page-hero-mark .shape {
   background-size: cover;
   background-position: center;
   box-shadow: 0 8px 22px color-mix(in srgb, var(--m3-shadow) 35%, transparent), 0 0 0 1px color-mix(in srgb, var(--m3-on-surface) 10%, transparent);
-  animation: welcome-spark 500ms var(--ease-spatial) 120ms both;
+  animation: pop-in 500ms var(--ease-spatial) 120ms both;
 }
 
 .page-hero-backdrop {
@@ -860,7 +717,6 @@ body.open .page-hero-mark .shape {
   opacity: 0.35;
 }
 
-/* Raccourcis : une carte par raccourci, chaque touche dans sa pastille. */
 .shortcuts {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

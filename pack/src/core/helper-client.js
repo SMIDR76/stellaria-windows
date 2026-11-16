@@ -1,5 +1,3 @@
-// Client of the caelestia-helper WebSocket endpoint. docs/protocol.md is the contract: any change here must match it.
-
 const requestTimeout = 15000;
 const silenceTimeout = 15000;
 const heartbeatInterval = 1000;
@@ -138,8 +136,6 @@ export function createHelperClient({ widget, monitor = '', runtimeUrl = './runti
     });
   }
 
-  // One animation frame per second: enough for the helper to notice a widget that stopped rendering, without keeping
-  // every widget repainting at the screen refresh rate.
   const beat = () => send({ kind: 'heartbeat', visible: document.visibilityState === 'visible' });
 
   connect();

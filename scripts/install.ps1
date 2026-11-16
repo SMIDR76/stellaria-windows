@@ -1,19 +1,4 @@
 #Requires -Version 5.1
-<#
-.SYNOPSIS
-  Installs Caelestia for Windows for the current user (no administrator rights).
-
-.DESCRIPTION
-  - copies the Zebar pack to %USERPROFILE%\.glzr\zebar\caelestia
-  - publishes caelestia-helper.exe to %USERPROFILE%\.caelestia\bin (self-contained when the .NET SDK is present,
-    otherwise uses the prebuilt helper shipped next to this script in .\helper-bin)
-  - builds the optional Alt+Tab switcher with the .NET Framework compiler that ships with Windows
-  - registers the widgets in Zebar's startup list and three logon tasks (helper, switcher, Zebar)
-  - adds Start menu shortcuts, including "Caelestia - Rétablir la barre des tâches"
-
-.PARAMETER NoStart
-  Install without starting the theme now.
-#>
 param([switch]$NoStart)
 
 $ErrorActionPreference = 'Stop'
@@ -34,8 +19,6 @@ Step 'Stopping a running Caelestia'
 Get-Process zebar, CaelestiaSwitcher -ErrorAction SilentlyContinue | Stop-Process -Force
 if (Test-Path (Join-Path $bin 'caelestia-helper.exe')) { & (Join-Path $bin 'caelestia-helper.exe') --quit; Start-Sleep 2 }
 Get-Process caelestia-helper -ErrorAction SilentlyContinue | Stop-Process -Force
-# A stopped Zebar cannot release its docked bars: give every screen its full area back so the new instance docks
-# against the real edges.
 Add-Type -Namespace CaelestiaInstall -Name WorkArea -MemberDefinition '[StructLayout(LayoutKind.Sequential)] public struct RECT { public int L, T, R, B; } [DllImport("user32.dll")] public static extern bool SystemParametersInfo(uint action, uint param, ref RECT rect, uint flags);'
 Add-Type -AssemblyName System.Windows.Forms
 foreach ($screen in [System.Windows.Forms.Screen]::AllScreens) {
@@ -51,11 +34,18 @@ if ($LASTEXITCODE -ge 8) { throw "Copying the pack failed (robocopy $LASTEXITCOD
 
 Step 'Installing the helper'
 New-Item -ItemType Directory -Force $bin | Out-Null
-# Start from an empty folder so files from an older, multi-file build do not linger next to the single-file helper.
 Get-ChildItem -LiteralPath $bin | Remove-Item -Recurse -Force
 $prebuilt = Join-Path $PSScriptRoot 'helper-bin'
-if (Get-Command dotnet -ErrorAction SilentlyContinue) {
-  dotnet publish (Join-Path $repo 'helper\src\Caelestia.Helper\Caelestia.Helper.csproj') -c Release -r win-x64 --self-contained `
+$project = Join-Path $repo 'helper\src\Caelestia.Helper\Caelestia.Helper.csproj'
+$vsInstaller = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer'
+$vswhere = Join-Path $vsInstaller 'vswhere.exe'
+$nativeTools = (Test-Path $vswhere) -and (& $vswhere -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath)
+if ((Get-Command dotnet -ErrorAction SilentlyContinue) -and $nativeTools) {
+  $env:Path = "$env:Path;$vsInstaller"
+  dotnet publish $project -c Release -r win-x64 -o $bin --nologo | Out-Null
+  if ($LASTEXITCODE -ne 0) { throw 'Building the helper failed.' }
+} elseif (Get-Command dotnet -ErrorAction SilentlyContinue) {
+  dotnet publish $project -c Release -r win-x64 --self-contained `
     -p:PublishAot=false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o $bin --nologo | Out-Null
   if ($LASTEXITCODE -ne 0) { throw 'Building the helper failed.' }
 } elseif (Test-Path (Join-Path $prebuilt 'caelestia-helper.exe')) {
@@ -80,7 +70,6 @@ $widgets = @(
 )
 $others = @($settings.startupConfigs | Where-Object { $_.pack -ne 'caelestia' })
 $settings.startupConfigs = $others + @($widgets | ForEach-Object { [pscustomobject]@{ pack = 'caelestia'; widget = $_[0]; preset = $_[1] } })
-# Zebar refuses a settings file that starts with a byte order mark.
 [IO.File]::WriteAllText($settingsPath, ($settings | ConvertTo-Json -Depth 6), $utf8)
 
 Step 'Registering the logon tasks'

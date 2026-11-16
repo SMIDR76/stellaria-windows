@@ -58,6 +58,17 @@ internal static unsafe partial class Gdi32
     [LibraryImport("gdi32.dll")]
     public static partial int GetDIBits(nint hdc, nint bitmap, uint startScan, uint lines, void* bits, BitmapInfoHeader* info, uint usage);
 
+    [LibraryImport("gdi32.dll")]
+    public static partial int SetStretchBltMode(nint hdc, int mode);
+
+    [LibraryImport("gdi32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool SetBrushOrgEx(nint hdc, int x, int y, nint previous);
+
+    [LibraryImport("gdi32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool StretchBlt(nint destination, int x, int y, int width, int height, nint source, int sourceX, int sourceY, int sourceWidth, int sourceHeight, uint operation);
+
     public static BitmapInfoHeader TopDown32(int width, int height) => new()
     {
         Size = (uint)sizeof(BitmapInfoHeader),

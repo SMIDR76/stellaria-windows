@@ -3,7 +3,8 @@ import {
   cursorPosition,
   describeWeather,
   element,
-  helper,
+  helperClient,
+  heroOrnament,
   hideOnFullscreen,
   icon,
   initTheme,
@@ -19,7 +20,6 @@ import {
   store,
   windowOrigin,
   zebar,
-  heroOrnament,
 } from './common.js';
 
 initTheme();
@@ -282,8 +282,6 @@ resources.cpu.node.title = 'Processeur';
 resources.ram.node.title = 'Mémoire';
 resources.disk.node.title = 'Disque';
 
-// Style de la carte d'accueil : grandes formes décoratives qui tournent lentement derrière la météo, l'heure et le
-// média (seulement tableau de bord ouvert).
 document.querySelector('.dash-weather').prepend(heroOrnament('flower'));
 document.querySelector('.dash-time').prepend(heroOrnament('cookie4'));
 document.getElementById('dash-media').prepend(heroOrnament('softBurst'));
@@ -317,7 +315,7 @@ async function loadSysinfo() {
   if (cached) renderSysinfo(cached);
   if (cached && Date.now() - cached.at < 24 * 60 * 60 * 1000) return;
   try {
-    const info = { ...(await helper('sysinfo')), at: Date.now() };
+    const info = { ...(await helperClient.request('system.info')), at: Date.now() };
     store.set(keys.sysinfo, info);
     renderSysinfo(info);
   } catch (error) {
@@ -326,27 +324,27 @@ async function loadSysinfo() {
 }
 
 function createHero({ symbol, label, accent }) {
-  const ring = createRing({ size: 52, stroke: 4, color: accent, className: 'hero-ring', content: icon(symbol) });
+  const ring = createRing({ size: 52, stroke: 4, color: accent, className: 'perf-hero-ring', content: icon(symbol) });
   ring.node.querySelector('.icon').style.color = accent;
-  const sub = element('span', { class: 'hero-sub', text: '—' });
+  const sub = element('span', { class: 'perf-hero-sub', text: '—' });
   const temperatureText = element('span', { text: '—' });
   const thermometer = icon('thermometer');
   thermometer.style.color = accent;
   const barFill = element('div', { class: 'bar-fill', style: { background: accent, width: '0%' } });
   const barTrack = element('div', { class: 'bar-track' }, barFill);
   const usageShape = shapeSvg('cookie4');
-  const usageValue = element('span', { class: 'hero-usage-value', text: '…' });
+  const usageValue = element('span', { class: 'perf-hero-usage-value', text: '…' });
   usageValue.style.color = accent;
   let currentShape = 'cookie4';
   const usageText = smoothPercent(usageValue);
   const temperatureValue = smoothValue(value => { temperatureText.textContent = `${Math.round(value)} °C`; }, { animate: () => isOpen, initial: NaN });
   const temperatureBar = smoothValue(value => { barFill.style.width = `${value}%`; }, { animate: () => isOpen });
 
-  const node = element('article', { class: 'card hero' }, [
+  const node = element('article', { class: 'card perf-hero' }, [
     ring.node,
-    element('div', { class: 'hero-title' }, [element('span', { class: 'hero-label', text: label, style: { color: accent } }), sub]),
-    element('div', { class: 'hero-temp' }, [element('div', { class: 'hero-temp-row' }, [thermometer, temperatureText]), barTrack]),
-    element('div', { class: 'hero-usage' }, [element('span', { class: 'hero-usage-label', text: 'Utilisation' }), usageShape, usageValue]),
+    element('div', { class: 'perf-hero-title' }, [element('span', { class: 'perf-hero-label', text: label, style: { color: accent } }), sub]),
+    element('div', { class: 'perf-hero-temp' }, [element('div', { class: 'perf-hero-temp-row' }, [thermometer, temperatureText]), barTrack]),
+    element('div', { class: 'perf-hero-usage' }, [element('span', { class: 'perf-hero-usage-label', text: 'Utilisation' }), usageShape, usageValue]),
   ]);
 
   return {
@@ -406,7 +404,6 @@ const storageCard = element('article', { class: 'card storage' }, [
 ]);
 
 const graph = svg('svg', { preserveAspectRatio: 'none' });
-// Tracés créés une fois : seul leur attribut d change à chaque image.
 const graphPaths = {
   upArea: svg('path', { fill: 'var(--m3-secondary)', 'fill-opacity': '0.15' }),
   upLine: svg('path', { class: 'line', stroke: 'var(--m3-secondary)' }),
@@ -473,7 +470,6 @@ function drawGraph(time) {
   graph.setAttribute('viewBox', `0 0 ${width} ${height}`);
   const target = Math.max(1024, ...history.down, ...history.up);
   graphMax += (target - graphMax) * 0.08;
-  // La dernière mesure entre par la droite pendant la seconde qui suit son arrivée.
   const progress = Math.min(1, (performance.now() - lastSampleAt) / 1000);
   const shift = (1 - progress) * (width / (historyLength - 2));
   const up = sparkline(history.up, graphMax, width, height, shift);
@@ -665,8 +661,7 @@ function requestCover() {
     const title = session.title;
     media.pendingCover = title;
     try {
-      const result = await helper('media');
-      const current = result?.session;
+      const current = await helperClient.request('media.artwork');
       if (current?.title) media.covers.set(current.title, current.image ?? null);
       if (current?.title !== title && !media.covers.has(title)) media.covers.set(title, null);
       if (media.covers.size > 30) media.covers.delete(media.covers.keys().next().value);
@@ -803,13 +798,22 @@ option('lyrics', true, value => {
   else lyrics.controller?.abort();
 });
 
-setInterval(() => {
-  if (media.session?.isPlaying) renderMediaProgress();
-}, 500);
+const mediaTimers = { progress: 0, lyrics: 0 };
 
-setInterval(() => {
-  if (media.session?.isPlaying && lyrics.lines.length) syncLyrics();
-}, 200);
+function syncMediaTimers() {
+  clearInterval(mediaTimers.progress);
+  clearInterval(mediaTimers.lyrics);
+  mediaTimers.progress = 0;
+  mediaTimers.lyrics = 0;
+  if (!isOpen) return;
+  renderMediaProgress();
+  mediaTimers.progress = setInterval(() => {
+    if (media.session?.isPlaying) renderMediaProgress();
+  }, 500);
+  mediaTimers.lyrics = setInterval(() => {
+    if (media.session?.isPlaying && lyrics.lines.length) syncLyrics();
+  }, 200);
+}
 
 function renderWeather(weather) {
   if (!weather) return;
@@ -915,7 +919,7 @@ render(providers.outputMap);
 
 async function pollGpu() {
   try {
-    const { name, usage, temperature } = await helper('gpu');
+    const { name, usage, temperature } = await helperClient.request('system.gpu');
     if (!Number.isFinite(usage)) throw new Error('Utilisation du GPU inconnue');
     heroes.gpu.setSub(name);
     heroes.gpu.setUsage(usage);
@@ -958,6 +962,7 @@ async function openDashboard(trigger) {
   const [origin] = await Promise.all([windowOrigin(), widgetWindow.setIgnoreCursorEvents(false)]);
   session = { trigger, origin, openedAt: Date.now(), lastInside: Date.now(), entered: false };
   syncGpuPolling();
+  syncMediaTimers();
   watchCursor();
 }
 
@@ -966,6 +971,7 @@ function closeDashboard() {
   isOpen = false;
   session = null;
   syncGpuPolling();
+  syncMediaTimers();
   document.body.classList.remove('open');
   document.body.classList.add('closing');
   closeTimer = setTimeout(() => {

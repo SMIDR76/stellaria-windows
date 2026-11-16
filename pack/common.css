@@ -8,7 +8,6 @@
   --bar: 48px;
 
   --ease-emphasized: cubic-bezier(0.05, 0.7, 0.1, 1);
-  /* Courbe « emphasized » complète de Material 3 (deux segments de Bézier, comme dans Caelestia), échantillonnée. */
   --ease-emphasized-full: linear(0, 0.007 2.9%, 0.027 5.7%, 0.064 8.5%, 0.124 11.2%, 0.21 13.8%, 0.375 16.4%, 0.599 19.2%,
     0.715 22.3%, 0.774 25.1%, 0.827 28.7%, 0.858 31.8%, 0.885 35.3%, 0.91 39.5%, 0.931 44.2%, 0.95 49.7%, 0.965 55.9%,
     0.978 62.9%, 0.988 70.8%, 0.995 79.5%, 0.999 89.3%, 1);
@@ -72,9 +71,6 @@
   --surface-layer: var(--m3-surface-container);
 }
 
-/* Transparence : seules la barre, les bords et les coins du cadre deviennent translucides. Windows floute ce qu'il y a
-   derrière la barre et les bords (effet acrylique, comme YASB) ; les panneaux restent opaques, car Windows ne peut pas
-   flouter derrière une fenêtre aux formes arrondies sans flouter tout son rectangle. */
 html.transparent.backdrop {
   --surface-base: color-mix(in srgb, var(--m3-surface) 72%, transparent);
 }
@@ -182,7 +178,6 @@ input {
   opacity: 0.14;
 }
 
-/* Icônes d'applications teintées par le thème (option « Icônes aux couleurs du thème »). */
 .tint-flood {
   flood-color: var(--m3-primary);
 }
@@ -213,7 +208,6 @@ html.tint-icons .app-volume img.app-icon {
   will-change: transform, opacity;
 }
 
-/* Réglage Windows « Effets d'animation » désactivé : pas de mouvement, seulement des changements immédiats. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -287,9 +281,6 @@ body.closing .drawer-content {
   pointer-events: none;
 }
 
-/* Le rebond d'ouverture éloigne un instant le panneau du bord. Comme son fond (::before du panneau), chaque arrondi de
-   raccord se prolonge vers le bord avec la couleur du cadre : l'espace qui s'ouvre reste rempli et le raccord ne se
-   décolle plus. Au repos, ce prolongement est caché sous la bordure du cadre ou hors de la fenêtre. */
 .flare::before {
   content: '';
   position: absolute;
@@ -324,8 +315,6 @@ body.closing .drawer-content {
   width: 48px;
 }
 
-/* Tiroir de coin (utilitaires) : l'arrondi du haut est accroché au bord droit et le longe pendant le glissement ; son
-   prolongement part donc vers la droite, sous la bordure, et non vers le bas où il mordrait sur le contenu. */
 .drawer.from-bottom.corner .flare.end::before {
   top: 0;
   bottom: 0;
@@ -476,9 +465,6 @@ body.closing .drawer-content {
   scrollbar-color: var(--m3-outline-variant) transparent;
 }
 
-/* Style « carte d'accueil » partagé par les panneaux (le même que les pages des réglages) : carte en dégradé aux
-   couleurs du thème, grande forme décorative, forme pleine qui porte une icône, pastilles et icônes tonales.
-   Les rotations continues ne tournent que panneau ouvert : une fenêtre masquée continue de dessiner ses animations. */
 .hero {
   position: relative;
   overflow: hidden;
@@ -601,7 +587,6 @@ body.open .hero-mark .icon {
   font-size: 19px;
 }
 
-/* Cartes qui arrivent en cascade à chaque ouverture : --i donne le rang. */
 body.open .cascade > * {
   animation: hero-in var(--duration-emphasized) var(--ease-emphasized-full) both;
   animation-delay: calc(var(--i, 0) * 55ms);

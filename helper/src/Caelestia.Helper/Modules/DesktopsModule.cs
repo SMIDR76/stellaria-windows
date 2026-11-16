@@ -19,11 +19,6 @@ internal sealed record DesktopSnapshot(IReadOnlyList<(Guid Id, string? Name)> It
     }
 }
 
-/// <summary>
-/// Publishes the Windows virtual desktops, so the bar can show them where a tiling window manager would show its
-/// workspaces. Windows has no public API to list or switch desktops: the list is read from the registry Explorer keeps
-/// up to date, and switching sends the documented Ctrl+Win+Left/Right shortcuts.
-/// </summary>
 internal sealed class DesktopsModule : IHelperModule
 {
     public const string KeyPath = @"Software\Microsoft\Windows\CurrentVersion\Explorer\VirtualDesktops";

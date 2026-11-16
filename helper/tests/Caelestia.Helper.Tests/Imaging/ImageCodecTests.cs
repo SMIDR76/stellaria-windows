@@ -64,16 +64,6 @@ public sealed class ImageCodecTests
     }
 
     [Fact]
-    public void Cropping_copies_the_requested_rectangle()
-    {
-        var image = new PixelImage(3, 1, [1, 1, 1, 255, 2, 2, 2, 255, 3, 3, 3, 255], true);
-
-        var cropped = ImageCodec.Crop(image, 1, 0, 2, 1);
-
-        Assert.Equal(new byte[] { 2, 2, 2, 255, 3, 3, 3, 255 }, cropped.Bgra);
-    }
-
-    [Fact]
     public void Identical_images_have_no_fingerprint_difference()
     {
         var image = Solid(64, 32, 10, 20, 30);

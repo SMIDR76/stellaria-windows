@@ -460,7 +460,6 @@ body.open .drawer * {
   font-size: 13px;
 }
 
-/* Une carte par application, qui arrive en cascade. */
 .notification-group {
   display: flex;
   flex-direction: column;

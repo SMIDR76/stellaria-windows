@@ -1,6 +1,3 @@
-# Raccourci de secours : arrête Caelestia et rend la barre des tâches de Windows.
-# Lancé depuis le menu Démarrer (« Caelestia - Rétablir la barre des tâches »).
-
 Get-Process -Name zebar, CaelestiaSwitcher -ErrorAction SilentlyContinue | Stop-Process -Force
 Get-CimInstance Win32_Process -Filter "Name='powershell.exe'" |
   Where-Object { $_.CommandLine -match 'caelestia\\helper\.ps1 daemon' } |
@@ -13,7 +10,6 @@ Add-Type -Namespace CaelestiaRecovery -Name Shell -MemberDefinition @'
 [DllImport("shell32.dll")] public static extern IntPtr SHAppBarMessage(uint message, ref APPBARDATA data);
 '@
 
-# Désactive le masquage automatique que Caelestia avait activé.
 $data = New-Object CaelestiaRecovery.Shell+APPBARDATA
 $data.cbSize = [Runtime.InteropServices.Marshal]::SizeOf($data)
 $state = [CaelestiaRecovery.Shell]::SHAppBarMessage(4, [ref]$data).ToInt64()

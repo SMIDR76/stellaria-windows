@@ -1,28 +1,26 @@
 import {
+  actions,
   applyTheme,
   element,
   getOption,
-  helper,
   helperClient,
   heroMark,
   heroOrnament,
-  setShape,
   icon,
   initTheme,
-  loadSchemes,
-  onDaemonEvent,
-  sendCommand,
   keys,
+  loadSchemes,
+  onShared,
   openSettings,
   setOption,
+  setShape,
   settings,
-  toast,
-  togglePopup,
   setupPopup,
   startApp,
   store,
+  toast,
+  togglePopup,
   variants,
-  zebar,
 } from './common.js';
 
 initTheme();
@@ -45,8 +43,6 @@ const nodes = {
   heroModes: document.getElementById('hero-modes'),
 };
 
-// En-tête du lanceur : la forme change avec le mode (fondu de forme), le titre dit où l'on est, et des boutons
-// passent d'un mode à l'autre sans retenir les préfixes.
 const heroModes = {
   apps: { shape: 'cookie9', symbol: 'apps', prefix: '', label: 'Applications' },
   actions: { shape: 'gem', symbol: 'terminal', prefix: '>', label: 'Actions', subtitle: 'Thème, session et outils' },
@@ -91,8 +87,6 @@ function paintHero(modeId) {
   symbol.animate?.([{ opacity: 0, transform: 'scale(0.4)' }, { opacity: 1, transform: 'none' }], { duration: 380, easing: 'cubic-bezier(0.38, 1.21, 0.22, 1)' });
 }
 
-// Le lanceur reste chargé entre deux ouvertures : chaque ouverture repart d'une recherche vide, sauf si un raccourci
-// vient de demander un mode précis (fonds d'écran, presse-papiers, emojis).
 let lastQueryAt = 0;
 let enteringTimer = 0;
 const popup = setupPopup('launcher', {
@@ -225,7 +219,7 @@ function evaluate(expression) {
 const formatNumber = value => value.toLocaleString(settings.locale, { maximumFractionDigits: 10 });
 
 async function runPower(action) {
-  const request = helper('power', action);
+  const request = helperClient.request('power.run', { action });
   await Promise.race([request, new Promise(resolve => setTimeout(resolve, 500))]);
   await popup.close();
 }
@@ -404,7 +398,7 @@ function loadEmoji() {
 
 async function pasteText(text) {
   await navigator.clipboard.writeText(text);
-  sendCommand('paste');
+  actions.paste();
   await popup.close();
 }
 
@@ -428,7 +422,7 @@ function emojiEntries(text) {
 let clipboardState = store.get(keys.event('clipboard'));
 let clipboardRequestedAt = 0;
 
-onDaemonEvent('clipboard', event => {
+onShared('clipboard', event => {
   if (event.at < clipboardRequestedAt) return;
   clipboardState = event;
   if (state.mode === 'clipboard') render();
@@ -465,7 +459,7 @@ function clipboardEntries(text) {
         title: labels[item.kind] ?? 'Contenu',
         subtitle: relativeTime(item.time),
         run: async () => {
-          sendCommand(`clipboard-paste ${item.id}`);
+          actions.pasteClipboardItem(item.id);
           await popup.close();
         },
       };
@@ -481,7 +475,6 @@ async function randomWallpaper() {
   await popup.close();
 }
 
-// Antisèche des raccourcis du thème et de Windows (comme celle d'end-4), filtrable par mot.
 const shortcutList = [
   ['Win', 'Ouvrir le lanceur'],
   ['Alt + Espace', 'Ouvrir le lanceur'],
@@ -517,7 +510,6 @@ function shortcutEntries(text) {
     .map(([keys, label]) => ({ icon: 'keyboard', title: keys, subtitle: label, keepOpen: true, run: () => {} }));
 }
 
-// Fenêtres ouvertes correspondant à la recherche, en tête des résultats.
 function windowEntries(query) {
   if (!query) return [];
   const icons = helperClient.state('icons') ?? {};
@@ -692,7 +684,7 @@ function renderWallpapers(filter) {
 async function applyWallpaper(item) {
   setLoading(true);
   try {
-    await helper('setwall', item.path);
+    await helperClient.request('wallpapers.apply', { path: item.path });
     toast("Fond d'écran appliqué", { message: item.name, icon: 'wallpaper' });
     state.wallpapers = { ...state.wallpapers, current: item.path };
     store.set(keys.wallpapers, state.wallpapers);
@@ -749,7 +741,7 @@ function render() {
   } else if (parsed.mode === 'clipboard') {
     if (modeChanged) {
       clipboardRequestedAt = Date.now();
-      sendCommand('clipboard');
+      actions.refreshClipboard().catch(error => console.error('[caelestia] Presse-papiers', error));
     }
     entries = clipboardEntries(parsed.text);
   } else {
@@ -808,7 +800,7 @@ async function loadApps() {
   if (cached && Date.now() - cached.at < appsRefreshAge && state.apps.length) return;
   setLoading(true);
   try {
-    const items = await helper('apps');
+    const items = await helperClient.request('apps.list');
     state.apps = Array.isArray(items) ? items : [];
     store.set(keys.apps, { at: Date.now(), items: state.apps });
     if (state.mode === 'apps') render();
@@ -824,7 +816,7 @@ async function loadWallpapers() {
   state.wallpapersLoaded = true;
   setLoading(true);
   try {
-    const result = await helper('thumbs', getOption('wallpaperDirectory', settings.wallpaperDirectory));
+    const result = await helperClient.request('wallpapers.list');
     state.wallpapers = { current: result.current, items: result.items ?? [] };
     store.set(keys.wallpapers, state.wallpapers);
   } catch (error) {

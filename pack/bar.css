@@ -73,8 +73,6 @@ body {
   gap: 6px;
 }
 
-/* Indicateur du bureau actif : ses deux bords se déplacent à des vitesses différentes (bord avant rapide, bord
-   arrière plus lent), ce qui l'étire pendant le trajet comme dans Caelestia. */
 .workspace-indicator {
   position: absolute;
   left: 50%;
@@ -102,12 +100,6 @@ body {
     height var(--duration-spatial) var(--ease-spatial),
     width var(--duration-spatial) var(--ease-spatial),
     background var(--duration) var(--ease-standard);
-}
-
-.workspace.occupied .workspace-dot {
-  width: 10px;
-  height: 10px;
-  background: var(--m3-on-surface-variant);
 }
 
 .workspace.focused .workspace-dot {

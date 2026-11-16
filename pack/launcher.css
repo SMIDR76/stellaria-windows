@@ -362,13 +362,6 @@ body.open .launcher-hero {
   }
 }
 
-@keyframes item-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-}
-
 .item-visual.swatches {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -393,7 +386,6 @@ body.open .launcher-hero {
   line-height: 1;
   font-family: 'Segoe UI Emoji', var(--font-sans);
 }
-/* Cascade à l'ouverture : les résultats les plus proches du champ de recherche arrivent en premier. */
 .list.entering .item {
   animation: item-in var(--duration-emphasized) var(--ease-emphasized-full) both;
 }

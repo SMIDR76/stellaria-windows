@@ -9,18 +9,11 @@ using Microsoft.Win32;
 
 namespace Caelestia.Helper.Modules;
 
-/// <summary>Seven shades from lightest to darkest (Windows' Light3 to Dark3) as 0xRRGGBB, plus the modes to apply.</summary>
 internal sealed record WindowsColors(uint[] Palette, bool Dark, bool TitleBars)
 {
     public uint Accent => Palette[3];
 }
 
-/// <summary>
-/// Gives Windows the theme's colours: the accent of Settings, File Explorer, the Start menu and the title bars, and
-/// light or dark mode for apps. Only the user's personalisation values are touched (the ones Settings &gt;
-/// Personalisation &gt; Colours writes); the previous ones are saved first and put back by <c>windows.restoreColors</c>,
-/// by <c>--restore-shell</c> and therefore by the uninstaller.
-/// </summary>
 internal sealed partial class WindowsColorsModule : IHelperModule
 {
     public const string BackupFileName = "windows-colors-backup.json";
@@ -94,11 +87,9 @@ internal sealed partial class WindowsColorsModule : IHelperModule
         return new WindowsColors(shades, request.RequireBoolean("dark"), request.RequireBoolean("titleBars"));
     }
 
-    /// <summary>0xRRGGBB to the 0xAABBGGRR order the registry and COLORREF use.</summary>
     public static uint ToAbgr(uint rgb, byte alpha = 0xFF) =>
         ((uint)alpha << 24) | ((rgb & 0xFF) << 16) | (rgb & 0xFF00) | ((rgb >> 16) & 0xFF);
 
-    /// <summary>AccentPalette: eight RGBA entries, the seven shades then the darkest again in the last slot.</summary>
     public static byte[] AccentPalette(uint[] palette)
     {
         var bytes = new byte[32];
@@ -181,7 +172,6 @@ internal sealed partial class WindowsColorsModule : IHelperModule
         return saved;
     }
 
-    /// <summary>Puts back the colours saved before the first change, then forgets them. Does nothing without a backup.</summary>
     public static void RestoreFromBackup(string dataDirectory, Log log)
     {
         var path = Path.Combine(dataDirectory, BackupFileName);
@@ -244,7 +234,6 @@ internal sealed partial class WindowsColorsModule : IHelperModule
     private static JsonNode? DWord(RegistryKey? key, string name) =>
         key?.GetValue(name) is int value ? JsonValue.Create(unchecked((uint)value)) : null;
 
-    // A value that did not exist before is removed again, so Windows falls back to its own default.
     private static void Put(RegistryKey key, string name, JsonNode? value)
     {
         if (value is JsonValue number)

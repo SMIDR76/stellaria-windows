@@ -6,6 +6,7 @@ namespace Caelestia.Helper.Imaging;
 internal static class DesktopCapture
 {
     public const uint PrintFullContent = 2;
+    public const int SampleWidth = 480;
 
     public static PixelImage? PrimaryMonitorBackground()
     {
@@ -21,7 +22,7 @@ internal static class DesktopCapture
             return null;
         }
 
-        var full = WindowCapture.Print(desktop, bounds.Width, bounds.Height, PrintFullContent);
-        return full is null ? null : ImageCodec.Crop(full, primary.Bounds.Left - bounds.Left, primary.Bounds.Top - bounds.Top, primary.Bounds.Width, primary.Bounds.Height);
+        return WindowCapture.PrintRegion(desktop, bounds.Width, bounds.Height, PrintFullContent,
+            primary.Bounds.Left - bounds.Left, primary.Bounds.Top - bounds.Top, primary.Bounds.Width, primary.Bounds.Height, SampleWidth);
     }
 }

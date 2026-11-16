@@ -1,22 +1,22 @@
 import {
+  actions,
   currentMonitorName,
   cursorPosition,
   element,
   helperClient,
+  heroMark,
+  heroOrnament,
   hideOnFullscreen,
-  reducedMotion,
   icon,
   initTheme,
   keys,
   layout,
-  onDaemonEvent,
+  onShared,
   openSettings,
-  sendCommand,
+  reducedMotion,
   store,
   toast,
   zebar,
-  heroMark,
-  heroOrnament,
 } from './common.js';
 
 initTheme();
@@ -180,7 +180,6 @@ function createAudioView() {
   const apps = element('div', { class: 'app-volumes' }, element('span', { class: 'empty', text: 'Chargement…' }));
   const pending = { output: null, input: null };
 
-  // Volume par application (sessions Core Audio du périphérique de sortie par défaut).
   const changeSession = (method, params) => helperClient.request(method, params)
     .catch(error => {
       console.error(`[caelestia] ${method}`, error);
@@ -221,7 +220,6 @@ function createAudioView() {
   const loadSessions = async () => {
     try {
       const sessions = await helperClient.request('audio.sessions');
-      // Une application peut ouvrir plusieurs sessions (Discord, navigateurs) : une seule ligne par nom.
       const groups = new Map();
       for (const session of sessions) {
         const key = session.system ? '~system' : session.name.toLowerCase();
@@ -267,7 +265,7 @@ function createAudioView() {
         onClick: () => {
           pending[kind] = device.deviceId;
           setTimeout(() => { pending[kind] = null; }, 3000);
-          sendCommand(`audio-default ${device.deviceId}`);
+          actions.setDefaultAudio(device.deviceId);
           toast(kind === 'output' ? 'Sortie audio' : 'Entrée audio', { message: device.name, icon: kind === 'output' ? deviceSymbol(device.name) : 'mic' });
           update(providers.outputMap);
         },
@@ -356,11 +354,11 @@ function createKeyboardView() {
       title: item.name,
       subtitle: item.language,
       selected: item.id === event.current,
-      onClick: () => sendCommand(`layout ${item.id}`),
+      onClick: () => actions.setLayout(item.id),
     })));
   };
 
-  onDaemonEvent('layouts', event => {
+  onShared('layouts', event => {
     render(event);
     if (state.kind === 'keyboard') layoutPanel();
   });
@@ -370,7 +368,7 @@ function createKeyboardView() {
     update: () => {},
     onShow: () => {
       render(store.get(keys.event('layouts')));
-      sendCommand('layouts');
+      actions.watchLayouts();
     },
   };
 }
@@ -386,13 +384,13 @@ function createWindowView() {
     preview,
     element('div', { class: 'window-details' }, [iconSlot, element('span', { class: 'option-text' }, [title, process])]),
     element('div', { class: 'button-line' }, [
-      element('button', { class: 'tonal-button', onClick: () => sendCommand('window minimize') }, [icon('minimize'), element('span', { text: 'Réduire' })]),
-      element('button', { class: 'tonal-button', onClick: () => sendCommand('window maximize') }, [icon('open_in_full'), element('span', { text: 'Agrandir' })]),
-      element('button', { class: 'tonal-button danger', onClick: () => { sendCommand('window close'); close(); } }, [icon('close'), element('span', { text: 'Fermer' })]),
+      element('button', { class: 'tonal-button', onClick: () => actions.windowAction('minimize') }, [icon('minimize'), element('span', { text: 'Réduire' })]),
+      element('button', { class: 'tonal-button', onClick: () => actions.windowAction('maximize') }, [icon('open_in_full'), element('span', { text: 'Agrandir' })]),
+      element('button', { class: 'tonal-button danger', onClick: () => { actions.windowAction('close'); close(); } }, [icon('close'), element('span', { text: 'Fermer' })]),
     ]),
   ]);
 
-  onDaemonEvent('preview', event => {
+  onShared('preview', event => {
     if (event.at < requestedAt) return;
     preview.replaceChildren(event.image
       ? element('img', { src: `data:image/jpeg;base64,${event.image}`, alt: '' })
@@ -417,12 +415,11 @@ function createWindowView() {
       renderDetails();
       requestedAt = Date.now();
       preview.replaceChildren(icon('hourglass_empty'));
-      sendCommand('preview');
+      actions.refreshPreview().catch(error => console.error('[caelestia] Aperçu', error));
     },
   };
 }
 
-// Centre de notifications : historique Windows lu par le helper, regroupé par application.
 const notificationKeys = { dismissed: 'caelestia:notifications:dismissed', seenAt: 'caelestia:notifications:seen-at' };
 let appDirectory = null;
 
@@ -459,7 +456,6 @@ function createNotificationsView() {
       render();
     },
   }, [icon('clear_all'), element('span', { text: 'Tout effacer' })]);
-  // En-tête au style de la carte d'accueil : la cloche dans une forme, le nombre de notifications en sous-titre.
   const node = element('div', { class: 'view notifications-view', style: { width: '360px' } }, [
     element('div', { class: 'hero notifications-hero' }, [
       heroOrnament('flower'),
@@ -565,8 +561,6 @@ function showView(kind, instant) {
   const view = views[kind];
   if (!view) return;
   if (state.kind !== kind) {
-    // Fondu croisé : une copie figée de l'ancien contenu s'efface pendant que le nouveau apparaît et que le panneau
-    // change de taille.
     const previous = page.firstElementChild;
     if (previous && state.open && !reducedMotion.matches) {
       const ghost = previous.cloneNode(true);

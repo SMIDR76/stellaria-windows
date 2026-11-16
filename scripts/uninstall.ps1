@@ -1,11 +1,4 @@
 #Requires -Version 5.1
-<#
-.SYNOPSIS
-  Removes Caelestia for Windows and gives the Windows taskbar back.
-
-.PARAMETER KeepSettings
-  Keep %APPDATA%\Caelestia (settings) and the widget settings stored by Zebar.
-#>
 param([switch]$KeepSettings)
 
 $ErrorActionPreference = 'Stop'

@@ -3,24 +3,17 @@ using Caelestia.Helper.Interop;
 
 namespace Caelestia.Helper.Desktop;
 
-/// <summary>
-/// Restarts Zebar when its main thread stops answering. A hung Zebar freezes every Caelestia window at once, while
-/// the widget pages, which run in separate WebView2 processes, keep sending heartbeats, so the widget health check
-/// alone cannot see it.
-/// </summary>
 internal sealed class ZebarWatchdog(Log log, ProcessDirectory processes)
 {
     public const string ProbeWindowTitle = "Zebar - caelestia / bar";
     public static readonly TimeSpan HungLimit = TimeSpan.FromSeconds(15);
     public static readonly TimeSpan RestartCooldown = TimeSpan.FromMinutes(10);
 
-    // Shared by every cause (hung Zebar, docks pushed away after a display change) so they cannot chain restarts.
     private static readonly Lock s_gate = new();
     private static DateTimeOffset s_lastRestart = DateTimeOffset.MinValue;
 
     private DateTimeOffset? _hungSince;
 
-    /// <summary>Decides from successive observations whether Zebar should be restarted now.</summary>
     public static bool ShouldRestart(DateTimeOffset? hungSince, DateTimeOffset now, DateTimeOffset lastRestart) =>
         hungSince is { } since && now - since >= HungLimit && now - lastRestart >= RestartCooldown;
 
@@ -67,10 +60,6 @@ internal sealed class ZebarWatchdog(Log log, ProcessDirectory processes)
         }
     }
 
-    /// <summary>
-    /// Ends the given Zebar process, gives the screens their full area back and starts Zebar again, at most once per
-    /// <see cref="RestartCooldown"/>. Returns false when the cooldown is running or the process is not Zebar.
-    /// </summary>
     public static bool TryRestart(Log log, ProcessDirectory processes, uint processId, DateTimeOffset now, string reason)
     {
         lock (s_gate)
@@ -118,10 +107,6 @@ internal sealed class ZebarWatchdog(Log log, ProcessDirectory processes)
         Thread.Sleep(1500);
     }
 
-    /// <summary>
-    /// A killed Zebar cannot unregister its docked bars, and Windows keeps their reservations. Giving every screen
-    /// its full area back lets the new instance dock against the real edges instead of next to the old bars.
-    /// </summary>
     private static void ReleaseWorkAreas()
     {
         foreach (var monitor in DesktopReader.Monitors())

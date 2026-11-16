@@ -1,8 +1,5 @@
 import { edgeDrawer, element, getOption, helperClient, icon, initTheme, zebar } from './common.js';
 
-// Île dynamique : une pilule descend du haut du cadre quand un nouveau morceau démarre ou qu'une notification arrive,
-// puis repart seule, sauf si le pointeur est dessus.
-
 initTheme();
 
 const content = document.getElementById('content');
@@ -71,7 +68,6 @@ async function appIcon(appId) {
     try {
       for (const app of await helperClient.request('apps.list')) appIcons.set(app.id.toLowerCase(), app);
     } catch {
-      // Sans catalogue, la notification s'affiche avec une icône générique.
     }
   }
   return appIcons.get(appId.toLowerCase());
@@ -95,7 +91,6 @@ async function showNotification(item) {
 
 helperClient.onEvent('notification', item => showNotification(item));
 
-// Nouveau morceau : Zebar signale la session média, le helper fournit la pochette et les modes de lecture.
 const providers = zebar.createProviderGroup({ media: { type: 'media' } });
 providers.onOutput(async output => {
   const session = output.media?.currentSession;

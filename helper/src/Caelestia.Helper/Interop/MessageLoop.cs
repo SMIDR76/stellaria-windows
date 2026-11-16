@@ -97,11 +97,6 @@ internal sealed unsafe class MessageLoop : IDisposable
         _hooks.Add(hook);
     }
 
-    /// <summary>
-    /// Installs a low level keyboard hook. The handler receives the virtual key, whether it is a press and whether the
-    /// event was injected by a program, and returns true to swallow the key. It runs on the loop thread and must be fast:
-    /// Windows drops hooks that take longer than about a second.
-    /// </summary>
     public void HookKeyboard(Func<uint, bool, bool, bool> handler)
     {
         EnsureOnLoop();

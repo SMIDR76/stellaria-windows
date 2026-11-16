@@ -42,10 +42,6 @@ internal static class KeyboardInput
         return true;
     }
 
-    /// <summary>
-    /// Presses an unassigned key. Sent while a Windows key is still down, it makes Explorer treat the Windows key as part
-    /// of a combination, so releasing it does not open the Start menu.
-    /// </summary>
     public static void MaskWindowsKey()
     {
         User32.keybd_event(Unassigned, 0, 0, 0);

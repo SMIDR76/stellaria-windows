@@ -98,13 +98,8 @@ internal sealed class WindowModule : IHelperModule
             return null;
         }
 
-        var full = WindowCapture.Print(window, bounds.Width, bounds.Height, PrintFullContent);
-        if (full is null)
-        {
-            return null;
-        }
-
         var frame = Dwmapi.FrameBounds(window) ?? bounds;
-        return ImageCodec.Crop(full, frame.Left - bounds.Left, frame.Top - bounds.Top, frame.Width, frame.Height);
+        return WindowCapture.PrintRegion(window, bounds.Width, bounds.Height, PrintFullContent,
+            frame.Left - bounds.Left, frame.Top - bounds.Top, frame.Width, frame.Height, PreviewWidth);
     }
 }

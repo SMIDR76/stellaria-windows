@@ -6,11 +6,6 @@ namespace Caelestia.Helper.Modules;
 
 internal sealed record NotificationEntry(long Id, string AppId, long Time, string Title, string Body);
 
-/// <summary>
-/// Notification history for the notification centre. The Windows API for reading notifications is reserved to
-/// packaged apps, so the helper reads the database Windows keeps for the Action Center, read only, from the user's own
-/// profile. Contents stay in memory and are never logged.
-/// </summary>
 internal sealed class NotificationsModule : IHelperModule
 {
     public const int MaxItems = 50;
@@ -35,7 +30,6 @@ internal sealed class NotificationsModule : IHelperModule
         return Task.CompletedTask;
     }
 
-    /// <summary>Reads the title (first text line, or the group header) and the body (other lines) of a toast payload.</summary>
     public static (string Title, string Body) ParsePayload(string xml)
     {
         var document = new XmlDocument { XmlResolver = null };

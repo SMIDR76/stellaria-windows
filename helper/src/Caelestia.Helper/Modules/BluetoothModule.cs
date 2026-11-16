@@ -6,10 +6,6 @@ using Windows.Devices.Enumeration;
 
 namespace Caelestia.Helper.Modules;
 
-/// <summary>
-/// Lists paired Bluetooth devices, discovers new ones and pairs or forgets them. Pairing uses the Windows pairing
-/// flow, so devices that need a PIN or a confirmation still show the Windows prompt.
-/// </summary>
 internal sealed class BluetoothModule : IHelperModule
 {
     public const int MaxDeviceIdLength = 512;

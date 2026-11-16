@@ -9,10 +9,6 @@ internal sealed class ShellModule(HelperState state) : IHelperModule
 {
     public static readonly TimeSpan MaintenanceInterval = TimeSpan.FromSeconds(2);
 
-    /// <summary>
-    /// How long docks may stay away from their screen edge before Zebar is restarted. A game or a driver that resets
-    /// the display configuration renames the screens and leaves Zebar's bars docked in the wrong place.
-    /// </summary>
     public static readonly TimeSpan PushedLimit = TimeSpan.FromSeconds(6);
 
     private DateTimeOffset? _pushedSince;
@@ -93,7 +89,6 @@ internal sealed class ShellModule(HelperState state) : IHelperModule
         }
     }
 
-    /// <summary>Decides from successive observations whether pushed docks have lasted long enough to restart Zebar.</summary>
     public static bool ShouldRestartForPushedDocks(DateTimeOffset? pushedSince, DateTimeOffset now) =>
         pushedSince is { } since && now - since >= PushedLimit;
 
@@ -154,7 +149,6 @@ internal sealed class ShellModule(HelperState state) : IHelperModule
 
             if (!AppBarRules.TouchesItsEdge(dock, info.Monitor))
             {
-                // Re-registering a pushed dock would pile up reservations; restarting Zebar fixes it (see above).
                 pushedZebar = User32.ProcessId(hwnd);
                 continue;
             }

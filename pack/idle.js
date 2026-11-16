@@ -18,8 +18,6 @@ const widgetWindow = zebar.currentWidget().tauriWindow;
 const monitor = await currentMonitorName();
 await widgetWindow.setIgnoreCursorEvents(true);
 
-// L'écran de veille n'est plus lancé au démarrage : la barre le crée peu avant le délai d'inactivité
-// et il se ferme tout seul au retour de l'utilisateur, pour ne pas garder deux fenêtres plein écran en mémoire.
 const startedAt = Date.now();
 const runningKey = 'caelestia:idle:running';
 let wasActive = false;

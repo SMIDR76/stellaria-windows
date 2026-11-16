@@ -2,6 +2,8 @@ import {
   applyTheme,
   element,
   getOption,
+  heroMark,
+  heroOrnament,
   helperClient,
   icon,
   initTheme,
@@ -16,7 +18,6 @@ import {
   store,
   toast,
   variants,
-  zebar,
 } from './common.js';
 
 initTheme();
@@ -24,7 +25,6 @@ initTheme();
 const panel = document.getElementById('panel');
 const pagesNode = document.getElementById('pages');
 const title = document.getElementById('page-title');
-// Une page peut être demandée à l'ouverture (premier lancement : page Bienvenue).
 const popup = setupPopup('settings', {
   panel,
   onOpen: () => {
@@ -36,8 +36,6 @@ const popup = setupPopup('settings', {
   },
 });
 document.getElementById('close').addEventListener('click', () => popup.close());
-// La marge transparente qui laisse place à l'ombre fait partie de la fenêtre : un clic dedans ferme, comme un clic
-// à l'extérieur.
 document.body.addEventListener('pointerdown', event => {
   if (event.target === document.body) popup.close();
 });
@@ -87,30 +85,27 @@ function section(label, children) {
   return element('div', { class: 'section' }, [element('span', { class: 'section-title', text: label }), ...children]);
 }
 
-// En-tête de page commun (style de la page À propos) : carte en dégradé aux couleurs du thème, forme animée,
-// titre, phrase d'accroche, pastilles d'état et actions.
 function pageHero({ symbol, shape = 'cookie9', heading, text, chips = [], actions = [], art = null, backdrop = null }) {
-  return element('div', { class: 'page-hero' }, [
+  return element('div', { class: 'hero page-hero' }, [
     backdrop,
-    element('div', { class: 'page-hero-ornament' }, shapeSvg(shape === 'flower' ? 'softBurst' : 'flower')),
-    art ?? element('div', { class: 'page-hero-mark' }, [shapeSvg(shape), icon(symbol)]),
+    heroOrnament(shape === 'flower' ? 'softBurst' : 'flower'),
+    art ?? heroMark(shape, symbol),
     element('div', { class: 'page-hero-text' }, [
       element('h2', { text: heading }),
       element('p', { text }),
-      chips.length ? element('div', { class: 'about-chips' }, chips) : null,
+      chips.length ? element('div', { class: 'hero-chips' }, chips) : null,
       actions.length ? element('div', { class: 'page-hero-actions' }, actions) : null,
     ]),
   ]);
 }
 
-// Chaque touche dans sa propre pastille, comme sur un clavier (« 2+2 » reste un calcul).
 function keysOf(text) {
   const parts = /^[0-9]/.test(text) ? [text] : text.split('+').map(part => part.trim()).filter(Boolean);
   return element('span', { class: 'keys' }, parts.flatMap((key, index) => [index ? element('span', { class: 'plus', text: '+' }) : null, element('kbd', { text: key })]));
 }
 
 function heroChip(text, symbol = null, className = '') {
-  return element('span', { class: `about-chip${className ? ` ${className}` : ''}` }, [symbol ? icon(symbol) : null, element('span', { text })]);
+  return element('span', { class: `hero-chip${className ? ` ${className}` : ''}` }, [symbol ? icon(symbol) : null, element('span', { text })]);
 }
 
 function optionRow(name, fallback, symbol, label, description) {
@@ -204,7 +199,7 @@ function appearancePage() {
       heading: 'Couleurs et mode',
       text: "Une palette Material You complète, tirée de votre fond d'écran ou d'un schéma fixe, appliquée à tout le thème.",
       chips: [
-        element('span', { class: 'about-chip hero-swatches' }, [element('i', { class: 'primary' }), element('i', { class: 'secondary' }), element('i', { class: 'tertiary' })]),
+        element('span', { class: 'hero-chip hero-swatches' }, [element('i', { class: 'primary' }), element('i', { class: 'secondary' }), element('i', { class: 'tertiary' })]),
         heroChip(modeLabel, mode === 'light' ? 'light_mode' : mode === 'auto' ? 'brightness_auto' : 'dark_mode'),
         heroChip(schemeLabel, 'colors'),
       ],
@@ -224,23 +219,23 @@ function appearancePage() {
 }
 
 function wallpaperPage() {
-  const field = element('input', { class: 'field', type: 'text', spellcheck: 'false', value: getOption('wallpaperDirectory', settings.wallpaperDirectory) });
+  const field = element('input', { class: 'field', type: 'text', spellcheck: 'false', value: getOption('wallpaperDirectory', ''), placeholder: 'Images (dossier par défaut)' });
   const save = element('button', {
     class: 'button filled',
     onClick: () => {
       const value = field.value.trim();
-      if (!/^[A-Za-z]:\\/.test(value)) {
+      if (value && !/^[A-Za-z]:\\/.test(value)) {
         toast('Dossier invalide', { message: 'Indique un chemin complet, par exemple C:\\Images', icon: 'error', kind: 'warning' });
         return;
       }
       setOption('wallpaperDirectory', value);
-      toast("Dossier des fonds d'écran", { message: value, icon: 'folder' });
+      toast("Dossier des fonds d'écran", { message: value || 'Images (dossier par défaut)', icon: 'folder' });
     },
   }, [icon('save'), element('span', { text: 'Enregistrer' })]);
 
   const sample = store.get(keys.wallpaperSample, null);
   const image = sample ? `url(data:image/png;base64,${sample})` : null;
-  const folder = getOption('wallpaperDirectory', settings.wallpaperDirectory);
+  const folder = getOption('wallpaperDirectory', '');
   return [
     pageHero({
       symbol: 'wallpaper',
@@ -248,7 +243,7 @@ function wallpaperPage() {
       text: "Chaque fond d'écran redonne au thème une palette assortie. Wallpaper Engine est pris en compte. Raccourci : Alt+E.",
       art: image ? element('div', { class: 'page-hero-thumb', style: { backgroundImage: image } }) : null,
       backdrop: image ? element('div', { class: 'page-hero-backdrop', style: { backgroundImage: image } }) : null,
-      chips: [heroChip(folder.split('\\').filter(Boolean).pop() ?? folder, 'folder')],
+      chips: [heroChip(folder.split('\\').filter(Boolean).pop() ?? 'Images', 'folder')],
       actions: [element('button', { class: 'button filled', onClick: async () => { await popup.close(); openLauncher('>fond '); } }, [icon('photo_library'), element('span', { text: 'Choisir un fond' })])],
     }),
     section("Dossier des fonds d'écran", [
@@ -388,7 +383,6 @@ function shortcutsPage() {
   ];
 }
 
-// Assistant de premier lancement (comme Noctalia) : l'essentiel pour bien démarrer, sur une seule page.
 function welcomePage() {
   const step = (number, label, children) => element('div', { class: 'welcome-step' }, [
     element('span', { class: 'welcome-number', text: String(number) }),
@@ -434,7 +428,6 @@ function welcomePage() {
   ];
 }
 
-// État du helper, partagé par toutes les pastilles « À propos » affichées.
 let helperConnected = false;
 helperClient.onConnection(connected => {
   helperConnected = connected;
@@ -446,7 +439,6 @@ function paintStatus(node) {
   node.lastChild.textContent = helperConnected ? 'Helper connecté' : 'Helper hors ligne';
 }
 
-// Version du pack, lue une fois dans zpack.json.
 let packVersion = '';
 fetch('./zpack.json').then(response => response.json()).then(pack => {
   packVersion = pack.version ?? '';
@@ -454,7 +446,7 @@ fetch('./zpack.json').then(response => response.json()).then(pack => {
 }).catch(() => {});
 
 function aboutPage() {
-  const status = element('span', { class: 'about-chip about-status' }, [element('span', { class: 'about-dot' }), element('span', {})]);
+  const status = element('span', { class: 'hero-chip about-status' }, [element('span', { class: 'about-dot' }), element('span', {})]);
   paintStatus(status);
   const highlight = (symbol, label, text) => element('div', { class: 'about-tile' }, [
     element('span', { class: 'about-tile-icon' }, icon(symbol)),
@@ -476,8 +468,8 @@ function aboutPage() {
       heading: 'Caelestia pour Windows',
       text: 'Le shell Material You de Caelestia, recréé pour Windows 11 : barre, tiroirs et animations expressives autour de vos fenêtres habituelles.',
       chips: [
-        element('span', { class: 'about-chip about-version', text: packVersion ? `Version ${packVersion}` : 'Version' }),
-        element('span', { class: 'about-chip', text: 'Licence GPL-3.0' }),
+        element('span', { class: 'hero-chip about-version', text: packVersion ? `Version ${packVersion}` : 'Version' }),
+        element('span', { class: 'hero-chip', text: 'Licence GPL-3.0' }),
         status,
       ],
     }),
@@ -492,7 +484,7 @@ function aboutPage() {
       credit('lightbulb', 'Inspirations', "DankMaterialShell, Noctalia, end-4's dots, YASB, FluentFlyout"),
     ]),
     section('Construit avec', [
-      element('div', { class: 'about-stack' }, stack.map(name => element('span', { class: 'about-chip quiet', text: name }))),
+      element('div', { class: 'about-stack' }, stack.map(name => element('span', { class: 'hero-chip quiet', text: name }))),
     ]),
     element('div', { class: 'about-actions' }, [
       element('button', { class: 'button', onClick: () => showPage('welcome') }, [icon('waving_hand'), element('span', { text: "Revoir l'accueil" })]),

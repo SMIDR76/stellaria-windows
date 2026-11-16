@@ -1,23 +1,23 @@
 import {
+  actions,
   edgeDrawer,
+  element,
+  getOption,
   helperClient,
   heroMark,
   heroOrnament,
-  isPrimaryMonitor,
-  openFolder,
-  element,
-  getOption,
   icon,
   initTheme,
-  onDaemonEvent,
+  isPrimaryMonitor,
+  keys,
+  onShared,
+  openFolder,
   openSettings,
   option,
-  sendCommand,
   setOption,
   settings,
   store,
   toast,
-  keys,
   zebar,
 } from './common.js';
 
@@ -42,11 +42,11 @@ const radios = { WiFi: null, Bluetooth: null };
 const toggles = {
   wifi: toggle('wifi', 'Wi-Fi', () => {
     if (!radios.WiFi) return;
-    sendCommand(`radio WiFi ${radios.WiFi.on ? 'off' : 'on'}`);
+    actions.setRadio('WiFi', !radios.WiFi.on).catch(error => console.error('[caelestia] Wi-Fi', error));
   }),
   bluetooth: toggle('bluetooth', 'Bluetooth', () => {
     if (!radios.Bluetooth) return;
-    sendCommand(`radio Bluetooth ${radios.Bluetooth.on ? 'off' : 'on'}`);
+    actions.setRadio('Bluetooth', !radios.Bluetooth.on).catch(error => console.error('[caelestia] Bluetooth', error));
   }),
   mic: toggle('mic', 'Micro', () => {
     const audio = providers.outputMap.audio;
@@ -65,7 +65,7 @@ const renderRadios = event => {
   toggles.bluetooth.set(radios.Bluetooth?.on, !radios.Bluetooth, radios.Bluetooth ? `Bluetooth : ${radios.Bluetooth.on ? 'activé' : 'désactivé'}` : 'Bluetooth indisponible');
 };
 renderRadios(store.get(keys.event('radios')));
-onDaemonEvent('radios', event => {
+onShared('radios', event => {
   const before = { WiFi: radios.WiFi?.on, Bluetooth: radios.Bluetooth?.on };
   renderRadios(event);
   if (!event.result) return;
@@ -91,7 +91,6 @@ providers.onOutput(renderAudio);
 option('gameMode', false, enabled => toggles.game.set(enabled, false, `Mode jeu : ${enabled ? 'activé' : 'désactivé'}`));
 toggles.settings.set(false);
 
-// En-tête : date du jour, état de la mise en veille et minuteur en cours.
 const hero = {
   node: document.getElementById('hero'),
   date: document.getElementById('hero-date'),
@@ -113,11 +112,11 @@ const renderAwake = enabled => {
   hero.awake.lastChild.textContent = enabled ? 'Toujours éveillé' : 'Veille autorisée';
 };
 renderAwake(store.get(keys.event('awake'))?.enabled);
-onDaemonEvent('awake', event => {
+onShared('awake', event => {
   renderAwake(event.enabled);
   toast('Garder éveillé', { message: event.enabled ? 'Le PC ne se mettra pas en veille' : 'Veille automatique rétablie', icon: 'coffee' });
 });
-awake.addEventListener('click', () => sendCommand(`awake ${awake.classList.contains('checked') ? 'off' : 'on'}`));
+awake.addEventListener('click', () => actions.setKeepAwake(!awake.classList.contains('checked')).catch(error => console.error('[caelestia] Garder éveillé', error)));
 
 const capture = (symbol, label, onClick, className = '') =>
   element('button', { class: `action ${className}`.trim(), onClick }, [icon(symbol), element('span', { text: label })]);
@@ -130,14 +129,12 @@ document.getElementById('captures').append(
   }),
   capture('screen_record', 'Enregistrer', () => {
     drawer.hide();
-    sendCommand('record');
+    actions.record();
     toast('Enregistrement', { message: 'Xbox Game Bar : Win+Alt+R pour arrêter', icon: 'screen_record' });
   }, 'danger'),
   capture('photo_library', 'Mes captures', () => openFolder('screenshots')),
 );
 
-// Minuteur Pomodoro : 25 minutes de concentration, 5 de pause. L'état vit dans le stockage partagé, donc le minuteur
-// continue quand le panneau est fermé, et la fin est annoncée par une notification du thème.
 const pomodoroKey = 'caelestia:pomodoro';
 const phases = { focus: { label: 'Concentration', minutes: 25 }, break: { label: 'Pause', minutes: 5 } };
 const pomodoroNodes = {
@@ -213,6 +210,6 @@ const drawer = await edgeDrawer('utilities', {
   side: 'bottom',
   onOpen: () => {
     paintDate();
-    sendCommand('radios');
+    actions.refreshRadios().catch(error => console.error('[caelestia] Radios', error));
   },
 });

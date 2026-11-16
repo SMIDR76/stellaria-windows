@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  helper:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: helper/global.json
+      - name: Test
+        working-directory: helper/tests/Caelestia.Helper.Tests
+        run: dotnet test .
+
+  pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Syntax
+        run: find pack -name '*.js' -not -path 'pack/vendor/*' -print0 | xargs -0 -n1 node --check
+      - run: npm run lint
+      - run: npm test
