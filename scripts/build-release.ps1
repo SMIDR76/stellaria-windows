@@ -27,6 +27,10 @@ dotnet publish (Join-Path $root 'helper\src\Caelestia.Helper\Caelestia.Helper.cs
 if ($LASTEXITCODE -ne 0) { throw 'Publishing the helper failed.' }
 Get-ChildItem -LiteralPath $bin -Filter *.pdb | Remove-Item -Force
 
+Step 'Building the launcher'
+& (Join-Path $root 'launcher\build.ps1')
+Copy-Item (Join-Path $root 'launcher\target\release\caelestia-launcher.exe') $bin
+
 Step 'Copying the Zebar pack'
 $pack = Join-Path $stage 'pack'
 robocopy (Join-Path $root 'pack') $pack /MIR /XF runtime.json *.exe /XD node_modules /NFL /NDL /NJH /NJS /NP | Out-Null

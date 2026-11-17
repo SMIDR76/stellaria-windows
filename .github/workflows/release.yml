@@ -37,7 +37,7 @@ jobs:
         shell: pwsh
         run: |
           $dumpbin = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -find 'VC\Tools\MSVC\**\bin\Hostx64\x64\dumpbin.exe' | Select-Object -First 1
-          foreach ($file in 'artifacts/stage/bin/caelestia-helper.exe', 'artifacts/stage/bin/e_sqlite3.dll') {
+          foreach ($file in 'artifacts/stage/bin/caelestia-helper.exe', 'artifacts/stage/bin/e_sqlite3.dll', 'artifacts/stage/bin/caelestia-launcher.exe') {
             $imports = & $dumpbin /nologo /dependents $file | Select-String '\.dll' | ForEach-Object { $_.Line.Trim() }
             $imports
             if ($imports -match '(?i)^(vcruntime|msvcp)') { throw "$file needs the Visual C++ runtime." }

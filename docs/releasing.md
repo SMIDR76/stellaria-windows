@@ -5,7 +5,7 @@
 | File | Contents |
 | --- | --- |
 | `CaelestiaSetup-<version>.exe` | Per-user Inno Setup installer (English and French). |
-| `Caelestia-<version>-portable.zip` | The pack, the helper, the switcher, `scripts\install.ps1` and `scripts\uninstall.ps1`. |
+| `Caelestia-<version>-portable.zip` | The pack, the helper, the switcher, the Caelestia app, `scripts\install.ps1` and `scripts\uninstall.ps1`. |
 | `SHA256SUMS.txt` | SHA-256 of the two files above. |
 
 Every file also gets a build provenance attestation, verifiable with
@@ -13,10 +13,11 @@ Every file also gets a build provenance attestation, verifiable with
 
 ## Steps
 
-1. Set the version in `helper/Directory.Build.props` and `pack/zpack.json`, and commit.
+1. Set the version in `helper/Directory.Build.props`, `pack/zpack.json`, `launcher/Cargo.toml` and
+   `launcher/tauri.conf.json`, and commit.
 2. Tag the commit and push the tag: `git tag v1.2.3` then `git push origin v1.2.3`.
-3. The **Release** workflow builds on `windows-latest` (NativeAOT helper, switcher, setup, archive, checksums), checks
-   that the helper needs no Visual C++ runtime, then on `ubuntu-latest` verifies the checksums, attests the files,
+3. The **Release** workflow builds on `windows-latest` (NativeAOT helper, switcher, Caelestia app, setup, archive,
+   checksums), checks that the helper and the app need no Visual C++ runtime, then on `ubuntu-latest` verifies the checksums, attests the files,
    creates a draft release with generated notes, uploads the files and publishes it.
 4. Upload the setup to [VirusTotal](https://www.virustotal.com) and, if Microsoft Defender flags it, submit it as a
    software developer at <https://www.microsoft.com/wdsi/filesubmission>.
@@ -33,7 +34,7 @@ workflow artifact without publishing anything.
 ## Building locally
 
 `scripts\build-release.ps1 [-Version 1.2.3] [-SkipInstaller]` produces the same files in `artifacts\`. It needs the
-.NET 10 SDK, the Visual Studio C++ build tools (for NativeAOT) and, unless `-SkipInstaller` is given, Inno Setup 6.7 or
+.NET 10 SDK, the Visual Studio C++ build tools (for NativeAOT and the app), Rust (`rustup`, stable MSVC toolchain) and, unless `-SkipInstaller` is given, Inno Setup 6.7 or
 later (`winget install -e --id JRSoftware.InnoSetup --scope user`). Inno Setup is free for non-commercial use, which
 covers this project.
 

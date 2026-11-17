@@ -546,6 +546,16 @@ function relayHelperState() {
 }
 
 const switcherRoles = [
+  'primary',
+  'onPrimary',
+  'secondary',
+  'tertiary',
+  'tertiaryContainer',
+  'onTertiaryContainer',
+  'surfaceContainerLow',
+  'outline',
+  'outlineVariant',
+  'error',
   'surface',
   'surfaceContainer',
   'surfaceContainerHigh',

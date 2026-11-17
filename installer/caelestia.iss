@@ -13,6 +13,7 @@
 #define WebView2Url "https://go.microsoft.com/fwlink/p/?LinkId=2124703"
 #define PackDir "{%USERPROFILE}\.glzr\zebar\caelestia"
 #define Helper "{app}\bin\caelestia-helper.exe"
+#define Launcher "{app}\bin\caelestia-launcher.exe"
 
 [Setup]
 AppId={{07E2E875-6641-40F1-998A-41F55DCD99DD}
@@ -40,7 +41,7 @@ SolidCompression=yes
 WizardStyle=modern dynamic
 SetupLogging=yes
 UninstallDisplayName={#AppName}
-UninstallDisplayIcon={#Helper}
+UninstallDisplayIcon={#Launcher}
 CloseApplications=yes
 RestartApplications=no
 ShowLanguageDialog=auto
@@ -67,6 +68,7 @@ en.ChangeColors=Optional, off by default: the Windows accent colour can follow t
 en.ChangePrivacy=No telemetry. Network use: weather (Open-Meteo) and lyrics (LRCLIB), both optional.
 en.TaskSwitcher=Caelestia Alt+Tab switcher
 en.TaskStartNow=Start Caelestia now
+en.TaskOpenLauncher=Open the Caelestia app
 en.IconRestore=Caelestia - Restore the taskbar
 en.IconStart=Caelestia - Start
 en.IconUninstall=Uninstall Caelestia
@@ -93,6 +95,7 @@ fr.ChangeColors=En option, désactivé par défaut : la couleur d'accent de Wind
 fr.ChangePrivacy=Aucune télémétrie. Réseau : météo (Open-Meteo) et paroles (LRCLIB), tous deux facultatifs.
 fr.TaskSwitcher=Sélecteur Alt+Tab Caelestia
 fr.TaskStartNow=Démarrer Caelestia maintenant
+fr.TaskOpenLauncher=Ouvrir l'application Caelestia
 fr.IconRestore=Caelestia - Rétablir la barre des tâches
 fr.IconStart=Caelestia - Relancer
 fr.IconUninstall=Désinstaller Caelestia
@@ -106,6 +109,7 @@ fr.RemoveSettings=Supprimer aussi vos réglages Caelestia (couleurs, options, fa
 [Tasks]
 Name: "switcher"; Description: "{cm:TaskSwitcher}"
 Name: "startnow"; Description: "{cm:TaskStartNow}"
+Name: "openlauncher"; Description: "{cm:TaskOpenLauncher}"
 
 [InstallDelete]
 Type: files; Name: "{userprograms}\Caelestia\*.lnk"
@@ -123,9 +127,16 @@ Source: "{#Stage}\THIRD_PARTY_NOTICES.md"; DestDir: "{app}"; Flags: ignoreversio
 Source: "{#Stage}\licenses\*"; DestDir: "{app}\licenses"; Flags: ignoreversion
 
 [Icons]
+Name: "{userprograms}\Caelestia\Caelestia"; Filename: "{#Launcher}"; Check: LauncherShipped
 Name: "{userprograms}\Caelestia\{cm:IconRestore}"; Filename: "{#Helper}"; Parameters: "--restore-shell"; IconFilename: "{sys}\imageres.dll"; IconIndex: 72
 Name: "{userprograms}\Caelestia\{cm:IconStart}"; Filename: "{#Helper}"; Parameters: "--start"
 Name: "{userprograms}\Caelestia\{cm:IconUninstall}"; Filename: "{uninstallexe}"
+
+[Registry]
+Root: HKCU; Subkey: "Software\Classes\caelestia"; ValueType: string; ValueName: ""; ValueData: "URL:Caelestia"; Flags: uninsdeletekey; Check: LauncherShipped
+Root: HKCU; Subkey: "Software\Classes\caelestia"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Check: LauncherShipped
+Root: HKCU; Subkey: "Software\Classes\caelestia\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{#Launcher},0"; Check: LauncherShipped
+Root: HKCU; Subkey: "Software\Classes\caelestia\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{#Launcher}"" ""%1"""; Check: LauncherShipped
 
 [UninstallRun]
 Filename: "{#Helper}"; Parameters: "--uninstall"; Flags: runhidden waituntilterminated; RunOnceId: "CaelestiaUninstall"
@@ -136,6 +147,11 @@ Type: filesandordirs; Name: "{#PackDir}"
 Type: filesandordirs; Name: "{app}"
 
 [Code]
+function LauncherShipped: Boolean;
+begin
+  Result := FileExists(ExpandConstant('{#Launcher}'));
+end;
+
 var
   ChangesPage: TOutputMsgMemoWizardPage;
   DownloadPage: TDownloadWizardPage;
@@ -274,6 +290,8 @@ begin
   end;
   if WizardIsTaskSelected('startnow') then
     Exec(Helper, '--start', '', SW_HIDE, ewNoWait, Code);
+  if WizardIsTaskSelected('openlauncher') and LauncherShipped then
+    ExecAsOriginalUser(ExpandConstant('{#Launcher}'), '', '', SW_SHOWNORMAL, ewNoWait, Code);
 end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);

@@ -10,8 +10,10 @@ The source files carry no comments. This page explains how the pieces fit togeth
 | `zebar.exe` | Hosts one WebView2 window per widget and per monitor (the `pack/` folder). |
 | `caelestia-helper.exe` | Native Windows features the pages cannot reach, over a local WebSocket. |
 | `CaelestiaSwitcher.exe` | Optional Alt+Tab switcher, themed from `switcher-theme.json`. |
+| `caelestia-launcher.exe` | The Caelestia app (Tauri 2): start, stop and repair the theme, colour presets from the community catalogue, news. Opened on demand, never at logon. |
 
-All three start from logon tasks registered by `scripts/install.ps1`, and run without administrator rights.
+The first three start from logon tasks registered by `scripts/install.ps1`, and every process runs without
+administrator rights.
 
 ## The pack
 
@@ -86,6 +88,24 @@ Installers only copy files and call the helper, so every way of installing share
 
 `installer/caelestia.iss` (Inno Setup) and `scripts/install.ps1` call these commands; `scripts/build-release.ps1` and
 the Release workflow build the release files (see `releasing.md`).
+
+## The Caelestia app
+
+`launcher/` holds a thin Rust shell and a plain HTML, CSS and JavaScript page (`launcher/ui/`), built with `cargo`
+alone by `launcher/build.ps1`, which first copies the pack's shared styles, fonts and colour schemes into
+`launcher/dist/`. The app holds no theme logic: everything goes through the helper.
+
+- **Connection**: the page reads `%LOCALAPPDATA%\Caelestia\launcher.json` (port and token, written by the helper)
+  through the `runtime` command, then talks to the helper over the same WebSocket as the widgets, from the origin
+  `http://tauri.localhost`, with the `launcher` scope. The helper's answers to `launcher.status`, `launcher.theme` and
+  `catalog.*` fill the pages.
+- **Rust commands**: `runtime`, `helper` (runs `caelestia-helper.exe` with `--start`, `--restore-shell` or
+  `--install`, nothing else), `open_external` (https links only) and `initial_link`.
+- **Links**: `caelestia://apply/<id>` is registered for the user by the setup and `scripts/install.ps1`. A second
+  instance hands its link to the running one (single-instance plugin), which asks before applying the preset.
+- **Restrictions**: the content security policy only allows the page's own files and the helper's ports; the window
+  only has the `core:default`, `show` and `set-focus` permissions.
+- **Language**: French by default like the theme, English from the app's settings.
 
 ### Recovery
 

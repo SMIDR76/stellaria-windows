@@ -23,6 +23,12 @@ Built on [Zebar](https://github.com/glzr-io/zebar) for the widgets and a small n
 - **Optional acrylic** blur behind the bar, **reduced motion** support, a **game mode** without animations.
 - **Recoverable**: the Windows taskbar comes back if anything stops, and the helper restarts a frozen Zebar.
 
+## The Caelestia app
+
+The setup adds a **Caelestia** entry to the Start menu: an app in the theme's colours to start, stop or repair the
+theme, open its settings, apply colour presets from the signed community catalogue (and undo them), and read the
+project's news. Links such as `caelestia://apply/preset-nord` open it on the matching preset and ask before applying.
+
 ## Requirements
 
 - Windows 11 (Windows 10 22H2 may work, untested)
@@ -30,6 +36,8 @@ Built on [Zebar](https://github.com/glzr-io/zebar) for the widgets and a small n
 - To build the helper: the [.NET 10 SDK](https://dotnet.microsoft.com/download) (`winget install -e --id Microsoft.DotNet.SDK.10`).
   Release archives ship a prebuilt helper instead. With the Visual Studio C++ build tools also installed, the helper
   is compiled natively (NativeAOT) and uses about ten times less memory.
+- To build the Caelestia app: [Rust](https://rustup.rs) with the MSVC toolchain. `scripts\install.ps1` skips the app
+  when Rust is missing.
 
 How the pieces fit together is described in [docs/architecture.md](docs/architecture.md).
 

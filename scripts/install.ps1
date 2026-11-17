@@ -53,6 +53,13 @@ if (Test-Path (Join-Path $prebuilt 'caelestia-helper.exe')) {
   throw 'No prebuilt helper and no .NET SDK: download a release archive or install the .NET 10 SDK.'
 }
 
+$launcherSource = Join-Path $root 'launcher'
+if ((Test-Path (Join-Path $launcherSource 'Cargo.toml')) -and (Test-Path (Join-Path $env:USERPROFILE '.cargo\bin\cargo.exe'))) {
+  Step 'Building the launcher'
+  & (Join-Path $launcherSource 'build.ps1') | Out-Null
+  Copy-Item (Join-Path $launcherSource 'target\release\caelestia-launcher.exe') $bin -Force
+}
+
 $catalogue = Join-Path $home2 'registry'
 $bundled = Join-Path $root 'registry\index.json.minisig'
 $keyFile = Join-Path $env:USERPROFILE '.caelestia-signing\caelestia-registry.key'
@@ -85,6 +92,17 @@ $restore.TargetPath = $helper
 $restore.Arguments = '--restore-shell'
 $restore.IconLocation = Join-Path $env:WINDIR 'System32\imageres.dll,72'
 $restore.Save()
+$launcherExe = Join-Path $bin 'caelestia-launcher.exe'
+if (Test-Path $launcherExe) {
+  $app = $shell.CreateShortcut((Join-Path $menu 'Caelestia.lnk'))
+  $app.TargetPath = $launcherExe
+  $app.Save()
+  $classes = 'HKCU:\Software\Classes\caelestia'
+  New-Item -Path "$classes\shell\open\command" -Force | Out-Null
+  Set-Item -Path $classes -Value 'URL:Caelestia'
+  New-ItemProperty -Path $classes -Name 'URL Protocol' -Value '' -Force | Out-Null
+  Set-Item -Path "$classes\shell\open\command" -Value "`"$launcherExe`" `"%1`""
+}
 $relaunch = $shell.CreateShortcut((Join-Path $menu 'Caelestia - Relancer.lnk'))
 $relaunch.TargetPath = $helper
 $relaunch.Arguments = '--start'

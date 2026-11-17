@@ -78,6 +78,11 @@ internal sealed class CatalogModule : IHelperModule
             return Task.FromResult<JsonNode?>(Describe());
         });
         context.Router.Register("launcher.status", (_, _) => Task.FromResult<JsonNode?>(Status()));
+        context.Router.Register("launcher.theme", (_, _) =>
+        {
+            var path = Path.Combine(context.Paths.DataDirectory, ThemeModule.FileName);
+            return Task.FromResult(File.Exists(path) ? JsonNode.Parse(File.ReadAllText(path)) : null);
+        });
         context.Router.Register("launcher.openSettings", (_, _) =>
         {
             context.Hub.Raise("hotkey", new JsonObject { ["name"] = "settings", ["monitor"] = DesktopReader.MonitorUnderCursor() });

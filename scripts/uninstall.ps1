@@ -13,6 +13,8 @@ if (Test-Path $helper) {
 }
 
 Write-Host '-> Removing the shortcuts and files' -ForegroundColor Cyan
+Get-Process caelestia-launcher -ErrorAction SilentlyContinue | Stop-Process -Force
+if (Test-Path 'HKCU:\Software\Classes\caelestia') { Remove-Item 'HKCU:\Software\Classes\caelestia' -Recurse -Force }
 $menu = Join-Path ([Environment]::GetFolderPath('Programs')) 'Caelestia'
 if (Test-Path $menu) { Remove-Item $menu -Recurse -Force }
 if (Test-Path $pack) { Remove-Item $pack -Recurse -Force }

@@ -126,6 +126,7 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `catalog.apply` | `{ "id" }` of a preset (scope `launcher`) | Same as `catalog.index`. Raises `theme.preset`; the primary bar saves the current look, then applies the preset's scheme, mode, variant and visual options. |
 | `catalog.undo` | none (scope `launcher`) | Same as `catalog.index`. Raises `theme.undo`; the primary bar restores the look saved before the last preset. |
 | `launcher.status` | none (scope `launcher`) | `{ "helperVersion", "packVersion", "packInstalled", "zebar", "zebarRunning", "tasks": [helper, switcher, Zebar], "sessions" }`. |
+| `launcher.theme` | none (scope `launcher`) | The last `theme.publish` payload, `{ "roles", "transparent" }`, so the Caelestia app wears the theme's colours. `null` before the first publish. |
 | `launcher.openSettings` | none (scope `launcher`) | Opens the theme settings window, like Win+Alt+S. |
 | `wallpapers.apply` | `{ "path" }` inside the configured folder | none, `denied` for any other path |
 | `wallpapers.list` | none | `{ "directory", "current", "items": [ { "path", "name", "thumb": "<384 x 216 jpeg base64>" } ] }`, at most 500 images of the configured folder |

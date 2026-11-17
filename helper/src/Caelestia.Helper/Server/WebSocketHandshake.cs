@@ -97,7 +97,7 @@ internal static class WebSocketHandshake
             return false;
         }
 
-        return uri.Host is "127.0.0.1" or "localhost" && uri.AbsolutePath == "/";
+        return (uri.Host is "127.0.0.1" or "localhost" || (uri.Host == "tauri.localhost" && uri.IsDefaultPort)) && uri.AbsolutePath == "/";
     }
 
     public static string AcceptResponse(string acceptKey) =>
