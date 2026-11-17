@@ -17,7 +17,7 @@ The file is written atomically (temporary file then rename), so a crash while sa
 | Setting | Type | Default | Meaning |
 | --- | --- | --- | --- |
 | `language` | `auto`, `en`, `fr`, `es`, `tr`, `ar`, `kmr`, `kiu` | `auto` | Interface language. `auto` follows the Windows display language and falls back to English. |
-| `theme.mode` | `dark`, `light`, `auto` | `dark` | Colour mode. `auto` follows sunrise and sunset at the weather location. |
+| `theme.mode` | `dark`, `light` | `dark` | Colour mode, chosen by the user. |
 | `theme.variant` | `tonalspot`, `vibrant`, `expressive`, `fidelity`, `content`, `fruitsalad`, `rainbow`, `neutral`, `monochrome` | `tonalspot` | Material You variant used for the wallpaper based palette. |
 | `theme.scheme` | `null` or `{ "name", "flavour" }` | `null` | Fixed colour scheme instead of the wallpaper palette, for example `{ "name": "catppuccin", "flavour": "mocha" }`. |
 | `theme.smartScheme` | boolean | `true` | Uses a monochrome palette when the wallpaper has almost no colour. |

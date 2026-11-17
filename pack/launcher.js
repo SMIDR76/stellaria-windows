@@ -241,21 +241,8 @@ function actionEntries() {
       keepOpen: true,
       run: () => {
         store.set(keys.mode, dark ? 'light' : 'dark');
-        store.set(keys.autoMode, false);
-        toast(dark ? 'Mode clair' : 'Mode sombre', { icon: dark ? 'light_mode' : 'dark_mode', message: 'Mode automatique désactivé' });
+        toast(dark ? 'Mode clair' : 'Mode sombre', { icon: dark ? 'light_mode' : 'dark_mode' });
         applyTheme();
-        render();
-      },
-    },
-    {
-      icon: 'brightness_auto',
-      title: `Clair/sombre automatique : ${store.get(keys.autoMode, false) ? 'activé' : 'désactivé'}`,
-      subtitle: 'Clair au lever du soleil, sombre au coucher',
-      keepOpen: true,
-      run: () => {
-        const enabled = !store.get(keys.autoMode, false);
-        store.set(keys.autoMode, enabled);
-        toast('Clair/sombre automatique', { message: enabled ? 'Activé' : 'Désactivé', icon: 'brightness_auto' });
         render();
       },
     },

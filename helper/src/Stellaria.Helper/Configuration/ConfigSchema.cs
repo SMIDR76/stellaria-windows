@@ -14,7 +14,7 @@ internal static partial class ConfigSchema
     public const int MaxIdentifierLength = 512;
 
     public static readonly string[] Languages = ["auto", "en", "fr", "es", "tr", "ar", "kmr", "kiu"];
-    public static readonly string[] Modes = ["dark", "light", "auto"];
+    public static readonly string[] Modes = ["dark", "light"];
     public static readonly string[] Variants = ["tonalspot", "vibrant", "expressive", "fidelity", "content", "fruitsalad", "rainbow", "neutral", "monochrome"];
 
     public static IReadOnlyList<ConfigOption> Options { get; } =

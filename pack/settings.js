@@ -120,14 +120,13 @@ function optionRow(name, fallback, symbol, label, description) {
 }
 
 function appearancePage() {
-  const mode = store.get(keys.autoMode, false) ? 'auto' : store.get(keys.mode, 'dark');
+  const mode = store.get(keys.mode, 'dark') === 'light' ? 'light' : 'dark';
   const segmented = element('div', { class: 'segmented' });
-  const modes = [['dark', 'dark_mode', 'Sombre'], ['light', 'light_mode', 'Clair'], ['auto', 'brightness_auto', 'Auto']];
+  const modes = [['dark', 'dark_mode', 'Sombre'], ['light', 'light_mode', 'Clair']];
   const renderModes = current => segmented.replaceChildren(...modes.map(([id, symbol, label]) => element('button', {
     class: id === current ? 'selected' : '',
     onClick: () => {
-      store.set(keys.autoMode, id === 'auto');
-      if (id !== 'auto') store.set(keys.mode, id);
+      store.set(keys.mode, id);
       applyTheme();
       renderModes(id);
       toast('Mode', { message: label, icon: symbol });
@@ -190,7 +189,7 @@ function appearancePage() {
   const schemeLabel = selection
     ? `${schemeNames[selection.name] ?? capitalize(selection.name)}${selection.flavour === 'default' || selection.flavour === 'medium' ? '' : ` ${capitalize(selection.flavour)}`}`
     : `Dynamique · ${variants[store.get(keys.variant, 'tonalspot')]?.label ?? ''}`;
-  const modeLabel = { dark: 'Sombre', light: 'Clair', auto: 'Auto' }[mode];
+  const modeLabel = { dark: 'Sombre', light: 'Clair' }[mode];
   return [
     pageHero({
       symbol: 'palette',
@@ -199,11 +198,11 @@ function appearancePage() {
       text: "Une palette Material You complète, tirée de votre fond d'écran ou d'un schéma fixe, appliquée à tout le thème.",
       chips: [
         element('span', { class: 'hero-chip hero-swatches' }, [element('i', { class: 'primary' }), element('i', { class: 'secondary' }), element('i', { class: 'tertiary' })]),
-        heroChip(modeLabel, mode === 'light' ? 'light_mode' : mode === 'auto' ? 'brightness_auto' : 'dark_mode'),
+        heroChip(modeLabel, mode === 'light' ? 'light_mode' : 'dark_mode'),
         heroChip(schemeLabel, 'colors'),
       ],
     }),
-    section('Mode', [row({ symbol: 'contrast', label: 'Clair ou sombre', description: 'Auto suit le lever et le coucher du soleil', control: segmented })]),
+    section('Mode', [row({ symbol: 'contrast', label: 'Clair ou sombre', description: 'Choisissez le mode de couleur du thème', control: segmented })]),
     section('Schéma de couleurs', [grid]),
     section('Variante du schéma dynamique', [
       chips,

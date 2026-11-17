@@ -9,7 +9,7 @@ internal static partial class CatalogItems
 {
     public static readonly FrozenSet<string> Types = new[] { "core", "preset", "pack" }.ToFrozenSet(StringComparer.Ordinal);
 
-    public static readonly FrozenSet<string> Modes = new[] { "dark", "light", "auto" }.ToFrozenSet(StringComparer.Ordinal);
+    public static readonly FrozenSet<string> Modes = new[] { "dark", "light" }.ToFrozenSet(StringComparer.Ordinal);
 
     public static readonly FrozenSet<string> Variants = new[]
     {

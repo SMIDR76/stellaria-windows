@@ -99,22 +99,6 @@ store.watch(keys.weather, renderWeather, 2000);
 refreshWeather();
 setInterval(refreshWeather, 15 * 60 * 1000);
 
-function applyAutoMode() {
-  if (!store.get(keys.autoMode, false)) return;
-  const weather = store.get(keys.weather);
-  if (!weather?.sunrise || !weather?.sunset) return;
-  const now = new Date();
-  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-  const sunrise = new Date(`${today}T${weather.sunrise.slice(11, 16)}:00`);
-  const sunset = new Date(`${today}T${weather.sunset.slice(11, 16)}:00`);
-  const mode = now >= sunrise && now < sunset ? 'light' : 'dark';
-  if (store.get(keys.mode, 'dark') !== mode) {
-    store.set(keys.mode, mode);
-    applyTheme();
-    toast(mode === 'light' ? 'Mode clair' : 'Mode sombre', { message: mode === 'light' ? 'Le soleil est levé' : 'Le soleil est couché', icon: mode === 'light' ? 'light_mode' : 'dark_mode' });
-  }
-}
-
 const syncActiveButtons = () => {
   for (const [name, button] of Object.entries(popupButtons)) {
     button.classList.toggle('active', isPopupOpen(name));
@@ -631,7 +615,6 @@ function currentLook() {
   return {
     scheme: store.get(keys.scheme, null),
     mode: store.get(keys.mode, 'dark'),
-    autoMode: store.get(keys.autoMode, false),
     variant: store.get(keys.variant, 'tonalspot'),
     options: Object.fromEntries(presetOptions.map(name => [name, getOption(name, presetDefaults[name])])),
   };
@@ -639,8 +622,7 @@ function currentLook() {
 
 function applyLook(look) {
   store.set(keys.scheme, look.scheme ?? null);
-  store.set(keys.autoMode, Boolean(look.autoMode));
-  if (look.mode) store.set(keys.mode, look.mode);
+  if (look.mode === 'dark' || look.mode === 'light') store.set(keys.mode, look.mode);
   if (look.variant) store.set(keys.variant, look.variant);
   for (const [name, value] of Object.entries(look.options ?? {})) {
     if (presetOptions.includes(name)) setOption(name, Boolean(value));
@@ -654,8 +636,7 @@ function applyPreset(event) {
   const preset = event.preset ?? {};
   applyLook({
     scheme: preset.scheme ?? null,
-    autoMode: preset.mode === 'auto',
-    mode: preset.mode === 'auto' ? undefined : preset.mode,
+    mode: preset.mode,
     variant: preset.variant,
     options: preset.options,
   });
@@ -691,9 +672,7 @@ if (await isPrimaryMonitor()) {
   new MutationObserver(syncSwitcherTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'data-mode', 'class'] });
   setInterval(syncSwitcherTheme, 6000);
   syncSwitcherTheme();
-  applyAutoMode();
-  setInterval(applyAutoMode, 60000);
-  store.watch(keys.autoMode, applyAutoMode, 1000);
+  if (store.get(keys.autoMode, false)) store.set(keys.autoMode, false);
   option('hideTaskbar', true, hidden => actions.setTaskbarHidden(Boolean(hidden)));
   if (!getOption('welcomed', false)) {
     setTimeout(() => {
