@@ -449,9 +449,26 @@ function dotChip(label, ok) {
 }
 
 let snackbarTimer = 0;
+let alertTimer = 0;
+function alertPulse() {
+  const body = document.body;
+  body.classList.remove('alerting');
+  void body.offsetWidth;
+  body.classList.add('alerting');
+  clearTimeout(alertTimer);
+  morph.to(14, 0.11);
+  alertTimer = setTimeout(() => {
+    body.classList.remove('alerting');
+    morph.to(...(pageShapes[state.page] ?? pageShapes.home));
+  }, 1100);
+}
+
 function notify(message, tone = 'notification') {
-  nodes.snackbar.textContent = message;
+  const warning = tone === 'warning';
+  nodes.snackbar.replaceChildren(...[warning ? icon('error') : null, element('span', { text: message })].filter(Boolean));
+  nodes.snackbar.classList.toggle('error', warning);
   nodes.snackbar.classList.add('visible');
+  if (warning) alertPulse();
   sounds.play(tone);
   clearTimeout(snackbarTimer);
   snackbarTimer = setTimeout(() => nodes.snackbar.classList.remove('visible'), 3500);

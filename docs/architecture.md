@@ -121,7 +121,10 @@ which must work while the helper is stopped or missing.
   the setting is off; reopening it plays the start sound again. The app checks for updates every six hours.
 - **Motion**: the logo morphs into a different rounded shape on each page, pages slide in when they change (not on
   every refresh), hovering a preset card repaints the app in its colours after 220 ms, finished install steps pop in,
-  and the window fades in and out. Everything is turned off when Windows asks for reduced motion.
+  and the window fades in and out. Every error snackbar also plays the warning sound and an alert: a glow in the
+  theme's error colour rises and fades around the window edges, the content gives a short damped shake, the logo turns
+  into a spiky error-coloured shape before morphing back, and the snackbar takes the error container colours with an
+  icon. Under reduced motion only the glow stays. The other effects are turned off when Windows asks for reduced motion.
 - **Installation page**: `installation` reads the state of each part without the helper: Zebar (the same places as
   the helper's `ZebarLocator`, version from its uninstall entry), the helper's file version, the pack's `zpack.json`,
   the switcher, Caelestia's entries in Zebar's `settings.json`, the three logon tasks (`schtasks /Query`) and whether

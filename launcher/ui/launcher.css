@@ -562,6 +562,119 @@ body {
   animation: slow-spin 900ms linear infinite;
 }
 
+.alert-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  border-radius: 0;
+  box-shadow:
+    inset 0 0 0 2px color-mix(in srgb, var(--m3-error) 70%, transparent),
+    inset 0 0 90px 10px color-mix(in srgb, var(--m3-error) 28%, transparent);
+  background: radial-gradient(120% 90% at 50% 100%, transparent 55%, color-mix(in srgb, var(--m3-error) 10%, transparent));
+}
+
+body.alerting .alert-glow {
+  animation: alert-glow 1100ms var(--ease-emphasized-full) both;
+}
+
+body.alerting .content {
+  animation: alert-shake 520ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+body.alerting .rail-brand {
+  color: var(--m3-error);
+  transition: color 240ms var(--ease-effects);
+}
+
+body.alerting .rail-brand .icon {
+  color: var(--m3-on-error);
+}
+
+.rail-brand {
+  transition: color 600ms var(--ease-effects);
+}
+
+.snackbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.snackbar .icon {
+  font-size: 20px;
+  font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+}
+
+.snackbar.error {
+  background: var(--m3-error-container);
+  color: var(--m3-on-error-container);
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--m3-error) 30%, transparent);
+}
+
+.snackbar.error.visible {
+  animation: snack-nudge 520ms var(--ease-emphasized-full);
+}
+
+@keyframes alert-glow {
+  0% {
+    opacity: 0;
+  }
+
+  18% {
+    opacity: 1;
+  }
+
+  45% {
+    opacity: 0.55;
+  }
+
+  60% {
+    opacity: 0.8;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes alert-shake {
+  0%,
+  100% {
+    transform: none;
+  }
+
+  20% {
+    transform: translateX(-7px);
+  }
+
+  40% {
+    transform: translateX(6px);
+  }
+
+  60% {
+    transform: translateX(-3px);
+  }
+
+  80% {
+    transform: translateX(1.5px);
+  }
+}
+
+@keyframes snack-nudge {
+  0% {
+    transform: translate(-50%, calc(100% + 32px));
+  }
+
+  60% {
+    transform: translate(-50%, -6px) scale(1.02);
+  }
+
+  100% {
+    transform: translate(-50%, 0);
+  }
+}
+
 .app {
   opacity: 0;
   transform: scale(0.985);
@@ -1345,7 +1458,9 @@ kbd {
   .spin,
   .welcome-body,
   .welcome-mark,
-  .step-icon {
+  .step-icon,
+  body.alerting .content,
+  .snackbar.error.visible {
     animation: none;
   }
 
