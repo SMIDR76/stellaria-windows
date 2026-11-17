@@ -39,3 +39,17 @@ jobs:
         run: find pack -name '*.js' -not -path 'pack/vendor/*' -print0 | xargs -0 -n1 node --check
       - run: npm run lint
       - run: npm test
+
+  launcher:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Build
+        shell: pwsh
+        run: ./launcher/build.ps1 -Debug
+      - name: Test
+        run: cargo test --manifest-path launcher/Cargo.toml --locked
