@@ -153,7 +153,8 @@ not exist before are removed again, so Windows falls back to its defaults.
   that anyone can check with `gh attestation verify <file> -R <owner>/<repository>`.
 - Rust crates are locked by `launcher/Cargo.lock`, and their licences are listed in `licenses/rust-crates.txt`.
 - Dependabot proposes security and version updates every week for GitHub Actions, NuGet and Cargo, and every month
-  for npm. CodeQL scans the C#, JavaScript and workflow code on every push and pull request to `main` and every week,
+  for npm, except the packages that only feed the vendored files (colour utilities, CLDR and emoji data, fonts): those are
+  updated by hand with `npm run vendor` and a check of the theme. CodeQL scans the C#, JavaScript and workflow code on every push and pull request to `main` and every week,
   once the repository is public.
 - Releases are signed through the SignPath Foundation once the project is accepted; until then Windows SmartScreen
   warns on first launch. The setup is in `docs/code-signing.md`.

@@ -19,3 +19,9 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    ignore:
+      - dependency-name: '@material/material-color-utilities'
+      - dependency-name: 'cldr-*'
+      - dependency-name: unicode-emoji-json
+      - dependency-name: '@fontsource-variable/*'
+      - dependency-name: material-symbols
