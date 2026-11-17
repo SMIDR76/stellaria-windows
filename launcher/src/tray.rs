@@ -24,9 +24,7 @@ fn clean(text: &str) -> String {
 pub fn reveal<R: Runtime>(app: &AppHandle<R>, page: Option<&str>) {
     if let Some(window) = app.get_webview_window("main") {
         let hidden = !window.is_visible().unwrap_or(true);
-        let _ = window.unminimize();
-        let _ = window.show();
-        let _ = window.set_focus();
+        crate::foreground::present(&window);
         if hidden {
             let _ = app.emit("reopened", ());
         }

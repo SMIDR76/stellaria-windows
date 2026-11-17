@@ -1,5 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod foreground;
 mod installation;
 mod tray;
 mod update;
@@ -166,7 +167,8 @@ fn main() {
             update::download_update,
             update::install_update,
             update::installed,
-            update::release_notes
+            update::release_notes,
+            foreground::present_window
         ])
         .run(tauri::generate_context!())
         .expect("Stellaria could not start");

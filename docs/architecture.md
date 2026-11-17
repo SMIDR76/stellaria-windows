@@ -116,6 +116,13 @@ which must work while the helper is stopped or missing.
 - **First run and updates**: a three-step welcome (language, look with live preview, key shortcuts) opens until it
   has been finished or closed once. After an update, the app compares the installed version with the last one it saw
   and shows the release notes, read from the GitHub release.
+- **Foreground**: the `present_window` command shows the window and brings it in front of any other app,
+  attaching to the foreground thread to get past Windows' focus lock. When a game is running (a Direct3D
+  full-screen app, or a foreground window that covers its whole monitor), the window is shown without activation and
+  stays behind. Reopening from the notification area or a second launch follow the same rule.
+- **French**: the French strings follow the Microsoft French style guide: "vous", nouns for progress and titles,
+  "Impossible de…", "Échec de…" and "… introuvable" for errors, a full stop only after a conjugated verb, "service"
+  rather than "helper", and a non-breaking space before `: ; ! ?` and inside « ».
 - **Notification area**: an icon next to the clock opens the app (left click) or a menu (open, start or stop the
   theme, update when one is available, quit). Closing the window plays the close sound and hides it there, unless
   the setting is off; reopening it plays the start sound again. The app checks for updates every six hours.
