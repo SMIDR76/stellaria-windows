@@ -657,7 +657,7 @@ function applyPreset(event) {
     autoMode: preset.mode === 'auto',
     mode: preset.mode === 'auto' ? undefined : preset.mode,
     variant: preset.variant,
-    options: preset.options,
+    options: { transparency: presetDefaults.transparency, ...preset.options },
   });
   toast('Préréglage appliqué', { message: event.name?.fr ?? event.id, icon: 'palette' });
 }
