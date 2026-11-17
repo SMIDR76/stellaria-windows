@@ -13,3 +13,8 @@ pack/native/*.exe
 launcher/dist/
 launcher/target/
 launcher/gen/
+
+*.key
+*.pem
+*.pfx
+.env
