@@ -20,7 +20,7 @@
     "@fontsource-variable/google-sans-flex": "5.3.2",
     "@fontsource-variable/rubik": "5.3.0",
     "@material/material-color-utilities": "0.3.0",
-    "cldr-annotations-derived-full": "48.2.0",
+    "cldr-annotations-derived-full": "49.0.0",
     "cldr-annotations-full": "48.2.0",
     "esbuild": "0.28.2",
     "eslint": "10.13.0",
