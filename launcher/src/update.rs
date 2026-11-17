@@ -14,9 +14,9 @@ use winreg::RegKey;
 
 use crate::{environment, CREATE_NO_WINDOW};
 
-const LATEST: &str = "https://github.com/SMIDR76/stellaria/releases/latest/download";
-const RELEASES: &str = "https://github.com/SMIDR76/stellaria/releases/download";
-const API: &str = "https://api.github.com/repos/SMIDR76/stellaria";
+const LATEST: &str = "https://github.com/SMIDR76/stellaria-windows/releases/latest/download";
+const RELEASES: &str = "https://github.com/SMIDR76/stellaria-windows/releases/download";
+const API: &str = "https://api.github.com/repos/SMIDR76/stellaria-windows";
 const PUBLIC_KEY: &str = "RWTou8VvwZXwQHs+sbv0zMiXD1JvVzuCX0ICnWMLpDqDAt7GcjMCMe/Z";
 const SETUP_KEY: &str = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\{07E2E875-6641-40F1-998A-41F55DCD99DD}_is1";
 const TEST_SOURCE: &str = "STELLARIA_UPDATE_SOURCE";
