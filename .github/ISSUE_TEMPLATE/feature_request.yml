@@ -1,0 +1,16 @@
+name: Idea or feature request
+description: Suggest something for Stellaria
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Idea
+      description: What you would like and why it helps.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Optional. Other ways you thought about.

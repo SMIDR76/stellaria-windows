@@ -74,7 +74,7 @@ pair. From a clone, the same scripts build the helper first:
 
 ```powershell
 git clone https://github.com/SMIDR76/stellaria-windows
-cd stellaria
+cd stellaria-windows
 powershell -ExecutionPolicy Bypass -File scripts\install.ps1
 ```
 

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security problem
+    url: https://github.com/SMIDR76/stellaria-windows/security/advisories/new
+    about: Report vulnerabilities privately, never in a public issue.
+  - name: Questions and help
+    url: https://github.com/SMIDR76/stellaria-windows/discussions
+    about: Ask questions and share your setup in Discussions.
