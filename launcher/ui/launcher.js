@@ -21,7 +21,7 @@ const strings = {
     presetsText: "Les préréglages changent seulement les couleurs et quelques options visuelles. Rien n'est installé : Annuler revient à l'apparence précédente.",
     zebar: 'Zebar', tasks: 'Démarrage automatique', tasksOk: 'Les trois tâches sont en place', tasksMissing: 'Tâches manquantes : utilisez Réparer',
     language: 'Langue', languageText: "Langue de l'application",
-    sound: 'Son', soundText: "Jouer un son à l'ouverture de l'application", soundOn: 'Activé', soundOff: 'Désactivé',
+    sound: 'Son', soundText: "Jouer les sons de l'application (ouverture et notifications)", soundOn: 'Activé', soundOff: 'Désactivé',
     catalog: 'Catalogue', catalogText: 'Version {0}, valable jusqu’au {1} ({2})', refresh: 'Actualiser',
     sources: { online: 'en ligne', cache: 'copie locale', bundled: "fourni avec l'installation", none: 'aucun' },
     about: 'À propos', aboutText: 'Logiciel libre sous licence GPL-3.0, basé sur Caelestia par soramanew et ses contributeurs.',
@@ -79,7 +79,7 @@ const strings = {
     presetsText: 'Presets only change colours and a few visual options. Nothing is installed: Undo goes back to the previous look.',
     zebar: 'Zebar', tasks: 'Start with Windows', tasksOk: 'The three tasks are in place', tasksMissing: 'Missing tasks: use Repair',
     language: 'Language', languageText: 'App language',
-    sound: 'Sound', soundText: 'Play a sound when the app opens', soundOn: 'On', soundOff: 'Off',
+    sound: 'Sound', soundText: 'Play the app sounds (opening and notifications)', soundOn: 'On', soundOff: 'Off',
     catalog: 'Catalogue', catalogText: 'Version {0}, valid until {1} ({2})', refresh: 'Refresh',
     sources: { online: 'online', cache: 'local copy', bundled: 'shipped with the setup', none: 'none' },
     about: 'About', aboutText: 'Free software under the GPL-3.0 licence, based on Caelestia by soramanew and contributors.',
@@ -152,9 +152,10 @@ const nodes = {
   snackbar: document.getElementById('snackbar'),
 };
 
-const startSound = {
+const sounds = {
   context: null,
-  buffer: null,
+  buffers: new Map(),
+  files: { start: './sounds/app-start.mp3', notification: './sounds/notification.mp3' },
 
   enabled() {
     try {
@@ -164,19 +165,28 @@ const startSound = {
     }
   },
 
-  async load() {
-    if (!this.enabled()) return;
+  async load(name) {
+    if (this.buffers.has(name)) return this.buffers.get(name);
     try {
-      this.context = new AudioContext({ latencyHint: 'interactive' });
-      const data = await (await fetch('./sounds/app-start.mp3')).arrayBuffer();
-      this.buffer = await this.context.decodeAudioData(data);
+      this.context ??= new AudioContext({ latencyHint: 'interactive' });
+      const data = await (await fetch(this.files[name])).arrayBuffer();
+      const buffer = await this.context.decodeAudioData(data);
+      this.buffers.set(name, buffer);
+      return buffer;
     } catch {
-      this.buffer = null;
+      return null;
     }
   },
 
-  async play() {
-    if (!this.buffer || !this.context) return;
+  async preload() {
+    if (!this.enabled()) return;
+    await Promise.allSettled(Object.keys(this.files).map(name => this.load(name)));
+  },
+
+  async play(name) {
+    if (!this.enabled()) return;
+    const buffer = await this.load(name);
+    if (!buffer || !this.context) return;
     try {
       if (this.context.state === 'suspended') await this.context.resume();
       const source = this.context.createBufferSource();
@@ -184,12 +194,11 @@ const startSound = {
       const now = this.context.currentTime;
       gain.gain.setValueAtTime(0, now);
       gain.gain.linearRampToValueAtTime(0.8, now + 0.06);
-      source.buffer = this.buffer;
+      source.buffer = buffer;
       source.connect(gain).connect(this.context.destination);
-      source.addEventListener('ended', () => this.context.close().catch(() => {}));
       source.start(now);
     } catch {
-      this.buffer = null;
+      this.buffers.delete(name);
     }
   },
 };
@@ -265,6 +274,7 @@ let snackbarTimer = 0;
 function notify(message) {
   nodes.snackbar.textContent = message;
   nodes.snackbar.classList.add('visible');
+  sounds.play('notification');
   clearTimeout(snackbarTimer);
   snackbarTimer = setTimeout(() => nodes.snackbar.classList.remove('visible'), 3500);
 }
@@ -826,7 +836,7 @@ function settingsPage() {
         render();
       },
     }, label)));
-  const soundOn = startSound.enabled();
+  const soundOn = sounds.enabled();
   const soundToggle = element('div', { class: 'segmented', role: 'group', 'aria-label': t('sound') }, [[true, t('soundOn')], [false, t('soundOff')]].map(([value, label]) =>
     element('button', {
       class: value === soundOn ? 'selected' : '',
@@ -963,13 +973,13 @@ window.addEventListener('focus', () => {
 });
 
 document.documentElement.lang = state.language;
-await Promise.allSettled([loadSchemes(), refreshInstall(), startSound.load()]);
+await Promise.allSettled([loadSchemes(), refreshInstall(), sounds.preload()]);
 paintRail();
 paintConnection();
 await appWindow.show();
 document.body.classList.add('open');
 render();
-startSound.play();
+sounds.play('start');
 helper.connect();
 listen('deep-link', event => handleLink(event.payload));
 const initial = await invoke('initial_link');
