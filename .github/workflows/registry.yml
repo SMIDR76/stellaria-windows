@@ -28,7 +28,7 @@ jobs:
       - name: Build and sign the index
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         env:
-          STELLARIA_SIGNING_KEY: ${{ secrets.CAELESTIA_SIGNING_KEY }}
+          STELLARIA_SIGNING_KEY: ${{ secrets.STELLARIA_SIGNING_KEY }}
         run: |
           if [ -z "$STELLARIA_SIGNING_KEY" ]; then echo "No signing key configured, skipping."; exit 0; fi
           dotnet run --project helper/tools/Stellaria.Registry -c Release -- build registry site

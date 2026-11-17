@@ -1,6 +1,9 @@
 ﻿#ifndef AppVersion
   #define AppVersion "0.0.0"
 #endif
+#ifndef AppNumericVersion
+  #define AppNumericVersion "0.0.0"
+#endif
 #ifndef Stage
   #define Stage "..\artifacts\stage"
 #endif
@@ -24,7 +27,7 @@ AppPublisher=Stellaria contributors
 AppPublisherURL={#RepoUrl}
 AppSupportURL={#RepoUrl}/issues
 AppUpdatesURL={#RepoUrl}/releases
-VersionInfoVersion={#AppVersion}
+VersionInfoVersion={#AppNumericVersion}
 VersionInfoProductName={#AppName}
 DefaultDirName={%USERPROFILE}\.stellaria
 DisableDirPage=yes
