@@ -101,6 +101,8 @@ internal static class Scopes
         ["hotkey"] = Input,
         ["hotkey.unavailable"] = Input,
         ["notification"] = Notifications,
+        ["theme.preset"] = Appearance,
+        ["theme.undo"] = Appearance,
     }.ToFrozenDictionary(StringComparer.Ordinal);
 
     public static string? ForMethod(string method) =>

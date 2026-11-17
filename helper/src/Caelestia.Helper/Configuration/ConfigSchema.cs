@@ -47,6 +47,10 @@ internal static partial class ConfigSchema
         IdentifierList("launcher.hidden"),
         new("wallpapers.directory", () => null, ValidateDirectory),
         new("screenshots.directory", () => null, ValidateDirectory),
+        new("catalog.url", () => null, value =>
+            value is null || (value is JsonValue json && json.TryGetValue<string>(out var url) && url.StartsWith("https://", StringComparison.Ordinal) && url.EndsWith("/index.json", StringComparison.Ordinal))
+                ? null
+                : "must be an https:// address ending with /index.json"),
     ];
 
     public static ConfigOption? Find(string path) => Options.FirstOrDefault(option => option.Path == path);

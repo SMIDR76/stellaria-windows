@@ -37,6 +37,16 @@ $csc = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 & $csc -nologo -target:winexe -optimize+ -platform:x64 "-out:$(Join-Path $pack 'native\CaelestiaSwitcher.exe')" -r:System.Windows.Forms.dll -r:System.Drawing.dll (Join-Path $pack 'native\CaelestiaSwitcher.cs')
 if ($LASTEXITCODE -ne 0) { throw 'Building the switcher failed.' }
 
+Step 'Signing the catalogue'
+$keyFile = Join-Path $env:USERPROFILE '.caelestia-signing\caelestia-registry.key'
+if (-not $env:CAELESTIA_SIGNING_KEY -and (Test-Path $keyFile)) { $env:CAELESTIA_SIGNING_KEY = (Get-Content $keyFile -Raw).Trim() }
+if ($env:CAELESTIA_SIGNING_KEY) {
+  dotnet run --project (Join-Path $root 'helper\tools\Caelestia.Registry') -c Release -- build (Join-Path $root 'registry') (Join-Path $stage 'registry')
+  if ($LASTEXITCODE -ne 0) { throw 'Building the catalogue failed.' }
+} else {
+  Write-Warning 'No catalogue signing key: the release ships without a bundled catalogue.'
+}
+
 Step 'Adding licences and scripts'
 Copy-Item (Join-Path $root 'LICENSE'), (Join-Path $root 'THIRD_PARTY_NOTICES.md'), (Join-Path $root 'README.md') $stage
 Copy-Item (Join-Path $root 'licenses') (Join-Path $stage 'licenses') -Recurse

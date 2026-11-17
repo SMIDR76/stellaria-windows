@@ -117,6 +117,7 @@ Type: filesandordirs; Name: "{app}\bin"
 Source: "{#Stage}\bin\*"; DestDir: "{app}\bin"; Flags: ignoreversion
 Source: "{#Stage}\pack\*"; DestDir: "{#PackDir}"; Excludes: "\native\CaelestiaSwitcher.exe"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#Stage}\pack\native\CaelestiaSwitcher.exe"; DestDir: "{#PackDir}\native"; Tasks: switcher; Flags: ignoreversion
+Source: "{#Stage}egistry\*"; DestDir: "{app}egistry"; Flags: ignoreversion skipifsourcedoesntexist
 Source: "{#Stage}\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#Stage}\THIRD_PARTY_NOTICES.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#Stage}\licenses\*"; DestDir: "{app}\licenses"; Flags: ignoreversion

@@ -30,6 +30,8 @@ jobs:
           "value=$version" >> $env:GITHUB_OUTPUT
       - name: Build
         shell: pwsh
+        env:
+          CAELESTIA_SIGNING_KEY: ${{ secrets.CAELESTIA_SIGNING_KEY }}
         run: ./scripts/build-release.ps1 -Version '${{ steps.version.outputs.value }}'
       - name: Check native dependencies
         shell: pwsh

@@ -53,6 +53,19 @@ if (Test-Path (Join-Path $prebuilt 'caelestia-helper.exe')) {
   throw 'No prebuilt helper and no .NET SDK: download a release archive or install the .NET 10 SDK.'
 }
 
+$catalogue = Join-Path $home2 'registry'
+$bundled = Join-Path $root 'registry\index.json.minisig'
+$keyFile = Join-Path $env:USERPROFILE '.caelestia-signing\caelestia-registry.key'
+if (Test-Path $bundled) {
+  New-Item -ItemType Directory -Force $catalogue | Out-Null
+  Copy-Item (Join-Path $root 'registry\index.json'), $bundled $catalogue -Force
+} elseif ((Test-Path $keyFile) -and (Test-Path (Join-Path $root 'helper\tools\Caelestia.Registry')) -and (Get-Command dotnet -ErrorAction SilentlyContinue)) {
+  Step 'Signing the catalogue'
+  $env:CAELESTIA_SIGNING_KEY = (Get-Content $keyFile -Raw).Trim()
+  dotnet run --project (Join-Path $root 'helper\tools\Caelestia.Registry') -c Release -- build (Join-Path $root 'registry') $catalogue | Out-Null
+  Remove-Item Env:CAELESTIA_SIGNING_KEY
+}
+
 $switcher = Join-Path $pack 'native\CaelestiaSwitcher.exe'
 if (-not (Test-Path $switcher)) {
   Step 'Building the Alt+Tab switcher'

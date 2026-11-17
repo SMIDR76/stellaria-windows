@@ -20,6 +20,7 @@ import {
   openLauncher,
   openSettings,
   option,
+  setOption,
   smoothValue,
   store,
   toast,
@@ -612,7 +613,57 @@ function syncWindowsColors() {
   }, 700);
 }
 
+const presetOptions = ['transparency', 'tintIcons', 'smartScheme', 'clockSeconds', 'desktopClock', 'island'];
+const presetHistoryKey = 'caelestia:preset:history';
+const presetDefaults = { transparency: false, tintIcons: true, smartScheme: true, clockSeconds: false, desktopClock: true, island: true };
+
+function currentLook() {
+  return {
+    scheme: store.get(keys.scheme, null),
+    mode: store.get(keys.mode, 'dark'),
+    autoMode: store.get(keys.autoMode, false),
+    variant: store.get(keys.variant, 'tonalspot'),
+    options: Object.fromEntries(presetOptions.map(name => [name, getOption(name, presetDefaults[name])])),
+  };
+}
+
+function applyLook(look) {
+  store.set(keys.scheme, look.scheme ?? null);
+  store.set(keys.autoMode, Boolean(look.autoMode));
+  if (look.mode) store.set(keys.mode, look.mode);
+  if (look.variant) store.set(keys.variant, look.variant);
+  for (const [name, value] of Object.entries(look.options ?? {})) {
+    if (presetOptions.includes(name)) setOption(name, Boolean(value));
+  }
+  applyTheme();
+}
+
+function applyPreset(event) {
+  const history = store.get(presetHistoryKey, []);
+  store.set(presetHistoryKey, [...history, currentLook()].slice(-10));
+  const preset = event.preset ?? {};
+  applyLook({
+    scheme: preset.scheme ?? null,
+    autoMode: preset.mode === 'auto',
+    mode: preset.mode === 'auto' ? undefined : preset.mode,
+    variant: preset.variant,
+    options: preset.options,
+  });
+  toast('Préréglage appliqué', { message: event.name?.fr ?? event.id, icon: 'palette' });
+}
+
+function undoPreset() {
+  const history = store.get(presetHistoryKey, []);
+  const previous = history.pop();
+  if (!previous) return;
+  store.set(presetHistoryKey, history);
+  applyLook(previous);
+  toast('Apparence précédente rétablie', { icon: 'undo' });
+}
+
 if (await isPrimaryMonitor()) {
+  helperClient.onEvent('theme.preset', applyPreset);
+  helperClient.onEvent('theme.undo', undoPreset);
   systemEvents.since = Date.now();
   new MutationObserver(syncWindowsColors).observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'data-mode'] });
   option('windowsColors', false, syncWindowsColors);

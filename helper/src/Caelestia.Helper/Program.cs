@@ -149,6 +149,7 @@ internal static class Program
         new ThemeSourceModule(),
         new ThemeModule(),
         new WindowsColorsModule(),
+        new CatalogModule(),
         new HealthModule(),
     ];
 

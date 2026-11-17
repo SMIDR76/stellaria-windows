@@ -83,6 +83,8 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `appbars.paused` | `{ "minutes": 5 }` when repairs loop and the circuit breaker stops them |
 | `notification` | one item of the `notifications` topic, when a toast arrived in the last 30 seconds |
 | `widgets.reload` | `{}`. Every widget reloads its page. Raised by the `widgets.reload` request, used by the settings app to recover a widget that stopped rendering. |
+| `theme.preset` | `{ "id", "name", "preset" }`, scope `appearance` | A catalogue preset to apply. |
+| `theme.undo` | `{}`, scope `appearance` | Restore the look saved before the last preset. |
 
 ## Requests
 
@@ -120,6 +122,11 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `theme.publish` | `{ "roles": { "<role>": "#rrggbb" }, "transparent": false }`, 1 to 64 roles of 1 to 32 letters | none. Written to `%LOCALAPPDATA%\Caelestia\switcher-theme.json` for the optional window switcher. |
 | `windows.setColors` | `{ "palette": [7 "#rrggbb", lightest first], "dark": bool, "titleBars": bool }` | none. Sets the Windows accent (Settings, File Explorer, Start menu, title bars when `titleBars`) and light or dark mode for apps, in the user's personalisation values only. The previous values are saved to `%LOCALAPPDATA%\Caelestia\windows-colors-backup.json` before the first change. |
 | `windows.restoreColors` | none | none. Writes back the saved colours and deletes the backup; does nothing without one. |
+| `catalog.index` | `{ "refresh"?: bool }` (scope `launcher`) | `{ "version", "expires", "source": "online" \| "cache" \| "bundled", "items", "news", "active", "canUndo" }`. Reads the signed index from `catalog.url` (optional setting), then the cached copy, then the copy shipped with the installer, and keeps the first one that passes `SignedIndex` checks. `not_found` when none does. |
+| `catalog.apply` | `{ "id" }` of a preset (scope `launcher`) | Same as `catalog.index`. Raises `theme.preset`; the primary bar saves the current look, then applies the preset's scheme, mode, variant and visual options. |
+| `catalog.undo` | none (scope `launcher`) | Same as `catalog.index`. Raises `theme.undo`; the primary bar restores the look saved before the last preset. |
+| `launcher.status` | none (scope `launcher`) | `{ "helperVersion", "packVersion", "packInstalled", "zebar", "zebarRunning", "tasks": [helper, switcher, Zebar], "sessions" }`. |
+| `launcher.openSettings` | none (scope `launcher`) | Opens the theme settings window, like Win+Alt+S. |
 | `wallpapers.apply` | `{ "path" }` inside the configured folder | none, `denied` for any other path |
 | `wallpapers.list` | none | `{ "directory", "current", "items": [ { "path", "name", "thumb": "<384 x 216 jpeg base64>" } ] }`, at most 500 images of the configured folder |
 | `window.act` | `{ "action": "close" \| "minimize" \| "maximize" \| "focus" }` on the last focused window | none |
