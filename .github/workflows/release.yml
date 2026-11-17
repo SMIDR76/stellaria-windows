@@ -49,6 +49,8 @@ jobs:
             artifacts/*.exe
             artifacts/*.zip
             artifacts/SHA256SUMS.txt
+            artifacts/update.json
+            artifacts/update.json.minisig
           if-no-files-found: error
 
   publish:

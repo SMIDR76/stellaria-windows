@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 param(
   [string]$Version = '',
   [switch]$SkipInstaller
@@ -74,6 +74,13 @@ if (-not $SkipInstaller) {
   if (-not $iscc) { throw 'Inno Setup (ISCC.exe) was not found. Install it or pass -SkipInstaller.' }
   & $iscc "/DAppVersion=$Version" "/DStage=$stage" "/O$artifacts" (Join-Path $root 'installer\caelestia.iss')
   if ($LASTEXITCODE -ne 0) { throw 'Compiling the installer failed.' }
+}
+
+$setupFile = Join-Path $artifacts "CaelestiaSetup-$Version.exe"
+if ((Test-Path $setupFile) -and $env:CAELESTIA_SIGNING_KEY -and $Version -match '^[0-9]+\.[0-9]+\.[0-9]+$') {
+  Step 'Signing the update manifest'
+  dotnet run --project (Join-Path $root 'helper\tools\Caelestia.Registry') -c Release -- update $setupFile $Version $artifacts
+  if ($LASTEXITCODE -ne 0) { throw 'Signing the update manifest failed.' }
 }
 
 Step 'Writing checksums'

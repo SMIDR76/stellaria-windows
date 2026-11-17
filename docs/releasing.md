@@ -7,6 +7,7 @@
 | `CaelestiaSetup-<version>.exe` | Per-user Inno Setup installer (English and French). |
 | `Caelestia-<version>-portable.zip` | The pack, the helper, the switcher, the Caelestia app, `scripts\install.ps1` and `scripts\uninstall.ps1`. |
 | `SHA256SUMS.txt` | SHA-256 of the two files above. |
+| `update.json`, `update.json.minisig` | The update manifest read by the Caelestia app (version, setup name, size and SHA-256), signed with the catalogue key. Only for `x.y.z` versions built with `CAELESTIA_SIGNING_KEY`. |
 
 Every file also gets a build provenance attestation, verifiable with
 `gh attestation verify <file> -R SMIDR76/caelestia-windows`.
@@ -48,5 +49,6 @@ and Windows colours must come back).
 
 ## Later
 
-Code signing (SignPath Foundation, or a Certum open source certificate), winget and Scoop manifests and signed
-automatic updates are planned; the reasoning is in `docs/research/`.
+Code signing (SignPath Foundation, or a Certum open source certificate) and winget and Scoop manifests are planned;
+the reasoning is in `docs/research/`. The app's updates need the repository to be public: GitHub answers 404 to
+`releases/latest/download/update.json` on a private repository.

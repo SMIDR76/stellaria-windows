@@ -21,7 +21,7 @@ const strings = {
     presetsText: "Les préréglages changent seulement les couleurs et quelques options visuelles. Rien n'est installé : Annuler revient à l'apparence précédente.",
     zebar: 'Zebar', tasks: 'Démarrage automatique', tasksOk: 'Les trois tâches sont en place', tasksMissing: 'Tâches manquantes : utilisez Réparer',
     language: 'Langue', languageText: "Langue de l'application",
-    sound: 'Son', soundText: "Jouer les sons de l'application (ouverture et notifications)", soundOn: 'Activé', soundOff: 'Désactivé',
+    sound: 'Son', soundText: "Jouer les sons de l'application (ouverture, fermeture, notifications, mises à jour)", soundOn: 'Activé', soundOff: 'Désactivé',
     catalog: 'Catalogue', catalogText: 'Version {0}, valable jusqu’au {1} ({2})', refresh: 'Actualiser',
     sources: { online: 'en ligne', cache: 'copie locale', bundled: "fourni avec l'installation", none: 'aucun' },
     about: 'À propos', aboutText: 'Logiciel libre sous licence GPL-3.0, basé sur Caelestia par soramanew et ses contributeurs.',
@@ -60,6 +60,21 @@ const strings = {
     removeTitle: 'Retirer Caelestia du démarrage ?',
     removeText: "Caelestia s'arrête et ne se lance plus à l'ouverture de session. La barre des tâches et les couleurs Windows sont rétablies. Les fichiers restent : Installer remet tout en place. Pour tout supprimer, passez par les applications Windows.",
     removed: 'Caelestia est retiré du démarrage, la barre des tâches Windows est revenue', remove: 'Retirer', appsSettings: 'Applications Windows',
+    updates: 'Mises à jour', check: 'Rechercher', updateNow: 'Mettre à jour', installRestart: 'Installer et redémarrer',
+    updateIdle: 'Recherchez une nouvelle version de Caelestia', updateChecking: 'Recherche d’une mise à jour…',
+    updateCurrent: 'Caelestia est à jour', updateCurrentText: 'Version {0}, la plus récente',
+    updateAvailable: 'Version {0} disponible', updateAvailableText: 'Vous avez la version {0} · téléchargement de {1}',
+    updateDownloading: 'Téléchargement de la version {0}', updateReady: 'Version {0} prête à installer',
+    updateReadyText: "Caelestia se ferme quelques secondes pendant l'installation, puis se relance.",
+    updateError: 'Impossible de vérifier les mises à jour', updateDownloaded: 'La mise à jour {0} est téléchargée',
+    updateOffered: 'Une mise à jour de Caelestia est disponible : version {0}', updateFailed: 'La mise à jour a échoué : {0}', updateChip: 'Mise à jour {0}',
+    updateErrors: {
+      network: 'pas de connexion au serveur de mises à jour', 'not-found': 'aucune version publiée pour le moment',
+      signature: 'signature invalide, la mise à jour est refusée', manifest: 'description de version invalide',
+      checksum: 'le fichier téléchargé ne correspond pas, il a été supprimé', disk: "impossible d'écrire le fichier",
+      'no-update': 'aucune mise à jour à installer', busy: 'une autre opération est en cours',
+    },
+    megabytes: '{0} Mo',
   },
   en: {
     home: 'Home', discover: 'Discover', library: 'Library', news: 'News', settings: 'Settings',
@@ -79,7 +94,7 @@ const strings = {
     presetsText: 'Presets only change colours and a few visual options. Nothing is installed: Undo goes back to the previous look.',
     zebar: 'Zebar', tasks: 'Start with Windows', tasksOk: 'The three tasks are in place', tasksMissing: 'Missing tasks: use Repair',
     language: 'Language', languageText: 'App language',
-    sound: 'Sound', soundText: 'Play the app sounds (opening and notifications)', soundOn: 'On', soundOff: 'Off',
+    sound: 'Sound', soundText: 'Play the app sounds (opening, closing, notifications, updates)', soundOn: 'On', soundOff: 'Off',
     catalog: 'Catalogue', catalogText: 'Version {0}, valid until {1} ({2})', refresh: 'Refresh',
     sources: { online: 'online', cache: 'local copy', bundled: 'shipped with the setup', none: 'none' },
     about: 'About', aboutText: 'Free software under the GPL-3.0 licence, based on Caelestia by soramanew and contributors.',
@@ -118,6 +133,21 @@ const strings = {
     removeTitle: 'Remove Caelestia from start-up?',
     removeText: 'Caelestia stops and no longer starts when you sign in. The Windows taskbar and colours are restored. The files stay: Install puts everything back. To remove everything, use Windows apps.',
     removed: 'Caelestia was removed from start-up, the Windows taskbar is back', remove: 'Remove', appsSettings: 'Windows apps',
+    updates: 'Updates', check: 'Check', updateNow: 'Update', installRestart: 'Install and restart',
+    updateIdle: 'Check for a new version of Caelestia', updateChecking: 'Checking for updates…',
+    updateCurrent: 'Caelestia is up to date', updateCurrentText: 'Version {0}, the latest',
+    updateAvailable: 'Version {0} available', updateAvailableText: 'You have version {0} · {1} download',
+    updateDownloading: 'Downloading version {0}', updateReady: 'Version {0} ready to install',
+    updateReadyText: 'Caelestia closes for a few seconds while it installs, then starts again.',
+    updateError: 'Could not check for updates', updateDownloaded: 'Update {0} downloaded',
+    updateOffered: 'A Caelestia update is available: version {0}', updateFailed: 'The update failed: {0}', updateChip: 'Update {0}',
+    updateErrors: {
+      network: 'no connection to the update server', 'not-found': 'no version published yet',
+      signature: 'invalid signature, the update is refused', manifest: 'invalid release description',
+      checksum: 'the downloaded file does not match and was deleted', disk: 'the file could not be written',
+      'no-update': 'no update to install', busy: 'another operation is running',
+    },
+    megabytes: '{0} MB',
   },
 };
 
@@ -141,6 +171,7 @@ const state = {
   schemes: null,
   install: null,
   steps: null,
+  update: { status: 'idle', info: null, received: 0, total: 0, error: '' },
 };
 
 const nodes = {
@@ -155,7 +186,13 @@ const nodes = {
 const sounds = {
   context: null,
   buffers: new Map(),
-  files: { start: './sounds/app-start.mp3', notification: './sounds/notification.mp3' },
+  files: {
+    start: './sounds/app-start.mp3',
+    notification: './sounds/notification.mp3',
+    warning: './sounds/warning.mp3',
+    updated: './sounds/updated.mp3',
+    close: './sounds/close.mp3',
+  },
 
   enabled() {
     try {
@@ -184,9 +221,9 @@ const sounds = {
   },
 
   async play(name) {
-    if (!this.enabled()) return;
+    if (!this.enabled()) return 0;
     const buffer = await this.load(name);
-    if (!buffer || !this.context) return;
+    if (!buffer || !this.context) return 0;
     try {
       if (this.context.state === 'suspended') await this.context.resume();
       const source = this.context.createBufferSource();
@@ -197,9 +234,11 @@ const sounds = {
       source.buffer = buffer;
       source.connect(gain).connect(this.context.destination);
       source.start(now);
+      return buffer.duration;
     } catch {
       this.buffers.delete(name);
     }
+    return 0;
   },
 };
 
@@ -271,10 +310,10 @@ function dotChip(label, ok) {
 }
 
 let snackbarTimer = 0;
-function notify(message) {
+function notify(message, tone = 'notification') {
   nodes.snackbar.textContent = message;
   nodes.snackbar.classList.add('visible');
-  sounds.play('notification');
+  sounds.play(tone);
   clearTimeout(snackbarTimer);
   snackbarTimer = setTimeout(() => nodes.snackbar.classList.remove('visible'), 3500);
 }
@@ -426,10 +465,10 @@ async function runHelper(verb, success) {
       notify(success);
       if (verb === 'install') await invoke('helper', { verb: 'start' });
     } else {
-      notify(t('failed', code));
+      notify(t('failed', code), 'warning');
     }
   } catch (error) {
-    notify(error === 'helper-missing' ? t('helperMissing') : t('failed', error));
+    notify(error === 'helper-missing' ? t('helperMissing') : t('failed', error), 'warning');
   } finally {
     state.busy = '';
     setTimeout(() => Promise.allSettled([refreshStatus(), refreshInstall()]).then(render), 1500);
@@ -477,13 +516,118 @@ async function installCaelestia() {
   } catch (error) {
     const message = errorText(error);
     mark(current, 'failed', message);
-    notify(t('installFailed', message));
+    notify(t('installFailed', message), 'warning');
   } finally {
     state.busy = '';
     await refreshInstall();
     render();
     setTimeout(() => Promise.allSettled([refreshInstall(), refreshStatus()]).then(render), 3000);
   }
+}
+
+function updateError(error) {
+  const code = String(error?.message ?? error);
+  return t('updateErrors')[code] ?? code;
+}
+
+function megabytes(bytes) {
+  return t('megabytes', (bytes / 1048576).toLocaleString(state.language === 'fr' ? 'fr-FR' : 'en-GB', { maximumFractionDigits: 1 }));
+}
+
+async function checkUpdate(quiet = false) {
+  if (['checking', 'downloading', 'ready'].includes(state.update.status)) return;
+  state.update = { ...state.update, status: 'checking', error: '' };
+  if (!quiet) render();
+  try {
+    const info = await invoke('check_update');
+    state.update = { ...state.update, status: info.available ? 'available' : 'current', info };
+    if (info.available && quiet) notify(t('updateOffered', info.version));
+  } catch (error) {
+    state.update = { ...state.update, status: 'error', error: updateError(error) };
+  }
+  render();
+}
+
+function paintUpdateProgress() {
+  const { received, total } = state.update;
+  const percent = total ? Math.min(100, Math.round((received / total) * 100)) : 0;
+  const bar = document.getElementById('update-bar');
+  const label = document.getElementById('update-label');
+  if (bar) {
+    bar.style.width = `${percent}%`;
+    bar.parentElement.setAttribute('aria-valuenow', String(percent));
+  }
+  if (label) label.textContent = `${percent} % · ${megabytes(received)} / ${megabytes(total)}`;
+}
+
+async function downloadUpdate() {
+  if (state.update.status !== 'available' || state.busy) return;
+  state.update = { ...state.update, status: 'downloading', received: 0, total: state.update.info.size, error: '' };
+  render();
+  try {
+    await invoke('download_update');
+    state.update = { ...state.update, status: 'ready', received: state.update.total };
+    render();
+    notify(t('updateDownloaded', state.update.info.version), 'updated');
+  } catch (error) {
+    state.update = { ...state.update, status: 'available', error: updateError(error) };
+    render();
+    notify(t('updateFailed', state.update.error), 'warning');
+  }
+}
+
+async function installUpdate() {
+  try {
+    await invoke('install_update');
+  } catch (error) {
+    notify(t('updateFailed', updateError(error)), 'warning');
+  }
+}
+
+function updateSection() {
+  const update = state.update;
+  const info = update.info;
+  let title = t('updateIdle');
+  let subtitle = '';
+  let action = button(t('check'), 'refresh', () => checkUpdate(), {});
+  if (update.status === 'checking') {
+    title = t('updateChecking');
+    action = button(t('check'), 'progress_activity', null, { disabled: true });
+  } else if (update.status === 'current') {
+    title = t('updateCurrent');
+    subtitle = t('updateCurrentText', info.current);
+  } else if (update.status === 'error') {
+    title = t('updateError');
+    subtitle = update.error;
+  } else if (update.status === 'available') {
+    title = t('updateAvailable', info.version);
+    subtitle = update.error || t('updateAvailableText', info.current, megabytes(info.size));
+    action = button(t('updateNow'), 'download', downloadUpdate, { variant: 'filled', disabled: Boolean(state.busy) });
+  } else if (update.status === 'downloading') {
+    title = t('updateDownloading', info.version);
+    action = null;
+  } else if (update.status === 'ready') {
+    title = t('updateReady', info.version);
+    subtitle = t('updateReadyText');
+    action = button(t('installRestart'), 'restart_alt', installUpdate, { variant: 'filled' });
+  }
+  const failed = update.status === 'error' || (update.status === 'available' && update.error);
+  const rows = [
+    element('div', { class: 'row' }, [
+      icon(update.status === 'ready' ? 'download_done' : update.status === 'current' ? 'verified' : 'system_update', 'tonal-icon'),
+      element('div', { class: 'row-text' }, [
+        element('span', { class: 'row-title', text: title }),
+        update.status === 'downloading'
+          ? element('span', { class: 'row-subtitle', id: 'update-label' })
+          : subtitle ? element('span', { class: `row-subtitle${failed ? ' error-text' : ''}`, text: subtitle }) : null,
+      ]),
+      action,
+    ]),
+  ];
+  if (update.status === 'downloading') {
+    rows.push(element('div', { class: 'progress-track', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': '0' }, element('span', { id: 'update-bar' })));
+  }
+  return element('section', { class: 'section' }, [element('div', { class: 'section-title' }, [element('span', { text: t('updates') })]), ...rows]);
 }
 
 function confirmRemove() {
@@ -508,7 +652,7 @@ async function applyPreset(item) {
     notify(t('applied', local(item.name)));
     setTimeout(refreshTheme, 1200);
   } catch (error) {
-    notify(t('failed', error.code ?? error.message));
+    notify(t('failed', error.code ?? error.message), 'warning');
   }
   render();
 }
@@ -519,7 +663,7 @@ async function undoPreset() {
     notify(t('undone'));
     setTimeout(refreshTheme, 1200);
   } catch (error) {
-    notify(t('failed', error.code ?? error.message));
+    notify(t('failed', error.code ?? error.message), 'warning');
   }
   render();
 }
@@ -583,7 +727,8 @@ function heroCard() {
           ? button(t('stop'), state.busy === 'restore-shell' ? 'progress_activity' : 'stop_circle', () => runHelper('restore-shell', t('stoppedDone')), { disabled: busy })
           : button(t('start'), state.busy === 'start' ? 'progress_activity' : 'play_circle', () => runHelper('start', t('started')), { variant: 'filled', disabled: busy }),
         button(t('repair'), state.busy === 'install' ? 'progress_activity' : 'build', () => runHelper('install', t('repaired')), { disabled: busy }),
-        button(t('themeSettings'), 'tune', () => helper.request('launcher.openSettings').catch(() => notify(t('offline'))), { variant: 'text', disabled: !state.connected }),
+        ['available', 'downloading', 'ready'].includes(state.update.status) ? button(t('updateChip', state.update.info.version), 'system_update', () => showPage('install'), { variant: 'filled' }) : null,
+        button(t('themeSettings'), 'tune', () => helper.request('launcher.openSettings').catch(() => notify(t('offline'), 'warning')), { variant: 'text', disabled: !state.connected }),
       ]),
     ]),
   ]);
@@ -735,7 +880,7 @@ function foldersSection() {
     ...folders.map(([target, symbol, key]) => element('div', { class: 'row' }, [
       icon(symbol, 'tonal-icon'),
       element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t(key) })]),
-      button(t('open'), 'open_in_new', () => invoke('open_folder', { target }).catch(() => notify(t('missing'))), { variant: 'text' }),
+      button(t('open'), 'open_in_new', () => invoke('open_folder', { target }).catch(() => notify(t('missing'), 'warning')), { variant: 'text' }),
     ])),
   ]);
 }
@@ -744,6 +889,7 @@ function installPage() {
   const install = state.install;
   return [
     installHero(install),
+    updateSection(),
     state.steps ? progressSection() : null,
     install ? componentsSection(install) : null,
     changesSection(),
@@ -910,6 +1056,7 @@ function render() {
   const scroll = nodes.pages.scrollTop;
   nodes.pages.replaceChildren(element('div', { class: 'page' }, builders[state.page]()));
   nodes.pages.scrollTop = scroll;
+  if (state.update.status === 'downloading') paintUpdateProgress();
 }
 
 function showPage(id) {
@@ -946,13 +1093,13 @@ async function handleLink(link) {
   }
   const match = /^caelestia:\/\/apply\/([a-z0-9][a-z0-9-]{1,47})\/?$/.exec(link ?? '');
   if (!match) {
-    if (link) notify(t('unknownLink'));
+    if (link) notify(t('unknownLink'), 'warning');
     return;
   }
   if (!state.catalog) await refreshCatalog(false);
   const item = itemById(match[1]);
   if (!item || item.type !== 'preset') {
-    notify(t('unknownLink'));
+    notify(t('unknownLink'), 'warning');
     return;
   }
   showPage('discover');
@@ -982,5 +1129,20 @@ render();
 sounds.play('start');
 helper.connect();
 listen('deep-link', event => handleLink(event.payload));
+listen('update-progress', event => {
+  state.update.received = event.payload.received;
+  state.update.total = event.payload.total;
+  paintUpdateProgress();
+});
+let closing = false;
+appWindow.onCloseRequested(async event => {
+  event.preventDefault();
+  if (closing) return;
+  closing = true;
+  document.body.classList.add('closing');
+  const duration = await sounds.play('close');
+  setTimeout(() => appWindow.destroy(), Math.max(220, Math.min(duration * 1000, 1200)));
+});
+setTimeout(() => checkUpdate(true), 1500);
 const initial = await invoke('initial_link');
 if (initial) setTimeout(() => handleLink(initial), 800);

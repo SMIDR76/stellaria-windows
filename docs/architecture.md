@@ -102,8 +102,8 @@ which must work while the helper is stopped or missing.
   `catalog.*` fill the pages.
 - **Rust commands**: `runtime`, `helper` (runs `caelestia-helper.exe` with `--start`, `--restore-shell`,
   `--install`, `--uninstall` or `--shutdown`, nothing else), `installation`, `install_zebar`, `open_folder` (the
-  Caelestia, widgets and logs folders only), `open_external` (https links and the Windows apps settings page only)
-  and `initial_link`.
+  Caelestia, widgets and logs folders only), `open_external` (https links and the Windows apps settings page only),
+  `initial_link`, `check_update`, `download_update` and `install_update`.
 - **Installation page**: `installation` reads the state of each part without the helper: Zebar (the same places as
   the helper's `ZebarLocator`, version from its uninstall entry), the helper's file version, the pack's `zpack.json`,
   the switcher, Caelestia's entries in Zebar's `settings.json`, the three logon tasks (`schtasks /Query`) and whether
@@ -111,15 +111,26 @@ which must work while the helper is stopped or missing.
   (`install_zebar`, skipped when Zebar is found), `--install`, then `--start`. "Remove from start-up" runs
   `--uninstall` after a confirmation; the files stay, and the full uninstall is left to Windows apps. The page cannot
   download Caelestia's own files: when the helper or the pack is missing, it asks to run the setup again.
+- **Updates**: a few seconds after opening, `check_update` downloads `update.json` and `update.json.minisig` from
+  the latest GitHub release. The manifest must be signed by the catalogue key with the trusted comment
+  `caelestia-update version=<version>`, name `CaelestiaSetup-<version>.exe` and give its size and SHA-256. It is
+  offered only when its version is newer than the installed one (`DisplayVersion` of the setup's uninstall entry,
+  else the app's own version), and the page never passes a URL or hash to Rust: the verified manifest stays in the
+  Rust side. "Update" streams the setup into `%LOCALAPPDATA%\Caelestia\updates`, with progress events, checks the
+  size and SHA-256, then plays the update sound. "Install and restart" runs the setup with `/VERYSILENT
+  /SUPPRESSMSGBOXES /NORESTART /MERGETASKS=startnow,openlauncher` and closes the app. Until the repository is public,
+  the check ends with "no version published yet". `CAELESTIA_UPDATE_SOURCE` (an `https://` or
+  `http://127.0.0.1:` address) points the app at a test server; the signature is still required.
 - **Links**: `caelestia://install` opens the Installation page. `caelestia://apply/<id>` is registered for the user by the setup and `scripts/install.ps1`. A second
   instance hands its link to the running one (single-instance plugin), which asks before applying the preset.
 - **Restrictions**: the content security policy only allows the page's own files and the helper's ports; the window
-  only has the `core:default`, `show` and `set-focus` permissions.
+  only has the `core:default`, `show`, `set-focus` and `destroy` permissions.
 - **Language**: French by default like the theme, English from the app's settings.
-- **Sounds**: `launcher/ui/sounds/app-start.mp3` and `notification.mp3` are decoded before the window appears. The
-  first plays as the window shows, the second with every snackbar notification. Both go through Web
-  Audio with a 60 ms fade-in, so the start sound begins with the opening animation. WebView2 gets
-  `--autoplay-policy=no-user-gesture-required` in `tauri.conf.json`, and the app's settings turn both sounds off.
+- **Sounds**: the files in `launcher/ui/sounds/` are decoded before the window appears. `app-start.mp3` plays as
+  the window shows, `notification.mp3` with every snackbar, `warning.mp3` with error snackbars, `updated.mp3` when an
+  update has finished downloading, and `close.mp3` when the window is closed: the page fades out and the window is
+  destroyed once the sound has played (1.2 s at most). All go through Web Audio with a 60 ms fade-in. WebView2 gets
+  `--autoplay-policy=no-user-gesture-required` in `tauri.conf.json`, and the app's settings turn every sound off.
 
 ### Recovery
 

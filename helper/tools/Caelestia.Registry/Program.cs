@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Caelestia.Helper.Catalog;
@@ -21,6 +21,7 @@ internal static class Program
                 ["keygen", var directory] => KeyGen(directory),
                 ["validate", var registry] => Validate(registry),
                 ["build", var registry, var output, .. var rest] => Build(registry, output, rest),
+                ["update", var setup, var version, var output] => Update(setup, version, output),
                 _ => Usage(),
             };
         }
@@ -36,6 +37,7 @@ internal static class Program
         Console.Error.WriteLine("caelestia-registry keygen <directory>");
         Console.Error.WriteLine("caelestia-registry validate <registry>");
         Console.Error.WriteLine($"caelestia-registry build <registry> <output> [--expires-days 14]   (signing key in ${KeyVariable})");
+        Console.Error.WriteLine($"caelestia-registry update <setup.exe> <version> <output>   (signing key in ${KeyVariable})");
         return 2;
     }
 
@@ -98,6 +100,37 @@ internal static class Program
         File.WriteAllBytes(Path.Combine(output, "index.json"), bytes);
         File.WriteAllText(Path.Combine(output, "index.json.minisig"), Minisign.Sign(bytes, key, SignedIndex.TrustedComment(version, expires)));
         Console.WriteLine($"index.json version {version}, {items.Count} items, expires {expires:yyyy-MM-dd}.");
+        return 0;
+    }
+
+    private static int Update(string setup, string version, string output)
+    {
+        if (!System.Text.RegularExpressions.Regex.IsMatch(version, @"^[0-9]+\.[0-9]+\.[0-9]+$"))
+        {
+            throw new FormatException($"'{version}' is not a release version (x.y.z).");
+        }
+
+        var keyText = Environment.GetEnvironmentVariable(KeyVariable) ?? throw new InvalidOperationException($"Set {KeyVariable} to the registry signing key.");
+        var key = MinisignSecretKey.Parse(keyText);
+        var data = File.ReadAllBytes(setup);
+        var manifest = new JsonObject
+        {
+            ["schema"] = 1,
+            ["version"] = version,
+            ["published"] = DateTimeOffset.UtcNow.UtcDateTime.ToString("yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture),
+            ["setup"] = new JsonObject
+            {
+                ["name"] = Path.GetFileName(setup),
+                ["size"] = data.LongLength,
+                ["sha256"] = Convert.ToHexStringLower(System.Security.Cryptography.SHA256.HashData(data)),
+            },
+        };
+
+        Directory.CreateDirectory(output);
+        var bytes = Encoding.UTF8.GetBytes(manifest.ToJsonString(s_indented) + "\n");
+        File.WriteAllBytes(Path.Combine(output, "update.json"), bytes);
+        File.WriteAllText(Path.Combine(output, "update.json.minisig"), Minisign.Sign(bytes, key, $"caelestia-update version={version}"));
+        Console.WriteLine($"update.json for {version} ({Path.GetFileName(setup)}).");
         return 0;
     }
 

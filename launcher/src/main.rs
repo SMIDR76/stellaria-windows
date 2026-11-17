@@ -1,6 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod installation;
+mod update;
 
 use std::os::windows::process::CommandExt;
 use std::path::PathBuf;
@@ -110,7 +111,19 @@ fn main() {
                 let _ = app.emit("deep-link", link);
             }
         }))
-        .invoke_handler(tauri::generate_handler![runtime, helper, installation, install_zebar, open_folder, open_external, initial_link])
+        .manage(update::UpdateState::default())
+        .invoke_handler(tauri::generate_handler![
+            runtime,
+            helper,
+            installation,
+            install_zebar,
+            open_folder,
+            open_external,
+            initial_link,
+            update::check_update,
+            update::download_update,
+            update::install_update
+        ])
         .run(tauri::generate_context!())
         .expect("Caelestia could not start");
 }

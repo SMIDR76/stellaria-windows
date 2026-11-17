@@ -555,6 +555,19 @@ body {
   animation: slow-spin 900ms linear infinite;
 }
 
+.app {
+  transition: opacity 220ms var(--ease-effects), transform 220ms var(--ease-effects);
+}
+
+body.closing .app {
+  opacity: 0;
+  transform: scale(0.985);
+}
+
+.error-text {
+  color: var(--m3-error);
+}
+
 .row.compact {
   min-height: 48px;
 }
