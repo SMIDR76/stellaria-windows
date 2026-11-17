@@ -235,3 +235,40 @@ pub fn install_update(app: AppHandle, state: State<'_, UpdateState>) -> Result<(
     app.exit(0);
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const MANIFEST: &[u8] = include_bytes!("fixtures/update.json");
+    const SIGNATURE: &[u8] = include_bytes!("fixtures/update.json.minisig");
+
+    #[test]
+    fn accepts_a_signed_manifest() {
+        let manifest = open_manifest(MANIFEST, SIGNATURE).expect("the signed manifest is accepted");
+        assert_eq!(manifest.version, "1.0.1");
+        assert_eq!(manifest.setup.name, "StellariaSetup-1.0.1.exe");
+    }
+
+    #[test]
+    fn refuses_a_changed_manifest() {
+        let changed = String::from_utf8(MANIFEST.to_vec()).unwrap().replace("1.0.1", "9.9.9");
+        assert_eq!(open_manifest(changed.as_bytes(), SIGNATURE).err().as_deref(), Some("signature"));
+    }
+
+    #[test]
+    fn refuses_a_changed_trusted_comment() {
+        let signature = String::from_utf8(SIGNATURE.to_vec()).unwrap().replace("version=1.0.1", "version=9.9.9");
+        assert!(open_manifest(MANIFEST, signature.as_bytes()).is_err());
+    }
+
+    #[test]
+    fn compares_release_versions() {
+        assert!(newer("1.0.1", "1.0.0"));
+        assert!(newer("1.10.0", "1.9.9"));
+        assert!(!newer("1.0.0", "1.0.0"));
+        assert!(!newer("1.0.0", "1.0.1"));
+        assert!(newer("1.0.1", "1.0.0-dev.3"));
+        assert!(!newer("1.0.1-beta", "1.0.0"));
+    }
+}

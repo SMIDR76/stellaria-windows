@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "version": "1.0.1",
+  "published": "2026-11-17T16:16:29Z",
+  "setup": {
+    "name": "StellariaSetup-1.0.1.exe",
+    "size": 10,
+    "sha256": "b3506ffce88b0e3f33783b934edff573fad872ddaff7ae1a3dd0fe666c5023be"
+  }
+}

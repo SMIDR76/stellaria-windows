@@ -14,3 +14,5 @@
 *.ico binary
 *.exe binary
 *.dll binary
+
+launcher/src/fixtures/* -text
