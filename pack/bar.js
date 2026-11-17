@@ -426,7 +426,7 @@ renderFocus(store.get(keys.focus));
 store.watch(keys.focus, renderFocus, 300);
 
 function taskButton(task, icons) {
-  const iconData = icons[task.exe];
+  const iconData = icons[task.icon || task.exe];
   return element('button', {
     class: ['task', 'state-layer', task.active ? 'active' : '', task.minimized ? 'minimized' : ''].join(' ').trim(),
     title: task.title,
@@ -457,7 +457,7 @@ function publishFocus(focus) {
   if (!focus) return;
   const byMonitor = {};
   for (const [device, entry] of Object.entries(focus.monitors ?? {})) {
-    byMonitor[device] = { title: entry.title, process: entry.process, icon: iconFor(entry.exe) };
+    byMonitor[device] = { title: entry.title, process: entry.process, icon: iconFor(entry.icon || entry.exe) };
   }
   const value = { byMonitor, active: focus.active };
   store.set(keys.focus, value);

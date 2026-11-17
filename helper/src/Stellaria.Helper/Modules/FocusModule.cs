@@ -52,6 +52,7 @@ internal sealed class FocusModule : IHelperModule
             ["title"] = shell ? "" : User32.WindowText(hwnd),
             ["process"] = shell ? "" : process?.Name ?? "",
             ["exe"] = shell ? "" : process?.ImagePath ?? "",
+            ["icon"] = shell ? "" : _context.Desktop.IconSource(hwnd, process),
         };
         _active = monitor;
 

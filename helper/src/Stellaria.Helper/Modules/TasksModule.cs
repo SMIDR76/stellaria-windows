@@ -123,13 +123,15 @@ internal sealed class TasksModule : IHelperModule
         {
             var process = _context.Desktop.Processes.Find(_context.Desktop.TaskProcessId(hwnd));
             var exe = process?.ImagePath ?? "";
-            exes.Add(exe);
+            var icon = _context.Desktop.IconSource(hwnd, process);
+            exes.Add(icon);
             JsonNode item = new JsonObject
             {
                 ["id"] = ((long)hwnd).ToString(CultureInfo.InvariantCulture),
                 ["title"] = factsByWindow[hwnd].Title,
                 ["process"] = process?.Name ?? factsByWindow[hwnd].ProcessName,
                 ["exe"] = exe,
+                ["icon"] = icon,
                 ["monitor"] = DesktopReader.MonitorOf(hwnd),
                 ["minimized"] = factsByWindow[hwnd].Minimized,
                 ["active"] = hwnd == foreground,

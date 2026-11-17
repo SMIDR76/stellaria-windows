@@ -2,7 +2,7 @@ using Stellaria.Helper.Interop;
 
 namespace Stellaria.Helper.Desktop;
 
-internal sealed record ProcessIdentity(uint Id, string ImagePath, long CreationTime)
+internal sealed record ProcessIdentity(uint Id, string ImagePath, long CreationTime, string AppId = "")
 {
     public string Name => Path.GetFileNameWithoutExtension(ImagePath);
 }
@@ -40,7 +40,7 @@ internal sealed class ProcessDirectory
                 }
             }
 
-            var identity = new ProcessIdentity(processId, ImagePath(process), creation);
+            var identity = new ProcessIdentity(processId, ImagePath(process), creation, Kernel32.ApplicationUserModelId(process));
             lock (_gate)
             {
                 _cache[processId] = identity;

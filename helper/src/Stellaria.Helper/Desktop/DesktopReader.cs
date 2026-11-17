@@ -54,6 +54,27 @@ internal sealed class DesktopReader(ProcessDirectory processes)
         }
     }
 
+    public const string AppsFolder = "shell:AppsFolder\\";
+
+    public string IconSource(nint hwnd, ProcessIdentity? process)
+    {
+        if (process?.AppId is { Length: > 0 } appId)
+        {
+            return AppsFolder + appId;
+        }
+
+        if (process is null || string.Equals(User32.ClassName(hwnd), "ApplicationFrameWindow", StringComparison.Ordinal))
+        {
+            var windowAppId = WindowProperties.AppUserModelId(hwnd);
+            if (windowAppId.Length > 0)
+            {
+                return AppsFolder + windowAppId;
+            }
+        }
+
+        return process?.ImagePath ?? "";
+    }
+
     public uint TaskProcessId(nint hwnd)
     {
         var processId = User32.ProcessId(hwnd);

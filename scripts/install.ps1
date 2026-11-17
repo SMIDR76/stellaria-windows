@@ -24,6 +24,7 @@ if (Test-Path $helper) {
     Start-Sleep 1
   }
 }
+Get-Process stellaria-launcher -ErrorAction SilentlyContinue | Stop-Process -Force
 
 Step 'Installing the Zebar pack'
 New-Item -ItemType Directory -Force $pack | Out-Null
