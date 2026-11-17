@@ -1,0 +1,72 @@
+body {
+  pointer-events: none;
+}
+
+:root {
+  --seam: 2px;
+}
+
+.seam {
+  position: fixed;
+  background: var(--surface-base);
+  transition: background var(--duration) var(--ease-standard);
+}
+
+.seam.top {
+  top: var(--border);
+  left: var(--bar);
+  right: var(--border);
+  height: var(--seam);
+}
+
+.seam.bottom {
+  bottom: var(--border);
+  left: var(--bar);
+  right: var(--border);
+  height: var(--seam);
+}
+
+.seam.left {
+  top: var(--border);
+  bottom: var(--border);
+  left: var(--bar);
+  width: var(--seam);
+}
+
+.seam.right {
+  top: var(--border);
+  bottom: var(--border);
+  right: var(--border);
+  width: var(--seam);
+}
+
+.corner {
+  position: fixed;
+  width: var(--rounding);
+  height: var(--rounding);
+  transition: background var(--duration) var(--ease-standard);
+}
+
+.corner.top-left {
+  left: calc(var(--bar) + var(--seam));
+  top: calc(var(--border) + var(--seam));
+  background: radial-gradient(circle at 100% 100%, transparent calc(var(--rounding) - 0.5px), var(--surface-base) var(--rounding));
+}
+
+.corner.top-right {
+  right: calc(var(--border) + var(--seam));
+  top: calc(var(--border) + var(--seam));
+  background: radial-gradient(circle at 0 100%, transparent calc(var(--rounding) - 0.5px), var(--surface-base) var(--rounding));
+}
+
+.corner.bottom-left {
+  left: calc(var(--bar) + var(--seam));
+  bottom: calc(var(--border) + var(--seam));
+  background: radial-gradient(circle at 100% 0, transparent calc(var(--rounding) - 0.5px), var(--surface-base) var(--rounding));
+}
+
+.corner.bottom-right {
+  right: calc(var(--border) + var(--seam));
+  bottom: calc(var(--border) + var(--seam));
+  background: radial-gradient(circle at 0 0, transparent calc(var(--rounding) - 0.5px), var(--surface-base) var(--rounding));
+}

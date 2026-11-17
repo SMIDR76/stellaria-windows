@@ -1,0 +1,15 @@
+[
+  {
+    "id": "2026-11-launcher",
+    "date": "2026-11-17",
+    "title": {
+      "fr": "Le launcher Stellaria arrive",
+      "en": "The Stellaria launcher is coming"
+    },
+    "body": {
+      "fr": "Installez, mettez à jour et personnalisez Stellaria depuis une seule application, avec des préréglages de couleurs officiels.",
+      "en": "Install, update and customise Stellaria from one app, with official colour presets."
+    },
+    "url": "https://github.com/SMIDR76/stellaria"
+  }
+]

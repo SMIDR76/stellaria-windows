@@ -1,0 +1,361 @@
+body {
+  background: var(--surface-base);
+  transition: background var(--duration) var(--ease-standard);
+}
+
+.bar {
+  height: 100%;
+  width: var(--bar);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0 10px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-height: 0;
+}
+
+.section.start {
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.section.end {
+  flex: 0 0 auto;
+  padding-top: 10px;
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--rounding-full);
+  display: grid;
+  place-items: center;
+  color: var(--m3-primary);
+  flex: 0 0 auto;
+}
+
+.logo svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  transition: transform var(--duration-spatial) var(--ease-spatial);
+}
+
+.logo:hover svg {
+  transform: rotate(-8deg) scale(1.08);
+}
+
+.group {
+  width: 36px;
+  border-radius: var(--rounding-full);
+  background: var(--surface-layer);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 auto;
+  transition: background var(--duration) var(--ease-standard);
+}
+
+.group[hidden] {
+  display: none;
+}
+
+.workspaces {
+  position: relative;
+  padding: 8px 0;
+  gap: 6px;
+}
+
+.workspace-indicator {
+  position: absolute;
+  left: 50%;
+  width: 12px;
+  margin-left: -6px;
+  border-radius: var(--rounding-full);
+  background: var(--m3-primary);
+  pointer-events: none;
+  will-change: top, height;
+}
+
+.workspace {
+  width: 26px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+}
+
+.workspace-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--rounding-full);
+  background: var(--m3-outline-variant);
+  transition:
+    height var(--duration-spatial) var(--ease-spatial),
+    width var(--duration-spatial) var(--ease-spatial),
+    background var(--duration) var(--ease-standard);
+}
+
+.workspace.focused .workspace-dot {
+  background: transparent;
+}
+
+.workspace:hover .workspace-dot {
+  background: var(--m3-on-surface);
+}
+
+.workspace.focused:hover .workspace-dot {
+  background: transparent;
+}
+
+.tasks {
+  padding: 5px 0;
+  gap: 4px;
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.task {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: var(--rounding-small);
+  color: var(--m3-on-surface-variant);
+  transition:
+    background var(--duration) var(--ease-standard),
+    opacity var(--duration) var(--ease-standard);
+}
+
+.task img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.task .icon {
+  font-size: 18px;
+}
+
+.task::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: 50%;
+  width: 3px;
+  height: 0;
+  border-radius: var(--rounding-full);
+  background: var(--m3-primary);
+  transform: translateY(-50%);
+  transition: height var(--duration-spatial) var(--ease-spatial);
+}
+
+.task.active {
+  background: var(--m3-secondary-container);
+}
+
+.task.active::before {
+  height: 16px;
+}
+
+.task.minimized {
+  opacity: 0.55;
+}
+
+.active-window {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-height: 0;
+  flex: 1 1 auto;
+  color: var(--m3-on-surface-variant);
+  overflow: hidden;
+  animation: fade-in var(--duration) var(--ease-standard);
+}
+
+.active-window .icon {
+  color: var(--m3-secondary);
+  font-size: 18px;
+}
+
+.active-window img.active-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.active-title {
+  writing-mode: vertical-rl;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 100%;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
+.tray {
+  padding: 8px 0;
+  gap: 8px;
+}
+
+.tray-item {
+  width: 26px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--rounding-small);
+}
+
+.tray-item img {
+  width: 17px;
+  height: 17px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.weather {
+  padding: 8px 0 7px;
+  gap: 2px;
+  color: var(--m3-on-surface);
+}
+
+.weather[hidden] {
+  display: none;
+}
+
+.weather .icon {
+  font-size: 19px;
+  color: var(--m3-secondary);
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.weather-temp {
+  font-family: var(--font-clock);
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.clock {
+  padding: 10px 0 9px;
+  gap: 4px;
+  color: var(--m3-on-surface);
+}
+
+.clock .icon {
+  color: var(--m3-tertiary);
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+
+.clock-digits {
+  font-family: var(--font-clock);
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+
+.clock-seconds {
+  font-size: 12px;
+  color: var(--m3-tertiary);
+}
+
+.status {
+  padding: 6px 0;
+  gap: 2px;
+}
+
+.status-item {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--rounding-full);
+  color: var(--m3-on-surface);
+}
+
+.status-item .icon {
+  font-size: 19px;
+}
+
+.keyboard {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: var(--m3-on-surface-variant);
+}
+
+.status-item.muted {
+  color: var(--m3-error);
+}
+
+.power {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--rounding-full);
+  display: grid;
+  place-items: center;
+  color: var(--m3-error);
+  flex: 0 0 auto;
+}
+
+.power .icon {
+  font-size: 21px;
+  font-variation-settings: 'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+}
+
+.logo.active,
+.clock.active,
+.power.active {
+  background: var(--m3-secondary-container);
+  color: var(--m3-on-secondary-container);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.status-item.notifications {
+  position: relative;
+}
+
+.status-item .badge {
+  position: absolute;
+  top: 1px;
+  right: 0;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  border-radius: var(--rounding-full);
+  background: var(--m3-primary);
+  color: var(--m3-on-primary);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 14px;
+  text-align: center;
+  animation: badge-in var(--duration-spatial-fast) var(--ease-spatial-fast);
+}
+
+@keyframes badge-in {
+  from {
+    transform: scale(0);
+  }
+}

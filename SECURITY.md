@@ -1,6 +1,6 @@
 # Security policy
 
-Caelestia for Windows runs a background helper with access to windows, the clipboard and the desktop image.
+Stellaria runs a background helper with access to windows, the clipboard and the desktop image.
 Security reports are taken seriously and handled before any other work.
 
 ## Supported versions

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stellaria popout</title>
+    <link rel="stylesheet" href="./common.css" />
+    <link rel="stylesheet" href="./popout.css" />
+  </head>
+  <body>
+    <div class="drawer from-left" id="drawer">
+      <div class="drawer-anchor" id="anchor">
+        <div class="flare start"></div>
+        <section class="drawer-panel popout" id="panel">
+          <div class="drawer-content">
+            <div class="popout-viewport" id="viewport">
+              <div class="popout-page" id="page"></div>
+            </div>
+          </div>
+        </section>
+        <div class="flare end"></div>
+      </div>
+    </div>
+
+    <script type="module" src="./popout.js"></script>
+  </body>
+</html>

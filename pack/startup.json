@@ -1,0 +1,62 @@
+[
+  {
+    "widget": "edge",
+    "preset": "top"
+  },
+  {
+    "widget": "edge",
+    "preset": "right"
+  },
+  {
+    "widget": "edge",
+    "preset": "bottom"
+  },
+  {
+    "widget": "bar",
+    "preset": "default"
+  },
+  {
+    "widget": "frame",
+    "preset": "default"
+  },
+  {
+    "widget": "dashboard",
+    "preset": "default"
+  },
+  {
+    "widget": "popout",
+    "preset": "default"
+  },
+  {
+    "widget": "desktop-clock",
+    "preset": "default"
+  },
+  {
+    "widget": "osd",
+    "preset": "default"
+  },
+  {
+    "widget": "utilities",
+    "preset": "default"
+  },
+  {
+    "widget": "toasts",
+    "preset": "default"
+  },
+  {
+    "widget": "launcher",
+    "preset": "default"
+  },
+  {
+    "widget": "session",
+    "preset": "default"
+  },
+  {
+    "widget": "settings",
+    "preset": "default"
+  },
+  {
+    "widget": "island",
+    "preset": "default"
+  }
+]

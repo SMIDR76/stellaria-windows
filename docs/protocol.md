@@ -1,20 +1,29 @@
 # Helper protocol
 
 The widgets of the Zebar pack never call Windows APIs themselves. Everything that needs native access goes
-through `caelestia-helper.exe`, a background process that exposes a local WebSocket endpoint. This document is
+through `stellaria-helper.exe`, a background process that exposes a local WebSocket endpoint. This document is
 the contract between the two sides. Any change to it must update both `helper/` and `pack/src/core/helper-client.js`
 and bump `protocolVersion` when it is not backwards compatible.
 
 ## Transport
 
 - The helper listens on `127.0.0.1` only, on the first free port of the range `47610-47619`.
-- On startup it writes `pack/runtime.json` inside the installed pack directory:
+- On startup it writes a runtime file for every party allowed to connect, each with its own token:
 
   ```json
-  { "protocolVersion": 1, "port": 47610, "token": "<64 hex characters>", "pid": 12345 }
+  { "protocolVersion": 2, "port": 47610, "token": "<64 hex characters>", "pid": 12345 }
   ```
 
-  The token is regenerated at every start. Widgets read the file with `fetch('./runtime.json', { cache: 'no-store' })`.
+  | File | Party | Scopes |
+  | --- | --- | --- |
+  | `runtime.json` in the official pack | Stellaria's own widgets | every theme scope |
+  | `runtime.json` in each pack listed in `%LOCALAPPDATA%\Stellaria\packs.json` | that community pack | `basic` plus the scopes the user granted |
+  | `%LOCALAPPDATA%\Stellaria\launcher.json` | the Stellaria launcher | every scope, including `launcher` |
+
+  Tokens are regenerated at every start. Widgets read their file with `fetch('./runtime.json', { cache: 'no-store' })`.
+  A pack that is not listed gets no file, so it cannot talk to the helper at all. `packs.json` is an array of
+  `{ "id", "directory", "scopes" }`; directories must be inside `%USERPROFILE%\.glzr\zebar\`, ids are 2 to 48 lowercase
+  letters, digits or dashes, and `stellaria` and `launcher` are reserved.
 - A widget connects to `ws://127.0.0.1:<port>/`. The token is never part of the URL.
 - The helper rejects the upgrade with HTTP 403 when the `Origin` header is not an `http://127.0.0.1:<any port>` or
   `http://localhost:<any port>` origin (Zebar serves widgets from such an origin) or when the `Host` header is not
@@ -38,7 +47,7 @@ and bump `protocolVersion` when it is not backwards compatible.
 
 | Kind | Shape | Purpose |
 | --- | --- | --- |
-| `hello` | `{ "kind": "hello", "protocolVersion": 1, "helperVersion": "1.0.0" }` | First message after the connection opens. |
+| `hello` | `{ "kind": "hello", "protocolVersion": 2, "helperVersion": "1.0.0" }` | First message after the connection opens. |
 | `state` | `{ "kind": "state", "topic": "<topic>", "data": { } }` | Current value of a topic. Sent for every topic right after `hello`, then on every change. |
 | `event` | `{ "kind": "event", "name": "<name>", "data": { } }` | Something happened once (a hotkey press, a repaired app bar). |
 | `reply` | `{ "kind": "reply", "id": "<request id>", "ok": true, "data": { } }` | Successful answer to a request. |
@@ -57,6 +66,8 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `icons` | `{ "<exe path>": "<48 px png base64>" }` for the executables of the current tasks. Published only when that set changes, because task titles change far more often than the list of applications. |
 | `wallpaper` | `{ "path": "<Windows wallpaper file or null>", "sample": "<png base64, at most 160 px wide>", "source": "capture" \| "file" }`. `capture` is the rendered desktop of the primary monitor, so it follows Wallpaper Engine; `file` is the fallback when the desktop cannot be captured. Published after every wallpaper change and when a 30 second check sees a visible difference. |
 | `keyboard` | `{ "capsLock": false, "numLock": true, "layout": "<hkl hex of the last user window>", "layouts": [ { "id": "<hkl hex>", "languageTag": "fr-FR", "name": "<layout name localized by Windows>" } ] }`. Widgets name the language with `Intl.DisplayNames` in the interface language. |
+| `desktops` | `{ "items": [ { "id": "<guid>", "name": "<name or null>" } ], "current": 0 }`, the Windows virtual desktops in Task View order. A single unnamed desktop until the user creates a second one. |
+| `notifications` | `{ "items": [ { "id", "appId", "time": <unix ms>, "title", "body" } ] }`, the 50 latest Windows toasts from the Action Center history, newest first. Empty while `notifications.history` is off. |
 | `idle` | `{ "seconds": 0 }`, published when it crosses 30 s and then every 5 s, and when input resumes |
 | `power` | `{ "keepAwake": false }` |
 | `shell` | `{ "taskbarHidden": true }`, driven by the `taskbar.hide` setting |
@@ -70,7 +81,10 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `hotkey.unavailable` | `{ "name": "dashboard", "shortcut": "Win+Alt+A" }` when another program already owns the shortcut |
 | `appbars.repaired` | `{ "count": 2 }` |
 | `appbars.paused` | `{ "minutes": 5 }` when repairs loop and the circuit breaker stops them |
+| `notification` | one item of the `notifications` topic, when a toast arrived in the last 30 seconds |
 | `widgets.reload` | `{}`. Every widget reloads its page. Raised by the `widgets.reload` request, used by the settings app to recover a widget that stopped rendering. |
+| `theme.preset` | `{ "id", "name", "preset" }`, scope `appearance` | A catalogue preset to apply. |
+| `theme.undo` | `{}`, scope `appearance` | Restore the look saved before the last preset. |
 
 ## Requests
 
@@ -78,32 +92,73 @@ A client that connects or reconnects receives the full state again, so it can ne
 | --- | --- | --- |
 | `apps.list` | none | `[ { "name", "id", "icon": "<48 px png base64 or null>" } ]` sorted by name, uninstallers and documents removed |
 | `apps.launch` | `{ "id" }`, an identifier returned by `apps.list` | none |
+| `audio.sessions` | none | `[ { "id", "name", "system": false, "volume": 0-100, "muted": false, "icon": "<48 px png base64 or null>" } ]`, the live sessions of the default playback device. `name` is the session or process name; `system` marks the Windows system sounds session. |
+| `audio.setSessionVolume` | `{ "id", "volume": 0-100 }` from `audio.sessions` | none, `not_found` when the session has ended |
+| `audio.setSessionMute` | `{ "id", "muted" }` from `audio.sessions` | none, `not_found` when the session has ended |
 | `audio.setDefault` | `{ "id" }` | none |
 | `clipboard.history` | `{ "limit": 1-100, default 40 }` | `{ "enabled", "items": [ { "id", "kind": "text", "time": <unix ms>, "text": "<at most 4096 characters>" } ] }`, text entries only |
 | `clipboard.paste` | `{ "id" }` from `clipboard.history` | none, the entry becomes the clipboard content and Ctrl+V is sent to the last user window |
 | `config.set` | `{ "path": "launcher.favourites", "value": [] }`, see `docs/configuration.md` for every setting | the updated configuration |
 | `folders.open` | `{ "name": "wallpapers" \| "screenshots" }` | none |
+| `desktops.switch` | `{ "index" }` | none, switches with Ctrl+Win+Left/Right; `not_found` for an index past the last desktop |
 | `display.brightness` | none | `{ "<device>": <0-100 or -1 when unsupported> }` |
 | `display.setBrightness` | `{ "monitor": "<device>", "value": 0-100 }` | none, `unsupported` when the monitor does not answer DDC/CI |
 | `input.paste` | none | none, sends Ctrl+V to the last user window |
 | `keyboard.setLayout` | `{ "id" }`, one of the installed layouts | none |
-| `media.artwork` | none | `{ "app", "title", "artist", "album", "image" }` or `null` |
+| `media.artwork` | none | `{ "app", "title", "artist", "album", "image", "playing", "shuffle", "repeat": "none" \| "list" \| "track", "canShuffle", "canRepeat" }` or `null` |
+| `media.control` | `{ "action": "playPause" \| "next" \| "previous" \| "shuffle" \| "repeat" }` | none, `unsupported` when the player refuses; repeat cycles off, list, track |
 | `power.keepAwake` | `{ "enabled" }` | none |
 | `power.run` | `{ "action": "lock" \| "sleep" \| "logout" \| "restart" \| "shutdown" }` | none |
 | `radios.list` | none | `[ { "kind", "on", "name" } ]` |
 | `radios.set` | `{ "kind", "on" }` | the updated list |
 | `capture.record` | none | none, sends the Game Bar Win+Alt+R shortcut to the last user window |
-| `shell.openSettings` | `{ "page": "sound" \| "network-status" \| "regionlanguage" \| "display" \| "bluetooth" \| "personalization" }` | none |
+| `shell.taskView` | none | none, sends Win+Tab to open Windows Task View (hot corner) |
+| `capture.region` | none | none, opens the Windows snipping overlay (`ms-screenclip:`) |
+| `shell.openSettings` | `{ "page": "home" \| "sound" \| "network-status" \| "regionlanguage" \| "display" \| "bluetooth" \| "personalization" }` | none |
 | `system.info` | none | `{ "name", "user", "picture": "<192 px png base64 or null>", "cpu", "gpu", "os" }` |
 | `system.gpu` | none | `{ "name", "usage": <0-100 or null>, "temperature": <degrees or null> }`. Usage comes from Windows performance counters on every vendor; temperature only when nvidia-smi is installed. |
 | `tasks.activate` | `{ "id" }` | none |
 | `tasks.close` | `{ "id" }` | none |
-| `theme.publish` | `{ "roles": { "<role>": "#rrggbb" }, "transparent": false }`, 1 to 64 roles of 1 to 32 letters | none. Written to `%LOCALAPPDATA%\Caelestia\switcher-theme.json` for the optional window switcher. |
+| `theme.publish` | `{ "roles": { "<role>": "#rrggbb" }, "transparent": false }`, 1 to 64 roles of 1 to 32 letters | none. Written to `%LOCALAPPDATA%\Stellaria\switcher-theme.json` for the optional window switcher. |
+| `windows.setColors` | `{ "palette": [7 "#rrggbb", lightest first], "dark": bool, "titleBars": bool }` | none. Sets the Windows accent (Settings, File Explorer, Start menu, title bars when `titleBars`) and light or dark mode for apps, in the user's personalisation values only. The previous values are saved to `%LOCALAPPDATA%\Stellaria\windows-colors-backup.json` before the first change. |
+| `windows.restoreColors` | none | none. Writes back the saved colours and deletes the backup; does nothing without one. |
+| `catalog.index` | `{ "refresh"?: bool }` (scope `launcher`) | `{ "version", "expires", "source": "online" \| "cache" \| "bundled", "items", "news", "active", "canUndo" }`. Reads the signed index from `catalog.url` (optional setting), then the cached copy, then the copy shipped with the installer, and keeps the first one that passes `SignedIndex` checks. `not_found` when none does. |
+| `catalog.apply` | `{ "id" }` of a preset (scope `launcher`) | Same as `catalog.index`. Raises `theme.preset`; the primary bar saves the current look, then applies the preset's scheme, mode, variant and visual options. There is no transparency option: a preset that sets one is refused. |
+| `catalog.undo` | none (scope `launcher`) | Same as `catalog.index`. Raises `theme.undo`; the primary bar restores the look saved before the last preset. |
+| `launcher.status` | none (scope `launcher`) | `{ "helperVersion", "packVersion", "packInstalled", "zebar", "zebarRunning", "tasks": [helper, switcher, Zebar], "sessions" }`. |
+| `launcher.theme` | none (scope `launcher`) | The last `theme.publish` payload, `{ "roles", "transparent" }`, so the Stellaria app wears the theme's colours. `null` before the first publish. |
+| `launcher.openSettings` | none (scope `launcher`) | Opens the theme settings window, like Win+Alt+S. |
 | `wallpapers.apply` | `{ "path" }` inside the configured folder | none, `denied` for any other path |
 | `wallpapers.list` | none | `{ "directory", "current", "items": [ { "path", "name", "thumb": "<384 x 216 jpeg base64>" } ] }`, at most 500 images of the configured folder |
 | `window.act` | `{ "action": "close" \| "minimize" \| "maximize" \| "focus" }` on the last focused window | none |
 | `window.preview` | none | `{ "image": "<jpeg base64 or null>" }` |
 | `widgets.reload` | none | none, raises the `widgets.reload` event |
+
+## Scopes
+
+Every method, state topic and event belongs to one scope. A session only receives the topics and events of its scopes,
+and a request outside them fails with `denied` (logged with the pack name). Methods, topics and events that have no scope
+cannot be registered or are only sent to sessions holding `config`, so new features are closed by default.
+
+| Scope | Methods | Topics and events |
+| --- | --- | --- |
+| `basic` (always granted) | `system.info`, `system.gpu`, `wallpapers.list`, `widgets.reload` | `config`, `monitors`, `idle`, `power`, `shell`, `wallpaper`, `desktops`; `widgets.reload`, `appbars.*` |
+| `media` | `media.artwork`, `media.control` | |
+| `audio` | `audio.*` | |
+| `display` | `display.*` | |
+| `network` | `radios.*`, `wifi.*`, `bluetooth.*` | |
+| `windows` | `tasks.*`, `window.act`, `window.preview`, `shell.taskView`, `desktops.switch` | `focus`, `tasks`, `icons` |
+| `apps` | `apps.list`, `apps.launch`, `folders.open` | |
+| `clipboard` | `clipboard.history`, `clipboard.paste` | |
+| `notifications` | | `notifications`; `notification` |
+| `input` | `input.paste`, `keyboard.setLayout` | `keyboard`; `hotkey`, `hotkey.unavailable` |
+| `system` | `power.*`, `capture.*`, `shell.openSettings` | |
+| `appearance` | `theme.publish`, `wallpapers.apply`, `windows.setColors`, `windows.restoreColors` | |
+| `config` | `config.set` | |
+| `launcher` | `catalog.*`, `launcher.*` | |
+
+`windows`, `apps`, `clipboard`, `notifications`, `input`, `system` and `config` are sensitive: the launcher must ask the user
+before granting them to a community pack.
 
 ## Error codes
 

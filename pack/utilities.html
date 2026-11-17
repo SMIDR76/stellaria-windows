@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stellaria utilities</title>
+    <link rel="stylesheet" href="./common.css" />
+    <link rel="stylesheet" href="./utilities.css" />
+  </head>
+  <body>
+    <div class="drawer from-bottom corner">
+      <div class="drawer-anchor">
+        <div class="flare start"></div>
+        <section class="drawer-panel utilities" id="panel">
+          <div class="drawer-content utilities-content cascade">
+            <header class="hero utilities-hero" id="hero">
+              <div class="hero-text">
+                <span class="hero-title">Utilitaires</span>
+                <span class="hero-subtitle" id="hero-date"></span>
+                <div class="hero-chips">
+                  <span class="hero-chip" id="hero-awake"><span class="icon">bedtime</span><span>Veille autorisée</span></span>
+                  <span class="hero-chip" id="hero-timer" hidden><span class="icon">timer</span><span></span></span>
+                </div>
+              </div>
+            </header>
+            <article class="card">
+              <div class="card-head"><span class="icon tonal-icon">bolt</span><span class="card-title">Raccourcis</span></div>
+              <div class="toggle-row" id="toggles"></div>
+            </article>
+            <article class="card">
+              <div class="switch-row">
+                <span class="icon">coffee</span>
+                <span class="switch-text"><span>Garder éveillé</span><span id="awake-text">Le PC peut se mettre en veille</span></span>
+                <button class="switch" id="awake" title="Empêcher la mise en veille"></button>
+              </div>
+            </article>
+            <article class="card pomodoro">
+              <div class="pomodoro-head">
+                <div class="card-head"><span class="icon tonal-icon">timer</span><span class="card-title" id="pomodoro-phase">Minuteur</span></div>
+                <span class="pomodoro-time" id="pomodoro-time">25:00</span>
+              </div>
+              <div class="pomodoro-track"><span class="pomodoro-fill" id="pomodoro-fill"></span></div>
+              <div class="pomodoro-actions" id="pomodoro-actions"></div>
+            </article>
+            <article class="card">
+              <div class="card-head"><span class="icon tonal-icon">screenshot_region</span><span class="card-title">Capture d'écran</span></div>
+              <div class="actions" id="captures"></div>
+            </article>
+          </div>
+        </section>
+        <div class="flare end"></div>
+      </div>
+    </div>
+
+    <script type="module" src="./utilities.js"></script>
+  </body>
+</html>

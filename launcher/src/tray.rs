@@ -1,0 +1,93 @@
+use serde::Deserialize;
+use tauri::menu::{Menu, MenuItem, PredefinedMenuItem};
+use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
+use tauri::{AppHandle, Emitter, Manager, Runtime};
+
+const TRAY: &str = "main";
+const MAX_LABEL: usize = 80;
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TrayLabels {
+    open: String,
+    start: String,
+    stop: String,
+    quit: String,
+    tooltip: String,
+    update: Option<String>,
+}
+
+fn clean(text: &str) -> String {
+    text.chars().filter(|c| !c.is_control()).take(MAX_LABEL).collect()
+}
+
+pub fn reveal<R: Runtime>(app: &AppHandle<R>, page: Option<&str>) {
+    if let Some(window) = app.get_webview_window("main") {
+        let hidden = !window.is_visible().unwrap_or(true);
+        crate::foreground::present(&window);
+        if hidden {
+            let _ = app.emit("reopened", ());
+        }
+    }
+    if let Some(page) = page {
+        let _ = app.emit("open-page", page);
+    }
+}
+
+fn menu<R: Runtime>(app: &AppHandle<R>, labels: &TrayLabels) -> tauri::Result<Menu<R>> {
+    let menu = Menu::new(app)?;
+    if let Some(update) = labels.update.as_deref() {
+        menu.append(&MenuItem::with_id(app, "update", clean(update), true, None::<&str>)?)?;
+        menu.append(&PredefinedMenuItem::separator(app)?)?;
+    }
+    menu.append(&MenuItem::with_id(app, "open", clean(&labels.open), true, None::<&str>)?)?;
+    menu.append(&MenuItem::with_id(app, "start", clean(&labels.start), true, None::<&str>)?)?;
+    menu.append(&MenuItem::with_id(app, "stop", clean(&labels.stop), true, None::<&str>)?)?;
+    menu.append(&PredefinedMenuItem::separator(app)?)?;
+    menu.append(&MenuItem::with_id(app, "quit", clean(&labels.quit), true, None::<&str>)?)?;
+    Ok(menu)
+}
+
+pub fn create<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
+    let labels = TrayLabels {
+        open: "Ouvrir Stellaria".into(),
+        start: "Démarrer le thème".into(),
+        stop: "Arrêter le thème".into(),
+        quit: "Quitter".into(),
+        tooltip: "Stellaria".into(),
+        update: None,
+    };
+    let mut builder = TrayIconBuilder::with_id(TRAY)
+        .tooltip(&labels.tooltip)
+        .menu(&menu(app, &labels)?)
+        .show_menu_on_left_click(false)
+        .on_menu_event(|app, event| match event.id().as_ref() {
+            "open" => reveal(app, None),
+            "update" => reveal(app, Some("install")),
+            "start" => {
+                std::thread::spawn(|| crate::run_helper("start"));
+            }
+            "stop" => {
+                std::thread::spawn(|| crate::run_helper("restore-shell"));
+            }
+            "quit" => app.exit(0),
+            _ => {}
+        })
+        .on_tray_icon_event(|tray, event| {
+            if let TrayIconEvent::Click { button: MouseButton::Left, button_state: MouseButtonState::Up, .. } = event {
+                reveal(tray.app_handle(), None);
+            }
+        });
+    if let Some(icon) = app.default_window_icon() {
+        builder = builder.icon(icon.clone());
+    }
+    builder.build(app)?;
+    Ok(())
+}
+
+#[tauri::command]
+pub fn tray_labels(app: AppHandle, labels: TrayLabels) -> Result<(), String> {
+    let tray = app.tray_by_id(TRAY).ok_or("tray-missing")?;
+    tray.set_menu(Some(menu(&app, &labels).map_err(|error| error.to_string())?)).map_err(|error| error.to_string())?;
+    tray.set_tooltip(Some(clean(&labels.tooltip))).map_err(|error| error.to_string())
+}

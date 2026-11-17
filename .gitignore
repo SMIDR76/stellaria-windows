@@ -8,3 +8,8 @@ obj/
 TestResults/
 
 pack/runtime.json
+pack/native/*.exe
+
+launcher/dist/
+launcher/target/
+launcher/gen/

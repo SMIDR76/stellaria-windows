@@ -1,6 +1,6 @@
 # Security model
 
-Caelestia for Windows runs permanently in the background, watches windows, reads the clipboard on request,
+Stellaria runs permanently in the background, watches windows, reads the clipboard on request,
 captures the desktop to extract wallpaper colours and can simulate a few key presses. That is the same kind of access
 spyware wants, so the project treats every feature as a potential risk for the people who install it.
 This document lists what can go wrong and what the code does about it. It is the security specification of version
@@ -57,6 +57,15 @@ widget page would gain that widget's abilities.
   `no-restricted-syntax`, `no-eval`, `no-implied-eval`).
 - Because widgets hold no `shellCommands` privileges (principle 2), even a successful injection cannot start a program.
 
+### A community pack abuses the helper
+
+Each pack gets its own token and only the scopes listed for it (see `protocol.md`, section Scopes). The official pack and
+the launcher have separate tokens; a pack without an entry in `packs.json` gets no runtime file. Topics and events are
+filtered per session, so a pack without `notifications` or `input` never sees notification contents or hotkeys, and
+requests outside the granted scopes fail with `denied` and are logged. The catalogue index is signed with a minisign
+Ed25519 key pinned in the helper (`Catalog/TrustedKeys.cs`); an index older than the last one seen, expired, or whose
+content does not match its signed version is refused.
+
 ### Abuse of helper methods
 
 | Method | Risk | Mitigation |
@@ -68,7 +77,8 @@ widget page would gain that widget's abilities.
 | `folders.open` | Opening or executing arbitrary paths | Only the named folders `wallpapers` and `screenshots`, resolved by the helper, and only if they are directories. |
 | `clipboard.history` | Leaking secrets copied by the user | Read on request only, never logged, never cached, limited to text entries, and only when Windows clipboard history is enabled by the user. |
 | `window.preview` | Screenshots of private windows | Image of the last focused window only, kept in memory and sent to local widgets, never written to disk. |
-| `input.paste`, `capture.record` | Simulated key presses | Fixed key sequences (Ctrl+V, Win+Alt+R) sent to the window the user was using, only after a click in the interface. |
+| `input.paste`, `capture.record`, `shell.taskView`, `desktops.switch` | Simulated key presses | Fixed key sequences (Ctrl+V, Win+Alt+R, Win+Tab, Ctrl+Win+arrows) sent only after a user action in the interface (click, wheel over the desktops, hot corner). |
+| `notifications` topic | Notification contents are personal | Read only, from the user's own Action Center database (`wpndatabase.db`), 50 latest toasts, kept in memory, never logged or written anywhere. Turned off with `notifications.history`. Dismissing in the theme only hides entries; Windows' history is never modified. |
 | `power.run` | Unwanted shutdown | Fixed actions only; the session menu asks for confirmation before restart and shutdown. |
 
 ### Resource exhaustion
@@ -76,6 +86,23 @@ widget page would gain that widget's abilities.
 Incoming messages are limited to 64 KB, the handshake to 8 KB and 5 seconds, connections to 64 and requests to
 200 per 10 seconds per connection. Outgoing queues are bounded: a client that does not read fast enough is
 disconnected instead of making the helper wait.
+
+### The Stellaria app is abused
+
+The app is a Tauri 2 window over local files only. Its content security policy allows scripts, styles, fonts, media
+and images from the app itself, `data:` and `blob:` images, the helper's loopback ports and Tauri's IPC, and nothing
+else: no remote content, no objects, no frames, no forms and no `<base>`. The window has only the `core:default`,
+`show`, `hide`, `is-visible`, `set-focus` and `destroy` permissions. Its Rust commands check their inputs:
+
+- `helper` runs `stellaria-helper.exe` with one of five fixed verbs;
+- `open_external` opens `https://` links without spaces, quotes, `^` or `&`, and the Windows apps settings page;
+- `open_folder` opens the Stellaria, widgets or logs folder only;
+- `install_zebar` runs winget for the `glzr-io.zebar` package only;
+- `wallpaper` reads the current Windows wallpaper only if it is an image of 64 MB at most;
+- updates are accepted only from a manifest signed with the Stellaria key, with the trusted comment
+  `stellaria-update version=<version>`, a newer version, the expected file name and a size and SHA-256 that the
+  download must match. The page never passes a URL, a hash or a path to Rust; the verified manifest stays in Rust.
+- `stellaria://apply/<id>` links only accept catalogue presets and always ask before applying.
 
 ## Privacy
 
@@ -92,7 +119,7 @@ No telemetry, analytics or crash reporting is collected.
 ## Recovery
 
 When the bar replaces the taskbar, the helper turns on taskbar auto-hide and hides the taskbar window. Before changing
-auto-hide the first time it saves the original value in `%LOCALAPPDATA%\Caelestia\state.json`.
+auto-hide the first time it saves the original value in `%LOCALAPPDATA%\Stellaria\state.json`.
 
 The taskbar window is shown again, still in auto-hide mode so it appears when the pointer reaches the screen edge:
 
@@ -103,12 +130,17 @@ The taskbar window is shown again, still in auto-hide mode so it appears when th
 Auto-hide stays on between sessions on purpose: turning it off at every exit would let Zebar dock its bars against a
 work area that still includes the taskbar at the next logon.
 
-The original auto-hide value is restored, and the taskbar shown, by `caelestia-helper.exe --restore-shell` (also
+The original auto-hide value is restored, and the taskbar shown, by `stellaria-helper.exe --restore-shell` (also
 available as a Start menu shortcut created by the installer) and by `uninstall.ps1`. `--restore-shell` first asks a
 running helper to quit so it cannot hide the taskbar again.
 
 These paths are verified on the NativeAOT build: the taskbar is visible right after `--quit`, and `--restore-shell`
 writes back the saved value and clears it.
+
+The optional Windows colour sync (`windows.setColors`) only writes the current user's personalisation values under
+`HKCU` (`Explorer\Accent`, `DWM`, `Themes\Personalize`) and the accent preference Settings itself uses. It saves the
+previous values first; turning the option off, `--restore-shell` and `uninstall.ps1` write them back. Values that did
+not exist before are removed again, so Windows falls back to its defaults.
 
 ## Supply chain
 
@@ -119,9 +151,28 @@ writes back the saved value and clears it.
   only gets the permissions needed to create artifact attestations.
 - Release archives are built by CI only. Each release publishes SHA-256 checksums and a build provenance attestation
   that anyone can check with `gh attestation verify <file> -R <owner>/<repository>`.
-- The executable is not code signed yet, so Windows SmartScreen shows a warning on first launch. Free signing for open
-  source projects is available from the SignPath Foundation once the repository is public; the steps are tracked in
-  `docs/releasing.md`.
+- Rust crates are locked by `launcher/Cargo.lock`, and their licences are listed in `licenses/rust-crates.txt`.
+- Dependabot proposes security and version updates every week for GitHub Actions, NuGet and Cargo, and every month
+  for npm. CodeQL scans the C#, JavaScript and workflow code on every push and pull request to `main` and every week,
+  once the repository is public.
+- Releases are signed through the SignPath Foundation once the project is accepted; until then Windows SmartScreen
+  warns on first launch. The setup is in `docs/code-signing.md`.
+
+## Audit of 2026-11-17
+
+A review before going public found no vulnerability to fix:
+
+- no HTML or script injection sink in the pack or the app (no `innerHTML`, `eval` or `Function`; text goes through
+  `textContent`, images only from `data:` and `blob:` URLs built by the app or the helper);
+- every Zebar widget has an empty `shellCommands` list;
+- the helper listens on loopback only, rejects web origins, needs a token, checks every method against the caller's
+  scopes, rate-limits requests, caps message sizes and never logs tokens or notification contents;
+- `dotnet list package --vulnerable` reports nothing for the helper and the catalogue tool, and `cargo audit` reports
+  no vulnerability in the app's crates (its warnings concern Linux-only crates that are not built for Windows).
+
+Changes made: a stricter content security policy for the app, Dependabot, CodeQL, the weather switch and the privacy
+policy. Still open: a `<meta>` content security policy in the pack's pages, to add once it is tested in Zebar's
+WebView2 (phase D of the platform plan, before community widget packs).
 
 ## Reporting a vulnerability
 

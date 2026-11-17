@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stellaria idle</title>
+    <link rel="stylesheet" href="./common.css" />
+    <link rel="stylesheet" href="./idle.css" />
+  </head>
+  <body>
+    <div class="screen">
+      <div class="backdrop" id="backdrop"></div>
+      <div class="shade"></div>
+      <div class="center">
+        <div class="avatar" id="avatar"><span class="icon">person</span></div>
+        <div class="time">
+          <span class="hours" id="hours">00</span>
+          <span class="colon">:</span>
+          <span class="minutes" id="minutes">00</span>
+        </div>
+        <span class="date" id="date"></span>
+        <span class="greeting" id="greeting"></span>
+      </div>
+      <div class="cards">
+        <article class="card" id="weather-card" hidden>
+          <span class="card-visual"><span class="icon" id="weather-icon">cloud</span></span>
+          <span class="card-text"><span class="card-title" id="weather-title"></span><span class="card-subtitle" id="weather-subtitle"></span></span>
+        </article>
+        <article class="card" id="media-card" hidden>
+          <span class="card-visual" id="media-visual"><span class="icon">music_note</span></span>
+          <span class="card-text"><span class="card-title" id="media-title"></span><span class="card-subtitle" id="media-subtitle"></span></span>
+        </article>
+        <article class="card" id="system-card">
+          <span class="card-visual"><span class="icon">memory</span></span>
+          <span class="card-text"><span class="card-title" id="system-title">—</span><span class="card-subtitle" id="system-subtitle">Système</span></span>
+        </article>
+      </div>
+    </div>
+    <script type="module" src="./idle.js"></script>
+  </body>
+</html>

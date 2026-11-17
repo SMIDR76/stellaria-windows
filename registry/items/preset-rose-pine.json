@@ -1,0 +1,29 @@
+{
+  "id": "preset-rose-pine",
+  "type": "preset",
+  "version": "1.0.0",
+  "official": true,
+  "license": "GPL-3.0-only",
+  "author": {
+    "name": "Stellaria",
+    "github": "SMIDR76"
+  },
+  "name": {
+    "fr": "Rosé Pine",
+    "en": "Rosé Pine"
+  },
+  "summary": {
+    "fr": "Rosé Pine Moon : tons doux et feutrés pour travailler tard.",
+    "en": "Rosé Pine Moon: soft, muted tones for late work."
+  },
+  "tags": [
+    "couleurs"
+  ],
+  "preset": {
+    "scheme": {
+      "name": "rosepine",
+      "flavour": "moon"
+    },
+    "mode": "dark"
+  }
+}

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stellaria</title>
+    <link rel="stylesheet" href="./shared/common.css" />
+    <link rel="stylesheet" href="./launcher.css" />
+  </head>
+  <body>
+    <canvas class="topo" id="topo" aria-hidden="true"></canvas>
+    <div class="app">
+      <nav class="rail" id="rail"></nav>
+      <main class="content">
+        <header class="content-header">
+          <h1 id="page-title"></h1>
+          <span class="connection" id="connection"></span>
+        </header>
+        <div class="pages" id="pages"></div>
+      </main>
+    </div>
+    <div class="dialog-backdrop" id="dialog" hidden></div>
+    <div class="alert-glow" aria-hidden="true"></div>
+    <div class="snackbar" id="snackbar" role="status" aria-live="polite"></div>
+    <script type="module" src="./launcher.js"></script>
+  </body>
+</html>

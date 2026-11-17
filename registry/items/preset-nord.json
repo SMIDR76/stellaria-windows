@@ -1,0 +1,29 @@
+{
+  "id": "preset-nord",
+  "type": "preset",
+  "version": "1.0.0",
+  "official": true,
+  "license": "GPL-3.0-only",
+  "author": {
+    "name": "Stellaria",
+    "github": "SMIDR76"
+  },
+  "name": {
+    "fr": "Nord",
+    "en": "Nord"
+  },
+  "summary": {
+    "fr": "Les bleus arctiques et apaisés de Nord.",
+    "en": "Nord's calm arctic blues."
+  },
+  "tags": [
+    "couleurs"
+  ],
+  "preset": {
+    "scheme": {
+      "name": "nord",
+      "flavour": "medium"
+    },
+    "mode": "dark"
+  }
+}

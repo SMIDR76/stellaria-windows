@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stellaria launcher</title>
+    <link rel="stylesheet" href="./common.css" />
+    <link rel="stylesheet" href="./launcher.css" />
+  </head>
+  <body>
+    <div class="drawer from-bottom">
+      <div class="drawer-anchor">
+        <div class="flare start"></div>
+        <section class="drawer-panel launcher" id="panel">
+          <div class="drawer-content launcher-content">
+            <header class="hero launcher-hero" id="hero">
+              <div class="hero-text">
+                <span class="hero-title" id="hero-title"></span>
+                <span class="hero-subtitle" id="hero-subtitle"></span>
+              </div>
+              <div class="hero-modes" id="hero-modes"></div>
+            </header>
+            <div class="results" id="results">
+              <ul class="list scroll" id="list" role="listbox"></ul>
+              <div class="wallpapers" id="wallpapers" hidden>
+                <div class="wallpaper-strip scroll" id="wallpaper-strip"></div>
+                <div class="wallpaper-caption" id="wallpaper-caption"></div>
+              </div>
+              <div class="empty" id="empty" hidden>
+                <span class="icon">manage_search</span>
+                <span id="empty-text">Aucun résultat</span>
+              </div>
+            </div>
+            <label class="search">
+              <span class="icon" id="search-icon">search</span>
+              <input id="query" type="text" spellcheck="false" autocomplete="off" placeholder="Rechercher une application, « > » pour les actions" />
+              <span class="loading" id="loading" hidden></span>
+            </label>
+          </div>
+        </section>
+        <div class="flare end"></div>
+      </div>
+    </div>
+
+    <script type="module" src="./launcher.js"></script>
+  </body>
+</html>

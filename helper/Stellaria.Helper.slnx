@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Stellaria.Helper/Stellaria.Helper.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Stellaria.Helper.Tests/Stellaria.Helper.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stellaria session</title>
+    <link rel="stylesheet" href="./common.css" />
+    <link rel="stylesheet" href="./session.css" />
+  </head>
+  <body>
+    <div class="drawer from-right">
+      <div class="drawer-anchor">
+        <div class="flare start"></div>
+        <section class="drawer-panel session" id="panel">
+          <div class="drawer-content session-content cascade" id="buttons">
+            <button class="session-button state-layer" data-action="lock" title="Verrouiller"><span class="icon">lock</span></button>
+            <button class="session-button state-layer" data-action="sleep" title="Veille"><span class="icon">bedtime</span></button>
+            <button class="session-button state-layer" data-action="logout" title="Déconnexion"><span class="icon">logout</span></button>
+            <button class="session-button state-layer danger" data-action="restart" title="Redémarrer"><span class="icon">restart_alt</span></button>
+            <button class="session-button state-layer danger" data-action="shutdown" title="Éteindre"><span class="icon">power_settings_new</span></button>
+          </div>
+        </section>
+        <div class="flare end"></div>
+      </div>
+    </div>
+
+    <script type="module" src="./session.js"></script>
+  </body>
+</html>
