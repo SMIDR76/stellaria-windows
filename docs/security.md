@@ -87,6 +87,23 @@ Incoming messages are limited to 64 KB, the handshake to 8 KB and 5 seconds, con
 200 per 10 seconds per connection. Outgoing queues are bounded: a client that does not read fast enough is
 disconnected instead of making the helper wait.
 
+### The Stellaria app is abused
+
+The app is a Tauri 2 window over local files only. Its content security policy allows scripts, styles, fonts, media
+and images from the app itself, `data:` and `blob:` images, the helper's loopback ports and Tauri's IPC, and nothing
+else: no remote content, no objects, no frames, no forms and no `<base>`. The window has only the `core:default`,
+`show`, `hide`, `is-visible`, `set-focus` and `destroy` permissions. Its Rust commands check their inputs:
+
+- `helper` runs `stellaria-helper.exe` with one of five fixed verbs;
+- `open_external` opens `https://` links without spaces, quotes, `^` or `&`, and the Windows apps settings page;
+- `open_folder` opens the Stellaria, widgets or logs folder only;
+- `install_zebar` runs winget for the `glzr-io.zebar` package only;
+- `wallpaper` reads the current Windows wallpaper only if it is an image of 64 MB at most;
+- updates are accepted only from a manifest signed with the Stellaria key, with the trusted comment
+  `stellaria-update version=<version>`, a newer version, the expected file name and a size and SHA-256 that the
+  download must match. The page never passes a URL, a hash or a path to Rust; the verified manifest stays in Rust.
+- `stellaria://apply/<id>` links only accept catalogue presets and always ask before applying.
+
 ## Privacy
 
 The helper itself never contacts the network. The widgets contact these services over HTTPS:
@@ -134,9 +151,28 @@ not exist before are removed again, so Windows falls back to its defaults.
   only gets the permissions needed to create artifact attestations.
 - Release archives are built by CI only. Each release publishes SHA-256 checksums and a build provenance attestation
   that anyone can check with `gh attestation verify <file> -R <owner>/<repository>`.
-- The executable is not code signed yet, so Windows SmartScreen shows a warning on first launch. Free signing for open
-  source projects is available from the SignPath Foundation once the repository is public; the steps are tracked in
-  `docs/releasing.md`.
+- Rust crates are locked by `launcher/Cargo.lock`, and their licences are listed in `licenses/rust-crates.txt`.
+- Dependabot proposes security and version updates every week for GitHub Actions, NuGet and Cargo, and every month
+  for npm. CodeQL scans the C#, JavaScript and workflow code on every push and pull request to `main` and every week,
+  once the repository is public.
+- Releases are signed through the SignPath Foundation once the project is accepted; until then Windows SmartScreen
+  warns on first launch. The setup is in `docs/code-signing.md`.
+
+## Audit of 2026-11-17
+
+A review before going public found no vulnerability to fix:
+
+- no HTML or script injection sink in the pack or the app (no `innerHTML`, `eval` or `Function`; text goes through
+  `textContent`, images only from `data:` and `blob:` URLs built by the app or the helper);
+- every Zebar widget has an empty `shellCommands` list;
+- the helper listens on loopback only, rejects web origins, needs a token, checks every method against the caller's
+  scopes, rate-limits requests, caps message sizes and never logs tokens or notification contents;
+- `dotnet list package --vulnerable` reports nothing for the helper and the catalogue tool, and `cargo audit` reports
+  no vulnerability in the app's crates (its warnings concern Linux-only crates that are not built for Windows).
+
+Changes made: a stricter content security policy for the app, Dependabot, CodeQL, the weather switch and the privacy
+policy. Still open: a `<meta>` content security policy in the pack's pages, to add once it is tested in Zebar's
+WebView2 (phase D of the platform plan, before community widget packs).
 
 ## Reporting a vulnerability
 

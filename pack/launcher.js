@@ -505,7 +505,7 @@ function windowEntries(query) {
     .sort((a, b) => b.score - a.score)
     .slice(0, 4)
     .map(({ task }) => ({
-      image: icons[task.exe] ? `data:image/png;base64,${icons[task.exe]}` : null,
+      image: icons[task.icon || task.exe] ? `data:image/png;base64,${icons[task.icon || task.exe]}` : null,
       icon: 'select_window',
       title: task.title,
       subtitle: `Fenêtre ouverte · ${task.process}`,
