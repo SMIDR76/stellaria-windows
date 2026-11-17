@@ -28,8 +28,34 @@ body {
   align-items: center;
   gap: 6px;
   padding: 22px 0;
-  background: var(--m3-surface-container);
+  background: color-mix(in srgb, var(--m3-surface-container) 90%, transparent);
+  backdrop-filter: blur(20px);
 }
+
+.topo {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 900ms var(--ease-effects);
+}
+
+body.open .topo {
+  opacity: 1;
+}
+
+.topo.hidden {
+  display: none;
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+}
+
 
 .rail-brand {
   position: relative;
@@ -1450,6 +1476,23 @@ kbd {
   from {
     opacity: 0;
   }
+}
+
+.section,
+.card,
+.news,
+.detail,
+.search {
+  background: color-mix(in srgb, var(--m3-surface-container) 84%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+.card:hover {
+  background: color-mix(in srgb, var(--m3-surface-container-high) 90%, transparent);
+}
+
+.search {
+  background: color-mix(in srgb, var(--m3-surface-container-high) 86%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {

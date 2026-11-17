@@ -97,6 +97,7 @@ const strings = {
     welcomeLook: 'Choisissez une apparence', welcomeLookText: 'Survolez une palette pour la voir sur cette fenêtre. Vous pourrez annuler à tout moment.',
     keepMine: 'Garder mes couleurs', welcomeKeys: 'Les raccourcis à retenir', next: 'Suivant', previous: 'Précédent', finish: 'Commencer',
     replayWelcome: "Revoir l'accueil", welcomeRow: "L'écran de la première ouverture",
+    background: 'Fond', backgroundText: 'Lignes topographiques aux couleurs du thème',
   },
   en: {
     home: 'Home', discover: 'Discover', library: 'Library', news: 'News', settings: 'Settings',
@@ -192,6 +193,7 @@ const strings = {
     welcomeLook: 'Pick a look', welcomeLookText: 'Hover a palette to see it on this window. You can undo at any time.',
     keepMine: 'Keep my colours', welcomeKeys: 'Shortcuts to remember', next: 'Next', previous: 'Previous', finish: 'Get started',
     replayWelcome: 'Show the welcome again', welcomeRow: 'The first-run screen',
+    background: 'Background', backgroundText: "Contour lines in the theme's colours",
   },
 };
 
@@ -545,7 +547,202 @@ function paintRoles(roles) {
     const value = roles?.[role];
     if (typeof value === 'string' && /^#[0-9a-f]{6}$/i.test(value)) document.documentElement.style.setProperty(`--m3-${kebab(role)}`, value);
   }
+  topo.recolor();
 }
+
+const topoFields = {
+  home: [0, 0, 3.0], install: [13.7, 5.1, 2.4], discover: [27.2, 19.4, 3.6], library: [41.9, 8.3, 2.1],
+  news: [6.6, 33.8, 2.8], help: [52.4, 27.5, 3.3], settings: [19.1, 47.2, 2.6], preset: [35.5, 41.6, 3.9],
+};
+
+const topoShader = `#version 300 es
+precision highp float;
+uniform vec2 uRes;
+uniform float uTime;
+uniform vec2 uOffset;
+uniform float uScale;
+uniform float uDpr;
+uniform vec3 uA;
+uniform vec3 uB;
+out vec4 color;
+vec3 hash3(vec3 p) {
+  p = vec3(dot(p, vec3(127.1, 311.7, 74.7)), dot(p, vec3(269.5, 183.3, 246.1)), dot(p, vec3(113.5, 271.9, 124.6)));
+  return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
+}
+float noise(vec3 p) {
+  vec3 i = floor(p);
+  vec3 f = fract(p);
+  vec3 u = f * f * (3.0 - 2.0 * f);
+  return mix(
+    mix(mix(dot(hash3(i), f), dot(hash3(i + vec3(1, 0, 0)), f - vec3(1, 0, 0)), u.x),
+        mix(dot(hash3(i + vec3(0, 1, 0)), f - vec3(0, 1, 0)), dot(hash3(i + vec3(1, 1, 0)), f - vec3(1, 1, 0)), u.x), u.y),
+    mix(mix(dot(hash3(i + vec3(0, 0, 1)), f - vec3(0, 0, 1)), dot(hash3(i + vec3(1, 0, 1)), f - vec3(1, 0, 1)), u.x),
+        mix(dot(hash3(i + vec3(0, 1, 1)), f - vec3(0, 1, 1)), dot(hash3(i + vec3(1, 1, 1)), f - vec3(1, 1, 1)), u.x), u.y), u.z);
+}
+float fbm(vec3 p) {
+  float value = 0.0;
+  float amplitude = 0.62;
+  for (int octave = 0; octave < 3; octave++) {
+    value += amplitude * noise(p);
+    p = p * 2.03 + vec3(17.0, 9.0, 3.0);
+    amplitude *= 0.42;
+  }
+  return value;
+}
+void main() {
+  vec2 uv = gl_FragCoord.xy / uRes.y;
+  float field = fbm(vec3(uv * uScale + uOffset, uTime)) * 0.5 + 0.5;
+  float level = field * 30.0;
+  float distance = abs(fract(level + 0.5) - 0.5) / max(fwidth(level), 1e-4);
+  float width = (0.85 + 0.5 * field) * uDpr;
+  float line = 1.0 - smoothstep(width - 0.75, width + 0.75, distance);
+  vec3 tint = mix(uA, uB, smoothstep(0.35, 0.75, field));
+  float index = floor(level + 0.5);
+  float shade = 0.45 + 0.55 * fract(sin(index * 12.9898) * 43758.5453);
+  float alpha = line * shade * (0.22 + 0.4 * sin(clamp(field, 0.0, 1.0) * 3.14159));
+  color = vec4(tint * alpha, alpha);
+}`;
+
+const topo = {
+  canvas: document.getElementById('topo'),
+  gl: null,
+  uniforms: {},
+  frame: 0,
+  started: 0,
+  from: { offset: [0, 0], scale: 3 },
+  to: { offset: [0, 0], scale: 3 },
+  shift: 0,
+  colors: { a: [0.8, 0.7, 1], b: [0.8, 0.7, 1], fromA: null, fromB: null, at: 0 },
+
+  enabled() {
+    return stored('topo', 'on') !== 'off';
+  },
+
+  setup() {
+    if (this.gl || !this.canvas) return Boolean(this.gl);
+    const gl = this.canvas.getContext('webgl2', { alpha: true, premultipliedAlpha: true, antialias: false });
+    if (!gl) return false;
+    const compile = (type, source) => {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      return shader;
+    };
+    const program = gl.createProgram();
+    gl.attachShader(program, compile(gl.VERTEX_SHADER, '#version 300 es\nin vec2 point;\nvoid main() { gl_Position = vec4(point, 0.0, 1.0); }'));
+    gl.attachShader(program, compile(gl.FRAGMENT_SHADER, topoShader));
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return false;
+    gl.useProgram(program);
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    const point = gl.getAttribLocation(program, 'point');
+    gl.enableVertexAttribArray(point);
+    gl.vertexAttribPointer(point, 2, gl.FLOAT, false, 0, 0);
+    for (const name of ['uRes', 'uTime', 'uOffset', 'uScale', 'uDpr', 'uA', 'uB']) this.uniforms[name] = gl.getUniformLocation(program, name);
+    this.gl = gl;
+    this.started = performance.now();
+    return true;
+  },
+
+  rgb(name) {
+    const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    const match = /^#([0-9a-f]{6})$/i.exec(value);
+    if (!match) return null;
+    const number = parseInt(match[1], 16);
+    return [(number >> 16) / 255, ((number >> 8) & 255) / 255, (number & 255) / 255];
+  },
+
+  recolor() {
+    const a = this.rgb('--m3-primary');
+    const b = this.rgb('--m3-tertiary') ?? a;
+    if (!a) return;
+    this.colors = { fromA: this.current('a'), fromB: this.current('b'), a, b, at: performance.now() };
+    this.start();
+  },
+
+  current(key) {
+    const colors = this.colors;
+    const from = key === 'a' ? colors.fromA : colors.fromB;
+    if (!from) return colors[key];
+    const progress = Math.min(1, (performance.now() - colors.at) / 600);
+    return colors[key].map((value, index) => from[index] + (value - from[index]) * progress);
+  },
+
+  page(id) {
+    const [x, y, scale] = topoFields[id] ?? topoFields.home;
+    this.from = this.state();
+    this.to = { offset: [x, y], scale };
+    this.shift = performance.now();
+    if (reducedMotion.matches) this.from = this.to;
+    this.start();
+  },
+
+  state() {
+    const progress = Math.min(1, (performance.now() - this.shift) / 1400);
+    const eased = progress < 0.5 ? 4 * progress ** 3 : 1 - (-2 * progress + 2) ** 3 / 2;
+    return {
+      offset: this.from.offset.map((value, index) => value + (this.to.offset[index] - value) * eased),
+      scale: this.from.scale + (this.to.scale - this.from.scale) * eased,
+    };
+  },
+
+  render(now) {
+    const gl = this.gl;
+    const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
+    const width = Math.round(window.innerWidth * ratio);
+    const height = Math.round(window.innerHeight * ratio);
+    if (this.canvas.width !== width || this.canvas.height !== height) {
+      this.canvas.width = width;
+      this.canvas.height = height;
+    }
+    gl.viewport(0, 0, width, height);
+    const field = this.state();
+    gl.uniform2f(this.uniforms.uRes, width, height);
+    gl.uniform1f(this.uniforms.uTime, reducedMotion.matches ? 0 : (now - this.started) / 1000 * 0.045);
+    gl.uniform2f(this.uniforms.uOffset, field.offset[0], field.offset[1]);
+    gl.uniform1f(this.uniforms.uScale, field.scale);
+    gl.uniform1f(this.uniforms.uDpr, ratio);
+    gl.uniform3fv(this.uniforms.uA, this.current('a'));
+    gl.uniform3fv(this.uniforms.uB, this.current('b'));
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  },
+
+  loop(now) {
+    this.frame = 0;
+    if (!this.enabled() || document.hidden) return;
+    this.render(now);
+    const settling = now - this.shift < 1500 || now - (this.colors.at ?? 0) < 700;
+    if (!reducedMotion.matches || settling) this.frame = requestAnimationFrame(next => this.loop(next));
+  },
+
+  start() {
+    if (!this.canvas) return;
+    this.canvas.classList.toggle('hidden', !this.enabled());
+    if (!this.enabled() || !this.setup()) return;
+    if (!this.frame) this.frame = requestAnimationFrame(now => this.loop(now));
+  },
+
+  draw() {
+    if (!this.colors.fromA && !this.colors.at) {
+      const a = this.rgb('--m3-primary');
+      if (a) this.colors = { a, b: this.rgb('--m3-tertiary') ?? a, fromA: null, fromB: null, at: 0 };
+    }
+    this.start();
+  },
+
+  resize() {
+    this.start();
+  },
+};
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) topo.start();
+});
+window.addEventListener('resize', () => topo.resize());
 
 function schemeRoles(item, mode = null) {
   const scheme = item?.preset?.scheme;
@@ -1499,6 +1696,17 @@ function settingsPage() {
         render();
       },
     }, label)));
+  const topoOn = topo.enabled();
+  const topoToggle = element('div', { class: 'segmented', role: 'group', 'aria-label': t('background') }, [[true, t('soundOn')], [false, t('soundOff')]].map(([value, label]) =>
+    element('button', {
+      class: value === topoOn ? 'selected' : '',
+      'aria-pressed': String(value === topoOn),
+      onClick: () => {
+        store('topo', value ? 'on' : 'off');
+        topo.draw();
+        render();
+      },
+    }, label)));
   const catalog = state.catalog;
   const expires = catalog?.expires ? new Date(catalog.expires).toLocaleDateString(state.language === 'fr' ? 'fr-FR' : 'en-GB') : '—';
   return [
@@ -1510,6 +1718,10 @@ function settingsPage() {
       element('div', { class: 'section-title' }, [element('span', { text: t('sound') })]),
       element('div', { class: 'row' }, [icon('volume_up', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('soundText') })]), soundToggle]),
       element('div', { class: 'row' }, [icon('tune', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('volumeText') })]), volume]),
+    ]),
+    element('section', { class: 'section' }, [
+      element('div', { class: 'section-title' }, [element('span', { text: t('background') })]),
+      element('div', { class: 'row' }, [icon('landscape', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('backgroundText') })]), topoToggle]),
     ]),
     element('section', { class: 'section' }, [
       element('div', { class: 'section-title' }, [element('span', { text: t('tray') })]),
@@ -1579,7 +1791,10 @@ function showPage(id) {
   hoverPreview.leave();
   state.page = id;
   nodes.pages.scrollTop = 0;
-  if (changed) morph.to(...(pageShapes[id] ?? pageShapes.home));
+  if (changed) {
+    morph.to(...(pageShapes[id] ?? pageShapes.home));
+    topo.page(id);
+  }
   render(true);
 }
 
@@ -1885,6 +2100,7 @@ document.documentElement.lang = state.language;
 await Promise.allSettled([loadSchemes(), refreshInstall(), sounds.preload(), loadWallpaper()]);
 paintRail();
 paintConnection();
+topo.draw();
 await appWindow.show();
 document.body.classList.add('open');
 render(true);

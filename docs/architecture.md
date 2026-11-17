@@ -119,6 +119,12 @@ which must work while the helper is stopped or missing.
 - **Notification area**: an icon next to the clock opens the app (left click) or a menu (open, start or stop the
   theme, update when one is available, quit). Closing the window plays the close sound and hides it there, unless
   the setting is off; reopening it plays the start sound again. The app checks for updates every six hours.
+- **Background**: a WebGL2 shader draws contour lines behind the pages from three octaves of 3D gradient noise,
+  thirty levels with varied brightness, in the theme's primary and tertiary colours (they fade to the new colours
+  when the theme or a hover preview changes them). The third noise axis is time, so the lines drift slowly; each page
+  has its own region and scale of the field, and changing page glides between them in 1.4 s. Sections and cards are
+  slightly translucent with a blur so the lines show through. It pauses while the window is hidden, stays still
+  under reduced motion, and can be turned off in Settings.
 - **Motion**: the logo morphs into a different rounded shape on each page, pages slide in when they change (not on
   every refresh), hovering a preset card repaints the app in its colours after 220 ms, finished install steps pop in,
   and the window fades in and out. Every error snackbar also plays the warning sound and an alert: a glow in the
