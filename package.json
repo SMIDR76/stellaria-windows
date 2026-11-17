@@ -23,7 +23,7 @@
     "cldr-annotations-derived-full": "48.2.0",
     "cldr-annotations-full": "48.2.0",
     "esbuild": "0.28.2",
-    "eslint": "10.13.0",
+    "eslint": "10.15.0",
     "globals": "17.14.0",
     "material-symbols": "0.48.0",
     "prettier": "3.10.1",
