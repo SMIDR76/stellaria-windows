@@ -16,6 +16,7 @@ body {
 }
 
 .app {
+  --page-width: 1600px;
   display: grid;
   grid-template-columns: 104px 1fr;
   height: 100vh;
@@ -112,6 +113,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: calc(var(--page-width) + 72px);
+  margin-inline: auto;
   padding: 26px 36px 14px;
 }
 
@@ -154,7 +159,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-width: 1080px;
+  max-width: var(--page-width);
+  margin-inline: auto;
 }
 
 .page > * {
