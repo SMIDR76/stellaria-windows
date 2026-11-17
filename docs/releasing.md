@@ -14,12 +14,16 @@ Every file also gets a build provenance attestation, verifiable with
 
 ## Steps
 
-1. Set the version in `helper/Directory.Build.props`, `pack/zpack.json`, `launcher/Cargo.toml` and
-   `launcher/tauri.conf.json`, and commit.
+1. Set the version in `helper/Directory.Build.props`, `pack/zpack.json`, `package.json`, `launcher/Cargo.toml` and
+   `launcher/tauri.conf.json`, write the highlights of the version in `.github/release-notes/v1.2.3.md` (a short
+   "What's new" list in English), and commit.
 2. Tag the commit and push the tag: `git tag v1.2.3` then `git push origin v1.2.3`.
 3. The **Release** workflow builds on `windows-latest` (NativeAOT helper, switcher, Stellaria app, setup, archive,
    checksums), checks that the helper and the app need no Visual C++ runtime, then on `ubuntu-latest` verifies the checksums, attests the files,
-   creates a draft release with generated notes, uploads the files and publishes it.
+   creates a draft release, uploads the files and publishes it. The release page is built by
+   `scripts/release-notes.py` from `.github/release-notes/template.md`: a download button, the highlights, an install
+   table with the file sizes, a signing notice, how to check the files, and the pull requests grouped by
+   `.github/release.yml` (features, fixes, security, dependencies, other) in a collapsed list.
 4. Upload the setup to [VirusTotal](https://www.virustotal.com) and, if Microsoft Defender flags it, submit it as a
    software developer at <https://www.microsoft.com/wdsi/filesubmission>.
 

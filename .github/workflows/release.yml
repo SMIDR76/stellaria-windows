@@ -144,20 +144,18 @@ jobs:
           subject-path: |
             release/*.exe
             release/*.zip
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          path: source
       - name: Publish the release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.ref_name }}
           SIGNED: ${{ vars.SIGNPATH_ORGANIZATION_ID != '' }}
         run: |
-          {
-            echo "Download \`StellariaSetup-${TAG#v}.exe\` and run it. The portable archive is for manual installs."
-            echo
-            if [ "$SIGNED" = "true" ]; then
-              echo "Code signing policy: free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org). See the [code signing policy](https://github.com/$GITHUB_REPOSITORY#code-signing-policy)."
-            else
-              echo "This release is not code signed yet, so Windows SmartScreen may warn about it. See the [code signing policy](https://github.com/$GITHUB_REPOSITORY#code-signing-policy)."
-            fi
-          } > notes.md
-          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --draft --verify-tag --generate-notes --notes-file notes.md --title "Stellaria ${TAG#v}" release/*
+          signed=""
+          if [ "$SIGNED" = "true" ]; then signed="--signed"; fi
+          python3 source/scripts/release-notes.py --tag "$TAG" --repo "$GITHUB_REPOSITORY" $signed             --setup "release/StellariaSetup-${TAG#v}.exe" --archive "release/Stellaria-${TAG#v}-portable.zip" --output notes.md
+          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --draft --verify-tag --notes-file notes.md --title "Stellaria ${TAG#v}" release/*
           gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --draft=false
