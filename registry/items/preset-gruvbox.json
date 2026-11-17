@@ -1,0 +1,29 @@
+{
+  "id": "preset-gruvbox",
+  "type": "preset",
+  "version": "1.0.0",
+  "official": true,
+  "license": "GPL-3.0-only",
+  "author": {
+    "name": "Caelestia for Windows",
+    "github": "SMIDR76"
+  },
+  "name": {
+    "fr": "Gruvbox",
+    "en": "Gruvbox"
+  },
+  "summary": {
+    "fr": "Les couleurs chaudes et rétro de Gruvbox, en clair.",
+    "en": "Gruvbox's warm retro colours, light."
+  },
+  "tags": [
+    "couleurs"
+  ],
+  "preset": {
+    "scheme": {
+      "name": "gruvbox",
+      "flavour": "medium"
+    },
+    "mode": "light"
+  }
+}

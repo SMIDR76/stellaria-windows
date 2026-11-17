@@ -1,0 +1,29 @@
+{
+  "id": "preset-tokyo-night",
+  "type": "preset",
+  "version": "1.0.0",
+  "official": true,
+  "license": "GPL-3.0-only",
+  "author": {
+    "name": "Caelestia for Windows",
+    "github": "SMIDR76"
+  },
+  "name": {
+    "fr": "Tokyo Night",
+    "en": "Tokyo Night"
+  },
+  "summary": {
+    "fr": "Bleus profonds et néons inspirés des nuits de Tokyo.",
+    "en": "Deep blues and neon inspired by Tokyo nights."
+  },
+  "tags": [
+    "couleurs"
+  ],
+  "preset": {
+    "scheme": {
+      "name": "tokyonight",
+      "flavour": "medium"
+    },
+    "mode": "dark"
+  }
+}

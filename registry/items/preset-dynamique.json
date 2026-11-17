@@ -1,0 +1,26 @@
+{
+  "id": "preset-dynamique",
+  "type": "preset",
+  "version": "1.0.0",
+  "official": true,
+  "license": "GPL-3.0-only",
+  "author": {
+    "name": "Caelestia for Windows",
+    "github": "SMIDR76"
+  },
+  "name": {
+    "fr": "Dynamique",
+    "en": "Dynamic"
+  },
+  "summary": {
+    "fr": "Les couleurs suivent votre fond d'écran, en Tonal Spot, clair ou sombre selon l'heure.",
+    "en": "Colours follow your wallpaper, Tonal Spot, light or dark depending on the time."
+  },
+  "tags": [
+    "couleurs"
+  ],
+  "preset": {
+    "mode": "auto",
+    "variant": "tonalspot"
+  }
+}

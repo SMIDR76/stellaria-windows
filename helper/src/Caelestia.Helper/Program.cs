@@ -4,6 +4,7 @@ using Caelestia.Helper.Desktop;
 using Caelestia.Helper.Hosting;
 using Caelestia.Helper.Interop;
 using Caelestia.Helper.Modules;
+using Caelestia.Helper.Security;
 using Caelestia.Helper.Server;
 using Caelestia.Helper.Setup;
 
@@ -93,19 +94,21 @@ internal static class Program
             var config = new ConfigStore(paths.ConfigFile, log);
             config.Load();
             var desktop = new DesktopReader(new ProcessDirectory());
-            var context = new ModuleContext(hub, router, loop, log, paths, config, desktop, new ForegroundTracker(desktop), new IconCache(log), TimeProvider.System, shutdown.Token);
+            var access = new AccessRegistry();
+            access.LoadCommunity(AccessRegistry.ParsePacks(ReadIfExists(Path.Combine(paths.DataDirectory, AccessRegistry.PacksFileName)), ZebarRoot()));
+            var context = new ModuleContext(hub, router, loop, log, paths, config, desktop, new ForegroundTracker(desktop), new IconCache(log), TimeProvider.System, shutdown.Token, access);
             await new ModuleHost(log).StartAsync(CreateModules(state), context).ConfigureAwait(false);
 
-            await using var server = new HelperServer(hub, router, log, version, TimeProvider.System);
+            await using var server = new HelperServer(hub, router, log, version, TimeProvider.System, access);
             server.Start();
-            RuntimeFile.Write(paths.RuntimeFile, server.Port, server.Token, Environment.ProcessId);
+            access.WriteRuntimeFiles(paths, server.Port, Environment.ProcessId, log);
             try
             {
                 await server.RunAsync(shutdown.Token).ConfigureAwait(false);
             }
             finally
             {
-                RuntimeFile.DeleteIfOwned(paths.RuntimeFile, Environment.ProcessId);
+                access.DeleteRuntimeFiles(paths, Environment.ProcessId);
                 log.Info("host", "Helper stopped.");
             }
         }
@@ -114,6 +117,10 @@ internal static class Program
             registration.Unregister(null);
         }
     }
+
+    public static string ZebarRoot() => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".glzr", "zebar");
+
+    private static string? ReadIfExists(string path) => File.Exists(path) ? File.ReadAllText(path) : null;
 
     private static IEnumerable<IHelperModule> CreateModules(HelperState state) =>
     [

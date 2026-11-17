@@ -57,6 +57,15 @@ widget page would gain that widget's abilities.
   `no-restricted-syntax`, `no-eval`, `no-implied-eval`).
 - Because widgets hold no `shellCommands` privileges (principle 2), even a successful injection cannot start a program.
 
+### A community pack abuses the helper
+
+Each pack gets its own token and only the scopes listed for it (see `protocol.md`, section Scopes). The official pack and
+the launcher have separate tokens; a pack without an entry in `packs.json` gets no runtime file. Topics and events are
+filtered per session, so a pack without `notifications` or `input` never sees notification contents or hotkeys, and
+requests outside the granted scopes fail with `denied` and are logged. The catalogue index is signed with a minisign
+Ed25519 key pinned in the helper (`Catalog/TrustedKeys.cs`); an index older than the last one seen, expired, or whose
+content does not match its signed version is refused.
+
 ### Abuse of helper methods
 
 | Method | Risk | Mitigation |

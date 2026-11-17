@@ -4,10 +4,11 @@ using System.Net.WebSockets;
 using System.Text;
 using Caelestia.Helper.Hosting;
 using Caelestia.Helper.Protocol;
+using Caelestia.Helper.Security;
 
 namespace Caelestia.Helper.Server;
 
-internal sealed class HelperServer(StateHub hub, RequestRouter router, Log log, string helperVersion, TimeProvider time) : IAsyncDisposable
+internal sealed class HelperServer(StateHub hub, RequestRouter router, Log log, string helperVersion, TimeProvider time, AccessRegistry? access = null) : IAsyncDisposable
 {
     public const int FirstPort = 47610;
     public const int LastPort = 47619;
@@ -20,7 +21,9 @@ internal sealed class HelperServer(StateHub hub, RequestRouter router, Log log, 
     private TcpListener? _listener;
     private int _openConnections;
 
-    public string Token { get; } = RuntimeFile.NewToken();
+    public AccessRegistry Access { get; } = access ?? new AccessRegistry();
+
+    public string Token => Access.OfficialToken;
 
     public int Port { get; private set; }
 
@@ -101,7 +104,7 @@ internal sealed class HelperServer(StateHub hub, RequestRouter router, Log log, 
                 }
 
                 var socket = WebSocket.CreateFromStream(stream, new WebSocketCreationOptions { IsServer = true, KeepAliveInterval = TimeSpan.Zero });
-                await using var session = new ClientSession(socket, Token, router, log, OnAuthenticated, time, shutdown);
+                await using var session = new ClientSession(socket, Access.Resolve, router, log, OnAuthenticated, time, shutdown);
                 try
                 {
                     await session.RunAsync().ConfigureAwait(false);

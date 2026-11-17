@@ -1,0 +1,29 @@
+{
+  "id": "preset-catppuccin-mocha",
+  "type": "preset",
+  "version": "1.0.0",
+  "official": true,
+  "license": "GPL-3.0-only",
+  "author": {
+    "name": "Caelestia for Windows",
+    "github": "SMIDR76"
+  },
+  "name": {
+    "fr": "Catppuccin Mocha",
+    "en": "Catppuccin Mocha"
+  },
+  "summary": {
+    "fr": "La palette pastel Catppuccin dans sa version sombre la plus douce.",
+    "en": "The pastel Catppuccin palette in its softest dark flavour."
+  },
+  "tags": [
+    "couleurs"
+  ],
+  "preset": {
+    "scheme": {
+      "name": "catppuccin",
+      "flavour": "mocha"
+    },
+    "mode": "dark"
+  }
+}

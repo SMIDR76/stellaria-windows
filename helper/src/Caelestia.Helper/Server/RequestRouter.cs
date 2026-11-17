@@ -1,6 +1,7 @@
 using System.Text.Json.Nodes;
 using Caelestia.Helper.Hosting;
 using Caelestia.Helper.Protocol;
+using Caelestia.Helper.Security;
 
 namespace Caelestia.Helper.Server;
 
@@ -44,22 +45,38 @@ internal sealed record RequestContext(JsonObject Params, string Widget, string M
 
 internal sealed class RequestRouter(Log log)
 {
-    private readonly Dictionary<string, RequestHandler> _handlers = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, (RequestHandler Handler, string Scope)> _handlers = new(StringComparer.Ordinal);
 
-    public void Register(string method, RequestHandler handler)
+    public void Register(string method, RequestHandler handler) =>
+        Register(method, Scopes.ForMethod(method) ?? throw new InvalidOperationException($"Method '{method}' has no scope in Security/Scopes.cs."), handler);
+
+    public void Register(string method, string scope, RequestHandler handler)
     {
-        if (!_handlers.TryAdd(method, handler))
+        if (!Scopes.IsKnown(scope))
+        {
+            throw new InvalidOperationException($"Scope '{scope}' of method '{method}' is unknown.");
+        }
+
+        if (!_handlers.TryAdd(method, (handler, scope)))
         {
             throw new InvalidOperationException($"Method '{method}' is registered twice.");
         }
     }
 
-    public async Task<string> DispatchAsync(RequestMessage request, string widget, string monitor, CancellationToken cancellation)
+    public async Task<string> DispatchAsync(RequestMessage request, string widget, string monitor, Grant grant, CancellationToken cancellation)
     {
-        if (!_handlers.TryGetValue(request.Method, out var handler))
+        if (!_handlers.TryGetValue(request.Method, out var entry))
         {
             return Messages.ReplyFailure(request.Id, ErrorCode.UnknownMethod, $"Unknown method '{request.Method}'.");
         }
+
+        if (!grant.Allows(entry.Scope))
+        {
+            log.Warning("access", $"Denied {request.Method} to pack {grant.Pack} ({widget}): it needs the '{entry.Scope}' scope.");
+            return Messages.ReplyFailure(request.Id, ErrorCode.Denied, $"This pack is not allowed to use '{request.Method}' (scope '{entry.Scope}').");
+        }
+
+        var handler = entry.Handler;
 
         try
         {

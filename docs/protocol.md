@@ -8,13 +8,22 @@ and bump `protocolVersion` when it is not backwards compatible.
 ## Transport
 
 - The helper listens on `127.0.0.1` only, on the first free port of the range `47610-47619`.
-- On startup it writes `pack/runtime.json` inside the installed pack directory:
+- On startup it writes a runtime file for every party allowed to connect, each with its own token:
 
   ```json
-  { "protocolVersion": 1, "port": 47610, "token": "<64 hex characters>", "pid": 12345 }
+  { "protocolVersion": 2, "port": 47610, "token": "<64 hex characters>", "pid": 12345 }
   ```
 
-  The token is regenerated at every start. Widgets read the file with `fetch('./runtime.json', { cache: 'no-store' })`.
+  | File | Party | Scopes |
+  | --- | --- | --- |
+  | `runtime.json` in the official pack | Caelestia's own widgets | every theme scope |
+  | `runtime.json` in each pack listed in `%LOCALAPPDATA%\Caelestia\packs.json` | that community pack | `basic` plus the scopes the user granted |
+  | `%LOCALAPPDATA%\Caelestia\launcher.json` | the Caelestia launcher | every scope, including `launcher` |
+
+  Tokens are regenerated at every start. Widgets read their file with `fetch('./runtime.json', { cache: 'no-store' })`.
+  A pack that is not listed gets no file, so it cannot talk to the helper at all. `packs.json` is an array of
+  `{ "id", "directory", "scopes" }`; directories must be inside `%USERPROFILE%\.glzr\zebar\`, ids are 2 to 48 lowercase
+  letters, digits or dashes, and `caelestia` and `launcher` are reserved.
 - A widget connects to `ws://127.0.0.1:<port>/`. The token is never part of the URL.
 - The helper rejects the upgrade with HTTP 403 when the `Origin` header is not an `http://127.0.0.1:<any port>` or
   `http://localhost:<any port>` origin (Zebar serves widgets from such an origin) or when the `Host` header is not
@@ -38,7 +47,7 @@ and bump `protocolVersion` when it is not backwards compatible.
 
 | Kind | Shape | Purpose |
 | --- | --- | --- |
-| `hello` | `{ "kind": "hello", "protocolVersion": 1, "helperVersion": "1.0.0" }` | First message after the connection opens. |
+| `hello` | `{ "kind": "hello", "protocolVersion": 2, "helperVersion": "1.0.0" }` | First message after the connection opens. |
 | `state` | `{ "kind": "state", "topic": "<topic>", "data": { } }` | Current value of a topic. Sent for every topic right after `hello`, then on every change. |
 | `event` | `{ "kind": "event", "name": "<name>", "data": { } }` | Something happened once (a hotkey press, a repaired app bar). |
 | `reply` | `{ "kind": "reply", "id": "<request id>", "ok": true, "data": { } }` | Successful answer to a request. |
@@ -116,6 +125,32 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `window.act` | `{ "action": "close" \| "minimize" \| "maximize" \| "focus" }` on the last focused window | none |
 | `window.preview` | none | `{ "image": "<jpeg base64 or null>" }` |
 | `widgets.reload` | none | none, raises the `widgets.reload` event |
+
+## Scopes
+
+Every method, state topic and event belongs to one scope. A session only receives the topics and events of its scopes,
+and a request outside them fails with `denied` (logged with the pack name). Methods, topics and events that have no scope
+cannot be registered or are only sent to sessions holding `config`, so new features are closed by default.
+
+| Scope | Methods | Topics and events |
+| --- | --- | --- |
+| `basic` (always granted) | `system.info`, `system.gpu`, `wallpapers.list`, `widgets.reload` | `config`, `monitors`, `idle`, `power`, `shell`, `wallpaper`, `desktops`; `widgets.reload`, `appbars.*` |
+| `media` | `media.artwork`, `media.control` | |
+| `audio` | `audio.*` | |
+| `display` | `display.*` | |
+| `network` | `radios.*`, `wifi.*`, `bluetooth.*` | |
+| `windows` | `tasks.*`, `window.act`, `window.preview`, `shell.taskView`, `desktops.switch` | `focus`, `tasks`, `icons` |
+| `apps` | `apps.list`, `apps.launch`, `folders.open` | |
+| `clipboard` | `clipboard.history`, `clipboard.paste` | |
+| `notifications` | | `notifications`; `notification` |
+| `input` | `input.paste`, `keyboard.setLayout` | `keyboard`; `hotkey`, `hotkey.unavailable` |
+| `system` | `power.*`, `capture.*`, `shell.openSettings` | |
+| `appearance` | `theme.publish`, `wallpapers.apply`, `windows.setColors`, `windows.restoreColors` | |
+| `config` | `config.set` | |
+| `launcher` | `catalog.*`, `launcher.*` | |
+
+`windows`, `apps`, `clipboard`, `notifications`, `input`, `system` and `config` are sensitive: the launcher must ask the user
+before granting them to a community pack.
 
 ## Error codes
 

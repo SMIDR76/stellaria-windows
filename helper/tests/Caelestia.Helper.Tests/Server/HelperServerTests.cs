@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json.Nodes;
 using Caelestia.Helper.Hosting;
 using Caelestia.Helper.Protocol;
+using Caelestia.Helper.Security;
 using Caelestia.Helper.Server;
 using Caelestia.Helper.Tests.TestSupport;
 
@@ -25,8 +26,9 @@ public sealed class HelperServerTests : IAsyncLifetime
         _log = new Log(_directory.Path, LogLevel.Debug);
         _hub = new StateHub();
         var router = new RequestRouter(_log);
-        router.Register("echo.widget", (context, _) => Task.FromResult<JsonNode?>(new JsonObject { ["widget"] = context.Widget }));
-        router.Register("always.fails", (_, _) => throw new HelperException(ErrorCode.NotFound, "Nothing here."));
+        router.Register("echo.widget", Scopes.Basic, (context, _) => Task.FromResult<JsonNode?>(new JsonObject { ["widget"] = context.Widget }));
+        router.Register("always.fails", Scopes.Basic, (_, _) => throw new HelperException(ErrorCode.NotFound, "Nothing here."));
+        router.Register("secret.read", Scopes.Clipboard, (_, _) => Task.FromResult<JsonNode?>(new JsonObject { ["secret"] = true }));
         _server = new HelperServer(_hub, router, _log, "9.9.9", TimeProvider.System);
         _server.Start(TestFirstPort, TestLastPort);
         _running = _server.RunAsync(_shutdown.Token);
@@ -140,6 +142,38 @@ public sealed class HelperServerTests : IAsyncLifetime
         var exception = await Assert.ThrowsAnyAsync<WebSocketException>(() => ConnectAsync("http://evil.example"));
 
         Assert.Contains("403", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task A_community_pack_only_sees_what_its_scopes_allow()
+    {
+        var root = Path.Combine(_directory.Path, "zebar");
+        _server.Access.LoadCommunity(AccessRegistry.ParsePacks($$"""[{"id":"neon","directory":"{{Path.Combine(root, "neon").Replace("\\", "\\\\")}}","scopes":["media"]}]""", root));
+        _hub.Publish("idle", new JsonObject { ["seconds"] = 1 });
+        _hub.Publish("notifications", new JsonObject { ["items"] = new JsonArray() });
+        using var client = await ConnectAsync();
+        await AuthenticateAsync(client, _server.Access.TokenOf("neon")!);
+
+        Assert.Equal("hello", (await ReceiveAsync(client))["kind"]!.GetValue<string>());
+        Assert.Equal("idle", (await ReceiveAsync(client))["topic"]!.GetValue<string>());
+        await SendAsync(client, """{"kind":"request","id":"c1","method":"secret.read"}""");
+        var denied = await ReceiveAsync(client);
+
+        Assert.Equal("c1", denied["id"]!.GetValue<string>());
+        Assert.Equal("denied", denied["error"]!["code"]!.GetValue<string>());
+    }
+
+    [Fact]
+    public async Task The_official_pack_keeps_every_theme_scope()
+    {
+        using var client = await ConnectAsync();
+        await AuthenticateAsync(client, _server.Token);
+        await ReceiveAsync(client);
+
+        await SendAsync(client, """{"kind":"request","id":"d1","method":"secret.read"}""");
+        var reply = await ReceiveAsync(client);
+
+        Assert.True(reply["ok"]!.GetValue<bool>());
     }
 
     private async Task<ClientWebSocket> ConnectAsync(string origin = "http://127.0.0.1:6124")

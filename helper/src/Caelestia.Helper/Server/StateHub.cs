@@ -1,5 +1,6 @@
 using System.Text.Json.Nodes;
 using Caelestia.Helper.Protocol;
+using Caelestia.Helper.Security;
 
 namespace Caelestia.Helper.Server;
 
@@ -46,9 +47,13 @@ internal sealed class StateHub
             targets = [.. _sessions];
         }
 
+        var scope = TopicScope(topic);
         foreach (var session in targets)
         {
-            session.Enqueue(message);
+            if (session.Grant.Allows(scope))
+            {
+                session.Enqueue(message);
+            }
         }
 
         return true;
@@ -57,9 +62,13 @@ internal sealed class StateHub
     public void Raise(string name, JsonNode? data)
     {
         var message = Messages.Event(name, data);
+        var scope = Scopes.ForEvent(name) ?? Scopes.Config;
         foreach (var session in Sessions)
         {
-            session.Enqueue(message);
+            if (session.Grant.Allows(scope))
+            {
+                session.Enqueue(message);
+            }
         }
     }
 
@@ -71,13 +80,15 @@ internal sealed class StateHub
         }
     }
 
+    private static string TopicScope(string topic) => Scopes.ForTopic(topic) ?? Scopes.Config;
+
     public void Attach(ClientSession session)
     {
         string[] snapshot;
         lock (_gate)
         {
             _sessions.Add(session);
-            snapshot = [.. _states.Values];
+            snapshot = [.. _states.Where(state => session.Grant.Allows(TopicScope(state.Key))).Select(state => state.Value)];
         }
 
         foreach (var message in snapshot)

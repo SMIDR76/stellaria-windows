@@ -17,7 +17,8 @@ internal sealed record ModuleContext(
     ForegroundTracker Foreground,
     IconCache Icons,
     TimeProvider Time,
-    CancellationToken Shutdown);
+    CancellationToken Shutdown,
+    Security.AccessRegistry? Access = null);
 
 internal interface IHelperModule
 {

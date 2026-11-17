@@ -1,0 +1,32 @@
+{
+  "id": "preset-nord",
+  "type": "preset",
+  "version": "1.0.0",
+  "official": true,
+  "license": "GPL-3.0-only",
+  "author": {
+    "name": "Caelestia for Windows",
+    "github": "SMIDR76"
+  },
+  "name": {
+    "fr": "Nord",
+    "en": "Nord"
+  },
+  "summary": {
+    "fr": "Les bleus arctiques de Nord, avec la transparence acrylique.",
+    "en": "Nord's arctic blues, with acrylic transparency."
+  },
+  "tags": [
+    "couleurs"
+  ],
+  "preset": {
+    "scheme": {
+      "name": "nord",
+      "flavour": "medium"
+    },
+    "mode": "dark",
+    "options": {
+      "transparency": true
+    }
+  }
+}

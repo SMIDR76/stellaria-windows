@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Channels;
 using Caelestia.Helper.Hosting;
 using Caelestia.Helper.Protocol;
+using Caelestia.Helper.Security;
 
 namespace Caelestia.Helper.Server;
 
@@ -15,7 +16,7 @@ internal sealed class ClientSession : IAsyncDisposable
     public static readonly TimeSpan AuthenticationTimeout = TimeSpan.FromSeconds(5);
 
     private readonly WebSocket _socket;
-    private readonly string _token;
+    private readonly Func<string, Grant?> _resolve;
     private readonly RequestRouter _router;
     private readonly Log _log;
     private readonly Action<ClientSession> _authenticated;
@@ -25,7 +26,7 @@ internal sealed class ClientSession : IAsyncDisposable
 
     public ClientSession(
         WebSocket socket,
-        string token,
+        Func<string, Grant?> resolve,
         RequestRouter router,
         Log log,
         Action<ClientSession> authenticated,
@@ -33,7 +34,7 @@ internal sealed class ClientSession : IAsyncDisposable
         CancellationToken shutdown)
     {
         _socket = socket;
-        _token = token;
+        _resolve = resolve;
         _router = router;
         _log = log;
         _authenticated = authenticated;
@@ -47,6 +48,10 @@ internal sealed class ClientSession : IAsyncDisposable
     }
 
     public string Widget { get; private set; } = "unauthenticated";
+
+    public Grant Grant { get; private set; } = new(string.Empty, System.Collections.Frozen.FrozenSet<string>.Empty);
+
+    public string Pack => Grant.Pack;
 
     public string Monitor { get; private set; } = "";
 
@@ -99,7 +104,11 @@ internal sealed class ClientSession : IAsyncDisposable
         _lifetime.Dispose();
     }
 
-    public string Describe() => string.IsNullOrEmpty(Monitor) ? Widget : $"{Widget}@{Monitor}";
+    public string Describe()
+    {
+        var name = Pack is "" or AccessRegistry.OfficialPack ? Widget : $"{Pack}/{Widget}";
+        return string.IsNullOrEmpty(Monitor) ? name : $"{name}@{Monitor}";
+    }
 
     private async Task<bool> AuthenticateAsync(CancellationToken token)
     {
@@ -118,13 +127,14 @@ internal sealed class ClientSession : IAsyncDisposable
             return false;
         }
 
-        if (ClientMessage.Parse(text) is not AuthMessage auth || !WebSocketHandshake.TokensMatch(auth.Token, _token))
+        if (ClientMessage.Parse(text) is not AuthMessage auth || _resolve(auth.Token) is not { } grant)
         {
             _log.Warning("session", "A connection sent a wrong or missing authentication token.");
             await CloseAsync(WebSocketCloseStatus.PolicyViolation, "authentication failed").ConfigureAwait(false);
             return false;
         }
 
+        Grant = grant;
         Widget = auth.Widget;
         Monitor = auth.Monitor;
         IsAuthenticated = true;
@@ -207,7 +217,7 @@ internal sealed class ClientSession : IAsyncDisposable
     {
         try
         {
-            Enqueue(await _router.DispatchAsync(request, Widget, Monitor, token).ConfigureAwait(false));
+            Enqueue(await _router.DispatchAsync(request, Widget, Monitor, Grant, token).ConfigureAwait(false));
         }
         catch (OperationCanceledException) when (token.IsCancellationRequested)
         {

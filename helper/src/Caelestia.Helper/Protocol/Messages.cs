@@ -5,7 +5,7 @@ namespace Caelestia.Helper.Protocol;
 
 internal static class Messages
 {
-    public const int ProtocolVersion = 1;
+    public const int ProtocolVersion = 2;
 
     public static string Hello(string helperVersion) => Serialize(new JsonObject
     {
