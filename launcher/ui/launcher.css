@@ -525,6 +525,7 @@ body.open .topo {
 .dialog-backdrop {
   position: fixed;
   inset: 0;
+  z-index: 20;
   display: grid;
   place-items: center;
   background: color-mix(in srgb, var(--m3-scrim) 45%, transparent);
@@ -564,6 +565,7 @@ body.open .topo {
 
 .snackbar {
   position: fixed;
+  z-index: 30;
   left: 50%;
   bottom: 24px;
   max-width: 560px;
@@ -590,6 +592,7 @@ body.open .topo {
 
 .alert-glow {
   position: fixed;
+  z-index: 40;
   inset: 0;
   pointer-events: none;
   opacity: 0;
