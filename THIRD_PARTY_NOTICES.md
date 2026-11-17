@@ -23,6 +23,24 @@ This is an unofficial port. It is not affiliated with or endorsed by the caelest
 | [glazewm](https://github.com/glzr-io/glazewm) | 1.7.0 | inside `pack/vendor/zebar.mjs` | MIT | `licenses/MIT-glazewm.txt` |
 | [material-color-utilities](https://github.com/material-foundation/material-color-utilities) | 0.3.0 | `pack/vendor/material-color-utilities.mjs` | Apache-2.0 | `licenses/Apache-2.0.txt` |
 
+## Helper (.NET)
+
+`stellaria-helper.exe` is compiled ahead of time with .NET 10, so it contains parts of the .NET runtime.
+
+| Package | Version | Shipped as | License | License text |
+| --- | --- | --- | --- | --- |
+| [.NET runtime](https://github.com/dotnet/runtime) | 10.0 | inside `stellaria-helper.exe` | MIT | `licenses/MIT-dotnet.txt` |
+| [Microsoft.Data.Sqlite](https://github.com/dotnet/efcore) | 11.0.0 | inside `stellaria-helper.exe` | MIT | `licenses/MIT-dotnet.txt` |
+| [BouncyCastle.Cryptography](https://github.com/bcgit/bc-csharp) | 2.7.0 | inside `stellaria-helper.exe` | MIT | `licenses/MIT-bouncycastle.txt` |
+| [SQLitePCLRaw](https://github.com/ericsink/SQLitePCL.raw) | 3.0.5 | inside `stellaria-helper.exe` | Apache-2.0 | `licenses/Apache-2.0.txt` |
+| [SQLite](https://sqlite.org) | 3.53.4 | `e_sqlite3.dll` | Public domain | [sqlite.org/copyright.html](https://sqlite.org/copyright.html) |
+
+## Stellaria app (Rust)
+
+`stellaria-launcher.exe` is built with [Tauri](https://tauri.app) and 264 Rust crates under MIT, Apache-2.0, BSD,
+MPL-2.0, Zlib, Unicode-3.0 and similar permissive licences. Each crate, its version, licence and licence files
+are listed in `licenses/rust-crates.txt`, generated from `launcher/Cargo.lock` by `scripts/rust-notices.ps1`.
+
 ## Fonts
 
 | Font | Version | Shipped as | License | License text |

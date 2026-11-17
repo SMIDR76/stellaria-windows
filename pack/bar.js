@@ -78,7 +78,10 @@ weatherNodes.button.addEventListener('click', () => {
 });
 
 function renderWeather(weather) {
-  if (!weather?.current) return;
+  if (!weather?.current) {
+    weatherNodes.button.hidden = true;
+    return;
+  }
   const now = describeWeather(weather.current.code, weather.current.isDay);
   weatherNodes.button.hidden = false;
   weatherNodes.icon.textContent = now.icon;
@@ -96,8 +99,8 @@ async function refreshWeather() {
 
 renderWeather(store.get(keys.weather));
 store.watch(keys.weather, renderWeather, 2000);
-refreshWeather();
 setInterval(refreshWeather, 15 * 60 * 1000);
+option('weather', true, () => refreshWeather());
 
 const syncActiveButtons = () => {
   for (const [name, button] of Object.entries(popupButtons)) {

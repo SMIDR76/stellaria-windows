@@ -820,7 +820,11 @@ function syncMediaTimers() {
 }
 
 function renderWeather(weather) {
-  if (!weather) return;
+  if (!weather?.current) {
+    $('dash-weather-label').textContent = 'Météo désactivée';
+    $('weather-city').textContent = 'Météo désactivée';
+    return;
+  }
   const now = describeWeather(weather.current.code, weather.current.isDay);
   const temperature = `${Math.round(weather.current.temperature)}°C`;
   $('dash-weather-icon').textContent = now.icon;
@@ -858,8 +862,8 @@ async function refreshWeather(force = false) {
 }
 
 renderWeather(store.get(keys.weather));
-refreshWeather();
 setInterval(() => refreshWeather(), 15 * 60 * 1000);
+option('weather', true, () => refreshWeather());
 
 const providers = zebar.createProviderGroup({
   host: { type: 'host', refreshInterval: 60000 },

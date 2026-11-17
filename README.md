@@ -109,9 +109,9 @@ for the utilities, top-right corner for Task View.
 
 The helper only listens on `127.0.0.1`, requires a per-session token and exposes a closed list of methods; widgets
 cannot run programs. Network use is limited to weather (Open-Meteo, plus ipinfo.io when no location is set) and
-lyrics (LRCLIB), both optional, and to the Stellaria app checking GitHub for a signed update and reading its release
-notes. Nothing else is sent anywhere: this program will not transfer any information to other networked systems
-unless specifically requested by the user or the person installing or operating it. Notification contents are read from your own Windows history, kept in memory and never
+lyrics (LRCLIB), both can be turned off in the theme settings, and to the Stellaria app checking GitHub for a signed
+update and reading its release notes. There is no telemetry; [PRIVACY.md](PRIVACY.md) lists every service, what it
+receives and how to turn it off. Notification contents are read from your own Windows history, kept in memory and never
 logged. See [docs/security.md](docs/security.md), [docs/protocol.md](docs/protocol.md) and
 [docs/configuration.md](docs/configuration.md).
 
@@ -126,8 +126,8 @@ Free code signing provided by [SignPath.io](https://about.signpath.io), certific
   runners and signed only after a manual approval. Only files built from this repository are signed: the helper, the
   Stellaria app, the Alt+Tab switcher and the setup. Third-party files (Zebar, which the setup installs separately,
   and `e_sqlite3.dll`) keep their own publishers' signatures.
-- Privacy: see [Privacy and security](#privacy-and-security). Third-party services used on request: Open-Meteo,
-  ipinfo.io, LRCLIB and GitHub, under their own privacy policies.
+- Privacy: see the [privacy policy](PRIVACY.md). Third-party services: Open-Meteo, ipinfo.io, LRCLIB, GitHub and
+  winget, under their own privacy policies.
 
 The setup details are in [docs/code-signing.md](docs/code-signing.md).
 

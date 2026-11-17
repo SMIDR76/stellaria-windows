@@ -1,5 +1,5 @@
 import * as zebar from '../../vendor/zebar.mjs';
-import { keys, store } from './store.js';
+import { getOption, keys, store } from './store.js';
 
 const weatherCodes = {
   0: ['Ciel dégagé', 'sunny', 'clear_night'],
@@ -72,7 +72,16 @@ async function resolveLocation() {
   return location;
 }
 
+export function weatherEnabled() {
+  return getOption('weather', true) !== false;
+}
+
 export async function loadWeather({ force = false } = {}) {
+  if (!weatherEnabled()) {
+    store.set(keys.weather, null);
+    store.set(keys.location, null);
+    return null;
+  }
   const cached = store.get(keys.weather);
   if (!force && cached && Date.now() - cached.at < weatherTtl) return cached;
   const location = await resolveLocation();

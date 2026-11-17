@@ -1,4 +1,4 @@
-﻿#Requires -Version 5.1
+#Requires -Version 5.1
 param(
   [string]$Version = '',
   [switch]$SkipInstaller,
@@ -82,6 +82,9 @@ if ($Phase -in 'All', 'Package') {
   } else {
     Write-Warning 'No catalogue signing key: the release ships without a bundled catalogue.'
   }
+
+  Step 'Listing the Rust crates'
+  & (Join-Path $root 'scripts\rust-notices.ps1') | Out-Null
 
   Step 'Adding licences and scripts'
   Copy-Item (Join-Path $root 'LICENSE'), (Join-Path $root 'THIRD_PARTY_NOTICES.md'), (Join-Path $root 'README.md') $stage

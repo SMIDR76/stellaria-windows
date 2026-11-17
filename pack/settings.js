@@ -310,7 +310,8 @@ function panelsPage() {
       optionRow('systemToasts', true, 'notifications_active', 'Événements système', 'Sortie et entrée audio, disposition du clavier, Verr. Maj / Num, morceau en cours'),
     ]),
     section('Tableau de bord', [
-      optionRow('lyrics', true, 'lyrics', 'Paroles synchronisées', "Onglet Média, paroles fournies par LRCLIB quand elles existent"),
+      optionRow('weather', true, 'partly_cloudy_day', 'Météo', "Prévisions d'Open-Meteo pour votre position approximative (ipinfo.io). Désactivée, rien n'est envoyé."),
+      optionRow('lyrics', true, 'lyrics', 'Paroles synchronisées', "Onglet Média, paroles fournies par LRCLIB quand elles existent. Désactivées, rien n'est envoyé."),
     ]),
     section('Lanceur', [hiddenAppsList()]),
   ];
