@@ -108,7 +108,7 @@ if ($Phase -in 'All', 'Package') {
       (Join-Path $env:LOCALAPPDATA 'Programs\Inno Setup 6\ISCC.exe')
     ) | Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
     if (-not $iscc) { throw 'Inno Setup (ISCC.exe) was not found. Install it or pass -SkipInstaller.' }
-    & $iscc "/DAppVersion=$Version" "/DStage=$stage" "/O$artifacts" (Join-Path $root 'installer\stellaria.iss')
+    & $iscc "/DAppVersion=$Version" "/DAppNumericVersion=$numericVersion" "/DStage=$stage" "/O$artifacts" (Join-Path $root 'installer\stellaria.iss')
     if ($LASTEXITCODE -ne 0) { throw 'Compiling the installer failed.' }
   }
 }

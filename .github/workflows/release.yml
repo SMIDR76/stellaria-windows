@@ -60,7 +60,7 @@ jobs:
       - name: Build the archive and the installer
         shell: pwsh
         env:
-          STELLARIA_SIGNING_KEY: ${{ secrets.CAELESTIA_SIGNING_KEY }}
+          STELLARIA_SIGNING_KEY: ${{ secrets.STELLARIA_SIGNING_KEY }}
         run: |
           $signed = if ($env:SIGN -eq 'true') { 'artifacts/signed-binaries' } else { '' }
           ./scripts/build-release.ps1 -Version '${{ steps.version.outputs.value }}' -Phase Package -SignedBinaries $signed
@@ -90,7 +90,7 @@ jobs:
       - name: Update manifest and checksums
         shell: pwsh
         env:
-          STELLARIA_SIGNING_KEY: ${{ secrets.CAELESTIA_SIGNING_KEY }}
+          STELLARIA_SIGNING_KEY: ${{ secrets.STELLARIA_SIGNING_KEY }}
         run: |
           $signed = if ($env:SIGN -eq 'true') { 'artifacts/signed-setup' } else { '' }
           ./scripts/build-release.ps1 -Version '${{ steps.version.outputs.value }}' -Phase Finish -SignedSetup $signed
