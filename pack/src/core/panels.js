@@ -7,7 +7,7 @@ const pendingWindow = 5000;
 const spawnedAt = new Map();
 let packManifest = null;
 
-const panelKey = (name, monitor, kind) => `caelestia:panel:${name}:${monitor}:${kind}`;
+const panelKey = (name, monitor, kind) => `stellaria:panel:${name}:${monitor}:${kind}`;
 
 export function answerPanelPings(name, monitor) {
   store.watch(panelKey(name, monitor, 'ping'), ping => {
@@ -43,15 +43,15 @@ async function ensurePanel(name, monitor) {
 }
 
 function ensureInBackground(name, monitor) {
-  ensurePanel(name, monitor).catch(error => console.error(`[caelestia] Chargement de ${name}`, error));
+  ensurePanel(name, monitor).catch(error => console.error(`[stellaria] Chargement de ${name}`, error));
 }
 
 export function letClicksThrough() {
-  return zebar.currentWidget().tauriWindow.setIgnoreCursorEvents(true).catch(error => console.error('[caelestia] Clics traversants', error));
+  return zebar.currentWidget().tauriWindow.setIgnoreCursorEvents(true).catch(error => console.error('[stellaria] Clics traversants', error));
 }
 
 export function drawerKey(name, monitor) {
-  return `caelestia:${name}:${monitor}`;
+  return `stellaria:${name}:${monitor}`;
 }
 
 export function requestDrawer(name, monitor, open, trigger = 'hover') {
@@ -115,7 +115,7 @@ export async function edgeDrawer(name, { panel, side, autoCloseMs = 1600, onOpen
           hide();
         }
       } catch (error) {
-        console.error(`[caelestia] ${name} : curseur indisponible`, error);
+        console.error(`[stellaria] ${name} : curseur indisponible`, error);
       }
       await new Promise(resolve => setTimeout(resolve, 50));
     }
@@ -312,7 +312,7 @@ export function setupPopup(name, { panel, onOpen } = {}) {
     store.set(keys.popupAck(name), request.id);
     const target = request.monitor === 'primary' ? monitorName : request.monitor;
     if (target !== placedOn) {
-      await placePopup(name, target).catch(error => console.error(`[caelestia] Placement de ${name}`, error));
+      await placePopup(name, target).catch(error => console.error(`[stellaria] Placement de ${name}`, error));
       placedOn = target;
     }
     show();

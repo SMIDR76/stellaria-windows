@@ -323,7 +323,7 @@ async function loadSysinfo() {
     store.set(keys.sysinfo, info);
     renderSysinfo(info);
   } catch (error) {
-    console.error('[caelestia] Informations système indisponibles', error);
+    console.error('[stellaria] Informations système indisponibles', error);
   }
 }
 
@@ -671,7 +671,7 @@ function requestCover() {
       if (media.covers.size > 30) media.covers.delete(media.covers.keys().next().value);
       renderMedia();
     } catch (error) {
-      console.error('[caelestia] Pochette indisponible', error);
+      console.error('[stellaria] Pochette indisponible', error);
       media.covers.set(title, null);
     } finally {
       media.pendingCover = null;
@@ -788,7 +788,7 @@ function requestLyrics() {
     })
     .catch(error => {
       if (error.name === 'AbortError' || lyrics.key !== key) return;
-      console.error('[caelestia] Paroles indisponibles', error);
+      console.error('[stellaria] Paroles indisponibles', error);
       showLyricsMessage('Paroles indisponibles (connexion)');
       lyrics.key = null;
     });
@@ -851,7 +851,7 @@ async function refreshWeather(force = false) {
   try {
     renderWeather(await loadWeather({ force }));
   } catch (error) {
-    console.error('[caelestia] Météo indisponible', error);
+    console.error('[stellaria] Météo indisponible', error);
     $('dash-weather-label').textContent = 'Météo indisponible';
     $('weather-city').textContent = 'Météo indisponible';
   }
@@ -918,7 +918,7 @@ function render(output) {
 }
 
 providers.onOutput(render);
-providers.onError(errors => console.error('[caelestia] providers', errors));
+providers.onError(errors => console.error('[stellaria] providers', errors));
 render(providers.outputMap);
 
 async function pollGpu() {
@@ -932,7 +932,7 @@ async function pollGpu() {
     heroes.gpu.setUsage(NaN);
     heroes.gpu.setTemperature(NaN);
     stopGpuPolling();
-    console.error('[caelestia] GPU', error);
+    console.error('[stellaria] GPU', error);
   }
 }
 
@@ -1012,7 +1012,7 @@ async function watchCursor() {
     } catch (error) {
       if (!session) break;
       session.failures = (session.failures ?? 0) + 1;
-      console.error('[caelestia] Position du curseur indisponible', error);
+      console.error('[stellaria] Position du curseur indisponible', error);
       if (session.failures >= 20) {
         requestDashboard(monitor, false, session.trigger);
         closeDashboard();

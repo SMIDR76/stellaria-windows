@@ -8,9 +8,9 @@ The source files carry no comments. This page explains how the pieces fit togeth
 | Process | Role |
 | --- | --- |
 | `zebar.exe` | Hosts one WebView2 window per widget and per monitor (the `pack/` folder). |
-| `caelestia-helper.exe` | Native Windows features the pages cannot reach, over a local WebSocket. |
-| `CaelestiaSwitcher.exe` | Optional Alt+Tab switcher, themed from `switcher-theme.json`. |
-| `caelestia-launcher.exe` | The Caelestia app (Tauri 2): start, stop and repair the theme, colour presets from the community catalogue, news. Opened on demand, never at logon. |
+| `stellaria-helper.exe` | Native Windows features the pages cannot reach, over a local WebSocket. |
+| `StellariaSwitcher.exe` | Optional Alt+Tab switcher, themed from `switcher-theme.json`. |
+| `stellaria-launcher.exe` | The Stellaria app (Tauri 2): start, stop and repair the theme, colour presets from the community catalogue, news. Opened on demand, never at logon. |
 
 The first three start from logon tasks registered by `scripts/install.ps1`, and every process runs without
 administrator rights.
@@ -38,7 +38,7 @@ styles per tab under `styles/`.
 ### Shared state
 
 Widgets are separate pages. They share state through `localStorage`: `store.set` writes a key and wakes the
-other windows through the `storage` event, and the current window through a `caelestia-store` event. `store.watch`
+other windows through the `storage` event, and the current window through a `stellaria-store` event. `store.watch`
 reacts to both and keeps a slow poll as a safety net. Results that several widgets need (clipboard history,
 brightness, radios, keyboard layouts, window preview) are published with `share` and read with `onShared`.
 
@@ -83,26 +83,26 @@ Installers only copy files and call the helper, so every way of installing share
 | `--install [--zebar <path>] [--switcher <path>]` | Adds the pack's widgets (`pack/startup.json`) to Zebar's start-up list (backup, atomic write, UTF-8 without BOM) and registers the logon tasks from XML, for the current user without elevation. Zebar is found in Program Files, the uninstall entries or Scoop. |
 | `--start` | Runs the logon tasks now. |
 | `--shutdown` | Ends the tasks, asks the running helper to quit (then stops it), stops Zebar and the switcher and gives the screens their full work area back. |
-| `--uninstall` | `--shutdown`, then restores the taskbar and Windows colours from the saved state, removes the tasks, the old Run entries and the Caelestia start-up entries of Zebar. Works even if the helper was killed. |
+| `--uninstall` | `--shutdown`, then restores the taskbar and Windows colours from the saved state, removes the tasks, the old Run entries and the Stellaria start-up entries of Zebar. Works even if the helper was killed. |
 | `--restore-shell` | `--shutdown`, then shows the taskbar and restores the Windows colours. |
 
-`installer/caelestia.iss` (Inno Setup) and `scripts/install.ps1` call these commands; `scripts/build-release.ps1` and
+`installer/stellaria.iss` (Inno Setup) and `scripts/install.ps1` call these commands; `scripts/build-release.ps1` and
 the Release workflow build the release files (see `releasing.md`).
 
-## The Caelestia app
+## The Stellaria app
 
 `launcher/` holds a thin Rust shell and a plain HTML, CSS and JavaScript page (`launcher/ui/`), built with `cargo`
 alone by `launcher/build.ps1`, which first copies the pack's shared styles, fonts and colour schemes into
 `launcher/dist/`. The app holds no theme logic: everything goes through the helper, except the Installation page,
 which must work while the helper is stopped or missing.
 
-- **Connection**: the page reads `%LOCALAPPDATA%\Caelestia\launcher.json` (port and token, written by the helper)
+- **Connection**: the page reads `%LOCALAPPDATA%\Stellaria\launcher.json` (port and token, written by the helper)
   through the `runtime` command, then talks to the helper over the same WebSocket as the widgets, from the origin
   `http://tauri.localhost`, with the `launcher` scope. The helper's answers to `launcher.status`, `launcher.theme` and
   `catalog.*` fill the pages.
-- **Rust commands**: `runtime`, `helper` (runs `caelestia-helper.exe` with `--start`, `--restore-shell`,
+- **Rust commands**: `runtime`, `helper` (runs `stellaria-helper.exe` with `--start`, `--restore-shell`,
   `--install`, `--uninstall` or `--shutdown`, nothing else), `installation`, `install_zebar`, `open_folder` (the
-  Caelestia, widgets and logs folders only), `open_external` (https links and the Windows apps settings page only),
+  Stellaria, widgets and logs folders only), `open_external` (https links and the Windows apps settings page only),
   `initial_link`, `log_tail` (the last lines of the helper log), `wallpaper` (the Windows wallpaper file as raw
   bytes, shown through a `blob:` URL), `tray_labels`, `installed`, `release_notes`, `check_update`,
   `download_update` and `install_update`.
@@ -133,22 +133,22 @@ which must work while the helper is stopped or missing.
   icon. Under reduced motion only the glow stays. The other effects are turned off when Windows asks for reduced motion.
 - **Installation page**: `installation` reads the state of each part without the helper: Zebar (the same places as
   the helper's `ZebarLocator`, version from its uninstall entry), the helper's file version, the pack's `zpack.json`,
-  the switcher, Caelestia's entries in Zebar's `settings.json`, the three logon tasks (`schtasks /Query`) and whether
+  the switcher, Stellaria's entries in Zebar's `settings.json`, the three logon tasks (`schtasks /Query`) and whether
   Zebar and the helper are running. Install and Repair run three steps and show each one: Zebar through winget
   (`install_zebar`, skipped when Zebar is found), `--install`, then `--start`. "Remove from start-up" runs
   `--uninstall` after a confirmation; the files stay, and the full uninstall is left to Windows apps. The page cannot
-  download Caelestia's own files: when the helper or the pack is missing, it asks to run the setup again.
+  download Stellaria's own files: when the helper or the pack is missing, it asks to run the setup again.
 - **Updates**: a few seconds after opening, `check_update` downloads `update.json` and `update.json.minisig` from
   the latest GitHub release. The manifest must be signed by the catalogue key with the trusted comment
-  `caelestia-update version=<version>`, name `CaelestiaSetup-<version>.exe` and give its size and SHA-256. It is
+  `stellaria-update version=<version>`, name `StellariaSetup-<version>.exe` and give its size and SHA-256. It is
   offered only when its version is newer than the installed one (`DisplayVersion` of the setup's uninstall entry,
   else the app's own version), and the page never passes a URL or hash to Rust: the verified manifest stays in the
-  Rust side. "Update" streams the setup into `%LOCALAPPDATA%\Caelestia\updates`, with progress events, checks the
+  Rust side. "Update" streams the setup into `%LOCALAPPDATA%\Stellaria\updates`, with progress events, checks the
   size and SHA-256, then plays the update sound. "Install and restart" runs the setup with `/VERYSILENT
   /SUPPRESSMSGBOXES /NORESTART /MERGETASKS=startnow,openlauncher` and closes the app. Until the repository is public,
-  the check ends with "no version published yet". `CAELESTIA_UPDATE_SOURCE` (an `https://` or
+  the check ends with "no version published yet". `STELLARIA_UPDATE_SOURCE` (an `https://` or
   `http://127.0.0.1:` address) points the app at a test server; the signature is still required.
-- **Links**: `caelestia://install` opens the Installation page. `caelestia://apply/<id>` is registered for the user by the setup and `scripts/install.ps1`. A second
+- **Links**: `stellaria://install` opens the Installation page. `stellaria://apply/<id>` is registered for the user by the setup and `scripts/install.ps1`. A second
   instance hands its link to the running one (single-instance plugin), which asks before applying the preset.
 - **Restrictions**: the content security policy only allows the page's own files and the helper's ports; the window
   only has the `core:default`, `show`, `hide`, `is-visible`, `set-focus` and `destroy` permissions.
@@ -169,7 +169,7 @@ sets it. Anything drawn next to the frame must use the same opaque `--surface-ba
 
 ### Recovery
 
-- A hung Zebar (15 s) or Caelestia docks pushed away from their screen edges after a display change (6 s) restart
+- A hung Zebar (15 s) or Stellaria docks pushed away from their screen edges after a display change (6 s) restart
   Zebar, at most once every 10 minutes, after giving every screen its full work area back.
 - Waking from sleep restarts Zebar 4 seconds later whatever the cooldown: after a resume, WebView2 windows can keep
   running their pages while no longer drawing on screen.

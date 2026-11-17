@@ -118,7 +118,7 @@ const drawer = await edgeDrawer('osd', {
   panel: document.getElementById('panel'),
   side: 'right',
   autoCloseMs: 1600,
-  onOpen: () => actions.refreshBrightness().catch(error => console.error('[caelestia] Luminosité', error)),
+  onOpen: () => actions.refreshBrightness().catch(error => console.error('[stellaria] Luminosité', error)),
 });
 
 onShared('brightness', event => {

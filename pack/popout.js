@@ -187,7 +187,7 @@ function createAudioView() {
 
   const changeSession = (method, params) => helperClient.request(method, params)
     .catch(error => {
-      console.error(`[caelestia] ${method}`, error);
+      console.error(`[stellaria] ${method}`, error);
       loadSessions();
     });
 
@@ -238,7 +238,7 @@ function createAudioView() {
         ? visible.map(sessionRow)
         : [element('span', { class: 'empty', text: 'Aucune application ne joue de son' })]));
     } catch (error) {
-      console.error('[caelestia] audio.sessions', error);
+      console.error('[stellaria] audio.sessions', error);
       apps.replaceChildren(element('span', { class: 'empty', text: 'Volumes indisponibles' }));
     }
     if (state.kind === 'audio') layoutPanel();
@@ -420,12 +420,12 @@ function createWindowView() {
       renderDetails();
       requestedAt = Date.now();
       preview.replaceChildren(icon('hourglass_empty'));
-      actions.refreshPreview().catch(error => console.error('[caelestia] Aperçu', error));
+      actions.refreshPreview().catch(error => console.error('[stellaria] Aperçu', error));
     },
   };
 }
 
-const notificationKeys = { dismissed: 'caelestia:notifications:dismissed', seenAt: 'caelestia:notifications:seen-at' };
+const notificationKeys = { dismissed: 'stellaria:notifications:dismissed', seenAt: 'stellaria:notifications:seen-at' };
 let appDirectory = null;
 
 function loadAppDirectory() {
@@ -635,7 +635,7 @@ async function watchCursor() {
         break;
       }
     } catch (error) {
-      console.error('[caelestia] Position du curseur indisponible', error);
+      console.error('[stellaria] Position du curseur indisponible', error);
     }
     await new Promise(resolve => setTimeout(resolve, 50));
   }

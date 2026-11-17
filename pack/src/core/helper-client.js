@@ -35,7 +35,7 @@ export function createHelperClient({ widget, monitor = '', runtimeUrl = './runti
       try {
         listener(...args);
       } catch (error) {
-        console.error('[caelestia] helper listener', error);
+        console.error('[stellaria] helper listener', error);
       }
     }
   };
@@ -123,7 +123,7 @@ export function createHelperClient({ widget, monitor = '', runtimeUrl = './runti
       try {
         handle(JSON.parse(event.data));
       } catch (error) {
-        console.error('[caelestia] helper message', error);
+        console.error('[stellaria] helper message', error);
       }
     });
     current.addEventListener('close', () => {

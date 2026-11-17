@@ -99,7 +99,7 @@ export function windowsPalette(primaryHex) {
 export function initTheme() {
   applyTheme();
   schemeBundleReady.then(applyTheme);
-  for (const key of [keys.source, keys.mode, keys.variant, keys.scheme, keys.achromatic, 'caelestia:option:smartScheme']) store.watch(key, applyTheme);
+  for (const key of [keys.source, keys.mode, keys.variant, keys.scheme, keys.achromatic, 'stellaria:option:smartScheme']) store.watch(key, applyTheme);
   if (getOption('transparency', false)) setOption('transparency', false);
   option('gameMode', false, enabled => document.documentElement.classList.toggle('game-mode', Boolean(enabled)));
   installIconTint();
@@ -107,7 +107,7 @@ export function initTheme() {
 }
 
 function installIconTint() {
-  if (document.getElementById('caelestia-tint')) return;
+  if (document.getElementById('stellaria-tint')) return;
   const ns = 'http://www.w3.org/2000/svg';
   const make = (tag, attributes) => {
     const node = document.createElementNS(ns, tag);
@@ -115,7 +115,7 @@ function installIconTint() {
     return node;
   };
   const host = make('svg', { width: '0', height: '0', 'aria-hidden': 'true', style: 'position:absolute' });
-  const filter = make('filter', { id: 'caelestia-tint', 'color-interpolation-filters': 'sRGB' });
+  const filter = make('filter', { id: 'stellaria-tint', 'color-interpolation-filters': 'sRGB' });
   filter.append(
     make('feColorMatrix', { type: 'saturate', values: '0', result: 'gray' }),
     make('feFlood', { class: 'tint-flood', result: 'color' }),

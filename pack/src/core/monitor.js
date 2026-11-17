@@ -60,7 +60,7 @@ export function hideOnFullscreen(onChange) {
         await window_.setAlwaysOnTop(true);
       }
     } catch (error) {
-      console.error('[caelestia] Changement de plan impossible', error);
+      console.error('[stellaria] Changement de plan impossible', error);
     }
   };
   sync(store.get(keys.fullscreen));

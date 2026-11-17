@@ -19,7 +19,7 @@ const monitor = await currentMonitorName();
 await widgetWindow.setIgnoreCursorEvents(true);
 
 const startedAt = Date.now();
-const runningKey = 'caelestia:idle:running';
+const runningKey = 'stellaria:idle:running';
 let wasActive = false;
 let closing = false;
 store.set(runningKey, Date.now());

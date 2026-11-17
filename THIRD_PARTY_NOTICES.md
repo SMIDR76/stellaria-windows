@@ -1,6 +1,6 @@
 # Third-party notices
 
-Caelestia for Windows is distributed under the GNU General Public License v3.0 (see `LICENSE`).
+Stellaria is distributed under the GNU General Public License v3.0 (see `LICENSE`).
 It reuses the work listed below. Every file named here is produced by `npm run vendor` from the exact
 package versions pinned in `package.json` and `package-lock.json`.
 

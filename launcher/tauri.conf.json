@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Caelestia",
+  "productName": "Stellaria",
   "version": "1.0.0",
-  "identifier": "io.github.smidr76.caelestia",
+  "identifier": "io.github.smidr76.stellaria",
   "build": {
     "frontendDist": "dist"
   },
@@ -11,7 +11,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Caelestia",
+        "title": "Stellaria",
         "width": 1180,
         "height": 760,
         "minWidth": 900,

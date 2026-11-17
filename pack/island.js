@@ -28,7 +28,7 @@ async function control(action) {
   try {
     await helperClient.request('media.control', { action });
   } catch (error) {
-    console.error('[caelestia] Contrôle média', error);
+    console.error('[stellaria] Contrôle média', error);
   }
   setTimeout(refreshMedia, 250);
 }

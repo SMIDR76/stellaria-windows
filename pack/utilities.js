@@ -45,11 +45,11 @@ const radios = { WiFi: null, Bluetooth: null };
 const toggles = {
   wifi: toggle('wifi', 'Wi-Fi', () => {
     if (!radios.WiFi) return;
-    actions.setRadio('WiFi', !radios.WiFi.on).catch(error => console.error('[caelestia] Wi-Fi', error));
+    actions.setRadio('WiFi', !radios.WiFi.on).catch(error => console.error('[stellaria] Wi-Fi', error));
   }),
   bluetooth: toggle('bluetooth', 'Bluetooth', () => {
     if (!radios.Bluetooth) return;
-    actions.setRadio('Bluetooth', !radios.Bluetooth.on).catch(error => console.error('[caelestia] Bluetooth', error));
+    actions.setRadio('Bluetooth', !radios.Bluetooth.on).catch(error => console.error('[stellaria] Bluetooth', error));
   }),
   mic: toggle('mic', 'Micro', () => {
     const audio = providers.outputMap.audio;
@@ -119,7 +119,7 @@ onShared('awake', event => {
   renderAwake(event.enabled);
   toast('Garder éveillé', { message: event.enabled ? 'Le PC ne se mettra pas en veille' : 'Veille automatique rétablie', icon: 'coffee' });
 });
-awake.addEventListener('click', () => actions.setKeepAwake(!awake.classList.contains('checked')).catch(error => console.error('[caelestia] Garder éveillé', error)));
+awake.addEventListener('click', () => actions.setKeepAwake(!awake.classList.contains('checked')).catch(error => console.error('[stellaria] Garder éveillé', error)));
 
 const capture = (symbol, label, onClick, className = '') =>
   element('button', { class: `action ${className}`.trim(), onClick }, [icon(symbol), element('span', { text: label })]);
@@ -138,7 +138,7 @@ document.getElementById('captures').append(
   capture('photo_library', 'Mes captures', () => openFolder('screenshots')),
 );
 
-const pomodoroKey = 'caelestia:pomodoro';
+const pomodoroKey = 'stellaria:pomodoro';
 const phases = { focus: { label: 'Concentration', minutes: 25 }, break: { label: 'Pause', minutes: 5 } };
 const pomodoroNodes = {
   phase: document.getElementById('pomodoro-phase'),
@@ -213,6 +213,6 @@ const drawer = await edgeDrawer('utilities', {
   side: 'bottom',
   onOpen: () => {
     paintDate();
-    actions.refreshRadios().catch(error => console.error('[caelestia] Radios', error));
+    actions.refreshRadios().catch(error => console.error('[stellaria] Radios', error));
   },
 });

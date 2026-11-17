@@ -1,8 +1,8 @@
 {
-  "name": "caelestia-windows",
+  "name": "stellaria",
   "version": "1.0.0",
   "private": true,
-  "description": "Unofficial Windows port of the Caelestia shell, built on Zebar.",
+  "description": "Stellaria, an unofficial Windows port of the Caelestia shell, built on Zebar.",
   "license": "GPL-3.0-only",
   "type": "module",
   "engines": {

@@ -41,7 +41,7 @@ const inTopRightCorner = event =>
 const triggerCorner = () => {
   if (!getOption('hotCorner', true) || Date.now() - cornerAt < 1200) return;
   cornerAt = Date.now();
-  helperClient.request('shell.taskView').catch(error => console.error('[caelestia] Coin actif', error));
+  helperClient.request('shell.taskView').catch(error => console.error('[stellaria] Coin actif', error));
 };
 
 document.addEventListener('mousemove', event => {

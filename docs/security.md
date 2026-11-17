@@ -1,6 +1,6 @@
 # Security model
 
-Caelestia for Windows runs permanently in the background, watches windows, reads the clipboard on request,
+Stellaria runs permanently in the background, watches windows, reads the clipboard on request,
 captures the desktop to extract wallpaper colours and can simulate a few key presses. That is the same kind of access
 spyware wants, so the project treats every feature as a potential risk for the people who install it.
 This document lists what can go wrong and what the code does about it. It is the security specification of version
@@ -102,7 +102,7 @@ No telemetry, analytics or crash reporting is collected.
 ## Recovery
 
 When the bar replaces the taskbar, the helper turns on taskbar auto-hide and hides the taskbar window. Before changing
-auto-hide the first time it saves the original value in `%LOCALAPPDATA%\Caelestia\state.json`.
+auto-hide the first time it saves the original value in `%LOCALAPPDATA%\Stellaria\state.json`.
 
 The taskbar window is shown again, still in auto-hide mode so it appears when the pointer reaches the screen edge:
 
@@ -113,7 +113,7 @@ The taskbar window is shown again, still in auto-hide mode so it appears when th
 Auto-hide stays on between sessions on purpose: turning it off at every exit would let Zebar dock its bars against a
 work area that still includes the taskbar at the next logon.
 
-The original auto-hide value is restored, and the taskbar shown, by `caelestia-helper.exe --restore-shell` (also
+The original auto-hide value is restored, and the taskbar shown, by `stellaria-helper.exe --restore-shell` (also
 available as a Start menu shortcut created by the installer) and by `uninstall.ps1`. `--restore-shell` first asks a
 running helper to quit so it cannot hide the taskbar again.
 

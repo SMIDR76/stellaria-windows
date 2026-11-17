@@ -2,27 +2,27 @@
 param([switch]$KeepSettings)
 
 $ErrorActionPreference = 'Stop'
-$pack = Join-Path $env:USERPROFILE '.glzr\zebar\caelestia'
-$home2 = Join-Path $env:USERPROFILE '.caelestia'
-$helper = Join-Path $home2 'bin\caelestia-helper.exe'
+$pack = Join-Path $env:USERPROFILE '.glzr\zebar\stellaria'
+$home2 = Join-Path $env:USERPROFILE '.stellaria'
+$helper = Join-Path $home2 'bin\stellaria-helper.exe'
 
-Write-Host '-> Restoring Windows and removing Caelestia from startup' -ForegroundColor Cyan
+Write-Host '-> Restoring Windows and removing Stellaria from startup' -ForegroundColor Cyan
 if (Test-Path $helper) {
   $process = Start-Process -FilePath $helper -ArgumentList '--uninstall' -Wait -PassThru -WindowStyle Hidden
-  if ($process.ExitCode -ne 0) { Write-Warning "caelestia-helper --uninstall returned $($process.ExitCode), see %LOCALAPPDATA%\Caelestia\logs\helper.log." }
+  if ($process.ExitCode -ne 0) { Write-Warning "stellaria-helper --uninstall returned $($process.ExitCode), see %LOCALAPPDATA%\Stellaria\logs\helper.log." }
 }
 
 Write-Host '-> Removing the shortcuts and files' -ForegroundColor Cyan
-Get-Process caelestia-launcher -ErrorAction SilentlyContinue | Stop-Process -Force
-if (Test-Path 'HKCU:\Software\Classes\caelestia') { Remove-Item 'HKCU:\Software\Classes\caelestia' -Recurse -Force }
-$menu = Join-Path ([Environment]::GetFolderPath('Programs')) 'Caelestia'
+Get-Process stellaria-launcher -ErrorAction SilentlyContinue | Stop-Process -Force
+if (Test-Path 'HKCU:\Software\Classes\stellaria') { Remove-Item 'HKCU:\Software\Classes\stellaria' -Recurse -Force }
+$menu = Join-Path ([Environment]::GetFolderPath('Programs')) 'Stellaria'
 if (Test-Path $menu) { Remove-Item $menu -Recurse -Force }
 if (Test-Path $pack) { Remove-Item $pack -Recurse -Force }
 if (Test-Path $home2) { Remove-Item $home2 -Recurse -Force }
 if (-not $KeepSettings) {
-  foreach ($path in (Join-Path $env:APPDATA 'Caelestia'), (Join-Path $env:LOCALAPPDATA 'Caelestia'), (Join-Path $env:APPDATA 'zebar\webview-cache\caelestia')) {
+  foreach ($path in (Join-Path $env:APPDATA 'Stellaria'), (Join-Path $env:LOCALAPPDATA 'Stellaria'), (Join-Path $env:APPDATA 'zebar\webview-cache\stellaria')) {
     if (Test-Path $path) { Remove-Item $path -Recurse -Force }
   }
 }
 
-Write-Host 'Caelestia has been removed. Zebar itself is still installed (winget uninstall glzr-io.zebar).' -ForegroundColor Green
+Write-Host 'Stellaria has been removed. Zebar itself is still installed (winget uninstall glzr-io.zebar).' -ForegroundColor Green

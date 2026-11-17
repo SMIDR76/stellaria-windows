@@ -6,12 +6,12 @@ const strings = {
   fr: {
     home: 'Accueil', discover: 'Découvrir', library: 'Bibliothèque', news: 'Actualités', settings: 'Réglages',
     online: 'Connecté au helper', offline: 'Helper hors ligne', connecting: 'Connexion…',
-    heroTitle: 'Caelestia pour Windows',
-    heroText: "Le shell Material You de Caelestia sur Windows 11. Démarrez, réparez et personnalisez le thème d'ici.",
+    heroTitle: 'Stellaria pour Windows',
+    heroText: "Le shell Material You inspiré de Caelestia, sur Windows 11. Démarrez, réparez et personnalisez le thème d'ici.",
     running: 'En marche', stopped: 'Arrêté', helperDown: 'Helper arrêté', version: 'Version',
     start: 'Démarrer', stop: 'Arrêter', repair: 'Réparer', themeSettings: 'Réglages du thème',
-    started: 'Caelestia démarre', stoppedDone: 'Caelestia est arrêté, la barre des tâches Windows est revenue',
-    repaired: 'Caelestia a été réparé et redémarré', failed: "L'opération a échoué (code {0})",
+    started: 'Stellaria démarre', stoppedDone: 'Stellaria est arrêté, la barre des tâches Windows est revenue',
+    repaired: 'Stellaria a été réparé et redémarré', failed: "L'opération a échoué (code {0})",
     look: 'Apparence active', lookNone: 'Aucun préréglage appliqué : vos réglages personnels sont utilisés.', undo: 'Annuler',
     suggestions: 'À découvrir', seeAll: 'Tout voir', latest: 'Dernière actualité',
     search: 'Rechercher un préréglage', apply: 'Appliquer', active: 'Actif', official: 'Officiel',
@@ -27,47 +27,47 @@ const strings = {
     about: 'À propos', aboutText: 'Logiciel libre sous licence GPL-3.0, basé sur Caelestia par soramanew et ses contributeurs.',
     project: 'Page du projet', readMore: 'En savoir plus', noNews: 'Aucune actualité pour le moment.',
     confirmTitle: 'Appliquer ce préréglage ?', confirmText: 'Un lien demande d’appliquer « {0} ». Vos réglages actuels seront gardés pour pouvoir annuler.',
-    unknownLink: "Ce lien Caelestia n'est pas reconnu.", cancel: 'Annuler',
-    helperMissing: "Le helper de Caelestia n'est pas installé. Réinstallez Caelestia.",
-    install: 'Installation', installCaelestia: 'Installer Caelestia', notInstalled: 'Pas installé',
-    installReady: 'Caelestia est installé', installReadyText: 'Tout est en place. Si quelque chose ne marche plus, Réparer réinstalle les widgets et le démarrage automatique sans toucher à vos réglages.',
-    installStopped: 'Caelestia est installé mais arrêté', installStoppedText: "Tout est en place, mais le thème ne tourne pas. Démarrez-le, ou réparez-le s'il ne se lance pas.",
-    installNew: 'Installer Caelestia', installNewText: "Zebar, les widgets et le démarrage automatique en une seule étape. Tout reste sur votre compte et rien n'est envoyé en ligne.",
+    unknownLink: "Ce lien Stellaria n'est pas reconnu.", cancel: 'Annuler',
+    helperMissing: "Le helper de Stellaria n'est pas installé. Réinstallez Stellaria.",
+    install: 'Installation', installStellaria: 'Installer Stellaria', notInstalled: 'Pas installé',
+    installReady: 'Stellaria est installé', installReadyText: 'Tout est en place. Si quelque chose ne marche plus, Réparer réinstalle les widgets et le démarrage automatique sans toucher à vos réglages.',
+    installStopped: 'Stellaria est installé mais arrêté', installStoppedText: "Tout est en place, mais le thème ne tourne pas. Démarrez-le, ou réparez-le s'il ne se lance pas.",
+    installNew: 'Installer Stellaria', installNewText: "Zebar, les widgets et le démarrage automatique en une seule étape. Tout reste sur votre compte et rien n'est envoyé en ligne.",
     installPartial: 'Installation incomplète', installPartialText: '{0} élément(s) à corriger. Réparer les remet en place sans toucher à vos réglages.',
-    installFiles: 'Fichiers manquants', installFilesText: "Une partie des fichiers de Caelestia a disparu. Relancez le programme d'installation de Caelestia pour les remettre.",
+    installFiles: 'Fichiers manquants', installFilesText: "Une partie des fichiers de Stellaria a disparu. Relancez le programme d'installation de Stellaria pour les remettre.",
     installAction: 'Installer', removeStartup: 'Retirer du démarrage', noAdmin: 'Sans droits administrateur',
-    progress: 'Progression', stepZebar: 'Installer Zebar', stepRegister: 'Inscrire les widgets et le démarrage automatique', stepStart: 'Lancer Caelestia',
+    progress: 'Progression', stepZebar: 'Installer Zebar', stepRegister: 'Inscrire les widgets et le démarrage automatique', stepStart: 'Lancer Stellaria',
     stepWaiting: 'En attente', stepRunning: 'En cours…', stepDone: 'Terminé', stepSkipped: 'Déjà installé',
     stepZebarRunning: 'Windows peut demander une autorisation : acceptez-la pour continuer.',
-    installDone: 'Caelestia est installé et démarre', installFailed: "L'installation s'est arrêtée : {0}",
+    installDone: 'Stellaria est installé et démarre', installFailed: "L'installation s'est arrêtée : {0}",
     wingetMissing: "winget n'est pas disponible sur ce PC. Installez Zebar depuis sa page, puis réessayez.",
     zebarStillMissing: "Zebar n'a pas été trouvé après son installation.", zebarNotFound: 'Zebar est introuvable.', codeFailed: 'code {0}',
     components: 'Composants', ok: 'En place', missing: 'Absent',
     compZebarMissing: 'Absent : il sera installé avec winget, Windows demandera une autorisation une fois.',
     compZebarNoWinget: "Absent, et winget n'est pas disponible : installez Zebar depuis sa page.",
-    compHelper: 'Helper Caelestia', compPack: 'Widgets (pack Zebar)', compSwitcher: 'Sélecteur Alt+Tab', compSwitcherOk: 'Remplace Alt+Tab pendant que le thème tourne', optional: 'Facultatif, non installé',
-    compStartup: 'Liste de démarrage de Zebar', compStartupOk: 'Les widgets Caelestia y sont inscrits', compStartupMissing: "Les widgets Caelestia n'y sont pas inscrits",
+    compHelper: 'Helper Stellaria', compPack: 'Widgets (pack Zebar)', compSwitcher: 'Sélecteur Alt+Tab', compSwitcherOk: 'Remplace Alt+Tab pendant que le thème tourne', optional: 'Facultatif, non installé',
+    compStartup: 'Liste de démarrage de Zebar', compStartupOk: 'Les widgets Stellaria y sont inscrits', compStartupMissing: "Les widgets Stellaria n'y sont pas inscrits",
     compTasksText: '{0} tâche(s) sur {1} en place', compRunning: 'En marche', compRunningText: 'Zebar : {0} · helper : {1}', on: 'lancé', off: 'arrêté',
-    compApp: 'Application Caelestia', zebarPage: 'Page de Zebar',
+    compApp: 'Application Stellaria', zebarPage: 'Page de Zebar',
     changes: "Ce que l'installation modifie",
-    changeFiles: 'Fichiers dans %USERPROFILE%\\.caelestia et %USERPROFILE%\\.glzr\\zebar\\caelestia, pour votre compte uniquement, sans droits administrateur.',
+    changeFiles: 'Fichiers dans %USERPROFILE%\\.stellaria et %USERPROFILE%\\.glzr\\zebar\\stellaria, pour votre compte uniquement, sans droits administrateur.',
     changeStartup: "Trois tâches lancent le helper, Zebar et le sélecteur à l'ouverture de session.",
     changeTaskbar: "La barre des tâches Windows est masquée pendant que le thème tourne et revient quand il s'arrête.",
-    changeZebar: 'La liste de démarrage de Zebar reçoit les widgets Caelestia (une sauvegarde de vos réglages est conservée).',
+    changeZebar: 'La liste de démarrage de Zebar reçoit les widgets Stellaria (une sauvegarde de vos réglages est conservée).',
     changeColors: "En option, désactivé par défaut : la couleur d'accent de Windows peut suivre le thème.",
     changePrivacy: 'Aucune télémétrie. Réseau : météo (Open-Meteo) et paroles (LRCLIB), tous deux facultatifs.',
-    folders: 'Dossiers', folderApp: 'Programmes de Caelestia', folderPack: 'Widgets', folderLogs: 'Journaux', open: 'Ouvrir',
-    removeTitle: 'Retirer Caelestia du démarrage ?',
-    removeText: "Caelestia s'arrête et ne se lance plus à l'ouverture de session. La barre des tâches et les couleurs Windows sont rétablies. Les fichiers restent : Installer remet tout en place. Pour tout supprimer, passez par les applications Windows.",
-    removed: 'Caelestia est retiré du démarrage, la barre des tâches Windows est revenue', remove: 'Retirer', appsSettings: 'Applications Windows',
+    folders: 'Dossiers', folderApp: 'Programmes de Stellaria', folderPack: 'Widgets', folderLogs: 'Journaux', open: 'Ouvrir',
+    removeTitle: 'Retirer Stellaria du démarrage ?',
+    removeText: "Stellaria s'arrête et ne se lance plus à l'ouverture de session. La barre des tâches et les couleurs Windows sont rétablies. Les fichiers restent : Installer remet tout en place. Pour tout supprimer, passez par les applications Windows.",
+    removed: 'Stellaria est retiré du démarrage, la barre des tâches Windows est revenue', remove: 'Retirer', appsSettings: 'Applications Windows',
     updates: 'Mises à jour', check: 'Rechercher', updateNow: 'Mettre à jour', installRestart: 'Installer et redémarrer',
-    updateIdle: 'Recherchez une nouvelle version de Caelestia', updateChecking: 'Recherche d’une mise à jour…',
-    updateCurrent: 'Caelestia est à jour', updateCurrentText: 'Version {0}, la plus récente',
+    updateIdle: 'Recherchez une nouvelle version de Stellaria', updateChecking: 'Recherche d’une mise à jour…',
+    updateCurrent: 'Stellaria est à jour', updateCurrentText: 'Version {0}, la plus récente',
     updateAvailable: 'Version {0} disponible', updateAvailableText: 'Vous avez la version {0} · téléchargement de {1}',
     updateDownloading: 'Téléchargement de la version {0}', updateReady: 'Version {0} prête à installer',
-    updateReadyText: "Caelestia se ferme quelques secondes pendant l'installation, puis se relance.",
+    updateReadyText: "Stellaria se ferme quelques secondes pendant l'installation, puis se relance.",
     updateError: 'Impossible de vérifier les mises à jour', updateDownloaded: 'La mise à jour {0} est téléchargée',
-    updateOffered: 'Une mise à jour de Caelestia est disponible : version {0}', updateFailed: 'La mise à jour a échoué : {0}', updateChip: 'Mise à jour {0}',
+    updateOffered: 'Une mise à jour de Stellaria est disponible : version {0}', updateFailed: 'La mise à jour a échoué : {0}', updateChip: 'Mise à jour {0}',
     updateErrors: {
       network: 'pas de connexion au serveur de mises à jour', 'not-found': 'aucune version publiée pour le moment',
       signature: 'signature invalide, la mise à jour est refusée', manifest: 'description de version invalide',
@@ -87,13 +87,13 @@ const strings = {
     dynamicPreview: "Ce préréglage prend les couleurs de votre fond d'écran : l'aperçu montre vos couleurs actuelles.",
     yourSetup: 'Votre configuration', wallpaperLabel: "Fond d'écran", paletteLabel: 'Palette', widgetsLabel: 'Widgets actifs', noWidgets: 'Aucun widget inscrit',
     history: 'Historique des apparences', historyEmpty: 'Les préréglages que vous appliquez apparaîtront ici.', reapply: 'Réappliquer',
-    whatsNew: 'Quoi de neuf dans la version {0}', whatsNewFallback: 'Caelestia a été mis à jour vers la version {0}.', close: 'Fermer',
+    whatsNew: 'Quoi de neuf dans la version {0}', whatsNewFallback: 'Stellaria a été mis à jour vers la version {0}.', close: 'Fermer',
     searchAll: 'Rechercher une page, un préréglage ou une action', groupPages: 'Pages', groupPresets: 'Préréglages', groupActions: 'Actions',
     checkUpdates: 'Rechercher des mises à jour', searchEmpty: 'Aucun résultat.',
     volume: 'Volume', volumeText: 'Volume des sons',
-    tray: 'Zone de notification', trayText: 'Garder Caelestia près de l’horloge quand la fenêtre est fermée',
-    trayOpen: 'Ouvrir Caelestia', trayStart: 'Démarrer le thème', trayStop: 'Arrêter le thème', trayQuit: 'Quitter', trayUpdate: 'Mise à jour {0} disponible',
-    welcome: 'Bienvenue dans Caelestia', welcomeText: "Quelques secondes pour régler l'essentiel. Tout reste modifiable ensuite dans les Réglages.",
+    tray: 'Zone de notification', trayText: 'Garder Stellaria près de l’horloge quand la fenêtre est fermée',
+    trayOpen: 'Ouvrir Stellaria', trayStart: 'Démarrer le thème', trayStop: 'Arrêter le thème', trayQuit: 'Quitter', trayUpdate: 'Mise à jour {0} disponible',
+    welcome: 'Bienvenue dans Stellaria', welcomeText: "Quelques secondes pour régler l'essentiel. Tout reste modifiable ensuite dans les Réglages.",
     welcomeLook: 'Choisissez une apparence', welcomeLookText: 'Survolez une palette pour la voir sur cette fenêtre. Vous pourrez annuler à tout moment.',
     keepMine: 'Garder mes couleurs', welcomeKeys: 'Les raccourcis à retenir', next: 'Suivant', previous: 'Précédent', finish: 'Commencer',
     replayWelcome: "Revoir l'accueil", welcomeRow: "L'écran de la première ouverture",
@@ -102,12 +102,12 @@ const strings = {
   en: {
     home: 'Home', discover: 'Discover', library: 'Library', news: 'News', settings: 'Settings',
     online: 'Connected to the helper', offline: 'Helper offline', connecting: 'Connecting…',
-    heroTitle: 'Caelestia for Windows',
-    heroText: "Caelestia's Material You shell on Windows 11. Start, repair and personalise the theme from here.",
+    heroTitle: 'Stellaria',
+    heroText: "The Material You shell inspired by Caelestia, on Windows 11. Start, repair and personalise the theme from here.",
     running: 'Running', stopped: 'Stopped', helperDown: 'Helper stopped', version: 'Version',
     start: 'Start', stop: 'Stop', repair: 'Repair', themeSettings: 'Theme settings',
-    started: 'Caelestia is starting', stoppedDone: 'Caelestia stopped, the Windows taskbar is back',
-    repaired: 'Caelestia was repaired and restarted', failed: 'The operation failed (code {0})',
+    started: 'Stellaria is starting', stoppedDone: 'Stellaria stopped, the Windows taskbar is back',
+    repaired: 'Stellaria was repaired and restarted', failed: 'The operation failed (code {0})',
     look: 'Current look', lookNone: 'No preset applied: your own settings are used.', undo: 'Undo',
     suggestions: 'Discover', seeAll: 'See all', latest: 'Latest news',
     search: 'Search presets', apply: 'Apply', active: 'Active', official: 'Official',
@@ -123,47 +123,47 @@ const strings = {
     about: 'About', aboutText: 'Free software under the GPL-3.0 licence, based on Caelestia by soramanew and contributors.',
     project: 'Project page', readMore: 'Read more', noNews: 'No news yet.',
     confirmTitle: 'Apply this preset?', confirmText: 'A link asks to apply “{0}”. Your current settings are kept so you can undo.',
-    unknownLink: 'This Caelestia link is not recognised.', cancel: 'Cancel',
-    helperMissing: 'The Caelestia helper is not installed. Reinstall Caelestia.',
-    install: 'Installation', installCaelestia: 'Install Caelestia', notInstalled: 'Not installed',
-    installReady: 'Caelestia is installed', installReadyText: 'Everything is in place. If something stops working, Repair reinstalls the widgets and start-up without touching your settings.',
-    installStopped: 'Caelestia is installed but stopped', installStoppedText: "Everything is in place, but the theme is not running. Start it, or repair it if it won't start.",
-    installNew: 'Install Caelestia', installNewText: 'Zebar, the widgets and start-up in one step. Everything stays on your account and nothing is sent online.',
+    unknownLink: 'This Stellaria link is not recognised.', cancel: 'Cancel',
+    helperMissing: 'The Stellaria helper is not installed. Reinstall Stellaria.',
+    install: 'Installation', installStellaria: 'Install Stellaria', notInstalled: 'Not installed',
+    installReady: 'Stellaria is installed', installReadyText: 'Everything is in place. If something stops working, Repair reinstalls the widgets and start-up without touching your settings.',
+    installStopped: 'Stellaria is installed but stopped', installStoppedText: "Everything is in place, but the theme is not running. Start it, or repair it if it won't start.",
+    installNew: 'Install Stellaria', installNewText: 'Zebar, the widgets and start-up in one step. Everything stays on your account and nothing is sent online.',
     installPartial: 'Incomplete installation', installPartialText: '{0} item(s) to fix. Repair puts them back without touching your settings.',
-    installFiles: 'Missing files', installFilesText: 'Some of Caelestia’s files are gone. Run the Caelestia setup again to restore them.',
+    installFiles: 'Missing files', installFilesText: 'Some of Stellaria’s files are gone. Run the Stellaria setup again to restore them.',
     installAction: 'Install', removeStartup: 'Remove from start-up', noAdmin: 'No administrator rights',
-    progress: 'Progress', stepZebar: 'Install Zebar', stepRegister: 'Register the widgets and start-up', stepStart: 'Start Caelestia',
+    progress: 'Progress', stepZebar: 'Install Zebar', stepRegister: 'Register the widgets and start-up', stepStart: 'Start Stellaria',
     stepWaiting: 'Waiting', stepRunning: 'Working…', stepDone: 'Done', stepSkipped: 'Already installed',
     stepZebarRunning: 'Windows may ask for permission: accept it to continue.',
-    installDone: 'Caelestia is installed and starting', installFailed: 'Installation stopped: {0}',
+    installDone: 'Stellaria is installed and starting', installFailed: 'Installation stopped: {0}',
     wingetMissing: 'winget is not available on this PC. Install Zebar from its page, then try again.',
     zebarStillMissing: 'Zebar was not found after installing it.', zebarNotFound: 'Zebar was not found.', codeFailed: 'code {0}',
     components: 'Components', ok: 'In place', missing: 'Missing',
     compZebarMissing: 'Missing: it will be installed with winget, Windows will ask for permission once.',
     compZebarNoWinget: 'Missing, and winget is not available: install Zebar from its page.',
-    compHelper: 'Caelestia helper', compPack: 'Widgets (Zebar pack)', compSwitcher: 'Alt+Tab switcher', compSwitcherOk: 'Replaces Alt+Tab while the theme runs', optional: 'Optional, not installed',
-    compStartup: 'Zebar start-up list', compStartupOk: 'The Caelestia widgets are registered', compStartupMissing: 'The Caelestia widgets are not registered',
+    compHelper: 'Stellaria helper', compPack: 'Widgets (Zebar pack)', compSwitcher: 'Alt+Tab switcher', compSwitcherOk: 'Replaces Alt+Tab while the theme runs', optional: 'Optional, not installed',
+    compStartup: 'Zebar start-up list', compStartupOk: 'The Stellaria widgets are registered', compStartupMissing: 'The Stellaria widgets are not registered',
     compTasksText: '{0} of {1} tasks in place', compRunning: 'Running', compRunningText: 'Zebar: {0} · helper: {1}', on: 'running', off: 'stopped',
-    compApp: 'Caelestia app', zebarPage: 'Zebar page',
+    compApp: 'Stellaria app', zebarPage: 'Zebar page',
     changes: 'What the installation changes',
-    changeFiles: 'Files in %USERPROFILE%\\.caelestia and %USERPROFILE%\\.glzr\\zebar\\caelestia, for your account only, no administrator rights.',
+    changeFiles: 'Files in %USERPROFILE%\\.stellaria and %USERPROFILE%\\.glzr\\zebar\\stellaria, for your account only, no administrator rights.',
     changeStartup: 'Three tasks start the helper, Zebar and the switcher when you sign in.',
     changeTaskbar: 'The Windows taskbar is hidden while the theme runs and comes back when it stops.',
-    changeZebar: "Zebar's start-up list gets the Caelestia widgets (a backup of your settings is kept).",
+    changeZebar: "Zebar's start-up list gets the Stellaria widgets (a backup of your settings is kept).",
     changeColors: "Optional, off by default: Windows' accent colour can follow the theme.",
     changePrivacy: 'No telemetry. Network: weather (Open-Meteo) and lyrics (LRCLIB), both optional.',
-    folders: 'Folders', folderApp: 'Caelestia programs', folderPack: 'Widgets', folderLogs: 'Logs', open: 'Open',
-    removeTitle: 'Remove Caelestia from start-up?',
-    removeText: 'Caelestia stops and no longer starts when you sign in. The Windows taskbar and colours are restored. The files stay: Install puts everything back. To remove everything, use Windows apps.',
-    removed: 'Caelestia was removed from start-up, the Windows taskbar is back', remove: 'Remove', appsSettings: 'Windows apps',
+    folders: 'Folders', folderApp: 'Stellaria programs', folderPack: 'Widgets', folderLogs: 'Logs', open: 'Open',
+    removeTitle: 'Remove Stellaria from start-up?',
+    removeText: 'Stellaria stops and no longer starts when you sign in. The Windows taskbar and colours are restored. The files stay: Install puts everything back. To remove everything, use Windows apps.',
+    removed: 'Stellaria was removed from start-up, the Windows taskbar is back', remove: 'Remove', appsSettings: 'Windows apps',
     updates: 'Updates', check: 'Check', updateNow: 'Update', installRestart: 'Install and restart',
-    updateIdle: 'Check for a new version of Caelestia', updateChecking: 'Checking for updates…',
-    updateCurrent: 'Caelestia is up to date', updateCurrentText: 'Version {0}, the latest',
+    updateIdle: 'Check for a new version of Stellaria', updateChecking: 'Checking for updates…',
+    updateCurrent: 'Stellaria is up to date', updateCurrentText: 'Version {0}, the latest',
     updateAvailable: 'Version {0} available', updateAvailableText: 'You have version {0} · {1} download',
     updateDownloading: 'Downloading version {0}', updateReady: 'Version {0} ready to install',
-    updateReadyText: 'Caelestia closes for a few seconds while it installs, then starts again.',
+    updateReadyText: 'Stellaria closes for a few seconds while it installs, then starts again.',
     updateError: 'Could not check for updates', updateDownloaded: 'Update {0} downloaded',
-    updateOffered: 'A Caelestia update is available: version {0}', updateFailed: 'The update failed: {0}', updateChip: 'Update {0}',
+    updateOffered: 'A Stellaria update is available: version {0}', updateFailed: 'The update failed: {0}', updateChip: 'Update {0}',
     updateErrors: {
       network: 'no connection to the update server', 'not-found': 'no version published yet',
       signature: 'invalid signature, the update is refused', manifest: 'invalid release description',
@@ -183,13 +183,13 @@ const strings = {
     dynamicPreview: 'This preset takes its colours from your wallpaper: the preview shows your current colours.',
     yourSetup: 'Your setup', wallpaperLabel: 'Wallpaper', paletteLabel: 'Palette', widgetsLabel: 'Active widgets', noWidgets: 'No widget registered',
     history: 'Look history', historyEmpty: 'The presets you apply will show up here.', reapply: 'Apply again',
-    whatsNew: "What's new in version {0}", whatsNewFallback: 'Caelestia was updated to version {0}.', close: 'Close',
+    whatsNew: "What's new in version {0}", whatsNewFallback: 'Stellaria was updated to version {0}.', close: 'Close',
     searchAll: 'Search pages, presets and actions', groupPages: 'Pages', groupPresets: 'Presets', groupActions: 'Actions',
     checkUpdates: 'Check for updates', searchEmpty: 'No result.',
     volume: 'Volume', volumeText: 'Sound volume',
-    tray: 'Notification area', trayText: 'Keep Caelestia next to the clock when the window is closed',
-    trayOpen: 'Open Caelestia', trayStart: 'Start the theme', trayStop: 'Stop the theme', trayQuit: 'Quit', trayUpdate: 'Update {0} available',
-    welcome: 'Welcome to Caelestia', welcomeText: 'A few seconds to set the essentials. Everything can be changed later in Settings.',
+    tray: 'Notification area', trayText: 'Keep Stellaria next to the clock when the window is closed',
+    trayOpen: 'Open Stellaria', trayStart: 'Start the theme', trayStop: 'Stop the theme', trayQuit: 'Quit', trayUpdate: 'Update {0} available',
+    welcome: 'Welcome to Stellaria', welcomeText: 'A few seconds to set the essentials. Everything can be changed later in Settings.',
     welcomeLook: 'Pick a look', welcomeLookText: 'Hover a palette to see it on this window. You can undo at any time.',
     keepMine: 'Keep my colours', welcomeKeys: 'Shortcuts to remember', next: 'Next', previous: 'Previous', finish: 'Get started',
     replayWelcome: 'Show the welcome again', welcomeRow: 'The first-run screen',
@@ -259,7 +259,7 @@ const state = {
 
 function stored(key, fallback) {
   try {
-    const value = localStorage.getItem(`caelestia-launcher:${key}`);
+    const value = localStorage.getItem(`stellaria-launcher:${key}`);
     return value === null ? fallback : value;
   } catch {
     return fallback;
@@ -268,7 +268,7 @@ function stored(key, fallback) {
 
 function store(key, value) {
   try {
-    localStorage.setItem(`caelestia-launcher:${key}`, value);
+    localStorage.setItem(`stellaria-launcher:${key}`, value);
   } catch {
     return false;
   }
@@ -297,7 +297,7 @@ const sounds = {
 
   enabled() {
     try {
-      return localStorage.getItem('caelestia-launcher:start-sound') !== 'off';
+      return localStorage.getItem('stellaria-launcher:start-sound') !== 'off';
     } catch {
       return true;
     }
@@ -350,7 +350,7 @@ const sounds = {
 
 function storedLanguage() {
   try {
-    const saved = localStorage.getItem('caelestia-launcher:language');
+    const saved = localStorage.getItem('stellaria-launcher:language');
     if (saved === 'fr' || saved === 'en') return saved;
   } catch {
     return 'fr';
@@ -882,7 +882,7 @@ function errorText(error) {
   return String(error?.message ?? error);
 }
 
-async function installCaelestia() {
+async function installStellaria() {
   if (state.busy) return;
   state.busy = 'setup';
   state.steps = ['zebar', 'register', 'start'].map(id => ({ id, status: 'waiting', detail: '' }));
@@ -1130,7 +1130,7 @@ function heroCard() {
         element('h2', { text: t('heroTitle') }),
         element('p', { text: kind === 'new' ? t('installNewText') : t('installFilesText') }),
         element('div', { class: 'chips' }, [dotChip(t('notInstalled'), false)]),
-        element('div', { class: 'actions' }, [button(t('installCaelestia'), 'install_desktop', () => showPage('install'), { variant: 'filled' })]),
+        element('div', { class: 'actions' }, [button(t('installStellaria'), 'install_desktop', () => showPage('install'), { variant: 'filled' })]),
       ]),
     ]);
   }
@@ -1240,10 +1240,10 @@ function installHero(install) {
   const [title, text] = titles[kind];
   const setupIcon = state.busy === 'setup' ? 'progress_activity' : kind === 'new' ? 'install_desktop' : 'build';
   const actions = [];
-  if (kind === 'new') actions.push(button(t('installAction'), setupIcon, installCaelestia, { variant: 'filled', disabled: busy }));
-  if (kind === 'partial') actions.push(button(t('repair'), setupIcon, installCaelestia, { variant: 'filled', disabled: busy }));
+  if (kind === 'new') actions.push(button(t('installAction'), setupIcon, installStellaria, { variant: 'filled', disabled: busy }));
+  if (kind === 'partial') actions.push(button(t('repair'), setupIcon, installStellaria, { variant: 'filled', disabled: busy }));
   if (kind === 'stopped') actions.push(button(t('start'), state.busy === 'start' ? 'progress_activity' : 'play_circle', () => runHelper('start', t('started')), { variant: 'filled', disabled: busy }));
-  if (kind === 'ready' || kind === 'stopped') actions.push(button(t('repair'), setupIcon, installCaelestia, { disabled: busy }));
+  if (kind === 'ready' || kind === 'stopped') actions.push(button(t('repair'), setupIcon, installStellaria, { disabled: busy }));
   if (install?.registered || install?.tasks.some(Boolean)) actions.push(button(t('removeStartup'), state.busy === 'uninstall' ? 'progress_activity' : 'remove_circle', confirmRemove, { variant: 'text', disabled: busy }));
   return element('section', { class: 'hero launcher-hero' }, [
     element('div', { class: 'hero-ornament' }, shape(5, 0.16)),
@@ -1383,7 +1383,7 @@ function libraryPage() {
       element('div', { class: 'row' }, [
         icon('auto_awesome', 'tonal-icon'),
         element('div', { class: 'row-text' }, [
-          element('span', { class: 'row-title', text: 'Caelestia' }),
+          element('span', { class: 'row-title', text: 'Stellaria' }),
           element('span', { class: 'row-subtitle', text: `${t('core')} · ${t('version')} ${status?.packVersion ?? '—'} · helper ${status?.helperVersion ?? '—'}` }),
         ]),
       ]),
@@ -1461,7 +1461,7 @@ function mockup(roles) {
     element('div', { class: 'mockup-dashboard' }, [
       element('div', { class: 'mockup-time' }, [element('strong', { text: time }), element('span', { text: date })]),
       element('div', { class: 'mockup-row' }, [
-        element('div', { class: 'mockup-media' }, [icon('music_note'), element('div', {}, [element('strong', { text: 'Caelestia' }), element('span', { text: 'Material You' })])]),
+        element('div', { class: 'mockup-media' }, [icon('music_note'), element('div', {}, [element('strong', { text: 'Stellaria' }), element('span', { text: 'Material You' })])]),
         element('div', { class: 'mockup-weather' }, [icon('partly_cloudy_day'), element('strong', { text: '18°' })]),
       ]),
       element('div', { class: 'mockup-meters' }, [62, 38, 81].map(value => element('span', {}, element('i', { style: { width: `${value}%` } })))),
@@ -1479,7 +1479,7 @@ function presetPage() {
   const mode = state.detailMode ?? (item.preset?.mode === 'light' ? 'light' : 'dark');
   const roles = scheme ? schemeRoles(item, mode) : state.themeRoles;
   const active = state.catalog?.active === item.id;
-  const link = `caelestia://apply/${item.id}`;
+  const link = `stellaria://apply/${item.id}`;
   const modes = ['dark', 'light'].filter(name => flavour[name]);
   return [
     element('div', { class: 'detail-top' }, [
@@ -1574,7 +1574,7 @@ async function loadLog() {
 function report() {
   const install = state.install;
   const lines = [
-    `Caelestia ${install?.pack.version ?? '?'} · helper ${install?.helper.version ?? '?'} · app ${install?.launcher.version ?? '?'} · Zebar ${install?.zebar.version ?? (install?.zebar.present ? '?' : 'missing')}`,
+    `Stellaria ${install?.pack.version ?? '?'} · helper ${install?.helper.version ?? '?'} · app ${install?.launcher.version ?? '?'} · Zebar ${install?.zebar.version ?? (install?.zebar.present ? '?' : 'missing')}`,
     `Windows: ${navigator.userAgent}`,
     `Registered: ${install?.registered} · tasks: ${(install?.tasks ?? []).map(Number).join('')} · zebar running: ${install?.zebarRunning} · helper running: ${install?.helperRunning}`,
     `Widgets: ${(install?.widgets ?? []).join(', ')}`,
@@ -1661,7 +1661,7 @@ function settingsPage() {
       onClick: () => {
         state.language = code;
         try {
-          localStorage.setItem('caelestia-launcher:language', code);
+          localStorage.setItem('stellaria-launcher:language', code);
         } catch {
           notify(label);
         }
@@ -1677,7 +1677,7 @@ function settingsPage() {
       'aria-pressed': String(value === soundOn),
       onClick: () => {
         try {
-          localStorage.setItem('caelestia-launcher:start-sound', value ? 'on' : 'off');
+          localStorage.setItem('stellaria-launcher:start-sound', value ? 'on' : 'off');
         } catch {
           notify(label);
         }
@@ -1748,8 +1748,8 @@ function settingsPage() {
       element('div', { class: 'section-title' }, [element('span', { text: t('about') })]),
       element('div', { class: 'row' }, [
         icon('favorite', 'tonal-icon'),
-        element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: 'Caelestia' }), element('span', { class: 'row-subtitle', text: t('aboutText') })]),
-        button(t('project'), 'open_in_new', () => invoke('open_external', { url: 'https://github.com/SMIDR76/caelestia-windows' }).catch(() => {}), { variant: 'text' }),
+        element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: 'Stellaria' }), element('span', { class: 'row-subtitle', text: t('aboutText') })]),
+        button(t('project'), 'open_in_new', () => invoke('open_external', { url: 'https://github.com/SMIDR76/stellaria' }).catch(() => {}), { variant: 'text' }),
       ]),
     ]),
   ];
@@ -1978,7 +1978,7 @@ const onboarding = {
 function syncTray() {
   const update = ['available', 'downloading', 'ready'].includes(state.update.status) ? t('trayUpdate', state.update.info.version) : null;
   invoke('tray_labels', {
-    labels: { open: t('trayOpen'), start: t('trayStart'), stop: t('trayStop'), quit: t('trayQuit'), tooltip: update ? `Caelestia · ${update}` : 'Caelestia', update },
+    labels: { open: t('trayOpen'), start: t('trayStart'), stop: t('trayStop'), quit: t('trayQuit'), tooltip: update ? `Stellaria · ${update}` : 'Stellaria', update },
   }).catch(() => {});
 }
 
@@ -2063,11 +2063,11 @@ function confirmPreset(item) {
 }
 
 async function handleLink(link) {
-  if (/^caelestia:\/\/install\/?$/.test(link ?? '')) {
+  if (/^stellaria:\/\/install\/?$/.test(link ?? '')) {
     showPage('install');
     return;
   }
-  const match = /^caelestia:\/\/apply\/([a-z0-9][a-z0-9-]{1,47})\/?$/.exec(link ?? '');
+  const match = /^stellaria:\/\/apply\/([a-z0-9][a-z0-9-]{1,47})\/?$/.exec(link ?? '');
   if (!match) {
     if (link) notify(t('unknownLink'), 'warning');
     return;

@@ -18,7 +18,7 @@ if (-not (Test-Path $cargo)) { $cargo = 'cargo' }
 $manifest = Join-Path $launcher 'Cargo.toml'
 [string[]]$buildMode = @(); if (-not $Debug) { $buildMode = @('--release') }
 $ErrorActionPreference = 'Continue'
-& $cargo clean --manifest-path $manifest @buildMode -p caelestia-launcher 2>&1 | Out-Null
+& $cargo clean --manifest-path $manifest @buildMode -p stellaria-launcher 2>&1 | Out-Null
 & $cargo build --manifest-path $manifest @buildMode 2>&1 | ForEach-Object { "$_" } | Where-Object { $_ -match 'error|warning: unused|Finished' }
 $exit = $LASTEXITCODE
 $ErrorActionPreference = 'Stop'

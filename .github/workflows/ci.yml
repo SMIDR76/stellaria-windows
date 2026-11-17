@@ -19,7 +19,7 @@ jobs:
         with:
           global-json-file: helper/global.json
       - name: Test
-        working-directory: helper/tests/Caelestia.Helper.Tests
+        working-directory: helper/tests/Stellaria.Helper.Tests
         run: dotnet test .
 
   pack:

@@ -1,7 +1,7 @@
 # Helper protocol
 
 The widgets of the Zebar pack never call Windows APIs themselves. Everything that needs native access goes
-through `caelestia-helper.exe`, a background process that exposes a local WebSocket endpoint. This document is
+through `stellaria-helper.exe`, a background process that exposes a local WebSocket endpoint. This document is
 the contract between the two sides. Any change to it must update both `helper/` and `pack/src/core/helper-client.js`
 and bump `protocolVersion` when it is not backwards compatible.
 
@@ -16,14 +16,14 @@ and bump `protocolVersion` when it is not backwards compatible.
 
   | File | Party | Scopes |
   | --- | --- | --- |
-  | `runtime.json` in the official pack | Caelestia's own widgets | every theme scope |
-  | `runtime.json` in each pack listed in `%LOCALAPPDATA%\Caelestia\packs.json` | that community pack | `basic` plus the scopes the user granted |
-  | `%LOCALAPPDATA%\Caelestia\launcher.json` | the Caelestia launcher | every scope, including `launcher` |
+  | `runtime.json` in the official pack | Stellaria's own widgets | every theme scope |
+  | `runtime.json` in each pack listed in `%LOCALAPPDATA%\Stellaria\packs.json` | that community pack | `basic` plus the scopes the user granted |
+  | `%LOCALAPPDATA%\Stellaria\launcher.json` | the Stellaria launcher | every scope, including `launcher` |
 
   Tokens are regenerated at every start. Widgets read their file with `fetch('./runtime.json', { cache: 'no-store' })`.
   A pack that is not listed gets no file, so it cannot talk to the helper at all. `packs.json` is an array of
   `{ "id", "directory", "scopes" }`; directories must be inside `%USERPROFILE%\.glzr\zebar\`, ids are 2 to 48 lowercase
-  letters, digits or dashes, and `caelestia` and `launcher` are reserved.
+  letters, digits or dashes, and `stellaria` and `launcher` are reserved.
 - A widget connects to `ws://127.0.0.1:<port>/`. The token is never part of the URL.
 - The helper rejects the upgrade with HTTP 403 when the `Origin` header is not an `http://127.0.0.1:<any port>` or
   `http://localhost:<any port>` origin (Zebar serves widgets from such an origin) or when the `Host` header is not
@@ -119,14 +119,14 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `system.gpu` | none | `{ "name", "usage": <0-100 or null>, "temperature": <degrees or null> }`. Usage comes from Windows performance counters on every vendor; temperature only when nvidia-smi is installed. |
 | `tasks.activate` | `{ "id" }` | none |
 | `tasks.close` | `{ "id" }` | none |
-| `theme.publish` | `{ "roles": { "<role>": "#rrggbb" }, "transparent": false }`, 1 to 64 roles of 1 to 32 letters | none. Written to `%LOCALAPPDATA%\Caelestia\switcher-theme.json` for the optional window switcher. |
-| `windows.setColors` | `{ "palette": [7 "#rrggbb", lightest first], "dark": bool, "titleBars": bool }` | none. Sets the Windows accent (Settings, File Explorer, Start menu, title bars when `titleBars`) and light or dark mode for apps, in the user's personalisation values only. The previous values are saved to `%LOCALAPPDATA%\Caelestia\windows-colors-backup.json` before the first change. |
+| `theme.publish` | `{ "roles": { "<role>": "#rrggbb" }, "transparent": false }`, 1 to 64 roles of 1 to 32 letters | none. Written to `%LOCALAPPDATA%\Stellaria\switcher-theme.json` for the optional window switcher. |
+| `windows.setColors` | `{ "palette": [7 "#rrggbb", lightest first], "dark": bool, "titleBars": bool }` | none. Sets the Windows accent (Settings, File Explorer, Start menu, title bars when `titleBars`) and light or dark mode for apps, in the user's personalisation values only. The previous values are saved to `%LOCALAPPDATA%\Stellaria\windows-colors-backup.json` before the first change. |
 | `windows.restoreColors` | none | none. Writes back the saved colours and deletes the backup; does nothing without one. |
 | `catalog.index` | `{ "refresh"?: bool }` (scope `launcher`) | `{ "version", "expires", "source": "online" \| "cache" \| "bundled", "items", "news", "active", "canUndo" }`. Reads the signed index from `catalog.url` (optional setting), then the cached copy, then the copy shipped with the installer, and keeps the first one that passes `SignedIndex` checks. `not_found` when none does. |
 | `catalog.apply` | `{ "id" }` of a preset (scope `launcher`) | Same as `catalog.index`. Raises `theme.preset`; the primary bar saves the current look, then applies the preset's scheme, mode, variant and visual options. There is no transparency option: a preset that sets one is refused. |
 | `catalog.undo` | none (scope `launcher`) | Same as `catalog.index`. Raises `theme.undo`; the primary bar restores the look saved before the last preset. |
 | `launcher.status` | none (scope `launcher`) | `{ "helperVersion", "packVersion", "packInstalled", "zebar", "zebarRunning", "tasks": [helper, switcher, Zebar], "sessions" }`. |
-| `launcher.theme` | none (scope `launcher`) | The last `theme.publish` payload, `{ "roles", "transparent" }`, so the Caelestia app wears the theme's colours. `null` before the first publish. |
+| `launcher.theme` | none (scope `launcher`) | The last `theme.publish` payload, `{ "roles", "transparent" }`, so the Stellaria app wears the theme's colours. `null` before the first publish. |
 | `launcher.openSettings` | none (scope `launcher`) | Opens the theme settings window, like Win+Alt+S. |
 | `wallpapers.apply` | `{ "path" }` inside the configured folder | none, `denied` for any other path |
 | `wallpapers.list` | none | `{ "directory", "current", "items": [ { "path", "name", "thumb": "<384 x 216 jpeg base64>" } ] }`, at most 500 images of the configured folder |

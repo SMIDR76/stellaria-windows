@@ -17,4 +17,4 @@ render();
 
 option('desktopClock', true, enabled => clock.classList.toggle('visible', enabled));
 zebar.currentWidget().tauriWindow.setIgnoreCursorEvents(true)
-  .catch(error => console.error('[caelestia] Horloge non traversable', error));
+  .catch(error => console.error('[stellaria] Horloge non traversable', error));

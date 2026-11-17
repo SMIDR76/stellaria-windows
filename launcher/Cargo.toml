@@ -1,9 +1,9 @@
 [package]
-name = "caelestia-launcher"
+name = "stellaria-launcher"
 version = "1.0.0"
 edition = "2021"
 license = "GPL-3.0-only"
-description = "Caelestia launcher"
+description = "Stellaria launcher"
 publish = false
 
 [build-dependencies]

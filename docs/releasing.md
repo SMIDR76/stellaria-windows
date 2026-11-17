@@ -4,20 +4,20 @@
 
 | File | Contents |
 | --- | --- |
-| `CaelestiaSetup-<version>.exe` | Per-user Inno Setup installer (English and French). |
-| `Caelestia-<version>-portable.zip` | The pack, the helper, the switcher, the Caelestia app, `scripts\install.ps1` and `scripts\uninstall.ps1`. |
+| `StellariaSetup-<version>.exe` | Per-user Inno Setup installer (English and French). |
+| `Stellaria-<version>-portable.zip` | The pack, the helper, the switcher, the Stellaria app, `scripts\install.ps1` and `scripts\uninstall.ps1`. |
 | `SHA256SUMS.txt` | SHA-256 of the two files above. |
-| `update.json`, `update.json.minisig` | The update manifest read by the Caelestia app (version, setup name, size and SHA-256), signed with the catalogue key. Only for `x.y.z` versions built with `CAELESTIA_SIGNING_KEY`. |
+| `update.json`, `update.json.minisig` | The update manifest read by the Stellaria app (version, setup name, size and SHA-256), signed with the catalogue key. Only for `x.y.z` versions built with `STELLARIA_SIGNING_KEY`. |
 
 Every file also gets a build provenance attestation, verifiable with
-`gh attestation verify <file> -R SMIDR76/caelestia-windows`.
+`gh attestation verify <file> -R SMIDR76/stellaria`.
 
 ## Steps
 
 1. Set the version in `helper/Directory.Build.props`, `pack/zpack.json`, `launcher/Cargo.toml` and
    `launcher/tauri.conf.json`, and commit.
 2. Tag the commit and push the tag: `git tag v1.2.3` then `git push origin v1.2.3`.
-3. The **Release** workflow builds on `windows-latest` (NativeAOT helper, switcher, Caelestia app, setup, archive,
+3. The **Release** workflow builds on `windows-latest` (NativeAOT helper, switcher, Stellaria app, setup, archive,
    checksums), checks that the helper and the app need no Visual C++ runtime, then on `ubuntu-latest` verifies the checksums, attests the files,
    creates a draft release with generated notes, uploads the files and publishes it.
 4. Upload the setup to [VirusTotal](https://www.virustotal.com) and, if Microsoft Defender flags it, submit it as a
@@ -43,8 +43,8 @@ covers this project.
 
 The Claude desktop app and other packaged (MSIX) apps redirect some registry and AppData writes of the programs they
 start, so an installer launched from them is not a real test. Run it from Explorer, a normal terminal or a scheduled
-task, and check: the entry in Installed apps, the three `Caelestia - *` logon tasks, the Caelestia entries in
-`%USERPROFILE%\.glzr\zebar\settings.json`, then an uninstall after `taskkill /F /IM caelestia-helper.exe` (the taskbar
+task, and check: the entry in Installed apps, the three `Stellaria - *` logon tasks, the Stellaria entries in
+`%USERPROFILE%\.glzr\zebar\settings.json`, then an uninstall after `taskkill /F /IM stellaria-helper.exe` (the taskbar
 and Windows colours must come back).
 
 ## Later

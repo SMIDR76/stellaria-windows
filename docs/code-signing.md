@@ -44,10 +44,10 @@ SignPath Foundation accepts a project at its discretion. Its [code of conduct](h
 
 | File | Product name | Version |
 | --- | --- | --- |
-| `caelestia-helper.exe` | Caelestia for Windows | release version |
-| `caelestia-launcher.exe` | Caelestia | release version (`launcher/Cargo.toml` and `launcher/tauri.conf.json` must match) |
-| `CaelestiaSwitcher.exe` | Caelestia | release version |
-| `CaelestiaSetup-<version>.exe` | Caelestia for Windows | release version (no restriction in its artifact configuration: Inno Setup pads both strings with spaces) |
+| `stellaria-helper.exe` | Stellaria | release version |
+| `stellaria-launcher.exe` | Stellaria | release version (`launcher/Cargo.toml` and `launcher/tauri.conf.json` must match) |
+| `StellariaSwitcher.exe` | Stellaria | release version |
+| `StellariaSetup-<version>.exe` | Stellaria | release version (no restriction in its artifact configuration: Inno Setup pads both strings with spaces) |
 
 `scripts/build-release.ps1` runs in three phases for this: `-Phase Binaries` builds the helper, the app and the switcher
 into `artifacts/unsigned`, `-Phase Package -SignedBinaries <folder>` builds the archive and the setup with the signed

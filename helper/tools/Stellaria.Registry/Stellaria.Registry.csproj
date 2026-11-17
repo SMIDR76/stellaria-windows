@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <SupportedOSPlatformVersion></SupportedOSPlatformVersion>
+    <AssemblyName>stellaria-registry</AssemblyName>
+    <RootNamespace>Stellaria.Registry</RootNamespace>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\src\Stellaria.Helper\Security\Minisign.cs" Link="Shared\Minisign.cs" />
+    <Compile Include="..\..\src\Stellaria.Helper\Security\Scopes.cs" Link="Shared\Scopes.cs" />
+    <Compile Include="..\..\src\Stellaria.Helper\Catalog\SignedIndex.cs" Link="Shared\SignedIndex.cs" />
+    <Compile Include="..\..\src\Stellaria.Helper\Catalog\CatalogItems.cs" Link="Shared\CatalogItems.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" />
+  </ItemGroup>
+
+</Project>

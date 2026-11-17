@@ -60,7 +60,7 @@ jobs:
       - name: Build the archive and the installer
         shell: pwsh
         env:
-          CAELESTIA_SIGNING_KEY: ${{ secrets.CAELESTIA_SIGNING_KEY }}
+          STELLARIA_SIGNING_KEY: ${{ secrets.CAELESTIA_SIGNING_KEY }}
         run: |
           $signed = if ($env:SIGN -eq 'true') { 'artifacts/signed-binaries' } else { '' }
           ./scripts/build-release.ps1 -Version '${{ steps.version.outputs.value }}' -Phase Package -SignedBinaries $signed
@@ -70,7 +70,7 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: unsigned-setup-${{ github.run_id }}-${{ github.run_attempt }}
-          path: artifacts/CaelestiaSetup-*.exe
+          path: artifacts/StellariaSetup-*.exe
           if-no-files-found: error
       - name: Sign the installer (SignPath)
         if: env.SIGN == 'true'
@@ -90,7 +90,7 @@ jobs:
       - name: Update manifest and checksums
         shell: pwsh
         env:
-          CAELESTIA_SIGNING_KEY: ${{ secrets.CAELESTIA_SIGNING_KEY }}
+          STELLARIA_SIGNING_KEY: ${{ secrets.CAELESTIA_SIGNING_KEY }}
         run: |
           $signed = if ($env:SIGN -eq 'true') { 'artifacts/signed-setup' } else { '' }
           ./scripts/build-release.ps1 -Version '${{ steps.version.outputs.value }}' -Phase Finish -SignedSetup $signed
@@ -98,7 +98,7 @@ jobs:
         if: env.SIGN == 'true'
         shell: pwsh
         run: |
-          foreach ($file in (Get-ChildItem artifacts/stage/bin/*.exe) + (Get-Item artifacts/stage/pack/native/CaelestiaSwitcher.exe) + (Get-ChildItem artifacts/CaelestiaSetup-*.exe)) {
+          foreach ($file in (Get-ChildItem artifacts/stage/bin/*.exe) + (Get-Item artifacts/stage/pack/native/StellariaSwitcher.exe) + (Get-ChildItem artifacts/StellariaSetup-*.exe)) {
             $signature = Get-AuthenticodeSignature $file.FullName
             "$($file.Name): $($signature.Status) $($signature.SignerCertificate.Subject)"
             if ($signature.Status -ne 'Valid') { throw "$($file.Name) is not signed." }
@@ -107,14 +107,14 @@ jobs:
         shell: pwsh
         run: |
           $dumpbin = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -find 'VC\Tools\MSVC\**\bin\Hostx64\x64\dumpbin.exe' | Select-Object -First 1
-          foreach ($file in 'artifacts/stage/bin/caelestia-helper.exe', 'artifacts/stage/bin/e_sqlite3.dll', 'artifacts/stage/bin/caelestia-launcher.exe') {
+          foreach ($file in 'artifacts/stage/bin/stellaria-helper.exe', 'artifacts/stage/bin/e_sqlite3.dll', 'artifacts/stage/bin/stellaria-launcher.exe') {
             $imports = & $dumpbin /nologo /dependents $file | Select-String '\.dll' | ForEach-Object { $_.Line.Trim() }
             $imports
             if ($imports -match '(?i)^(vcruntime|msvcp)') { throw "$file needs the Visual C++ runtime." }
           }
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
-          name: caelestia-${{ steps.version.outputs.value }}
+          name: stellaria-${{ steps.version.outputs.value }}
           path: |
             artifacts/*.exe
             artifacts/*.zip
@@ -149,5 +149,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.ref_name }}
         run: |
-          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --draft --verify-tag --generate-notes --title "Caelestia for Windows ${TAG#v}" release/*
+          gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --draft --verify-tag --generate-notes --title "Stellaria ${TAG#v}" release/*
           gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --draft=false

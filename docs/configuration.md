@@ -1,12 +1,12 @@
 # Configuration
 
-All settings live in one file: `%APPDATA%\Caelestia\config.json`. The settings app (Win+Alt+S) edits it through the
+All settings live in one file: `%APPDATA%\Stellaria\config.json`. The settings app (Win+Alt+S) edits it through the
 helper, which validates every value. You can also edit the file by hand while the helper is stopped.
 
 Rules applied when the file is read:
 
 - A missing setting takes its default value.
-- An invalid value is ignored, logged in `%LOCALAPPDATA%\Caelestia\logs\helper.log` and replaced by the default.
+- An invalid value is ignored, logged in `%LOCALAPPDATA%\Stellaria\logs\helper.log` and replaced by the default.
   A broken file never stops the helper.
 - Unknown keys are dropped the next time the helper saves the file.
 
@@ -23,7 +23,7 @@ The file is written atomically (temporary file then rename), so a crash while sa
 | `theme.smartScheme` | boolean | `true` | Uses a monochrome palette when the wallpaper has almost no colour. |
 | `theme.transparency` | boolean | `false` | Translucent surfaces. |
 | `performance.gameMode` | boolean | `false` | Turns off every animation. |
-| `taskbar.hide` | boolean | `true` | Hides the Windows taskbar; the Caelestia bar lists open windows instead. See `docs/security.md` for recovery. |
+| `taskbar.hide` | boolean | `true` | Hides the Windows taskbar; the Stellaria bar lists open windows instead. See `docs/security.md` for recovery. |
 | `clock.seconds` | boolean | `false` | Shows seconds on the bar and dashboard clocks. |
 | `desktopClock.enabled` | boolean | `true` | Large clock on the wallpaper. |
 | `idle.enabled` | boolean | `true` | Shows the idle screen after inactivity. It never replaces the Windows lock screen. |
@@ -52,8 +52,8 @@ Application identifiers are the ones Windows shows in the Start menu (for exampl
 
 | Path | Content |
 | --- | --- |
-| `%APPDATA%\Caelestia\config.json` | Settings described above. |
-| `%LOCALAPPDATA%\Caelestia\state.json` | Original taskbar auto-hide value, kept until it is restored. |
-| `%LOCALAPPDATA%\Caelestia\logs\helper.log` | Helper log, rotated at 2 MB, three archives kept. |
-| `%LOCALAPPDATA%\Caelestia\cache\` | Wallpaper thumbnails. Safe to delete. |
-| `%USERPROFILE%\.glzr\zebar\caelestia\runtime.json` | Port and session token of the running helper. Recreated at every start. |
+| `%APPDATA%\Stellaria\config.json` | Settings described above. |
+| `%LOCALAPPDATA%\Stellaria\state.json` | Original taskbar auto-hide value, kept until it is restored. |
+| `%LOCALAPPDATA%\Stellaria\logs\helper.log` | Helper log, rotated at 2 MB, three archives kept. |
+| `%LOCALAPPDATA%\Stellaria\cache\` | Wallpaper thumbnails. Safe to delete. |
+| `%USERPROFILE%\.glzr\zebar\stellaria\runtime.json` | Port and session token of the running helper. Recreated at every start. |

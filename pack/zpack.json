@@ -1,10 +1,10 @@
 {
   "$schema": "https://github.com/glzr-io/zebar/raw/v3.3.1/resources/zpack-schema.json",
-  "name": "caelestia",
+  "name": "stellaria",
   "version": "1.0.0",
-  "description": "Caelestia shell recreated for Windows 11: vertical bar, rounded screen frame, morphing drawers and Material You colours from the wallpaper.",
+  "description": "Stellaria recreates the Caelestia shell for Windows 11: vertical bar, rounded screen frame, morphing drawers and Material You colours from the wallpaper.",
   "tags": [
-    "caelestia",
+    "stellaria",
     "material-you",
     "vertical-bar"
   ],

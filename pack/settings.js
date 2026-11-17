@@ -27,9 +27,9 @@ const title = document.getElementById('page-title');
 const popup = setupPopup('settings', {
   panel,
   onOpen: () => {
-    const request = store.get('caelestia:settings:page');
+    const request = store.get('stellaria:settings:page');
     if (request && Date.now() - request.at < 5000) {
-      store.set('caelestia:settings:page', null);
+      store.set('stellaria:settings:page', null);
       showPage(request.page);
     }
   },
@@ -40,7 +40,7 @@ document.body.addEventListener('pointerdown', event => {
 });
 
 const schemeNames = {
-  caelestia: 'Caelestia',
+  stellaria: 'Stellaria',
   catppuccin: 'Catppuccin',
   darkgreen: 'Dark Green',
   dracula: 'Dracula',
@@ -278,7 +278,7 @@ function desktopPage() {
       optionRow('tintIcons', true, 'palette', 'Icônes aux couleurs du thème', "Teinte les icônes d'applications avec la couleur principale"),
       optionRow('desktopClock', true, 'schedule', 'Horloge de bureau', "Grande horloge en bas à droite du fond d'écran"),
       optionRow('clockSeconds', false, 'timer', 'Afficher les secondes', 'Horloges de la barre et du tableau de bord'),
-      optionRow('hideTaskbar', true, 'dock_to_left', 'Remplacer la barre des tâches', 'Masque la barre Windows : la barre Caelestia liste les fenêtres ouvertes'),
+      optionRow('hideTaskbar', true, 'dock_to_left', 'Remplacer la barre des tâches', 'Masque la barre Windows : la barre Stellaria liste les fenêtres ouvertes'),
     ]),
     section("Écran d'inactivité", [
       optionRow('idleScreen', true, 'nightlight', "Afficher l'écran d'inactivité", "Horloge, météo et média sur le fond flouté. Le verrouillage de Windows n'est pas modifié."),
@@ -395,7 +395,7 @@ function welcomePage() {
   return [
     pageHero({
       symbol: 'auto_awesome',
-      heading: 'Bienvenue dans Caelestia',
+      heading: 'Bienvenue dans Stellaria',
       text: 'Quatre étapes rapides pour régler le thème à votre goût. Tout reste modifiable plus tard dans ces réglages.',
     }),
     step(1, "Fond d'écran", [
@@ -413,7 +413,7 @@ function welcomePage() {
       optionRow('island', true, 'smart_display', 'Île dynamique', 'Morceau en cours et notifications en haut de l\'écran'),
     ]),
     step(4, 'Démarrage', [
-      element('p', { class: 'welcome-text', text: "Caelestia se lance à chaque ouverture de session. En cas de souci, le menu Démarrer contient « Caelestia - Rétablir la barre des tâches »." }),
+      element('p', { class: 'welcome-text', text: "Stellaria se lance à chaque ouverture de session. En cas de souci, le menu Démarrer contient « Stellaria - Rétablir la barre des tâches »." }),
       element('button', {
         class: 'button primary',
         onClick: () => {
@@ -462,8 +462,8 @@ function aboutPage() {
   return [
     pageHero({
       symbol: 'auto_awesome',
-      heading: 'Caelestia pour Windows',
-      text: 'Le shell Material You de Caelestia, recréé pour Windows 11 : barre, tiroirs et animations expressives autour de vos fenêtres habituelles.',
+      heading: 'Stellaria pour Windows',
+      text: 'Stellaria recrée le shell Material You de Caelestia pour Windows 11 : barre, tiroirs et animations expressives autour de vos fenêtres habituelles.',
       chips: [
         element('span', { class: 'hero-chip about-version', text: packVersion ? `Version ${packVersion}` : 'Version' }),
         element('span', { class: 'hero-chip', text: 'Licence GPL-3.0' }),

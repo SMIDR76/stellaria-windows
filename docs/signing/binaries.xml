@@ -4,13 +4,13 @@
     <parameter name="version" required="true" />
   </parameters>
   <zip-file>
-    <pe-file path="caelestia-helper.exe" product-name="Caelestia for Windows" product-version="${version}">
+    <pe-file path="stellaria-helper.exe" product-name="Stellaria" product-version="${version}">
       <authenticode-sign />
     </pe-file>
-    <pe-file path="caelestia-launcher.exe" product-name="Caelestia" product-version="${version}">
+    <pe-file path="stellaria-launcher.exe" product-name="Stellaria" product-version="${version}">
       <authenticode-sign />
     </pe-file>
-    <pe-file path="CaelestiaSwitcher.exe" product-name="Caelestia" product-version="${version}">
+    <pe-file path="StellariaSwitcher.exe" product-name="Stellaria" product-version="${version}">
       <authenticode-sign />
     </pe-file>
   </zip-file>

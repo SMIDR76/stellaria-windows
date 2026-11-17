@@ -13,9 +13,9 @@ use winreg::RegKey;
 
 use crate::{environment, helper_path, CREATE_NO_WINDOW};
 
-const TASKS: [&str; 3] = ["Caelestia - Helper", "Caelestia - Zebar", "Caelestia - Selecteur Alt+Tab"];
+const TASKS: [&str; 3] = ["Stellaria - Helper", "Stellaria - Zebar", "Stellaria - Selecteur Alt+Tab"];
 const UNINSTALL_KEY: &str = r"Software\Microsoft\Windows\CurrentVersion\Uninstall";
-const PACK_NAME: &str = "caelestia";
+const PACK_NAME: &str = "stellaria";
 
 #[derive(Serialize, Default)]
 #[serde(rename_all = "camelCase")]
@@ -55,9 +55,9 @@ fn winget_path() -> PathBuf {
 
 pub fn folder(target: &str) -> Option<PathBuf> {
     match target {
-        "app" => Some(environment("USERPROFILE").join(".caelestia")),
+        "app" => Some(environment("USERPROFILE").join(".stellaria")),
         "pack" => Some(pack_directory()),
-        "logs" => Some(environment("LOCALAPPDATA").join("Caelestia").join("logs")),
+        "logs" => Some(environment("LOCALAPPDATA").join("Stellaria").join("logs")),
         _ => None,
     }
 }
@@ -196,12 +196,12 @@ pub fn detect() -> Installation {
         helper: executable(helper_path()),
         pack: pack(),
         launcher: Component { present: true, version: Some(env!("CARGO_PKG_VERSION").to_string()), path: launcher },
-        switcher: pack_directory().join("native").join("CaelestiaSwitcher.exe").is_file(),
+        switcher: pack_directory().join("native").join("StellariaSwitcher.exe").is_file(),
         registered: !widgets.is_empty(),
         widgets,
         tasks: TASKS.iter().map(|name| task_exists(name)).collect(),
         zebar_running: processes.iter().any(|name| name == "zebar.exe"),
-        helper_running: processes.iter().any(|name| name == "caelestia-helper.exe"),
+        helper_running: processes.iter().any(|name| name == "stellaria-helper.exe"),
         winget: winget_path().is_file(),
     }
 }

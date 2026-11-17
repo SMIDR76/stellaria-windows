@@ -52,11 +52,11 @@ fn menu<R: Runtime>(app: &AppHandle<R>, labels: &TrayLabels) -> tauri::Result<Me
 
 pub fn create<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
     let labels = TrayLabels {
-        open: "Ouvrir Caelestia".into(),
+        open: "Ouvrir Stellaria".into(),
         start: "Démarrer le thème".into(),
         stop: "Arrêter le thème".into(),
         quit: "Quitter".into(),
-        tooltip: "Caelestia".into(),
+        tooltip: "Stellaria".into(),
         update: None,
     };
     let mut builder = TrayIconBuilder::with_id(TRAY)

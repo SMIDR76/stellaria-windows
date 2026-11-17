@@ -17,7 +17,7 @@ export function onShared(type, callback) {
 }
 
 function report(method, error) {
-  console.error(`[caelestia] ${method} : ${error.message}`);
+  console.error(`[stellaria] ${method} : ${error.message}`);
   if (error.code === 'unsupported' || error.code === 'denied') toast('Action impossible', { message: error.message, icon: 'block', kind: 'warning' });
 }
 

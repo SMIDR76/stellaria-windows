@@ -14,12 +14,12 @@ use winreg::RegKey;
 
 use crate::{environment, CREATE_NO_WINDOW};
 
-const LATEST: &str = "https://github.com/SMIDR76/caelestia-windows/releases/latest/download";
-const RELEASES: &str = "https://github.com/SMIDR76/caelestia-windows/releases/download";
-const API: &str = "https://api.github.com/repos/SMIDR76/caelestia-windows";
+const LATEST: &str = "https://github.com/SMIDR76/stellaria/releases/latest/download";
+const RELEASES: &str = "https://github.com/SMIDR76/stellaria/releases/download";
+const API: &str = "https://api.github.com/repos/SMIDR76/stellaria";
 const PUBLIC_KEY: &str = "RWTou8VvwZXwQHs+sbv0zMiXD1JvVzuCX0ICnWMLpDqDAt7GcjMCMe/Z";
 const SETUP_KEY: &str = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\{07E2E875-6641-40F1-998A-41F55DCD99DD}_is1";
-const TEST_SOURCE: &str = "CAELESTIA_UPDATE_SOURCE";
+const TEST_SOURCE: &str = "STELLARIA_UPDATE_SOURCE";
 const MAX_MANIFEST: usize = 64 * 1024;
 const MAX_SETUP: u64 = 512 * 1024 * 1024;
 
@@ -87,7 +87,7 @@ fn newer(candidate: &str, current: &str) -> bool {
 
 fn client() -> Result<reqwest::Client, String> {
     reqwest::Client::builder()
-        .user_agent(concat!("caelestia-launcher/", env!("CARGO_PKG_VERSION")))
+        .user_agent(concat!("stellaria-launcher/", env!("CARGO_PKG_VERSION")))
         .connect_timeout(Duration::from_secs(10))
         .build()
         .map_err(|_| "network".to_string())
@@ -114,8 +114,8 @@ fn open_manifest(data: &[u8], signature: &[u8]) -> Result<Manifest, String> {
     let signature = Signature::decode(text).map_err(|_| "signature".to_string())?;
     key.verify(data, &signature, false).map_err(|_| "signature".to_string())?;
     let manifest: Manifest = serde_json::from_slice(data).map_err(|_| "manifest".to_string())?;
-    let expected = format!("caelestia-update version={}", manifest.version);
-    let name_ok = manifest.setup.name == format!("CaelestiaSetup-{}.exe", manifest.version);
+    let expected = format!("stellaria-update version={}", manifest.version);
+    let name_ok = manifest.setup.name == format!("StellariaSetup-{}.exe", manifest.version);
     let hash_ok = manifest.setup.sha256.len() == 64 && manifest.setup.sha256.chars().all(|c| c.is_ascii_hexdigit() && !c.is_ascii_uppercase());
     let valid = manifest.schema == 1
         && signature.trusted_comment() == expected
@@ -128,7 +128,7 @@ fn open_manifest(data: &[u8], signature: &[u8]) -> Result<Manifest, String> {
 }
 
 fn updates_directory() -> PathBuf {
-    environment("LOCALAPPDATA").join("Caelestia").join("updates")
+    environment("LOCALAPPDATA").join("Stellaria").join("updates")
 }
 
 #[tauri::command]

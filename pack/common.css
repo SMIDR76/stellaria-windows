@@ -183,7 +183,7 @@ html.tint-icons img.active-icon,
 html.tint-icons .tray-item img,
 html.tint-icons .item-visual img,
 html.tint-icons .app-volume img.app-icon {
-  filter: url(#caelestia-tint);
+  filter: url(#stellaria-tint);
 }
 
 .ripple-clip {

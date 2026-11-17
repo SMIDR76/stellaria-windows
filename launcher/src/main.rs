@@ -17,7 +17,7 @@ use winreg::RegKey;
 
 const CREATE_NO_WINDOW: u32 = 0x0800_0000;
 const HELPER_VERBS: [&str; 5] = ["start", "restore-shell", "install", "uninstall", "shutdown"];
-const LINK_PREFIX: &str = "caelestia://";
+const LINK_PREFIX: &str = "stellaria://";
 const SETTINGS_LINKS: [&str; 1] = ["ms-settings:appsfeatures"];
 const LOG_BYTES: u64 = 96 * 1024;
 const MAX_WALLPAPER: u64 = 64 * 1024 * 1024;
@@ -34,7 +34,7 @@ fn environment(name: &str) -> PathBuf {
 }
 
 fn helper_path() -> PathBuf {
-    environment("USERPROFILE").join(".caelestia").join("bin").join("caelestia-helper.exe")
+    environment("USERPROFILE").join(".stellaria").join("bin").join("stellaria-helper.exe")
 }
 
 fn run_helper(verb: &str) -> Result<i32, String> {
@@ -55,7 +55,7 @@ fn run_helper(verb: &str) -> Result<i32, String> {
 
 #[tauri::command]
 fn runtime() -> Result<Runtime, String> {
-    let path = environment("LOCALAPPDATA").join("Caelestia").join("launcher.json");
+    let path = environment("LOCALAPPDATA").join("Stellaria").join("launcher.json");
     let text = std::fs::read_to_string(&path).map_err(|_| "helper-offline".to_string())?;
     let value: serde_json::Value = serde_json::from_str(&text).map_err(|error| error.to_string())?;
     let port = value["port"].as_u64().filter(|port| (47610..=47619).contains(port)).ok_or("helper-offline")?;
@@ -109,7 +109,7 @@ fn initial_link() -> Option<String> {
 
 #[tauri::command]
 fn log_tail(lines: usize) -> Result<Vec<String>, String> {
-    let path = environment("LOCALAPPDATA").join("Caelestia").join("logs").join("helper.log");
+    let path = environment("LOCALAPPDATA").join("Stellaria").join("logs").join("helper.log");
     let mut file = std::fs::File::open(path).map_err(|_| "log-missing".to_string())?;
     let length = file.metadata().map_err(|error| error.to_string())?.len();
     file.seek(SeekFrom::Start(length.saturating_sub(LOG_BYTES))).map_err(|error| error.to_string())?;
@@ -169,5 +169,5 @@ fn main() {
             update::release_notes
         ])
         .run(tauri::generate_context!())
-        .expect("Caelestia could not start");
+        .expect("Stellaria could not start");
 }

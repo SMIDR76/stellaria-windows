@@ -104,7 +104,7 @@ const popup = setupPopup('launcher', {
 });
 
 const maxResults = 40;
-const launchCountsKey = 'caelestia:launch-counts';
+const launchCountsKey = 'stellaria:launch-counts';
 const appsRefreshAge = 10 * 60 * 1000;
 
 const state = {
@@ -221,7 +221,7 @@ const formatNumber = value => value.toLocaleString(settings.locale, { maximumFra
 async function runPower(action) {
   popup.close();
   await new Promise(resolve => setTimeout(resolve, 420));
-  await helperClient.request('power.run', { action }).catch(error => console.error('[caelestia] Alimentation', error));
+  await helperClient.request('power.run', { action }).catch(error => console.error('[stellaria] Alimentation', error));
 }
 
 function actionEntries() {
@@ -308,7 +308,7 @@ function variantEntries() {
 }
 
 const schemeNames = {
-  caelestia: 'Caelestia',
+  stellaria: 'Stellaria',
   catppuccin: 'Catppuccin',
   darkgreen: 'Dark Green',
   dracula: 'Dracula',
@@ -389,7 +389,7 @@ function loadEmoji() {
       return emojiList;
     })
     .catch(error => {
-      console.error('[caelestia] Emojis indisponibles', error);
+      console.error('[stellaria] Emojis indisponibles', error);
       emojiList = [];
     });
   return emojiRequest;
@@ -740,7 +740,7 @@ function render() {
   } else if (parsed.mode === 'clipboard') {
     if (modeChanged) {
       clipboardRequestedAt = Date.now();
-      actions.refreshClipboard().catch(error => console.error('[caelestia] Presse-papiers', error));
+      actions.refreshClipboard().catch(error => console.error('[stellaria] Presse-papiers', error));
     }
     entries = clipboardEntries(parsed.text);
   } else {
@@ -789,7 +789,7 @@ async function activate(index = state.selected) {
   try {
     await entry.run();
   } catch (error) {
-    console.error('[caelestia] Action du lanceur impossible', error);
+    console.error('[stellaria] Action du lanceur impossible', error);
     nodes.emptyText.textContent = error.message;
   }
 }
@@ -804,7 +804,7 @@ async function loadApps() {
     store.set(keys.apps, { at: Date.now(), items: state.apps });
     if (state.mode === 'apps') render();
   } catch (error) {
-    console.error('[caelestia] Liste des applications indisponible', error);
+    console.error('[stellaria] Liste des applications indisponible', error);
   } finally {
     setLoading(false);
     if (state.mode === 'apps') render();
@@ -819,7 +819,7 @@ async function loadWallpapers() {
     state.wallpapers = { current: result.current, items: result.items ?? [] };
     store.set(keys.wallpapers, state.wallpapers);
   } catch (error) {
-    console.error("[caelestia] Fonds d'écran indisponibles", error);
+    console.error("[stellaria] Fonds d'écran indisponibles", error);
     nodes.caption.textContent = error.message;
   } finally {
     setLoading(false);
@@ -862,7 +862,7 @@ nodes.strip.addEventListener('wheel', event => {
   select(Math.max(0, Math.min(state.entries.length - 1, state.selected + (event.deltaY > 0 ? 1 : -1))), true);
 }, { passive: false });
 
-store.watch('caelestia:wallpaper', path => {
+store.watch('stellaria:wallpaper', path => {
   if (!path) return;
   state.wallpapers = { ...state.wallpapers, current: path };
   if (state.mode === 'wallpapers') render();

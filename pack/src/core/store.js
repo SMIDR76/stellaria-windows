@@ -4,37 +4,53 @@ export const settings = {
 };
 
 export const keys = {
-  source: 'caelestia:source',
-  mode: 'caelestia:mode',
-  variant: 'caelestia:variant',
-  scheme: 'caelestia:scheme',
-  toast: 'caelestia:toast',
-  autoMode: 'caelestia:auto-mode',
-  dashboardTab: 'caelestia:dashboard-tab',
-  idle: 'caelestia:idle',
-  wallpaperSample: 'caelestia:wallpaper:sample',
-  achromatic: 'caelestia:wallpaper:achromatic',
-  fullscreen: 'caelestia:fullscreen',
-  apps: 'caelestia:apps',
-  wallpapers: 'caelestia:wallpapers',
-  dashboard: monitor => `caelestia:dashboard:${monitor}`,
-  focus: 'caelestia:focus',
-  tasks: 'caelestia:tasks',
-  taskIcons: 'caelestia:task-icons',
-  event: type => `caelestia:event:${type}`,
-  popout: monitor => `caelestia:popout:${monitor}`,
-  dashboardWidth: 'caelestia:dashboard:width',
-  launcherQuery: 'caelestia:launcher:query',
-  location: 'caelestia:location',
-  weather: 'caelestia:weather',
-  sysinfo: 'caelestia:sysinfo',
-  popupClosed: name => `caelestia:popup:${name}:closed`,
-  popupDismiss: name => `caelestia:popup:${name}:dismiss`,
-  popupRequest: name => `caelestia:popup:${name}:request`,
-  popupAck: name => `caelestia:popup:${name}:ack`,
-  popupState: name => `caelestia:popup:${name}:state`,
-  popupSpawn: name => `caelestia:popup:${name}:spawn`,
+  source: 'stellaria:source',
+  mode: 'stellaria:mode',
+  variant: 'stellaria:variant',
+  scheme: 'stellaria:scheme',
+  toast: 'stellaria:toast',
+  autoMode: 'stellaria:auto-mode',
+  dashboardTab: 'stellaria:dashboard-tab',
+  idle: 'stellaria:idle',
+  wallpaperSample: 'stellaria:wallpaper:sample',
+  achromatic: 'stellaria:wallpaper:achromatic',
+  fullscreen: 'stellaria:fullscreen',
+  apps: 'stellaria:apps',
+  wallpapers: 'stellaria:wallpapers',
+  dashboard: monitor => `stellaria:dashboard:${monitor}`,
+  focus: 'stellaria:focus',
+  tasks: 'stellaria:tasks',
+  taskIcons: 'stellaria:task-icons',
+  event: type => `stellaria:event:${type}`,
+  popout: monitor => `stellaria:popout:${monitor}`,
+  dashboardWidth: 'stellaria:dashboard:width',
+  launcherQuery: 'stellaria:launcher:query',
+  location: 'stellaria:location',
+  weather: 'stellaria:weather',
+  sysinfo: 'stellaria:sysinfo',
+  popupClosed: name => `stellaria:popup:${name}:closed`,
+  popupDismiss: name => `stellaria:popup:${name}:dismiss`,
+  popupRequest: name => `stellaria:popup:${name}:request`,
+  popupAck: name => `stellaria:popup:${name}:ack`,
+  popupState: name => `stellaria:popup:${name}:state`,
+  popupSpawn: name => `stellaria:popup:${name}:spawn`,
 };
+
+function migrateKeys() {
+  try {
+    const legacy = 'caelestia:';
+    for (const key of Object.keys(localStorage)) {
+      if (!key.startsWith(legacy)) continue;
+      const renamed = `stellaria:${key.slice(legacy.length)}`;
+      if (localStorage.getItem(renamed) === null) localStorage.setItem(renamed, localStorage.getItem(key));
+      localStorage.removeItem(key);
+    }
+  } catch {
+    return;
+  }
+}
+
+migrateKeys();
 
 export const store = {
   get(key, fallback = null) {
@@ -49,9 +65,9 @@ export const store = {
   set(key, value) {
     try {
       localStorage.setItem(key, JSON.stringify(value));
-      window.dispatchEvent(new CustomEvent('caelestia-store', { detail: key }));
+      window.dispatchEvent(new CustomEvent('stellaria-store', { detail: key }));
     } catch (error) {
-      console.error(`[caelestia] Impossible d'écrire ${key}`, error);
+      console.error(`[stellaria] Impossible d'écrire ${key}`, error);
     }
   },
 
@@ -66,7 +82,7 @@ export const store = {
     window.addEventListener('storage', event => {
       if (event.key === key) check();
     });
-    window.addEventListener('caelestia-store', event => {
+    window.addEventListener('stellaria-store', event => {
       if (event.detail === key) check();
     });
     setInterval(check, Math.max(interval, 2000));
@@ -74,15 +90,15 @@ export const store = {
 };
 
 export function option(name, fallback, callback) {
-  const key = `caelestia:option:${name}`;
+  const key = `stellaria:option:${name}`;
   callback(store.get(key, fallback));
   store.watch(key, value => callback(value ?? fallback), 250);
 }
 
 export function setOption(name, value) {
-  store.set(`caelestia:option:${name}`, value);
+  store.set(`stellaria:option:${name}`, value);
 }
 
 export function getOption(name, fallback) {
-  return store.get(`caelestia:option:${name}`, fallback);
+  return store.get(`stellaria:option:${name}`, fallback);
 }

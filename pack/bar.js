@@ -61,7 +61,7 @@ const nodes = {
 const popupButtons = { launcher: nodes.logo, session: nodes.power };
 
 for (const [name, button] of Object.entries(popupButtons)) {
-  button.addEventListener('click', () => togglePopup(name, monitor).catch(error => console.error(`[caelestia] ${name}`, error)));
+  button.addEventListener('click', () => togglePopup(name, monitor).catch(error => console.error(`[stellaria] ${name}`, error)));
 }
 
 nodes.clock.addEventListener('click', () => toggleDashboard(monitor));
@@ -90,7 +90,7 @@ async function refreshWeather() {
   try {
     renderWeather(await loadWeather());
   } catch (error) {
-    console.error('[caelestia] Météo indisponible', error);
+    console.error('[stellaria] Météo indisponible', error);
   }
 }
 
@@ -276,7 +276,7 @@ function render(output) {
 
 render(providers.outputMap);
 providers.onOutput(render);
-providers.onError(errors => console.error('[caelestia] providers', JSON.stringify(errors)));
+providers.onError(errors => console.error('[stellaria] providers', JSON.stringify(errors)));
 
 nodes.volume.addEventListener('click', () => {
   const audio = providers.outputMap.audio;
@@ -323,7 +323,7 @@ for (const [node, kind] of popoutTargets) {
 }
 nodes.keyboard.addEventListener('click', () => openSettings('regionlanguage'));
 
-const notificationKeys = { dismissed: 'caelestia:notifications:dismissed', seenAt: 'caelestia:notifications:seen-at' };
+const notificationKeys = { dismissed: 'stellaria:notifications:dismissed', seenAt: 'stellaria:notifications:seen-at' };
 function renderNotificationBadge() {
   const items = helperClient.state('notifications')?.items ?? [];
   const dismissed = new Set(store.get(notificationKeys.dismissed, []));
@@ -389,7 +389,7 @@ function renderDesktops(desktops) {
 }
 
 function switchDesktop(index) {
-  helperClient.request('desktops.switch', { index }).catch(error => console.error('[caelestia] Bureau virtuel', error));
+  helperClient.request('desktops.switch', { index }).catch(error => console.error('[stellaria] Bureau virtuel', error));
 }
 
 helperClient.onState('desktops', renderDesktops);
@@ -467,7 +467,7 @@ function publishFocus(focus) {
 async function applyWallpaperSample(wallpaper) {
   if (!wallpaper?.sample) return;
   const { source, achromatic } = await analyzeImage(wallpaper.sample);
-  store.set('caelestia:wallpaper', wallpaper.path);
+  store.set('stellaria:wallpaper', wallpaper.path);
   store.set(keys.wallpaperSample, wallpaper.sample);
   if (store.get(keys.source) !== source || store.get(keys.achromatic, false) !== achromatic) {
     store.set(keys.source, source);
@@ -509,10 +509,10 @@ function relayHelperState() {
     const seconds = idle?.seconds ?? 0;
     store.set(keys.idle, { seconds, at: Date.now() });
     const threshold = Math.max(1, Number(getOption('idleMinutes', 10)) || 10) * 60 - 15;
-    const running = Date.now() - store.get('caelestia:idle:running', 0) < 3000;
+    const running = Date.now() - store.get('stellaria:idle:running', 0) < 3000;
     if (getOption('idleScreen', true) && seconds >= threshold && !running) {
-      store.set('caelestia:idle:running', Date.now());
-      zebar.startWidgetPreset('idle', 'default').catch(error => console.error('[caelestia] Écran de veille', error));
+      store.set('stellaria:idle:running', Date.now());
+      zebar.startWidgetPreset('idle', 'default').catch(error => console.error('[stellaria] Écran de veille', error));
     }
   });
   helperClient.onState('keyboard', keyboard => {
@@ -532,16 +532,16 @@ function relayHelperState() {
     store.set(keys.fullscreen, { monitors: fullscreen, covered });
   });
   helperClient.onState('wallpaper', wallpaper => {
-    applyWallpaperSample(wallpaper).catch(error => console.error('[caelestia] Fond d\'écran', error));
+    applyWallpaperSample(wallpaper).catch(error => console.error('[stellaria] Fond d\'écran', error));
   });
   helperClient.onEvent('hotkey', event => {
-    runHotkey(event.name, event.monitor).catch(error => console.error('[caelestia] Raccourci', error));
+    runHotkey(event.name, event.monitor).catch(error => console.error('[stellaria] Raccourci', error));
   });
   helperClient.onEvent('hotkey.unavailable', event => {
     toast('Raccourci indisponible', { message: `${event.shortcut} est déjà utilisé par une autre application.`, icon: 'keyboard', kind: 'warning', duration: 6000 });
   });
   helperClient.onEvent('appbars.paused', event => {
-    toast('Barres Caelestia', { message: `Réparations suspendues ${event.minutes} min.`, icon: 'warning', kind: 'warning', duration: 8000 });
+    toast('Barres Stellaria', { message: `Réparations suspendues ${event.minutes} min.`, icon: 'warning', kind: 'warning', duration: 8000 });
   });
 }
 
@@ -586,7 +586,7 @@ function syncSwitcherTheme() {
     if (payload === switcherTheme.payload && Date.now() - switcherTheme.sentAt < 5000) return;
     switcherTheme.payload = payload;
     switcherTheme.sentAt = Date.now();
-    actions.publishSwitcherTheme(theme).catch(error => console.error('[caelestia] Thème du sélecteur', error));
+    actions.publishSwitcherTheme(theme).catch(error => console.error('[stellaria] Thème du sélecteur', error));
   }, 400);
 }
 
@@ -596,10 +596,10 @@ function syncWindowsColors() {
   clearTimeout(windowsColors.timer);
   windowsColors.timer = setTimeout(() => {
     if (!getOption('windowsColors', false)) {
-      if (store.get('caelestia:windows-colors:applied', false)) {
+      if (store.get('stellaria:windows-colors:applied', false)) {
         helperClient.request('windows.restoreColors')
-          .then(() => store.set('caelestia:windows-colors:applied', false))
-          .catch(error => console.error('[caelestia] Couleurs Windows', error));
+          .then(() => store.set('stellaria:windows-colors:applied', false))
+          .catch(error => console.error('[stellaria] Couleurs Windows', error));
       }
       windowsColors.sent = '';
       return;
@@ -615,16 +615,16 @@ function syncWindowsColors() {
     if (payload === windowsColors.sent) return;
     windowsColors.sent = payload;
     helperClient.request('windows.setColors', request)
-      .then(() => store.set('caelestia:windows-colors:applied', true))
+      .then(() => store.set('stellaria:windows-colors:applied', true))
       .catch(error => {
         windowsColors.sent = '';
-        console.error('[caelestia] Couleurs Windows', error);
+        console.error('[stellaria] Couleurs Windows', error);
       });
   }, 700);
 }
 
 const presetOptions = ['tintIcons', 'smartScheme', 'clockSeconds', 'desktopClock', 'island'];
-const presetHistoryKey = 'caelestia:preset:history';
+const presetHistoryKey = 'stellaria:preset:history';
 const presetDefaults = { tintIcons: true, smartScheme: true, clockSeconds: false, desktopClock: true, island: true };
 
 function currentLook() {
@@ -697,11 +697,11 @@ if (await isPrimaryMonitor()) {
   option('hideTaskbar', true, hidden => actions.setTaskbarHidden(Boolean(hidden)));
   if (!getOption('welcomed', false)) {
     setTimeout(() => {
-      store.set('caelestia:settings:page', { page: 'welcome', at: Date.now() });
-      togglePopup('settings').catch(error => console.error('[caelestia] Bienvenue', error));
+      store.set('stellaria:settings:page', { page: 'welcome', at: Date.now() });
+      togglePopup('settings').catch(error => console.error('[stellaria] Bienvenue', error));
     }, 4000);
   }
   const configure = (path, value) => helperClient.request('config.set', { path, value })
-    .catch(error => console.error(`[caelestia] ${path}`, error));
+    .catch(error => console.error(`[stellaria] ${path}`, error));
   option('wallpaperDirectory', '', directory => configure('wallpapers.directory', directory || null));
 }
