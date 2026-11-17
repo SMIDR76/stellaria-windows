@@ -28,6 +28,37 @@ const strings = {
     confirmTitle: 'Appliquer ce préréglage ?', confirmText: 'Un lien demande d’appliquer « {0} ». Vos réglages actuels seront gardés pour pouvoir annuler.',
     unknownLink: "Ce lien Caelestia n'est pas reconnu.", cancel: 'Annuler',
     helperMissing: "Le helper de Caelestia n'est pas installé. Réinstallez Caelestia.",
+    install: 'Installation', installCaelestia: 'Installer Caelestia', notInstalled: 'Pas installé',
+    installReady: 'Caelestia est installé', installReadyText: 'Tout est en place. Si quelque chose ne marche plus, Réparer réinstalle les widgets et le démarrage automatique sans toucher à vos réglages.',
+    installStopped: 'Caelestia est installé mais arrêté', installStoppedText: "Tout est en place, mais le thème ne tourne pas. Démarrez-le, ou réparez-le s'il ne se lance pas.",
+    installNew: 'Installer Caelestia', installNewText: "Zebar, les widgets et le démarrage automatique en une seule étape. Tout reste sur votre compte et rien n'est envoyé en ligne.",
+    installPartial: 'Installation incomplète', installPartialText: '{0} élément(s) à corriger. Réparer les remet en place sans toucher à vos réglages.',
+    installFiles: 'Fichiers manquants', installFilesText: "Une partie des fichiers de Caelestia a disparu. Relancez le programme d'installation de Caelestia pour les remettre.",
+    installAction: 'Installer', removeStartup: 'Retirer du démarrage', noAdmin: 'Sans droits administrateur',
+    progress: 'Progression', stepZebar: 'Installer Zebar', stepRegister: 'Inscrire les widgets et le démarrage automatique', stepStart: 'Lancer Caelestia',
+    stepWaiting: 'En attente', stepRunning: 'En cours…', stepDone: 'Terminé', stepSkipped: 'Déjà installé',
+    stepZebarRunning: 'Windows peut demander une autorisation : acceptez-la pour continuer.',
+    installDone: 'Caelestia est installé et démarre', installFailed: "L'installation s'est arrêtée : {0}",
+    wingetMissing: "winget n'est pas disponible sur ce PC. Installez Zebar depuis sa page, puis réessayez.",
+    zebarStillMissing: "Zebar n'a pas été trouvé après son installation.", zebarNotFound: 'Zebar est introuvable.', codeFailed: 'code {0}',
+    components: 'Composants', ok: 'En place', missing: 'Absent',
+    compZebarMissing: 'Absent : il sera installé avec winget, Windows demandera une autorisation une fois.',
+    compZebarNoWinget: "Absent, et winget n'est pas disponible : installez Zebar depuis sa page.",
+    compHelper: 'Helper Caelestia', compPack: 'Widgets (pack Zebar)', compSwitcher: 'Sélecteur Alt+Tab', compSwitcherOk: 'Remplace Alt+Tab pendant que le thème tourne', optional: 'Facultatif, non installé',
+    compStartup: 'Liste de démarrage de Zebar', compStartupOk: 'Les widgets Caelestia y sont inscrits', compStartupMissing: "Les widgets Caelestia n'y sont pas inscrits",
+    compTasksText: '{0} tâche(s) sur {1} en place', compRunning: 'En marche', compRunningText: 'Zebar : {0} · helper : {1}', on: 'lancé', off: 'arrêté',
+    compApp: 'Application Caelestia', zebarPage: 'Page de Zebar',
+    changes: "Ce que l'installation modifie",
+    changeFiles: 'Fichiers dans %USERPROFILE%\\.caelestia et %USERPROFILE%\\.glzr\\zebar\\caelestia, pour votre compte uniquement, sans droits administrateur.',
+    changeStartup: "Trois tâches lancent le helper, Zebar et le sélecteur à l'ouverture de session.",
+    changeTaskbar: "La barre des tâches Windows est masquée pendant que le thème tourne et revient quand il s'arrête.",
+    changeZebar: 'La liste de démarrage de Zebar reçoit les widgets Caelestia (une sauvegarde de vos réglages est conservée).',
+    changeColors: "En option, désactivé par défaut : la couleur d'accent de Windows peut suivre le thème.",
+    changePrivacy: 'Aucune télémétrie. Réseau : météo (Open-Meteo) et paroles (LRCLIB), tous deux facultatifs.',
+    folders: 'Dossiers', folderApp: 'Programmes de Caelestia', folderPack: 'Widgets', folderLogs: 'Journaux', open: 'Ouvrir',
+    removeTitle: 'Retirer Caelestia du démarrage ?',
+    removeText: "Caelestia s'arrête et ne se lance plus à l'ouverture de session. La barre des tâches et les couleurs Windows sont rétablies. Les fichiers restent : Installer remet tout en place. Pour tout supprimer, passez par les applications Windows.",
+    removed: 'Caelestia est retiré du démarrage, la barre des tâches Windows est revenue', remove: 'Retirer', appsSettings: 'Applications Windows',
   },
   en: {
     home: 'Home', discover: 'Discover', library: 'Library', news: 'News', settings: 'Settings',
@@ -54,11 +85,43 @@ const strings = {
     confirmTitle: 'Apply this preset?', confirmText: 'A link asks to apply “{0}”. Your current settings are kept so you can undo.',
     unknownLink: 'This Caelestia link is not recognised.', cancel: 'Cancel',
     helperMissing: 'The Caelestia helper is not installed. Reinstall Caelestia.',
+    install: 'Installation', installCaelestia: 'Install Caelestia', notInstalled: 'Not installed',
+    installReady: 'Caelestia is installed', installReadyText: 'Everything is in place. If something stops working, Repair reinstalls the widgets and start-up without touching your settings.',
+    installStopped: 'Caelestia is installed but stopped', installStoppedText: "Everything is in place, but the theme is not running. Start it, or repair it if it won't start.",
+    installNew: 'Install Caelestia', installNewText: 'Zebar, the widgets and start-up in one step. Everything stays on your account and nothing is sent online.',
+    installPartial: 'Incomplete installation', installPartialText: '{0} item(s) to fix. Repair puts them back without touching your settings.',
+    installFiles: 'Missing files', installFilesText: 'Some of Caelestia’s files are gone. Run the Caelestia setup again to restore them.',
+    installAction: 'Install', removeStartup: 'Remove from start-up', noAdmin: 'No administrator rights',
+    progress: 'Progress', stepZebar: 'Install Zebar', stepRegister: 'Register the widgets and start-up', stepStart: 'Start Caelestia',
+    stepWaiting: 'Waiting', stepRunning: 'Working…', stepDone: 'Done', stepSkipped: 'Already installed',
+    stepZebarRunning: 'Windows may ask for permission: accept it to continue.',
+    installDone: 'Caelestia is installed and starting', installFailed: 'Installation stopped: {0}',
+    wingetMissing: 'winget is not available on this PC. Install Zebar from its page, then try again.',
+    zebarStillMissing: 'Zebar was not found after installing it.', zebarNotFound: 'Zebar was not found.', codeFailed: 'code {0}',
+    components: 'Components', ok: 'In place', missing: 'Missing',
+    compZebarMissing: 'Missing: it will be installed with winget, Windows will ask for permission once.',
+    compZebarNoWinget: 'Missing, and winget is not available: install Zebar from its page.',
+    compHelper: 'Caelestia helper', compPack: 'Widgets (Zebar pack)', compSwitcher: 'Alt+Tab switcher', compSwitcherOk: 'Replaces Alt+Tab while the theme runs', optional: 'Optional, not installed',
+    compStartup: 'Zebar start-up list', compStartupOk: 'The Caelestia widgets are registered', compStartupMissing: 'The Caelestia widgets are not registered',
+    compTasksText: '{0} of {1} tasks in place', compRunning: 'Running', compRunningText: 'Zebar: {0} · helper: {1}', on: 'running', off: 'stopped',
+    compApp: 'Caelestia app', zebarPage: 'Zebar page',
+    changes: 'What the installation changes',
+    changeFiles: 'Files in %USERPROFILE%\\.caelestia and %USERPROFILE%\\.glzr\\zebar\\caelestia, for your account only, no administrator rights.',
+    changeStartup: 'Three tasks start the helper, Zebar and the switcher when you sign in.',
+    changeTaskbar: 'The Windows taskbar is hidden while the theme runs and comes back when it stops.',
+    changeZebar: "Zebar's start-up list gets the Caelestia widgets (a backup of your settings is kept).",
+    changeColors: "Optional, off by default: Windows' accent colour can follow the theme.",
+    changePrivacy: 'No telemetry. Network: weather (Open-Meteo) and lyrics (LRCLIB), both optional.',
+    folders: 'Folders', folderApp: 'Caelestia programs', folderPack: 'Widgets', folderLogs: 'Logs', open: 'Open',
+    removeTitle: 'Remove Caelestia from start-up?',
+    removeText: 'Caelestia stops and no longer starts when you sign in. The Windows taskbar and colours are restored. The files stay: Install puts everything back. To remove everything, use Windows apps.',
+    removed: 'Caelestia was removed from start-up, the Windows taskbar is back', remove: 'Remove', appsSettings: 'Windows apps',
   },
 };
 
 const pages = [
   ['home', 'home'],
+  ['install', 'install_desktop'],
   ['discover', 'explore'],
   ['library', 'apps'],
   ['news', 'newspaper'],
@@ -74,6 +137,8 @@ const state = {
   query: '',
   busy: '',
   schemes: null,
+  install: null,
+  steps: null,
 };
 
 const nodes = {
@@ -145,6 +210,12 @@ const button = (label, symbol, onClick, { variant = '', disabled = false } = {})
 
 const chip = (label, symbol, className = '') =>
   element('span', { class: `hero-chip${className ? ` ${className}` : ''}` }, [symbol ? icon(symbol) : null, element('span', { text: label })]);
+
+function dotChip(label, ok) {
+  const node = chip(label, null, `chip-status ${ok ? 'ok' : 'warn'}`);
+  node.prepend(element('span', { class: 'dot' }));
+  return node;
+}
 
 let snackbarTimer = 0;
 function notify(message) {
@@ -231,8 +302,33 @@ async function refreshTheme() {
 }
 
 async function refreshAll() {
-  await Promise.allSettled([refreshTheme(), refreshStatus(), refreshCatalog(false)]);
+  await Promise.allSettled([refreshTheme(), refreshStatus(), refreshCatalog(false), refreshInstall()]);
   render();
+}
+
+async function refreshInstall() {
+  try {
+    state.install = await invoke('installation');
+  } catch {
+    state.install = null;
+  }
+}
+
+function expectedTasks(install) {
+  return install.switcher ? install.tasks : install.tasks.slice(0, 2);
+}
+
+function installIssues(install) {
+  const tasks = expectedTasks(install);
+  return [!install.zebar.present, !install.registered, !tasks.every(Boolean)].filter(Boolean).length;
+}
+
+function installKind(install) {
+  if (!install) return 'unknown';
+  if (!install.helper.present || !install.pack.present) return 'files';
+  if (!install.registered && !install.tasks.some(Boolean)) return 'new';
+  if (installIssues(install)) return 'partial';
+  return install.zebarRunning ? 'ready' : 'stopped';
 }
 
 async function refreshStatus() {
@@ -282,9 +378,74 @@ async function runHelper(verb, success) {
     notify(error === 'helper-missing' ? t('helperMissing') : t('failed', error));
   } finally {
     state.busy = '';
-    setTimeout(() => refreshStatus().then(render), 1500);
+    setTimeout(() => Promise.allSettled([refreshStatus(), refreshInstall()]).then(render), 1500);
     render();
   }
+}
+
+function errorText(error) {
+  if (error === 'helper-missing') return t('helperMissing');
+  if (error === 'winget-missing') return t('wingetMissing');
+  return String(error?.message ?? error);
+}
+
+async function installCaelestia() {
+  if (state.busy) return;
+  state.busy = 'setup';
+  state.steps = ['zebar', 'register', 'start'].map(id => ({ id, status: 'waiting', detail: '' }));
+  const mark = (id, status, detail = '') => {
+    Object.assign(state.steps.find(step => step.id === id), { status, detail });
+    render();
+  };
+  let current = 'zebar';
+  try {
+    await refreshInstall();
+    mark('zebar', 'running', t('stepZebarRunning'));
+    if (state.install?.zebar.present) {
+      mark('zebar', 'skipped', state.install.zebar.version ? `${t('version')} ${state.install.zebar.version}` : '');
+    } else {
+      const code = await invoke('install_zebar');
+      await refreshInstall();
+      if (!state.install?.zebar.present) throw new Error(code === 0 ? t('zebarStillMissing') : t('codeFailed', code));
+      mark('zebar', 'done', state.install.zebar.version ? `${t('version')} ${state.install.zebar.version}` : '');
+    }
+    current = 'register';
+    mark('register', 'running');
+    const code = await invoke('helper', { verb: 'install' });
+    if (code !== 0) throw new Error(code === 3 ? t('zebarNotFound') : t('codeFailed', code));
+    mark('register', 'done');
+    current = 'start';
+    mark('start', 'running');
+    const started = await invoke('helper', { verb: 'start' });
+    if (started !== 0) throw new Error(t('codeFailed', started));
+    mark('start', 'done');
+    notify(t('installDone'));
+  } catch (error) {
+    const message = errorText(error);
+    mark(current, 'failed', message);
+    notify(t('installFailed', message));
+  } finally {
+    state.busy = '';
+    await refreshInstall();
+    render();
+    setTimeout(() => Promise.allSettled([refreshInstall(), refreshStatus()]).then(render), 3000);
+  }
+}
+
+function confirmRemove() {
+  nodes.dialog.replaceChildren(element('div', { class: 'dialog', role: 'dialog', 'aria-modal': 'true' }, [
+    element('h2', { text: t('removeTitle') }),
+    element('p', { text: t('removeText') }),
+    element('div', { class: 'actions' }, [
+      button(t('cancel'), null, closeDialog, { variant: 'text' }),
+      button(t('remove'), 'remove_circle', () => {
+        closeDialog();
+        state.steps = null;
+        runHelper('uninstall', t('removed'));
+      }, { variant: 'filled' }),
+    ]),
+  ]));
+  nodes.dialog.hidden = false;
 }
 
 async function applyPreset(item) {
@@ -340,6 +501,19 @@ function heroCard() {
     : chip(running ? t('running') : t('stopped'), null, `chip-status ${running ? 'ok' : 'warn'}`);
   statusChip.prepend(element('span', { class: 'dot' }));
   const busy = Boolean(state.busy);
+  const kind = installKind(state.install);
+  if (kind === 'new' || kind === 'files') {
+    return element('section', { class: 'hero launcher-hero' }, [
+      element('div', { class: 'hero-ornament' }, shape(5, 0.16)),
+      element('div', { class: 'hero-mark' }, [shape(9, 0.07), icon('auto_awesome')]),
+      element('div', { class: 'hero-body' }, [
+        element('h2', { text: t('heroTitle') }),
+        element('p', { text: kind === 'new' ? t('installNewText') : t('installFilesText') }),
+        element('div', { class: 'chips' }, [dotChip(t('notInstalled'), false)]),
+        element('div', { class: 'actions' }, [button(t('installCaelestia'), 'install_desktop', () => showPage('install'), { variant: 'filled' })]),
+      ]),
+    ]);
+  }
   return element('section', { class: 'hero launcher-hero' }, [
     element('div', { class: 'hero-ornament' }, shape(5, 0.16)),
     element('div', { class: 'hero-mark' }, [shape(9, 0.07), icon('auto_awesome')]),
@@ -389,6 +563,137 @@ function homePage() {
       ])
       : null,
     latest ? newsCard(latest, t('latest')) : null,
+  ];
+}
+
+function installHero(install) {
+  const kind = installKind(install);
+  const busy = Boolean(state.busy);
+  const titles = {
+    ready: [t('installReady'), t('installReadyText')],
+    stopped: [t('installStopped'), t('installStoppedText')],
+    new: [t('installNew'), t('installNewText')],
+    partial: [t('installPartial'), t('installPartialText', install ? installIssues(install) : 0)],
+    files: [t('installFiles'), t('installFilesText')],
+    unknown: [t('install'), t('connecting')],
+  };
+  const [title, text] = titles[kind];
+  const setupIcon = state.busy === 'setup' ? 'progress_activity' : kind === 'new' ? 'install_desktop' : 'build';
+  const actions = [];
+  if (kind === 'new') actions.push(button(t('installAction'), setupIcon, installCaelestia, { variant: 'filled', disabled: busy }));
+  if (kind === 'partial') actions.push(button(t('repair'), setupIcon, installCaelestia, { variant: 'filled', disabled: busy }));
+  if (kind === 'stopped') actions.push(button(t('start'), state.busy === 'start' ? 'progress_activity' : 'play_circle', () => runHelper('start', t('started')), { variant: 'filled', disabled: busy }));
+  if (kind === 'ready' || kind === 'stopped') actions.push(button(t('repair'), setupIcon, installCaelestia, { disabled: busy }));
+  if (install?.registered || install?.tasks.some(Boolean)) actions.push(button(t('removeStartup'), state.busy === 'uninstall' ? 'progress_activity' : 'remove_circle', confirmRemove, { variant: 'text', disabled: busy }));
+  return element('section', { class: 'hero launcher-hero' }, [
+    element('div', { class: 'hero-ornament' }, shape(5, 0.16)),
+    element('div', { class: 'hero-mark' }, [shape(9, 0.07), icon(kind === 'ready' || kind === 'stopped' ? 'download_done' : 'install_desktop')]),
+    element('div', { class: 'hero-body' }, [
+      element('h2', { text: title }),
+      element('p', { text }),
+      element('div', { class: 'chips' }, [
+        install ? dotChip(kind === 'ready' ? t('running') : kind === 'stopped' ? t('stopped') : kind === 'partial' ? t('installPartial') : t('notInstalled'), kind === 'ready') : null,
+        install?.pack.version ? chip(`${t('version')} ${install.pack.version}`, 'sell') : null,
+        chip(t('noAdmin'), 'shield_person'),
+      ]),
+      element('div', { class: 'actions' }, actions),
+    ]),
+  ]);
+}
+
+const stepIcons = { waiting: 'radio_button_unchecked', running: 'progress_activity', done: 'check_circle', skipped: 'check_circle', failed: 'error' };
+
+function progressSection() {
+  const steps = state.steps;
+  const finished = steps.filter(step => step.status === 'done' || step.status === 'skipped').length;
+  const labels = { zebar: t('stepZebar'), register: t('stepRegister'), start: t('stepStart') };
+  const statuses = { waiting: t('stepWaiting'), running: t('stepRunning'), done: t('stepDone'), skipped: t('stepSkipped'), failed: '' };
+  return element('section', { class: 'section' }, [
+    element('div', { class: 'section-title' }, [element('span', { text: t('progress') }), element('span', { class: 'progress-count', text: `${finished}/${steps.length}` })]),
+    element('div', { class: 'progress-track', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': String(steps.length), 'aria-valuenow': String(finished) }, element('span', { style: { width: `${(finished / steps.length) * 100}%` } })),
+    ...steps.map(step => element('div', { class: `row step ${step.status}` }, [
+      icon(stepIcons[step.status], `step-icon${step.status === 'running' ? ' spin' : ''}`),
+      element('div', { class: 'row-text' }, [
+        element('span', { class: 'row-title', text: labels[step.id] }),
+        element('span', { class: 'row-subtitle', text: [statuses[step.status], step.detail].filter(Boolean).join(' · ') }),
+      ]),
+    ])),
+  ]);
+}
+
+function componentRow(symbol, title, subtitle, ok, extra = null) {
+  return element('div', { class: 'row' }, [
+    icon(symbol, 'tonal-icon'),
+    element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: title }), element('span', { class: 'row-subtitle', text: subtitle })]),
+    extra,
+    element('span', { class: `state-badge ${ok === null ? 'neutral' : ok ? 'ok' : 'missing'}` }, [
+      icon(ok === null ? 'remove' : ok ? 'check' : 'close'),
+      element('span', { text: ok === null ? t('optional').split(',')[0] : ok ? t('ok') : t('missing') }),
+    ]),
+  ]);
+}
+
+function versioned(component) {
+  return [component.version ? `${t('version')} ${component.version}` : null, component.path].filter(Boolean).join(' · ');
+}
+
+function componentsSection(install) {
+  const tasks = expectedTasks(install);
+  const zebarText = install.zebar.present ? versioned(install.zebar) : install.winget ? t('compZebarMissing') : t('compZebarNoWinget');
+  const zebarLink = !install.zebar.present && !install.winget
+    ? button(t('zebarPage'), 'open_in_new', () => invoke('open_external', { url: 'https://github.com/glzr-io/zebar/releases' }).catch(() => {}), { variant: 'text' })
+    : null;
+  return element('section', { class: 'section' }, [
+    element('div', { class: 'section-title' }, [element('span', { text: t('components') })]),
+    componentRow('widgets', t('zebar'), zebarText, install.zebar.present, zebarLink),
+    componentRow('memory', t('compHelper'), install.helper.present ? versioned(install.helper) : t('installFilesText'), install.helper.present),
+    componentRow('view_quilt', t('compPack'), install.pack.present ? versioned(install.pack) : t('installFilesText'), install.pack.present),
+    componentRow('tab', t('compSwitcher'), install.switcher ? t('compSwitcherOk') : t('optional'), install.switcher ? true : null),
+    componentRow('format_list_bulleted', t('compStartup'), install.registered ? t('compStartupOk') : t('compStartupMissing'), install.registered),
+    componentRow('schedule', t('tasks'), t('compTasksText', tasks.filter(Boolean).length, tasks.length), tasks.every(Boolean)),
+    componentRow('bolt', t('compRunning'), t('compRunningText', install.zebarRunning ? t('on') : t('off'), install.helperRunning ? t('on') : t('off')), install.zebarRunning && install.helperRunning),
+    componentRow('apps', t('compApp'), versioned(install.launcher), true),
+  ]);
+}
+
+function changesSection() {
+  const items = [
+    ['folder_managed', 'changeFiles'],
+    ['schedule', 'changeStartup'],
+    ['dock_to_bottom', 'changeTaskbar'],
+    ['format_list_bulleted', 'changeZebar'],
+    ['palette', 'changeColors'],
+    ['shield', 'changePrivacy'],
+  ];
+  return element('section', { class: 'section' }, [
+    element('div', { class: 'section-title' }, [element('span', { text: t('changes') })]),
+    ...items.map(([symbol, key]) => element('div', { class: 'row compact' }, [icon(symbol, 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-subtitle', text: t(key) })])])),
+  ]);
+}
+
+function foldersSection() {
+  const folders = [['app', 'folder', 'folderApp'], ['pack', 'folder_special', 'folderPack'], ['logs', 'description', 'folderLogs']];
+  return element('section', { class: 'section' }, [
+    element('div', { class: 'section-title' }, [
+      element('span', { text: t('folders') }),
+      button(t('appsSettings'), 'open_in_new', () => invoke('open_external', { url: 'ms-settings:appsfeatures' }).catch(() => {}), { variant: 'text' }),
+    ]),
+    ...folders.map(([target, symbol, key]) => element('div', { class: 'row' }, [
+      icon(symbol, 'tonal-icon'),
+      element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t(key) })]),
+      button(t('open'), 'open_in_new', () => invoke('open_folder', { target }).catch(() => notify(t('missing'))), { variant: 'text' }),
+    ])),
+  ]);
+}
+
+function installPage() {
+  const install = state.install;
+  return [
+    installHero(install),
+    state.steps ? progressSection() : null,
+    install ? componentsSection(install) : null,
+    changesSection(),
+    install ? foldersSection() : null,
   ];
 }
 
@@ -508,7 +813,7 @@ function settingsPage() {
   ];
 }
 
-const builders = { home: homePage, discover: discoverPage, library: libraryPage, news: newsPage, settings: settingsPage };
+const builders = { home: homePage, install: installPage, discover: discoverPage, library: libraryPage, news: newsPage, settings: settingsPage };
 
 function paintConnection() {
   nodes.connection.classList.toggle('online', state.connected);
@@ -563,6 +868,10 @@ function confirmPreset(item) {
 }
 
 async function handleLink(link) {
+  if (/^caelestia:\/\/install\/?$/.test(link ?? '')) {
+    showPage('install');
+    return;
+  }
   const match = /^caelestia:\/\/apply\/([a-z0-9][a-z0-9-]{1,47})\/?$/.exec(link ?? '');
   if (!match) {
     if (link) notify(t('unknownLink'));
@@ -588,11 +897,12 @@ window.addEventListener('keydown', event => {
 
 window.addEventListener('focus', () => {
   if (state.connected) refreshAll();
+  else if (!state.busy) refreshInstall().then(render);
 });
 
 document.documentElement.lang = state.language;
 document.body.classList.add('open');
-await loadSchemes();
+await Promise.allSettled([loadSchemes(), refreshInstall()]);
 render();
 await appWindow.show();
 helper.connect();

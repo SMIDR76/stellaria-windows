@@ -93,15 +93,25 @@ the Release workflow build the release files (see `releasing.md`).
 
 `launcher/` holds a thin Rust shell and a plain HTML, CSS and JavaScript page (`launcher/ui/`), built with `cargo`
 alone by `launcher/build.ps1`, which first copies the pack's shared styles, fonts and colour schemes into
-`launcher/dist/`. The app holds no theme logic: everything goes through the helper.
+`launcher/dist/`. The app holds no theme logic: everything goes through the helper, except the Installation page,
+which must work while the helper is stopped or missing.
 
 - **Connection**: the page reads `%LOCALAPPDATA%\Caelestia\launcher.json` (port and token, written by the helper)
   through the `runtime` command, then talks to the helper over the same WebSocket as the widgets, from the origin
   `http://tauri.localhost`, with the `launcher` scope. The helper's answers to `launcher.status`, `launcher.theme` and
   `catalog.*` fill the pages.
-- **Rust commands**: `runtime`, `helper` (runs `caelestia-helper.exe` with `--start`, `--restore-shell` or
-  `--install`, nothing else), `open_external` (https links only) and `initial_link`.
-- **Links**: `caelestia://apply/<id>` is registered for the user by the setup and `scripts/install.ps1`. A second
+- **Rust commands**: `runtime`, `helper` (runs `caelestia-helper.exe` with `--start`, `--restore-shell`,
+  `--install`, `--uninstall` or `--shutdown`, nothing else), `installation`, `install_zebar`, `open_folder` (the
+  Caelestia, widgets and logs folders only), `open_external` (https links and the Windows apps settings page only)
+  and `initial_link`.
+- **Installation page**: `installation` reads the state of each part without the helper: Zebar (the same places as
+  the helper's `ZebarLocator`, version from its uninstall entry), the helper's file version, the pack's `zpack.json`,
+  the switcher, Caelestia's entries in Zebar's `settings.json`, the three logon tasks (`schtasks /Query`) and whether
+  Zebar and the helper are running. Install and Repair run three steps and show each one: Zebar through winget
+  (`install_zebar`, skipped when Zebar is found), `--install`, then `--start`. "Remove from start-up" runs
+  `--uninstall` after a confirmation; the files stay, and the full uninstall is left to Windows apps. The page cannot
+  download Caelestia's own files: when the helper or the pack is missing, it asks to run the setup again.
+- **Links**: `caelestia://install` opens the Installation page. `caelestia://apply/<id>` is registered for the user by the setup and `scripts/install.ps1`. A second
   instance hands its link to the running one (single-instance plugin), which asks before applying the preset.
 - **Restrictions**: the content security policy only allows the page's own files and the helper's ports; the window
   only has the `core:default`, `show` and `set-focus` permissions.

@@ -26,7 +26,8 @@ Built on [Zebar](https://github.com/glzr-io/zebar) for the widgets and a small n
 ## The Caelestia app
 
 The setup adds a **Caelestia** entry to the Start menu: an app in the theme's colours to start, stop or repair the
-theme, open its settings, apply colour presets from the signed community catalogue (and undo them), and read the
+theme, see each part of the installation on its Installation page (Zebar, helper, widgets, start-up tasks) and
+install or repair them step by step, open its settings, apply colour presets from the signed community catalogue (and undo them), and read the
 project's news. Links such as `caelestia://apply/preset-nord` open it on the matching preset and ask before applying.
 
 ## Requirements

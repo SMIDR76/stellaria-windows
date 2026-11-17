@@ -1,5 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod installation;
+
 use std::os::windows::process::CommandExt;
 use std::path::PathBuf;
 use std::process::Command;
@@ -8,8 +10,9 @@ use serde::Serialize;
 use tauri::{Emitter, Manager};
 
 const CREATE_NO_WINDOW: u32 = 0x0800_0000;
-const HELPER_VERBS: [&str; 3] = ["start", "restore-shell", "install"];
+const HELPER_VERBS: [&str; 5] = ["start", "restore-shell", "install", "uninstall", "shutdown"];
 const LINK_PREFIX: &str = "caelestia://";
+const SETTINGS_LINKS: [&str; 1] = ["ms-settings:appsfeatures"];
 
 #[derive(Serialize)]
 struct Runtime {
@@ -57,8 +60,28 @@ async fn helper(verb: String) -> Result<i32, String> {
 }
 
 #[tauri::command]
+async fn installation() -> Result<installation::Installation, String> {
+    tauri::async_runtime::spawn_blocking(installation::detect).await.map_err(|error| error.to_string())
+}
+
+#[tauri::command]
+async fn install_zebar() -> Result<i32, String> {
+    tauri::async_runtime::spawn_blocking(installation::install_zebar).await.map_err(|error| error.to_string())?
+}
+
+#[tauri::command]
+fn open_folder(target: String) -> Result<(), String> {
+    let path = installation::folder(&target).ok_or("unknown-folder")?;
+    if !path.is_dir() {
+        return Err("folder-missing".into());
+    }
+    Command::new(environment("WINDIR").join("explorer.exe")).arg(path).spawn().map(|_| ()).map_err(|error| error.to_string())
+}
+
+#[tauri::command]
 fn open_external(url: String) -> Result<(), String> {
-    let allowed = url.starts_with("https://") && url.len() < 512 && !url.chars().any(|c| c.is_whitespace() || c == '"' || c == '^' || c == '&');
+    let allowed = SETTINGS_LINKS.contains(&url.as_str())
+        || (url.starts_with("https://") && url.len() < 512 && !url.chars().any(|c| c.is_whitespace() || c == '"' || c == '^' || c == '&'));
     if !allowed {
         return Err("refused".into());
     }
@@ -87,7 +110,7 @@ fn main() {
                 let _ = app.emit("deep-link", link);
             }
         }))
-        .invoke_handler(tauri::generate_handler![runtime, helper, open_external, initial_link])
+        .invoke_handler(tauri::generate_handler![runtime, helper, installation, install_zebar, open_folder, open_external, initial_link])
         .run(tauri::generate_context!())
         .expect("Caelestia could not start");
 }

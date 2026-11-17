@@ -549,6 +549,87 @@ body {
   animation: slow-spin 900ms linear infinite;
 }
 
+.row.compact {
+  min-height: 48px;
+}
+
+.state-badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 12px 0 8px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--m3-surface-container-highest);
+  color: var(--m3-on-surface-variant);
+}
+
+.state-badge .icon {
+  font-size: 16px;
+}
+
+.state-badge.ok {
+  background: color-mix(in srgb, #6dd58c 18%, var(--m3-surface-container-high));
+  color: #6dd58c;
+}
+
+.state-badge.missing {
+  background: var(--m3-error-container);
+  color: var(--m3-on-error-container);
+}
+
+.progress-count {
+  font-variant-numeric: tabular-nums;
+  color: var(--m3-on-surface-variant);
+}
+
+.progress-track {
+  height: 6px;
+  margin: 2px 12px 8px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--m3-surface-container-highest);
+}
+
+.progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--m3-primary);
+  transition: width var(--duration-spatial) var(--ease-spatial);
+}
+
+.step-icon {
+  width: 34px;
+  flex: 0 0 auto;
+  text-align: center;
+  font-size: 24px;
+  color: var(--m3-outline);
+}
+
+.step.running .step-icon,
+.step.done .step-icon,
+.step.skipped .step-icon {
+  color: var(--m3-primary);
+}
+
+.step.done .step-icon,
+.step.skipped .step-icon {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.step.failed .step-icon,
+.step.failed .row-subtitle {
+  color: var(--m3-error);
+}
+
+.step.running .row-title {
+  font-weight: 600;
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -560,5 +641,9 @@ body {
   .dialog,
   .spin {
     animation: none;
+  }
+
+  .progress-track span {
+    transition: none;
   }
 }
