@@ -209,7 +209,6 @@ function appearancePage() {
       chips,
       optionRow('smartScheme', true, 'auto_awesome', 'Schéma intelligent', "Fond d'écran en noir et blanc : palette monochrome au lieu d'une teinte inventée"),
     ]),
-    section('Surfaces', [optionRow('transparency', false, 'opacity', 'Transparence', 'Surfaces translucides façon Caelestia')]),
     section('Windows', [
       optionRow('windowsColors', false, 'desktop_windows', 'Accorder Windows au thème', "L'accent et le mode clair ou sombre de Windows suivent le thème : Paramètres, Explorateur, menu Démarrer. Vos couleurs d'avant reviennent si vous désactivez."),
       optionRow('windowsTitleBars', false, 'web_asset', 'Barres de titre colorées', "Les barres de titre des fenêtres prennent la couleur d'accent (avec l'option ci-dessus)"),
@@ -410,7 +409,6 @@ function welcomePage() {
       ]))),
     ]),
     step(3, 'Apparence', [
-      optionRow('transparency', false, 'opacity', 'Transparence', 'Flou acrylique derrière la barre et les bords'),
       optionRow('tintIcons', true, 'palette', 'Icônes aux couleurs du thème', "Teinte les icônes d'applications"),
       optionRow('island', true, 'smart_display', 'Île dynamique', 'Morceau en cours et notifications en haut de l\'écran'),
     ]),

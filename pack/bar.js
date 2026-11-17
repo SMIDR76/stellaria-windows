@@ -623,9 +623,9 @@ function syncWindowsColors() {
   }, 700);
 }
 
-const presetOptions = ['transparency', 'tintIcons', 'smartScheme', 'clockSeconds', 'desktopClock', 'island'];
+const presetOptions = ['tintIcons', 'smartScheme', 'clockSeconds', 'desktopClock', 'island'];
 const presetHistoryKey = 'caelestia:preset:history';
-const presetDefaults = { transparency: false, tintIcons: true, smartScheme: true, clockSeconds: false, desktopClock: true, island: true };
+const presetDefaults = { tintIcons: true, smartScheme: true, clockSeconds: false, desktopClock: true, island: true };
 
 function currentLook() {
   return {
@@ -657,7 +657,7 @@ function applyPreset(event) {
     autoMode: preset.mode === 'auto',
     mode: preset.mode === 'auto' ? undefined : preset.mode,
     variant: preset.variant,
-    options: { transparency: presetDefaults.transparency, ...preset.options },
+    options: preset.options,
   });
   toast('Préréglage appliqué', { message: event.name?.fr ?? event.id, icon: 'palette' });
 }

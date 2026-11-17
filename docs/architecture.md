@@ -159,6 +159,14 @@ which must work while the helper is stopped or missing.
   destroyed once the sound has played (1.2 s at most). All go through Web Audio with a 60 ms fade-in. WebView2 gets
   `--autoplay-policy=no-user-gesture-required` in `tauri.conf.json`, and the app's settings turn every sound off.
 
+### No transparency
+
+The bar, the edges and the frame are always opaque, and there is no transparency option. The frame's seams and
+rounded corners are drawn over the windows they round off, while the edges and the bar sit over the desktop: a
+translucent or acrylic surface therefore shows two different shades and the corners look square. The theme turns
+an old `transparency` option off at start, the bar ignores it in presets, and the catalogue refuses a preset that
+sets it. Anything drawn next to the frame must use the same opaque `--surface-base`.
+
 ### Recovery
 
 - A hung Zebar (15 s) or Caelestia docks pushed away from their screen edges after a display change (6 s) restart

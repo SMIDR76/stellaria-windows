@@ -20,7 +20,7 @@ Built on [Zebar](https://github.com/glzr-io/zebar) for the widgets and a small n
 - **Dynamic island** that drops from the top of the frame for a new track (with shuffle and repeat) or a notification.
 - **Sound panel** with per-application volume, **utilities** (radios, game mode, keep awake, captures, Pomodoro timer),
   **brightness** over DDC/CI, **Alt+Tab switcher**, **hot corner** for Task View and an **idle screen**.
-- **Optional acrylic** blur behind the bar, **reduced motion** support, a **game mode** without animations.
+- **Reduced motion** support, a **game mode** without animations.
 - **Recoverable**: the Windows taskbar comes back if anything stops, and the helper restarts a frozen Zebar.
 
 ## The Caelestia app

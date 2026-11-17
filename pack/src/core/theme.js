@@ -1,4 +1,3 @@
-import * as zebar from '../../vendor/zebar.mjs';
 import {
   Hct,
   MaterialDynamicColors,
@@ -16,7 +15,6 @@ import {
   hexFromArgb,
   sourceColorFromImage,
 } from '../../vendor/material-color-utilities.mjs';
-import { widgetName } from './monitor.js';
 import { getOption, keys, option, setOption, settings, store } from './store.js';
 
 export const variants = {
@@ -102,29 +100,10 @@ export function initTheme() {
   applyTheme();
   schemeBundleReady.then(applyTheme);
   for (const key of [keys.source, keys.mode, keys.variant, keys.scheme, keys.achromatic, 'caelestia:option:smartScheme']) store.watch(key, applyTheme);
-  if (!store.get('caelestia:migration:transparency-off', false)) {
-    setOption('transparency', false);
-    store.set('caelestia:migration:transparency-off', true);
-  }
-  option('transparency', false, enabled => {
-    document.documentElement.classList.toggle('transparent', Boolean(enabled));
-    applyBackdrop(Boolean(enabled));
-  });
+  if (getOption('transparency', false)) setOption('transparency', false);
   option('gameMode', false, enabled => document.documentElement.classList.toggle('game-mode', Boolean(enabled)));
   installIconTint();
   option('tintIcons', true, enabled => document.documentElement.classList.toggle('tint-icons', Boolean(enabled)));
-}
-
-const backdropWidgets = { bar: true, edge: true, frame: false };
-
-function applyBackdrop(enabled) {
-  const name = widgetName();
-  if (!(name in backdropWidgets)) return;
-  document.documentElement.classList.add('backdrop');
-  if (!backdropWidgets[name]) return;
-  const window_ = zebar.currentWidget().tauriWindow;
-  const request = enabled ? window_.setEffects({ effects: ['acrylic'] }) : window_.clearEffects();
-  request.catch(error => console.error('[caelestia] Effet de fond', error));
 }
 
 function installIconTint() {

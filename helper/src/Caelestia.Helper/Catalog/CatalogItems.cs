@@ -18,7 +18,7 @@ internal static partial class CatalogItems
 
     public static readonly FrozenSet<string> PresetOptions = new[]
     {
-        "transparency", "tintIcons", "smartScheme", "clockSeconds", "desktopClock", "island",
+        "tintIcons", "smartScheme", "clockSeconds", "desktopClock", "island",
     }.ToFrozenSet(StringComparer.Ordinal);
 
     public static readonly FrozenSet<string> Licenses = new[]

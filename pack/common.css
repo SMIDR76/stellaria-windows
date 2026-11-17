@@ -71,10 +71,6 @@
   --surface-layer: var(--m3-surface-container);
 }
 
-html.transparent.backdrop {
-  --surface-base: color-mix(in srgb, var(--m3-surface) 72%, transparent);
-}
-
 html.game-mode *,
 html.game-mode *::before,
 html.game-mode *::after {

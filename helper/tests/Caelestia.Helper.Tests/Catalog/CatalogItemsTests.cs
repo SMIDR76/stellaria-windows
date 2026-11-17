@@ -8,7 +8,7 @@ public sealed class CatalogItemsTests
     private const string Preset = """
         {"id":"preset-test","type":"preset","version":"1.0.0","license":"MIT","author":{"name":"A"},
          "name":{"fr":"Test","en":"Test"},"summary":{"fr":"Un test","en":"A test"},
-         "preset":{"scheme":{"name":"nord","flavour":"medium"},"mode":"dark","variant":"vibrant","options":{"transparency":true}}}
+         "preset":{"scheme":{"name":"nord","flavour":"medium"},"mode":"dark","variant":"vibrant","options":{"tintIcons":false}}}
         """;
 
     [Fact]
@@ -22,8 +22,8 @@ public sealed class CatalogItemsTests
     [InlineData("\"license\":\"MIT\"", "\"license\":\"Proprietary\"")]
     [InlineData("\"version\":\"1.0.0\"", "\"version\":\"one\"")]
     [InlineData("\"mode\":\"dark\"", "\"mode\":\"neon\"")]
-    [InlineData("\"options\":{\"transparency\":true}", "\"options\":{\"hideTaskbar\":true}")]
-    [InlineData("\"options\":{\"transparency\":true}", "\"script\":\"alert(1)\"")]
+    [InlineData("\"options\":{\"tintIcons\":false}", "\"options\":{\"transparency\":true}")]
+    [InlineData("\"options\":{\"tintIcons\":false}", "\"script\":\"alert(1)\"")]
     [InlineData("\"en\":\"A test\"", "\"de\":\"Ein Test\"")]
     public void Unsafe_or_incomplete_presets_are_refused(string original, string replacement)
     {
