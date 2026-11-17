@@ -127,7 +127,7 @@ Source: "{#Stage}\THIRD_PARTY_NOTICES.md"; DestDir: "{app}"; Flags: ignoreversio
 Source: "{#Stage}\licenses\*"; DestDir: "{app}\licenses"; Flags: ignoreversion
 
 [Icons]
-Name: "{userprograms}\Stellaria\Stellaria"; Filename: "{#Launcher}"; Check: LauncherShipped
+Name: "{userprograms}\Stellaria\Stellaria"; Filename: "{#Launcher}"; IconFilename: "{#Launcher}"; Check: LauncherShipped
 Name: "{userprograms}\Stellaria\{cm:IconRestore}"; Filename: "{#Helper}"; Parameters: "--restore-shell"; IconFilename: "{sys}\imageres.dll"; IconIndex: 72
 Name: "{userprograms}\Stellaria\{cm:IconStart}"; Filename: "{#Helper}"; Parameters: "--start"
 Name: "{userprograms}\Stellaria\{cm:IconUninstall}"; Filename: "{uninstallexe}"

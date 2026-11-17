@@ -97,6 +97,7 @@ $launcherExe = Join-Path $bin 'stellaria-launcher.exe'
 if (Test-Path $launcherExe) {
   $app = $shell.CreateShortcut((Join-Path $menu 'Stellaria.lnk'))
   $app.TargetPath = $launcherExe
+  $app.IconLocation = "$launcherExe,0"
   $app.Save()
   $classes = 'HKCU:\Software\Classes\stellaria'
   New-Item -Path "$classes\shell\open\command" -Force | Out-Null
@@ -107,6 +108,7 @@ if (Test-Path $launcherExe) {
 $relaunch = $shell.CreateShortcut((Join-Path $menu 'Stellaria - Relancer.lnk'))
 $relaunch.TargetPath = $helper
 $relaunch.Arguments = '--start'
+$relaunch.IconLocation = "$helper,0"
 $relaunch.Save()
 
 if (-not $NoStart) {

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <AssemblyName>stellaria-helper</AssemblyName>
+    <ApplicationIcon>..\..\..\launcher\icons\icon.ico</ApplicationIcon>
     <RootNamespace>Stellaria.Helper</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PublishAot>true</PublishAot>
