@@ -1749,7 +1749,7 @@ function settingsPage() {
       element('div', { class: 'row' }, [
         icon('favorite', 'tonal-icon'),
         element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: 'Stellaria' }), element('span', { class: 'row-subtitle', text: t('aboutText') })]),
-        button(t('project'), 'open_in_new', () => invoke('open_external', { url: 'https://github.com/SMIDR76/stellaria' }).catch(() => {}), { variant: 'text' }),
+        button(t('project'), 'open_in_new', () => invoke('open_external', { url: 'https://github.com/SMIDR76/stellaria-windows' }).catch(() => {}), { variant: 'text' }),
       ]),
     ]),
   ];

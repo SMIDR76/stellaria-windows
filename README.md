@@ -46,7 +46,7 @@ No administrator rights are needed: everything installs in your user profile.
 
 ## Install
 
-Download `StellariaSetup-<version>.exe` from the [latest release](https://github.com/SMIDR76/stellaria/releases/latest)
+Download `StellariaSetup-<version>.exe` from the [latest release](https://github.com/SMIDR76/stellaria-windows/releases/latest)
 and run it. It installs for your account only, without administrator rights, in English or French. It shows what it
 changes on your PC before installing, installs Zebar and WebView2 when they are missing (Zebar installs for the whole
 machine, so Windows asks for permission once), and starts the theme.
@@ -58,7 +58,7 @@ The setup is not code-signed yet, so Windows may warn about it:
   App & browser control > Smart App Control, or wait for a signed release.
 
 To check a download, compare its SHA-256 with `SHA256SUMS.txt` from the same release, or verify its build provenance
-with the GitHub CLI: `gh attestation verify StellariaSetup-<version>.exe -R SMIDR76/stellaria`.
+with the GitHub CLI: `gh attestation verify StellariaSetup-<version>.exe -R SMIDR76/stellaria-windows`.
 
 Silent install: `StellariaSetup-<version>.exe /VERYSILENT /SUPPRESSMSGBOXES`. Add `/TASKS="startnow"` to leave the
 Alt+Tab switcher out, and `/LANG=fr` or `/LANG=en` to force the language.
@@ -73,7 +73,7 @@ start-up entries, and asks whether to keep your settings (silent uninstalls keep
 pair. From a clone, the same scripts build the helper first:
 
 ```powershell
-git clone https://github.com/SMIDR76/stellaria
+git clone https://github.com/SMIDR76/stellaria-windows
 cd stellaria
 powershell -ExecutionPolicy Bypass -File scripts\install.ps1
 ```

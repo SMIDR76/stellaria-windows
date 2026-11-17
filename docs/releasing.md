@@ -10,7 +10,7 @@
 | `update.json`, `update.json.minisig` | The update manifest read by the Stellaria app (version, setup name, size and SHA-256), signed with the catalogue key. Only for `x.y.z` versions built with `STELLARIA_SIGNING_KEY`. |
 
 Every file also gets a build provenance attestation, verifiable with
-`gh attestation verify <file> -R SMIDR76/stellaria`.
+`gh attestation verify <file> -R SMIDR76/stellaria-windows`.
 
 ## Steps
 

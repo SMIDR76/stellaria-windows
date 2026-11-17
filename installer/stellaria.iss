@@ -8,7 +8,7 @@
   #define Stage "..\artifacts\stage"
 #endif
 #define AppName "Stellaria"
-#define RepoUrl "https://github.com/SMIDR76/stellaria"
+#define RepoUrl "https://github.com/SMIDR76/stellaria-windows"
 #define ZebarMsiUrl "https://github.com/glzr-io/zebar/releases/download/v3.3.1/zebar-v3.3.1-opt1-x64.msi"
 #define ZebarMsiSha256 "1d5584be8def58f828d55ed09cee52fe80fdd60ea118141f37963aa80e902c28"
 #define ZebarUpgradeKey "SOFTWARE\Classes\Installer\UpgradeCodes\8DD3D075DBDFC5B55A91F23FB46AB033"
