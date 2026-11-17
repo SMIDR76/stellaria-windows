@@ -75,6 +75,28 @@ const strings = {
       'no-update': 'aucune mise à jour à installer', busy: 'une autre opération est en cours',
     },
     megabytes: '{0} Mo',
+    help: 'Aide', preset: 'Préréglage', shortcutsTab: 'Raccourcis', troubleTab: 'Dépannage',
+    shortcutsSearch: 'Rechercher un raccourci', globalShortcuts: 'Raccourcis globaux', prefixes: 'Préfixes du lanceur',
+    shortcutsHint: 'Win+Alt+K affiche cette aide partout. Un appui sur Win seul ouvre le lanceur.', noShortcut: 'Aucun raccourci ne correspond.',
+    restoreTaskbar: 'Rétablir la barre des tâches Windows', restoreTaskbarText: 'Arrête le thème et rend la barre des tâches de Windows.', restore: 'Rétablir',
+    repairText: 'Réinstalle les widgets et le démarrage automatique sans toucher à vos réglages.',
+    logs: 'Journal du helper', logsText: 'Les dernières lignes, pour comprendre un problème.', noLog: 'Aucun journal pour le moment.',
+    copyReport: 'Copier un rapport', reportText: "Versions, état des composants et journal, à coller dans un signalement de bug.", reportCopied: 'Rapport copié dans le presse-papiers',
+    back: 'Retour', copyLink: 'Copier le lien', linkCopied: 'Lien copié', author: 'Auteur', tags: 'Étiquettes', licence: 'Licence',
+    previewDark: 'Sombre', previewLight: 'Clair', previewTitle: 'Aperçu', transparency: 'Transparence acrylique',
+    dynamicPreview: "Ce préréglage prend les couleurs de votre fond d'écran : l'aperçu montre vos couleurs actuelles.",
+    yourSetup: 'Votre configuration', wallpaperLabel: "Fond d'écran", paletteLabel: 'Palette', widgetsLabel: 'Widgets actifs', noWidgets: 'Aucun widget inscrit',
+    history: 'Historique des apparences', historyEmpty: 'Les préréglages que vous appliquez apparaîtront ici.', reapply: 'Réappliquer',
+    whatsNew: 'Quoi de neuf dans la version {0}', whatsNewFallback: 'Caelestia a été mis à jour vers la version {0}.', close: 'Fermer',
+    searchAll: 'Rechercher une page, un préréglage ou une action', groupPages: 'Pages', groupPresets: 'Préréglages', groupActions: 'Actions',
+    checkUpdates: 'Rechercher des mises à jour', searchEmpty: 'Aucun résultat.',
+    volume: 'Volume', volumeText: 'Volume des sons',
+    tray: 'Zone de notification', trayText: 'Garder Caelestia près de l’horloge quand la fenêtre est fermée',
+    trayOpen: 'Ouvrir Caelestia', trayStart: 'Démarrer le thème', trayStop: 'Arrêter le thème', trayQuit: 'Quitter', trayUpdate: 'Mise à jour {0} disponible',
+    welcome: 'Bienvenue dans Caelestia', welcomeText: "Quelques secondes pour régler l'essentiel. Tout reste modifiable ensuite dans les Réglages.",
+    welcomeLook: 'Choisissez une apparence', welcomeLookText: 'Survolez une palette pour la voir sur cette fenêtre. Vous pourrez annuler à tout moment.',
+    keepMine: 'Garder mes couleurs', welcomeKeys: 'Les raccourcis à retenir', next: 'Suivant', previous: 'Précédent', finish: 'Commencer',
+    replayWelcome: "Revoir l'accueil", welcomeRow: "L'écran de la première ouverture",
   },
   en: {
     home: 'Home', discover: 'Discover', library: 'Library', news: 'News', settings: 'Settings',
@@ -148,6 +170,28 @@ const strings = {
       'no-update': 'no update to install', busy: 'another operation is running',
     },
     megabytes: '{0} MB',
+    help: 'Help', preset: 'Preset', shortcutsTab: 'Shortcuts', troubleTab: 'Troubleshooting',
+    shortcutsSearch: 'Search shortcuts', globalShortcuts: 'Global shortcuts', prefixes: 'Launcher prefixes',
+    shortcutsHint: 'Win+Alt+K shows this help anywhere. A single press of Win opens the launcher.', noShortcut: 'No shortcut matches.',
+    restoreTaskbar: 'Bring back the Windows taskbar', restoreTaskbarText: 'Stops the theme and gives Windows its taskbar back.', restore: 'Restore',
+    repairText: 'Reinstalls the widgets and start-up without touching your settings.',
+    logs: 'Helper log', logsText: 'The latest lines, to understand a problem.', noLog: 'No log yet.',
+    copyReport: 'Copy a report', reportText: 'Versions, component state and log, to paste into a bug report.', reportCopied: 'Report copied to the clipboard',
+    back: 'Back', copyLink: 'Copy link', linkCopied: 'Link copied', author: 'Author', tags: 'Tags', licence: 'Licence',
+    previewDark: 'Dark', previewLight: 'Light', previewTitle: 'Preview', transparency: 'Acrylic transparency',
+    dynamicPreview: 'This preset takes its colours from your wallpaper: the preview shows your current colours.',
+    yourSetup: 'Your setup', wallpaperLabel: 'Wallpaper', paletteLabel: 'Palette', widgetsLabel: 'Active widgets', noWidgets: 'No widget registered',
+    history: 'Look history', historyEmpty: 'The presets you apply will show up here.', reapply: 'Apply again',
+    whatsNew: "What's new in version {0}", whatsNewFallback: 'Caelestia was updated to version {0}.', close: 'Close',
+    searchAll: 'Search pages, presets and actions', groupPages: 'Pages', groupPresets: 'Presets', groupActions: 'Actions',
+    checkUpdates: 'Check for updates', searchEmpty: 'No result.',
+    volume: 'Volume', volumeText: 'Sound volume',
+    tray: 'Notification area', trayText: 'Keep Caelestia next to the clock when the window is closed',
+    trayOpen: 'Open Caelestia', trayStart: 'Start the theme', trayStop: 'Stop the theme', trayQuit: 'Quit', trayUpdate: 'Update {0} available',
+    welcome: 'Welcome to Caelestia', welcomeText: 'A few seconds to set the essentials. Everything can be changed later in Settings.',
+    welcomeLook: 'Pick a look', welcomeLookText: 'Hover a palette to see it on this window. You can undo at any time.',
+    keepMine: 'Keep my colours', welcomeKeys: 'Shortcuts to remember', next: 'Next', previous: 'Previous', finish: 'Get started',
+    replayWelcome: 'Show the welcome again', welcomeRow: 'The first-run screen',
   },
 };
 
@@ -157,8 +201,38 @@ const pages = [
   ['discover', 'explore'],
   ['library', 'apps'],
   ['news', 'newspaper'],
+  ['help', 'help'],
   ['settings', 'settings'],
 ];
+
+const shortcutList = [
+  ['Win', 'Lanceur d’applications', 'App launcher'],
+  ['Alt+Espace', 'Lanceur d’applications', 'App launcher'],
+  ['Alt+E', "Fonds d'écran", 'Wallpapers'],
+  ['Win+Alt+A', 'Tableau de bord', 'Dashboard'],
+  ['Win+Alt+U', 'Utilitaires', 'Utilities'],
+  ['Win+Alt+V', 'Historique du presse-papiers', 'Clipboard history'],
+  ['Win+Alt+.', 'Emojis', 'Emojis'],
+  ['Win+Alt+P', 'Menu de session', 'Session menu'],
+  ['Win+Alt+S', 'Réglages du thème', 'Theme settings'],
+  ['Win+Alt+K', 'Aide des raccourcis', 'Shortcut help'],
+  ['Alt+Tab', 'Sélecteur de fenêtres', 'Window switcher'],
+];
+
+const prefixList = [
+  ['>', 'Actions', 'Actions'],
+  ['>fond', "Fonds d'écran", 'Wallpapers'],
+  ['>schéma', 'Schémas de couleurs', 'Colour schemes'],
+  ['>variante', 'Variantes dynamiques', 'Dynamic variants'],
+  ['>clip', 'Presse-papiers', 'Clipboard'],
+  [':', 'Emojis', 'Emojis'],
+  ['2+2', 'Calculatrice', 'Calculator'],
+];
+
+const pageShapes = {
+  home: [9, 0.07], install: [6, 0.1], discover: [12, 0.05], library: [4, 0.13],
+  news: [7, 0.09], help: [5, 0.15], settings: [8, 0.08], preset: [10, 0.06],
+};
 
 const state = {
   language: storedLanguage(),
@@ -172,7 +246,32 @@ const state = {
   install: null,
   steps: null,
   update: { status: 'idle', info: null, received: 0, total: 0, error: '' },
+  detail: null,
+  detailMode: null,
+  helpTab: 'shortcuts',
+  shortcutQuery: '',
+  log: null,
+  themeRoles: null,
+  wallpaperUrl: null,
 };
+
+function stored(key, fallback) {
+  try {
+    const value = localStorage.getItem(`caelestia-launcher:${key}`);
+    return value === null ? fallback : value;
+  } catch {
+    return fallback;
+  }
+}
+
+function store(key, value) {
+  try {
+    localStorage.setItem(`caelestia-launcher:${key}`, value);
+  } catch {
+    return false;
+  }
+  return true;
+}
 
 const nodes = {
   rail: document.getElementById('rail'),
@@ -200,6 +299,11 @@ const sounds = {
     } catch {
       return true;
     }
+  },
+
+  volume() {
+    const value = Number(stored('volume', '1'));
+    return Number.isFinite(value) ? Math.min(1, Math.max(0, value)) : 1;
   },
 
   async load(name) {
@@ -230,7 +334,7 @@ const sounds = {
       const gain = this.context.createGain();
       const now = this.context.currentTime;
       gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(0.8, now + 0.06);
+      gain.gain.linearRampToValueAtTime(0.8 * this.volume(), now + 0.06);
       source.buffer = buffer;
       source.connect(gain).connect(this.context.destination);
       source.start(now);
@@ -280,22 +384,57 @@ function element(tag, attributes = {}, children = []) {
 
 const icon = (name, className = '') => element('span', { class: `icon${className ? ` ${className}` : ''}`, text: name, 'aria-hidden': 'true' });
 
-function shape(lobes, amplitude) {
+function shapePoints(lobes, amplitude) {
   const points = [];
   const radius = 50 / (1 + amplitude);
   for (let index = 0; index < 240; index++) {
     const angle = (index / 240) * Math.PI * 2;
     const r = radius * (1 + amplitude * Math.cos(lobes * (angle - Math.PI / 2 / lobes)));
-    points.push(`${(50 + r * Math.cos(angle)).toFixed(2)},${(50 + r * Math.sin(angle)).toFixed(2)}`);
+    points.push([50 + r * Math.cos(angle), 50 + r * Math.sin(angle)]);
   }
+  return points;
+}
+
+const pathData = points => `M${points.map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join('L')}Z`;
+
+function shape(lobes, amplitude) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 100 100');
   svg.setAttribute('class', 'shape');
   const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  path.setAttribute('d', `M${points.join('L')}Z`);
+  path.setAttribute('d', pathData(shapePoints(lobes, amplitude)));
   svg.append(path);
   return svg;
 }
+
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+const morph = {
+  path: null,
+  points: shapePoints(9, 0.07),
+  frame: 0,
+
+  to(lobes, amplitude) {
+    if (!this.path) return;
+    const from = this.points;
+    const target = shapePoints(lobes, amplitude);
+    cancelAnimationFrame(this.frame);
+    if (reducedMotion.matches) {
+      this.points = target;
+      this.path.setAttribute('d', pathData(target));
+      return;
+    }
+    const start = performance.now();
+    const step = now => {
+      const progress = Math.min(1, (now - start) / 520);
+      const eased = 1 - Math.pow(1 - progress, 4);
+      this.points = from.map(([x, y], index) => [x + (target[index][0] - x) * eased, y + (target[index][1] - y) * eased]);
+      this.path.setAttribute('d', pathData(this.points));
+      if (progress < 1) this.frame = requestAnimationFrame(step);
+    };
+    this.frame = requestAnimationFrame(step);
+  },
+};
 
 const button = (label, symbol, onClick, { variant = '', disabled = false } = {}) =>
   element('button', { class: `button${variant ? ` ${variant}` : ''} state-layer`, onClick, disabled }, [symbol ? icon(symbol) : null, element('span', { text: label })]);
@@ -383,11 +522,55 @@ const helper = {
 
 const kebab = name => name.replace(/[A-Z]/g, letter => `-${letter.toLowerCase()}`);
 
+function paintRoles(roles) {
+  const names = Object.keys(state.themeRoles ?? roles ?? {});
+  for (const role of names) {
+    const value = roles?.[role];
+    if (typeof value === 'string' && /^#[0-9a-f]{6}$/i.test(value)) document.documentElement.style.setProperty(`--m3-${kebab(role)}`, value);
+  }
+}
+
+function schemeRoles(item, mode = null) {
+  const scheme = item?.preset?.scheme;
+  if (!scheme) return null;
+  const flavour = state.schemes?.[scheme.name]?.[scheme.flavour] ?? {};
+  const wanted = mode ?? (item.preset.mode === 'light' ? 'light' : 'dark');
+  return flavour[wanted] ?? flavour.dark ?? flavour.light ?? null;
+}
+
+const hoverPreview = {
+  timer: 0,
+  active: false,
+
+  enter(item) {
+    clearTimeout(this.timer);
+    const roles = schemeRoles(item);
+    if (!roles || !state.themeRoles) return;
+    this.timer = setTimeout(() => {
+      this.active = true;
+      document.body.classList.add('previewing');
+      paintRoles(roles);
+    }, 220);
+  },
+
+  leave() {
+    clearTimeout(this.timer);
+    if (!this.active) return;
+    this.active = false;
+    paintRoles(state.themeRoles);
+    setTimeout(() => {
+      if (!this.active) document.body.classList.remove('previewing');
+    }, 400);
+  },
+};
+
 async function refreshTheme() {
   try {
     const theme = await helper.request('launcher.theme');
-    for (const [role, value] of Object.entries(theme?.roles ?? {})) {
-      if (/^#[0-9a-f]{6}$/i.test(value)) document.documentElement.style.setProperty(`--m3-${kebab(role)}`, value);
+    loadWallpaper().then(() => state.page === 'home' && !nodes.dialog.querySelector('.welcome') && render());
+    if (theme?.roles) {
+      state.themeRoles = theme.roles;
+      if (!hoverPreview.active) paintRoles(theme.roles);
     }
   } catch {
     return;
@@ -487,7 +670,7 @@ async function installCaelestia() {
   state.busy = 'setup';
   state.steps = ['zebar', 'register', 'start'].map(id => ({ id, status: 'waiting', detail: '' }));
   const mark = (id, status, detail = '') => {
-    Object.assign(state.steps.find(step => step.id === id), { status, detail });
+    Object.assign(state.steps.find(step => step.id === id), { status, detail, at: Date.now() });
     render();
   };
   let current = 'zebar';
@@ -646,9 +829,20 @@ function confirmRemove() {
   nodes.dialog.hidden = false;
 }
 
+function lookHistory() {
+  try {
+    const list = JSON.parse(stored('history', '[]'));
+    return Array.isArray(list) ? list.filter(id => typeof id === 'string').slice(0, 5) : [];
+  } catch {
+    return [];
+  }
+}
+
 async function applyPreset(item) {
+  hoverPreview.leave();
   try {
     state.catalog = await helper.request('catalog.apply', { id: item.id });
+    store('history', JSON.stringify([item.id, ...lookHistory().filter(id => id !== item.id)].slice(0, 5)));
     notify(t('applied', local(item.name)));
     setTimeout(refreshTheme, 1200);
   } catch (error) {
@@ -678,7 +872,18 @@ function swatch(item) {
 
 function presetCard(item) {
   const active = state.catalog?.active === item.id;
-  return element('article', { class: `card${active ? ' active' : ''}` }, [
+  return element('article', {
+    class: `card clickable${active ? ' active' : ''}`,
+    tabindex: '0',
+    onMouseenter: () => hoverPreview.enter(item),
+    onMouseleave: () => hoverPreview.leave(),
+    onClick: event => {
+      if (!event.target.closest('button')) openPreset(item.id);
+    },
+    onKeydown: event => {
+      if (event.key === 'Enter' && event.target === event.currentTarget) openPreset(item.id);
+    },
+  }, [
     swatch(item),
     element('div', { class: 'card-title', text: local(item.name) }),
     element('div', { class: 'card-text', text: local(item.summary) }),
@@ -749,11 +954,50 @@ function lookSection() {
   ]);
 }
 
+function setupSection() {
+  const roles = state.themeRoles ?? {};
+  const widgets = state.install?.widgets ?? [];
+  const active = state.catalog?.active ? itemById(state.catalog.active) : null;
+  return element('section', { class: 'section setup' }, [
+    element('div', { class: 'section-title' }, [element('span', { text: t('yourSetup') })]),
+    element('div', { class: 'setup-body' }, [
+      element('div', { class: 'setup-wallpaper', 'aria-label': t('wallpaperLabel'), role: 'img' }, state.wallpaperUrl
+        ? element('img', { src: state.wallpaperUrl, alt: '' })
+        : icon('wallpaper')),
+      element('div', { class: 'setup-facts' }, [
+        element('div', { class: 'setup-fact' }, [
+          element('span', { class: 'setup-label', text: t('paletteLabel') }),
+          element('div', { class: 'palette-dots' }, [
+            ...['primary', 'secondary', 'tertiary', 'primaryContainer', 'surfaceContainerHigh'].map(role => element('span', { style: { background: roles[role] ?? `var(--m3-${kebab(role)})` } })),
+            element('span', { class: 'palette-name', text: active ? local(active.name) : t('dynamic') }),
+          ]),
+        ]),
+        element('div', { class: 'setup-fact' }, [
+          element('span', { class: 'setup-label', text: t('widgetsLabel') }),
+          element('div', { class: 'chips' }, widgets.length ? widgets.map(name => chip(name, 'widgets')) : [element('span', { class: 'row-subtitle', text: t('noWidgets') })]),
+        ]),
+      ]),
+    ]),
+  ]);
+}
+
+async function loadWallpaper() {
+  try {
+    const data = await invoke('wallpaper');
+    const url = URL.createObjectURL(new Blob([data]));
+    if (state.wallpaperUrl) URL.revokeObjectURL(state.wallpaperUrl);
+    state.wallpaperUrl = url;
+  } catch {
+    state.wallpaperUrl = null;
+  }
+}
+
 function homePage() {
   const suggestions = presets().filter(item => item.id !== state.catalog?.active).slice(0, 3);
   const latest = (state.catalog?.news ?? [])[0];
   return [
     heroCard(),
+    setupSection(),
     lookSection(),
     suggestions.length
       ? element('section', { class: 'section' }, [
@@ -810,7 +1054,7 @@ function progressSection() {
   return element('section', { class: 'section' }, [
     element('div', { class: 'section-title' }, [element('span', { text: t('progress') }), element('span', { class: 'progress-count', text: `${finished}/${steps.length}` })]),
     element('div', { class: 'progress-track', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': String(steps.length), 'aria-valuenow': String(finished) }, element('span', { style: { width: `${(finished / steps.length) * 100}%` } })),
-    ...steps.map(step => element('div', { class: `row step ${step.status}` }, [
+    ...steps.map(step => element('div', { class: `row step ${step.status}${Date.now() - (step.at ?? 0) < 700 ? ' fresh' : ''}` }, [
       icon(stepIcons[step.status], `step-icon${step.status === 'running' ? ' spin' : ''}`),
       element('div', { class: 'row-text' }, [
         element('span', { class: 'row-title', text: labels[step.id] }),
@@ -949,7 +1193,233 @@ function libraryPage() {
       ]),
     ]),
     lookSection(),
+    historySection(),
   ];
+}
+
+function historySection() {
+  const items = lookHistory().map(itemById).filter(Boolean);
+  return element('section', { class: 'section' }, [
+    element('div', { class: 'section-title' }, [element('span', { text: t('history') })]),
+    ...(items.length
+      ? items.map(item => element('div', { class: 'row' }, [
+        swatchDot(item),
+        element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: local(item.name) }), element('span', { class: 'row-subtitle', text: local(item.summary) })]),
+        state.catalog?.active === item.id
+          ? element('span', { class: 'badge' }, [icon('check'), element('span', { text: t('active') })])
+          : button(t('reapply'), 'history', () => applyPreset(item), { disabled: !state.connected }),
+      ]))
+      : [element('div', { class: 'row' }, [icon('history', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-subtitle', text: t('historyEmpty') })])])]),
+  ]);
+}
+
+function swatchDot(item) {
+  const roles = schemeRoles(item);
+  return element('span', { class: 'swatch-dot', style: roles ? { background: `conic-gradient(${roles.primary} 0 50%, ${roles.secondary} 0 75%, ${roles.tertiary} 0)` } : {} }, roles ? null : icon('wallpaper'));
+}
+
+function openPreset(id) {
+  state.detail = id;
+  state.detailMode = null;
+  showPage('preset');
+}
+
+function mockup(roles) {
+  const vars = {};
+  for (const role of ['primary', 'onPrimary', 'primaryContainer', 'onPrimaryContainer', 'secondary', 'secondaryContainer', 'onSecondaryContainer', 'tertiary', 'tertiaryContainer', 'onTertiaryContainer', 'surface', 'surfaceContainer', 'surfaceContainerHigh', 'surfaceContainerHighest', 'onSurface', 'onSurfaceVariant', 'outlineVariant']) {
+    if (roles?.[role]) vars[`--x-${kebab(role)}`] = roles[role];
+  }
+  const now = new Date();
+  const time = now.toLocaleTimeString(state.language === 'fr' ? 'fr-FR' : 'en-GB', { hour: '2-digit', minute: '2-digit' });
+  const date = now.toLocaleDateString(state.language === 'fr' ? 'fr-FR' : 'en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+  const node = element('div', { class: 'mockup', role: 'img', 'aria-label': t('previewTitle') }, [
+    state.wallpaperUrl ? element('img', { class: 'mockup-wallpaper', src: state.wallpaperUrl, alt: '' }) : null,
+    element('div', { class: 'mockup-frame' }),
+    element('div', { class: 'mockup-bar' }, [
+      element('span', { class: 'mockup-logo' }, icon('auto_awesome')),
+      element('div', { class: 'mockup-workspaces' }, [1, 2, 3, 4, 5].map(index => element('span', { class: index === 2 ? 'current' : '' }))),
+      element('span', { class: 'mockup-clock', text: time.replace(':', '\n') }),
+      element('div', { class: 'mockup-tray' }, ['wifi', 'volume_up', 'battery_5_bar'].map(name => icon(name))),
+    ]),
+    element('div', { class: 'mockup-dashboard' }, [
+      element('div', { class: 'mockup-time' }, [element('strong', { text: time }), element('span', { text: date })]),
+      element('div', { class: 'mockup-row' }, [
+        element('div', { class: 'mockup-media' }, [icon('music_note'), element('div', {}, [element('strong', { text: 'Caelestia' }), element('span', { text: 'Material You' })])]),
+        element('div', { class: 'mockup-weather' }, [icon('partly_cloudy_day'), element('strong', { text: '18°' })]),
+      ]),
+      element('div', { class: 'mockup-meters' }, [62, 38, 81].map(value => element('span', {}, element('i', { style: { width: `${value}%` } })))),
+    ]),
+  ]);
+  Object.entries(vars).forEach(([name, value]) => node.style.setProperty(name, value));
+  return node;
+}
+
+function presetPage() {
+  const item = itemById(state.detail);
+  if (!item) return [element('div', { class: 'empty' }, [icon('search_off'), element('span', { text: t('catalogMissing') })])];
+  const scheme = item.preset?.scheme;
+  const flavour = scheme ? state.schemes?.[scheme.name]?.[scheme.flavour] ?? {} : {};
+  const mode = state.detailMode ?? (item.preset?.mode === 'light' ? 'light' : 'dark');
+  const roles = scheme ? schemeRoles(item, mode) : state.themeRoles;
+  const active = state.catalog?.active === item.id;
+  const link = `caelestia://apply/${item.id}`;
+  const modes = ['dark', 'light'].filter(name => flavour[name]);
+  return [
+    element('div', { class: 'detail-top' }, [
+      button(t('back'), 'arrow_back', () => showPage('discover'), { variant: 'text' }),
+      modes.length > 1 ? element('div', { class: 'segmented', role: 'group', 'aria-label': t('previewTitle') }, modes.map(name => element('button', {
+        class: name === mode ? 'selected' : '',
+        'aria-pressed': String(name === mode),
+        onClick: () => {
+          state.detailMode = name;
+          render();
+        },
+      }, name === 'dark' ? t('previewDark') : t('previewLight')))) : null,
+    ]),
+    element('section', { class: 'detail' }, [
+      mockup(roles),
+      element('div', { class: 'detail-body' }, [
+        element('h2', { text: local(item.name) }),
+        element('p', { text: local(item.summary) }),
+        scheme ? null : element('p', { class: 'row-subtitle', text: t('dynamicPreview') }),
+        element('div', { class: 'chips' }, [
+          item.official ? chip(t('official'), 'verified') : null,
+          item.preset?.options?.transparency ? chip(t('transparency'), 'blur_on') : null,
+          ...(item.tags ?? []).map(tag => chip(tag, 'sell')),
+        ]),
+        element('dl', { class: 'detail-facts' }, [
+          element('dt', { text: t('author') }), element('dd', { text: item.author?.name ?? '—' }),
+          element('dt', { text: t('version') }), element('dd', { text: item.version ?? '—' }),
+          element('dt', { text: t('licence') }), element('dd', { text: item.license ?? '—' }),
+        ]),
+        element('div', { class: 'actions' }, [
+          active
+            ? element('span', { class: 'badge big' }, [icon('check'), element('span', { text: t('active') })])
+            : button(t('apply'), 'palette', () => applyPreset(item), { variant: 'filled', disabled: !state.connected }),
+          active && state.catalog?.canUndo ? button(t('undo'), 'undo', undoPreset, { disabled: !state.connected }) : null,
+          button(t('copyLink'), 'link', () => copyText(link, t('linkCopied')), { variant: 'text' }),
+        ]),
+      ]),
+    ]),
+  ];
+}
+
+async function copyText(text, message) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch {
+    const area = element('textarea', { style: { position: 'fixed', opacity: '0' } }, text);
+    document.body.append(area);
+    area.select();
+    document.execCommand('copy');
+    area.remove();
+  }
+  notify(message);
+}
+
+function shortcutRows(list, split = true) {
+  return list.map(([keys, fr, en]) => element('div', { class: 'shortcut' }, [
+    element('span', { class: 'keys' }, (split ? keys.split('+') : [keys]).map(key => element('kbd', { text: key }))),
+    element('span', { class: 'shortcut-label', text: state.language === 'fr' ? fr : en }),
+  ]));
+}
+
+function shortcutsTab() {
+  const input = element('input', { type: 'search', placeholder: t('shortcutsSearch'), value: state.shortcutQuery, 'aria-label': t('shortcutsSearch') });
+  const body = element('div', { class: 'help-body' });
+  const paint = () => {
+    const query = state.shortcutQuery.trim().toLowerCase();
+    const match = ([keys, fr, en]) => !query || `${keys} ${fr} ${en}`.toLowerCase().includes(query);
+    const globals = shortcutList.filter(match);
+    const prefixes = prefixList.filter(match);
+    body.replaceChildren(...[
+      globals.length ? element('section', { class: 'section' }, [element('div', { class: 'section-title' }, [element('span', { text: t('globalShortcuts') })]), element('div', { class: 'shortcuts' }, shortcutRows(globals))]) : null,
+      prefixes.length ? element('section', { class: 'section' }, [element('div', { class: 'section-title' }, [element('span', { text: t('prefixes') })]), element('div', { class: 'shortcuts' }, shortcutRows(prefixes, false))]) : null,
+      globals.length || prefixes.length ? null : element('div', { class: 'empty' }, [icon('keyboard'), element('span', { text: t('noShortcut') })]),
+    ].filter(Boolean));
+  };
+  input.addEventListener('input', () => {
+    state.shortcutQuery = input.value;
+    paint();
+  });
+  paint();
+  return [element('p', { class: 'help-hint', text: t('shortcutsHint') }), element('label', { class: 'search' }, [icon('search'), input]), body];
+}
+
+async function loadLog() {
+  try {
+    state.log = await invoke('log_tail', { lines: 80 });
+  } catch {
+    state.log = [];
+  }
+}
+
+function report() {
+  const install = state.install;
+  const lines = [
+    `Caelestia ${install?.pack.version ?? '?'} · helper ${install?.helper.version ?? '?'} · app ${install?.launcher.version ?? '?'} · Zebar ${install?.zebar.version ?? (install?.zebar.present ? '?' : 'missing')}`,
+    `Windows: ${navigator.userAgent}`,
+    `Registered: ${install?.registered} · tasks: ${(install?.tasks ?? []).map(Number).join('')} · zebar running: ${install?.zebarRunning} · helper running: ${install?.helperRunning}`,
+    `Widgets: ${(install?.widgets ?? []).join(', ')}`,
+    `Preset: ${state.catalog?.active ?? 'none'} · catalogue ${state.catalog?.version ?? '?'} (${state.catalog?.source ?? '?'})`,
+    '',
+    ...(state.log ?? []),
+  ];
+  return lines.join('\n');
+}
+
+function troubleTab() {
+  if (state.log === null) loadLog().then(() => state.page === 'help' && render());
+  const busy = Boolean(state.busy);
+  return [
+    element('section', { class: 'section' }, [
+      element('div', { class: 'row' }, [
+        icon('dock_to_bottom', 'tonal-icon'),
+        element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('restoreTaskbar') }), element('span', { class: 'row-subtitle', text: t('restoreTaskbarText') })]),
+        button(t('restore'), state.busy === 'restore-shell' ? 'progress_activity' : 'settings_backup_restore', () => runHelper('restore-shell', t('stoppedDone')), { disabled: busy }),
+      ]),
+      element('div', { class: 'row' }, [
+        icon('build', 'tonal-icon'),
+        element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('repair') }), element('span', { class: 'row-subtitle', text: t('repairText') })]),
+        button(t('repair'), 'arrow_forward', () => showPage('install'), { disabled: busy }),
+      ]),
+      element('div', { class: 'row' }, [
+        icon('bug_report', 'tonal-icon'),
+        element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('copyReport') }), element('span', { class: 'row-subtitle', text: t('reportText') })]),
+        button(t('copyReport'), 'content_copy', async () => {
+          await Promise.allSettled([loadLog(), refreshInstall()]);
+          copyText(report(), t('reportCopied'));
+        }, { variant: 'filled' }),
+      ]),
+    ]),
+    element('section', { class: 'section' }, [
+      element('div', { class: 'section-title' }, [
+        element('span', { text: t('logs') }),
+        element('div', { class: 'actions inline' }, [
+          button(t('refresh'), 'refresh', async () => {
+            await loadLog();
+            render();
+          }, { variant: 'text' }),
+          button(t('open'), 'open_in_new', () => invoke('open_folder', { target: 'logs' }).catch(() => notify(t('missing'), 'warning')), { variant: 'text' }),
+        ]),
+      ]),
+      element('pre', { class: 'log', tabindex: '0', 'aria-label': t('logs') }, state.log?.length ? state.log.join('\n') : t('noLog')),
+    ]),
+  ];
+}
+
+function helpPage() {
+  const tabs = element('div', { class: 'segmented tabs', role: 'tablist' }, [['shortcuts', t('shortcutsTab'), 'keyboard'], ['trouble', t('troubleTab'), 'build']].map(([id, label, symbol]) => element('button', {
+    role: 'tab',
+    class: id === state.helpTab ? 'selected' : '',
+    'aria-selected': String(id === state.helpTab),
+    onClick: () => {
+      state.helpTab = id;
+      if (id === 'trouble') state.log = null;
+      render(true);
+    },
+  }, [icon(symbol), element('span', { text: label })])));
+  return [tabs, ...(state.helpTab === 'shortcuts' ? shortcutsTab() : troubleTab())];
 }
 
 function newsCard(item, label = '') {
@@ -980,6 +1450,7 @@ function settingsPage() {
         }
         document.documentElement.lang = code;
         render();
+        syncTray();
       },
     }, label)));
   const soundOn = sounds.enabled();
@@ -996,6 +1467,21 @@ function settingsPage() {
         render();
       },
     }, label)));
+  const volume = element('input', {
+    type: 'range', min: '0', max: '100', step: '5', value: String(Math.round(sounds.volume() * 100)), 'aria-label': t('volumeText'), class: 'slider',
+  });
+  volume.addEventListener('input', () => store('volume', String(Number(volume.value) / 100)));
+  volume.addEventListener('change', () => sounds.play('notification'));
+  const trayOn = stored('tray', 'on') !== 'off';
+  const trayToggle = element('div', { class: 'segmented', role: 'group', 'aria-label': t('tray') }, [[true, t('soundOn')], [false, t('soundOff')]].map(([value, label]) =>
+    element('button', {
+      class: value === trayOn ? 'selected' : '',
+      'aria-pressed': String(value === trayOn),
+      onClick: () => {
+        store('tray', value ? 'on' : 'off');
+        render();
+      },
+    }, label)));
   const catalog = state.catalog;
   const expires = catalog?.expires ? new Date(catalog.expires).toLocaleDateString(state.language === 'fr' ? 'fr-FR' : 'en-GB') : '—';
   return [
@@ -1006,6 +1492,12 @@ function settingsPage() {
     element('section', { class: 'section' }, [
       element('div', { class: 'section-title' }, [element('span', { text: t('sound') })]),
       element('div', { class: 'row' }, [icon('volume_up', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('soundText') })]), soundToggle]),
+      element('div', { class: 'row' }, [icon('tune', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('volumeText') })]), volume]),
+    ]),
+    element('section', { class: 'section' }, [
+      element('div', { class: 'section-title' }, [element('span', { text: t('tray') })]),
+      element('div', { class: 'row' }, [icon('select_window_2', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('trayText') })]), trayToggle]),
+      element('div', { class: 'row' }, [icon('waving_hand', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('welcomeRow') })]), button(t('replayWelcome'), 'replay', () => onboarding.open(), {})]),
     ]),
     element('section', { class: 'section' }, [
       element('div', { class: 'section-title' }, [element('span', { text: t('catalog') })]),
@@ -1031,41 +1523,290 @@ function settingsPage() {
   ];
 }
 
-const builders = { home: homePage, install: installPage, discover: discoverPage, library: libraryPage, news: newsPage, settings: settingsPage };
+const builders = { home: homePage, install: installPage, discover: discoverPage, library: libraryPage, news: newsPage, help: helpPage, settings: settingsPage, preset: presetPage };
 
 function paintConnection() {
   nodes.connection.classList.toggle('online', state.connected);
   nodes.connection.textContent = state.connected ? t('online') : t('offline');
 }
 
+const railItems = element('div', { class: 'rail-items' });
+
 function paintRail() {
-  nodes.rail.replaceChildren(
-    element('div', { class: 'rail-brand', 'aria-hidden': 'true' }, [shape(9, 0.07), icon('auto_awesome')]),
-    ...pages.map(([id, symbol]) => element('button', {
-      class: `rail-item${id === state.page ? ' current' : ''}`,
-      'aria-current': id === state.page ? 'page' : null,
-      onClick: () => showPage(id),
-    }, [element('span', { class: 'rail-pill' }, icon(symbol)), element('span', { text: t(id) })])),
-  );
+  if (!morph.path) {
+    const brand = element('button', { class: 'rail-brand', 'aria-label': t('searchAll'), title: 'Ctrl+K', onClick: () => palette.open() }, [shape(9, 0.07), icon('auto_awesome')]);
+    morph.path = brand.querySelector('path');
+    nodes.rail.replaceChildren(brand, railItems);
+  }
+  const current = state.page === 'preset' ? 'discover' : state.page;
+  railItems.replaceChildren(...pages.map(([id, symbol]) => element('button', {
+    class: `rail-item${id === current ? ' current' : ''}`,
+    'aria-current': id === current ? 'page' : null,
+    onClick: () => showPage(id),
+  }, [element('span', { class: 'rail-pill' }, icon(symbol)), element('span', { text: t(id) })])));
 }
 
-function render() {
+function render(animate = false) {
   paintRail();
   paintConnection();
-  nodes.title.textContent = t(state.page);
+  nodes.title.textContent = state.page === 'preset' ? local(itemById(state.detail)?.name) || t('preset') : t(state.page);
   const scroll = nodes.pages.scrollTop;
-  nodes.pages.replaceChildren(element('div', { class: 'page' }, builders[state.page]()));
-  nodes.pages.scrollTop = scroll;
+  nodes.pages.replaceChildren(element('div', { class: `page${animate ? ' enter' : ''}` }, builders[state.page]()));
+  nodes.pages.scrollTop = animate ? 0 : scroll;
   if (state.update.status === 'downloading') paintUpdateProgress();
 }
 
 function showPage(id) {
+  if (!builders[id]) return;
+  const changed = id !== state.page;
+  hoverPreview.leave();
   state.page = id;
   nodes.pages.scrollTop = 0;
-  render();
+  if (changed) morph.to(...(pageShapes[id] ?? pageShapes.home));
+  render(true);
+}
+
+const palette = {
+  index: 0,
+  items: [],
+
+  entries(query) {
+    const text = query.trim().toLowerCase();
+    const actions = [
+      ['play_circle', t('start'), () => runHelper('start', t('started'))],
+      ['stop_circle', t('stop'), () => runHelper('restore-shell', t('stoppedDone'))],
+      ['build', t('repair'), () => showPage('install')],
+      ['system_update', t('checkUpdates'), () => {
+        showPage('install');
+        checkUpdate();
+      }],
+      ['dock_to_bottom', t('restoreTaskbar'), () => runHelper('restore-shell', t('stoppedDone'))],
+      ['tune', t('themeSettings'), () => helper.request('launcher.openSettings').catch(() => notify(t('offline'), 'warning'))],
+      ['keyboard', t('shortcutsTab'), () => {
+        state.helpTab = 'shortcuts';
+        showPage('help');
+      }],
+      ['bug_report', t('copyReport'), async () => {
+        await Promise.allSettled([loadLog(), refreshInstall()]);
+        copyText(report(), t('reportCopied'));
+      }],
+    ].map(([symbol, label, run]) => ({ group: t('groupActions'), symbol, label, run }));
+    const pageEntries = pages.map(([id, symbol]) => ({ group: t('groupPages'), symbol, label: t(id), run: () => showPage(id) }));
+    const presetEntries = presets().map(item => ({ group: t('groupPresets'), symbol: 'palette', label: local(item.name), detail: local(item.summary), run: () => openPreset(item.id) }));
+    return [...pageEntries, ...presetEntries, ...actions].filter(entry => !text || `${entry.label} ${entry.detail ?? ''} ${entry.group}`.toLowerCase().includes(text)).slice(0, 12);
+  },
+
+  open() {
+    const input = element('input', { type: 'search', placeholder: t('searchAll'), 'aria-label': t('searchAll'), autocomplete: 'off' });
+    const list = element('div', { class: 'palette-list', role: 'listbox' });
+    const paint = () => {
+      this.items = this.entries(input.value);
+      this.index = Math.min(this.index, Math.max(0, this.items.length - 1));
+      list.replaceChildren(...(this.items.length ? this.items.map((entry, index) => element('button', {
+        class: `palette-item${index === this.index ? ' selected' : ''}`,
+        role: 'option',
+        'aria-selected': String(index === this.index),
+        onClick: () => this.run(index),
+        onMouseenter: () => {
+          this.index = index;
+          paint();
+        },
+      }, [icon(entry.symbol), element('span', { class: 'palette-label', text: entry.label }), element('span', { class: 'palette-group', text: entry.group })])) : [element('div', { class: 'empty small', text: t('searchEmpty') })]));
+    };
+    input.addEventListener('input', () => {
+      this.index = 0;
+      paint();
+    });
+    input.addEventListener('keydown', event => {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        const count = this.items.length || 1;
+        this.index = (this.index + (event.key === 'ArrowDown' ? 1 : count - 1)) % count;
+        paint();
+        list.querySelector('.selected')?.scrollIntoView({ block: 'nearest' });
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+        this.run(this.index);
+      }
+    });
+    this.index = 0;
+    paint();
+    nodes.dialog.replaceChildren(element('div', { class: 'dialog palette', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('searchAll') }, [
+      element('label', { class: 'search' }, [icon('search'), input, element('kbd', { text: 'Esc' })]),
+      list,
+    ]));
+    nodes.dialog.hidden = false;
+    input.focus();
+  },
+
+  run(index) {
+    const entry = this.items[index];
+    if (!entry) return;
+    closeDialog();
+    entry.run();
+  },
+};
+
+const onboarding = {
+  step: 0,
+  choice: null,
+
+  open() {
+    this.step = 0;
+    this.choice = null;
+    this.paint();
+    nodes.dialog.hidden = false;
+  },
+
+  finish() {
+    hoverPreview.leave();
+    store('onboarded', '1');
+    closeDialog();
+    const item = this.choice ? itemById(this.choice) : null;
+    if (item && state.catalog?.active !== item.id) applyPreset(item);
+  },
+
+  paint() {
+    const steps = 3;
+    const dots = element('div', { class: 'steps-dots' }, Array.from({ length: steps }, (_, index) => element('span', { class: index === this.step ? 'current' : index < this.step ? 'done' : '' })));
+    let body;
+    if (this.step === 0) {
+      body = [
+        element('div', { class: 'welcome-mark' }, [shape(9, 0.07), icon('auto_awesome')]),
+        element('h2', { text: t('welcome') }),
+        element('p', { text: t('welcomeText') }),
+        element('div', { class: 'segmented', role: 'group', 'aria-label': t('language') }, [['fr', 'Français'], ['en', 'English']].map(([code, label]) => element('button', {
+          class: code === state.language ? 'selected' : '',
+          'aria-pressed': String(code === state.language),
+          onClick: () => {
+            state.language = code;
+            store('language', code);
+            document.documentElement.lang = code;
+            render();
+            syncTray();
+            this.paint();
+          },
+        }, label))),
+      ];
+    } else if (this.step === 1) {
+      const options = presets().slice(0, 8);
+      body = [
+        element('h2', { text: t('welcomeLook') }),
+        element('p', { text: t('welcomeLookText') }),
+        element('div', { class: 'welcome-looks' }, [
+          element('button', {
+            class: `look${this.choice === null ? ' selected' : ''}`,
+            onClick: () => {
+              this.choice = null;
+              this.paint();
+            },
+          }, [element('span', { class: 'swatch-dot' }, icon('person')), element('span', { text: t('keepMine') })]),
+          ...options.map(item => element('button', {
+            class: `look${this.choice === item.id ? ' selected' : ''}`,
+            onMouseenter: () => hoverPreview.enter(item),
+            onMouseleave: () => hoverPreview.leave(),
+            onClick: () => {
+              this.choice = item.id;
+              this.paint();
+            },
+          }, [swatchDot(item), element('span', { text: local(item.name) })])),
+        ]),
+      ];
+    } else {
+      body = [
+        element('h2', { text: t('welcomeKeys') }),
+        element('div', { class: 'shortcuts' }, shortcutRows(shortcutList.filter(([keys]) => ['Win', 'Win+Alt+A', 'Win+Alt+K', 'Alt+E', 'Win+Alt+S'].includes(keys)))),
+      ];
+    }
+    nodes.dialog.replaceChildren(element('div', { class: 'dialog welcome', role: 'dialog', 'aria-modal': 'true' }, [
+      element('div', { class: 'welcome-body', key: String(this.step) }, body),
+      element('div', { class: 'welcome-footer' }, [
+        dots,
+        element('div', { class: 'actions' }, [
+          this.step > 0 ? button(t('previous'), null, () => {
+            this.step -= 1;
+            this.paint();
+          }, { variant: 'text' }) : null,
+          this.step < steps - 1
+            ? button(t('next'), 'arrow_forward', () => {
+              hoverPreview.leave();
+              this.step += 1;
+              this.paint();
+            }, { variant: 'filled' })
+            : button(t('finish'), 'check', () => this.finish(), { variant: 'filled' }),
+        ]),
+      ]),
+    ]));
+  },
+};
+
+function syncTray() {
+  const update = ['available', 'downloading', 'ready'].includes(state.update.status) ? t('trayUpdate', state.update.info.version) : null;
+  invoke('tray_labels', {
+    labels: { open: t('trayOpen'), start: t('trayStart'), stop: t('trayStop'), quit: t('trayQuit'), tooltip: update ? `Caelestia · ${update}` : 'Caelestia', update },
+  }).catch(() => {});
+}
+
+function newer(candidate, current) {
+  const parse = text => String(text ?? '').split(/[-+]/)[0].split('.').map(Number);
+  const [a, b] = [parse(candidate), parse(current)];
+  for (let index = 0; index < 3; index++) {
+    if ((a[index] || 0) !== (b[index] || 0)) return (a[index] || 0) > (b[index] || 0);
+  }
+  return false;
+}
+
+function notesNodes(text) {
+  const clean = line => line.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/\*\*|__|`/g, '').trim();
+  const nodesList = [];
+  let list = null;
+  for (const raw of text.split(/\r?\n/)) {
+    const line = raw.trim();
+    if (!line) {
+      list = null;
+      continue;
+    }
+    if (/^[-*] /.test(line)) {
+      list ??= nodesList[nodesList.push(element('ul')) - 1];
+      list.append(element('li', { text: clean(line.slice(2)) }));
+    } else if (/^#+ /.test(line)) {
+      list = null;
+      nodesList.push(element('h3', { text: clean(line.replace(/^#+ /, '')) }));
+    } else {
+      list = null;
+      nodesList.push(element('p', { text: clean(line) }));
+    }
+  }
+  return nodesList.slice(0, 60);
+}
+
+async function showWhatsNew() {
+  let installed;
+  try {
+    installed = await invoke('installed');
+  } catch {
+    return;
+  }
+  const seen = stored('seen-version', '');
+  store('seen-version', installed);
+  if (!seen || !newer(installed, seen)) return;
+  let notes = '';
+  try {
+    notes = await invoke('release_notes', { version: installed });
+  } catch {
+    notes = '';
+  }
+  nodes.dialog.replaceChildren(element('div', { class: 'dialog notes', role: 'dialog', 'aria-modal': 'true' }, [
+    element('h2', { text: t('whatsNew', installed) }),
+    element('div', { class: 'notes-body' }, notes.trim() ? notesNodes(notes) : [element('p', { text: t('whatsNewFallback', installed) })]),
+    element('div', { class: 'actions' }, [button(t('close'), null, closeDialog, { variant: 'filled' })]),
+  ]));
+  nodes.dialog.hidden = false;
 }
 
 function closeDialog() {
+  hoverPreview.leave();
+  if (nodes.dialog.querySelector('.welcome')) store('onboarded', '1');
   nodes.dialog.hidden = true;
   nodes.dialog.replaceChildren();
 }
@@ -1102,7 +1843,7 @@ async function handleLink(link) {
     notify(t('unknownLink'), 'warning');
     return;
   }
-  showPage('discover');
+  openPreset(item.id);
   confirmPreset(item);
 }
 
@@ -1112,6 +1853,10 @@ nodes.dialog.addEventListener('click', event => {
 
 window.addEventListener('keydown', event => {
   if (event.key === 'Escape' && !nodes.dialog.hidden) closeDialog();
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+    event.preventDefault();
+    if (nodes.dialog.hidden) palette.open();
+  }
 });
 
 window.addEventListener('focus', () => {
@@ -1120,13 +1865,14 @@ window.addEventListener('focus', () => {
 });
 
 document.documentElement.lang = state.language;
-await Promise.allSettled([loadSchemes(), refreshInstall(), sounds.preload()]);
+await Promise.allSettled([loadSchemes(), refreshInstall(), sounds.preload(), loadWallpaper()]);
 paintRail();
 paintConnection();
 await appWindow.show();
 document.body.classList.add('open');
-render();
+render(true);
 sounds.play('start');
+syncTray();
 helper.connect();
 listen('deep-link', event => handleLink(event.payload));
 listen('update-progress', event => {
@@ -1139,10 +1885,39 @@ appWindow.onCloseRequested(async event => {
   event.preventDefault();
   if (closing) return;
   closing = true;
+  closeDialog();
   document.body.classList.add('closing');
   const duration = await sounds.play('close');
-  setTimeout(() => appWindow.destroy(), Math.max(220, Math.min(duration * 1000, 1200)));
+  const wait = Math.max(260, Math.min(duration * 1000, 1200));
+  setTimeout(async () => {
+    if (stored('tray', 'on') === 'off') {
+      appWindow.destroy();
+      return;
+    }
+    await appWindow.hide();
+    closing = false;
+  }, wait);
 });
-setTimeout(() => checkUpdate(true), 1500);
+listen('reopened', () => {
+  document.body.classList.remove('closing', 'open');
+  requestAnimationFrame(() => {
+    document.body.classList.add('open');
+    render(true);
+    sounds.play('start');
+    if (state.connected) refreshAll();
+    else refreshInstall().then(() => render());
+  });
+});
+listen('open-page', event => showPage(event.payload));
+setTimeout(async () => {
+  await checkUpdate(true);
+  syncTray();
+}, 1500);
+setInterval(async () => {
+  await checkUpdate(true);
+  syncTray();
+}, 6 * 60 * 60 * 1000);
+if (stored('onboarded', '') !== '1') setTimeout(() => onboarding.open(), 700);
+else setTimeout(showWhatsNew, 900);
 const initial = await invoke('initial_link');
 if (initial) setTimeout(() => handleLink(initial), 800);

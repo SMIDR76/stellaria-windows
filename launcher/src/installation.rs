@@ -34,6 +34,7 @@ pub struct Installation {
     launcher: Component,
     switcher: bool,
     registered: bool,
+    widgets: Vec<String>,
     tasks: Vec<bool>,
     zebar_running: bool,
     helper_running: bool,
@@ -140,10 +141,22 @@ fn pack() -> Component {
     Component { present: true, version, path: Some(directory.display().to_string()) }
 }
 
-fn registered() -> bool {
-    let Ok(text) = std::fs::read_to_string(zebar_settings()) else { return false };
-    let Ok(value) = serde_json::from_str::<serde_json::Value>(text.trim_start_matches('\u{feff}')) else { return false };
-    value["startupConfigs"].as_array().is_some_and(|entries| entries.iter().any(|entry| entry["pack"].as_str() == Some(PACK_NAME)))
+fn startup_widgets() -> Vec<String> {
+    let Ok(text) = std::fs::read_to_string(zebar_settings()) else { return Vec::new() };
+    let Ok(value) = serde_json::from_str::<serde_json::Value>(text.trim_start_matches('\u{feff}')) else { return Vec::new() };
+    let mut widgets: Vec<String> = value["startupConfigs"]
+        .as_array()
+        .map(|entries| {
+            entries
+                .iter()
+                .filter(|entry| entry["pack"].as_str() == Some(PACK_NAME))
+                .filter_map(|entry| entry["widget"].as_str().map(str::to_string))
+                .collect()
+        })
+        .unwrap_or_default();
+    widgets.sort();
+    widgets.dedup();
+    widgets
 }
 
 fn task_exists(name: &str) -> bool {
@@ -176,6 +189,7 @@ fn running_processes() -> Vec<String> {
 
 pub fn detect() -> Installation {
     let processes = running_processes();
+    let widgets = startup_widgets();
     let launcher = std::env::current_exe().map(|path| path.display().to_string()).ok();
     Installation {
         zebar: zebar(),
@@ -183,7 +197,8 @@ pub fn detect() -> Installation {
         pack: pack(),
         launcher: Component { present: true, version: Some(env!("CARGO_PKG_VERSION").to_string()), path: launcher },
         switcher: pack_directory().join("native").join("CaelestiaSwitcher.exe").is_file(),
-        registered: registered(),
+        registered: !widgets.is_empty(),
+        widgets,
         tasks: TASKS.iter().map(|name| task_exists(name)).collect(),
         zebar_running: processes.iter().any(|name| name == "zebar.exe"),
         helper_running: processes.iter().any(|name| name == "caelestia-helper.exe"),

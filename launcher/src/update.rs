@@ -16,6 +16,7 @@ use crate::{environment, CREATE_NO_WINDOW};
 
 const LATEST: &str = "https://github.com/SMIDR76/caelestia-windows/releases/latest/download";
 const RELEASES: &str = "https://github.com/SMIDR76/caelestia-windows/releases/download";
+const API: &str = "https://api.github.com/repos/SMIDR76/caelestia-windows";
 const PUBLIC_KEY: &str = "RWTou8VvwZXwQHs+sbv0zMiXD1JvVzuCX0ICnWMLpDqDAt7GcjMCMe/Z";
 const SETUP_KEY: &str = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\{07E2E875-6641-40F1-998A-41F55DCD99DD}_is1";
 const TEST_SOURCE: &str = "CAELESTIA_UPDATE_SOURCE";
@@ -128,6 +129,34 @@ fn open_manifest(data: &[u8], signature: &[u8]) -> Result<Manifest, String> {
 
 fn updates_directory() -> PathBuf {
     environment("LOCALAPPDATA").join("Caelestia").join("updates")
+}
+
+#[tauri::command]
+pub fn installed() -> String {
+    installed_version()
+}
+
+#[tauri::command]
+pub async fn release_notes(version: String) -> Result<String, String> {
+    release_version(&version).ok_or("manifest")?;
+    let client = client()?;
+    let url = format!("{API}/releases/tags/v{version}");
+    let response = client
+        .get(url)
+        .header("Accept", "application/vnd.github+json")
+        .timeout(Duration::from_secs(15))
+        .send()
+        .await
+        .map_err(|_| "network".to_string())?;
+    if !response.status().is_success() {
+        return Err(if response.status() == reqwest::StatusCode::NOT_FOUND { "not-found".into() } else { "network".into() });
+    }
+    let bytes = response.bytes().await.map_err(|_| "network".to_string())?;
+    if bytes.len() > 512 * 1024 {
+        return Err("manifest".into());
+    }
+    let value: serde_json::Value = serde_json::from_slice(&bytes).map_err(|_| "manifest".to_string())?;
+    Ok(value["body"].as_str().unwrap_or_default().chars().take(8000).collect())
 }
 
 #[tauri::command]

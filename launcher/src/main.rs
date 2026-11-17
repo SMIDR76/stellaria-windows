@@ -1,19 +1,27 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod installation;
+mod tray;
 mod update;
 
+use std::io::{Read, Seek, SeekFrom};
 use std::os::windows::process::CommandExt;
 use std::path::PathBuf;
 use std::process::Command;
 
 use serde::Serialize;
-use tauri::{Emitter, Manager};
+use tauri::ipc::Response;
+use tauri::Emitter;
+use winreg::enums::HKEY_CURRENT_USER;
+use winreg::RegKey;
 
 const CREATE_NO_WINDOW: u32 = 0x0800_0000;
 const HELPER_VERBS: [&str; 5] = ["start", "restore-shell", "install", "uninstall", "shutdown"];
 const LINK_PREFIX: &str = "caelestia://";
 const SETTINGS_LINKS: [&str; 1] = ["ms-settings:appsfeatures"];
+const LOG_BYTES: u64 = 96 * 1024;
+const MAX_WALLPAPER: u64 = 64 * 1024 * 1024;
+const WALLPAPER_TYPES: [&str; 6] = ["jpg", "jpeg", "png", "bmp", "webp", "gif"];
 
 #[derive(Serialize)]
 struct Runtime {
@@ -29,6 +37,22 @@ fn helper_path() -> PathBuf {
     environment("USERPROFILE").join(".caelestia").join("bin").join("caelestia-helper.exe")
 }
 
+fn run_helper(verb: &str) -> Result<i32, String> {
+    if !HELPER_VERBS.contains(&verb) {
+        return Err("unknown-verb".into());
+    }
+    let path = helper_path();
+    if !path.exists() {
+        return Err("helper-missing".into());
+    }
+    Command::new(path)
+        .arg(format!("--{verb}"))
+        .creation_flags(CREATE_NO_WINDOW)
+        .status()
+        .map(|status| status.code().unwrap_or(-1))
+        .map_err(|error| error.to_string())
+}
+
 #[tauri::command]
 fn runtime() -> Result<Runtime, String> {
     let path = environment("LOCALAPPDATA").join("Caelestia").join("launcher.json");
@@ -41,23 +65,7 @@ fn runtime() -> Result<Runtime, String> {
 
 #[tauri::command]
 async fn helper(verb: String) -> Result<i32, String> {
-    if !HELPER_VERBS.contains(&verb.as_str()) {
-        return Err("unknown-verb".into());
-    }
-    let path = helper_path();
-    if !path.exists() {
-        return Err("helper-missing".into());
-    }
-    tauri::async_runtime::spawn_blocking(move || {
-        Command::new(path)
-            .arg(format!("--{verb}"))
-            .creation_flags(CREATE_NO_WINDOW)
-            .status()
-            .map(|status| status.code().unwrap_or(-1))
-            .map_err(|error| error.to_string())
-    })
-    .await
-    .map_err(|error| error.to_string())?
+    tauri::async_runtime::spawn_blocking(move || run_helper(&verb)).await.map_err(|error| error.to_string())?
 }
 
 #[tauri::command]
@@ -99,19 +107,50 @@ fn initial_link() -> Option<String> {
     std::env::args().find(|argument| argument.starts_with(LINK_PREFIX))
 }
 
+#[tauri::command]
+fn log_tail(lines: usize) -> Result<Vec<String>, String> {
+    let path = environment("LOCALAPPDATA").join("Caelestia").join("logs").join("helper.log");
+    let mut file = std::fs::File::open(path).map_err(|_| "log-missing".to_string())?;
+    let length = file.metadata().map_err(|error| error.to_string())?.len();
+    file.seek(SeekFrom::Start(length.saturating_sub(LOG_BYTES))).map_err(|error| error.to_string())?;
+    let mut bytes = Vec::new();
+    file.read_to_end(&mut bytes).map_err(|error| error.to_string())?;
+    let text = String::from_utf8_lossy(&bytes);
+    let all: Vec<&str> = text.lines().filter(|line| !line.trim().is_empty()).collect();
+    let skip = all.len().saturating_sub(lines.min(400));
+    Ok(all[skip..].iter().map(|line| line.to_string()).collect())
+}
+
+#[tauri::command]
+async fn wallpaper() -> Result<Response, String> {
+    tauri::async_runtime::spawn_blocking(|| {
+        let desktop = RegKey::predef(HKEY_CURRENT_USER).open_subkey(r"Control Panel\Desktop").map_err(|_| "no-wallpaper".to_string())?;
+        let path: String = desktop.get_value("WallPaper").map_err(|_| "no-wallpaper".to_string())?;
+        let path = PathBuf::from(path);
+        let extension = path.extension().and_then(|value| value.to_str()).unwrap_or_default().to_ascii_lowercase();
+        let size = std::fs::metadata(&path).map_err(|_| "no-wallpaper".to_string())?.len();
+        if !WALLPAPER_TYPES.contains(&extension.as_str()) || size > MAX_WALLPAPER {
+            return Err("no-wallpaper".to_string());
+        }
+        std::fs::read(&path).map(Response::new).map_err(|_| "no-wallpaper".to_string())
+    })
+    .await
+    .map_err(|error| error.to_string())?
+}
+
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, arguments, _| {
-            if let Some(window) = app.get_webview_window("main") {
-                let _ = window.unminimize();
-                let _ = window.show();
-                let _ = window.set_focus();
-            }
+            tray::reveal(app, None);
             if let Some(link) = arguments.into_iter().find(|argument| argument.starts_with(LINK_PREFIX)) {
                 let _ = app.emit("deep-link", link);
             }
         }))
         .manage(update::UpdateState::default())
+        .setup(|app| {
+            tray::create(app.handle())?;
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             runtime,
             helper,
@@ -120,9 +159,14 @@ fn main() {
             open_folder,
             open_external,
             initial_link,
+            log_tail,
+            wallpaper,
+            tray::tray_labels,
             update::check_update,
             update::download_update,
-            update::install_update
+            update::install_update,
+            update::installed,
+            update::release_notes
         ])
         .run(tauri::generate_context!())
         .expect("Caelestia could not start");

@@ -103,7 +103,25 @@ which must work while the helper is stopped or missing.
 - **Rust commands**: `runtime`, `helper` (runs `caelestia-helper.exe` with `--start`, `--restore-shell`,
   `--install`, `--uninstall` or `--shutdown`, nothing else), `installation`, `install_zebar`, `open_folder` (the
   Caelestia, widgets and logs folders only), `open_external` (https links and the Windows apps settings page only),
-  `initial_link`, `check_update`, `download_update` and `install_update`.
+  `initial_link`, `log_tail` (the last lines of the helper log), `wallpaper` (the Windows wallpaper file as raw
+  bytes, shown through a `blob:` URL), `tray_labels`, `installed`, `release_notes`, `check_update`,
+  `download_update` and `install_update`.
+- **Pages**: Home (theme card, "Your setup" with the wallpaper, palette and active widgets, current look,
+  suggestions, news), Installation, Discover, a detail page per preset (a mock-up of the bar and dashboard drawn in
+  the preset's colours, dark and light when the scheme has both, facts, apply, copy link), Library (with the last
+  five presets applied, kept in the page's storage), News, Help (shortcut list with search, and troubleshooting:
+  restore the taskbar, repair, copy a report with versions, component state and the log tail, log viewer) and
+  Settings (language, sounds and volume, notification area, replay the welcome). Ctrl+K, or the logo, opens a
+  search over pages, presets and actions.
+- **First run and updates**: a three-step welcome (language, look with live preview, key shortcuts) opens until it
+  has been finished or closed once. After an update, the app compares the installed version with the last one it saw
+  and shows the release notes, read from the GitHub release.
+- **Notification area**: an icon next to the clock opens the app (left click) or a menu (open, start or stop the
+  theme, update when one is available, quit). Closing the window plays the close sound and hides it there, unless
+  the setting is off; reopening it plays the start sound again. The app checks for updates every six hours.
+- **Motion**: the logo morphs into a different rounded shape on each page, pages slide in when they change (not on
+  every refresh), hovering a preset card repaints the app in its colours after 220 ms, finished install steps pop in,
+  and the window fades in and out. Everything is turned off when Windows asks for reduced motion.
 - **Installation page**: `installation` reads the state of each part without the helper: Zebar (the same places as
   the helper's `ZebarLocator`, version from its uninstall entry), the helper's file version, the pack's `zpack.json`,
   the switcher, Caelestia's entries in Zebar's `settings.json`, the three logon tasks (`schtasks /Query`) and whether
@@ -124,7 +142,7 @@ which must work while the helper is stopped or missing.
 - **Links**: `caelestia://install` opens the Installation page. `caelestia://apply/<id>` is registered for the user by the setup and `scripts/install.ps1`. A second
   instance hands its link to the running one (single-instance plugin), which asks before applying the preset.
 - **Restrictions**: the content security policy only allows the page's own files and the helper's ports; the window
-  only has the `core:default`, `show`, `set-focus` and `destroy` permissions.
+  only has the `core:default`, `show`, `hide`, `is-visible`, `set-focus` and `destroy` permissions.
 - **Language**: French by default like the theme, English from the app's settings.
 - **Sounds**: the files in `launcher/ui/sounds/` are decoded before the window appears. `app-start.mp3` plays as
   the window shows, `notification.mp3` with every snackbar, `warning.mp3` with error snackbars, `updated.mp3` when an
