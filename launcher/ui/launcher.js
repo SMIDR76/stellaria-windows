@@ -566,8 +566,11 @@ uniform vec3 uA;
 uniform vec3 uB;
 out vec4 color;
 vec3 hash3(vec3 p) {
-  p = vec3(dot(p, vec3(127.1, 311.7, 74.7)), dot(p, vec3(269.5, 183.3, 246.1)), dot(p, vec3(113.5, 271.9, 124.6)));
-  return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
+  uvec3 q = uvec3(ivec3(p)) * uvec3(1597334673u, 3812015801u, 2798796415u);
+  q = (q.x ^ q.y ^ q.z) * uvec3(1597334673u, 3812015801u, 2798796415u);
+  q ^= q >> 16u;
+  q *= uvec3(2246822519u, 3266489917u, 668265263u);
+  return -1.0 + 2.0 * vec3(q >> 8u) / 16777215.0;
 }
 float noise(vec3 p) {
   vec3 i = floor(p);
@@ -597,8 +600,8 @@ void main() {
   float width = (0.85 + 0.5 * field) * uDpr;
   float line = 1.0 - smoothstep(width - 0.75, width + 0.75, distance);
   vec3 tint = mix(uA, uB, smoothstep(0.35, 0.75, field));
-  float index = floor(level + 0.5);
-  float shade = 0.45 + 0.55 * fract(sin(index * 12.9898) * 43758.5453);
+  uint index = uint(int(floor(level + 0.5)) + 64) * 2654435761u;
+  float shade = 0.45 + 0.55 * float((index ^ (index >> 15u)) & 1023u) / 1023.0;
   float alpha = line * shade * (0.22 + 0.4 * sin(clamp(field, 0.0, 1.0) * 3.14159));
   color = vec4(tint * alpha, alpha);
 }`;
