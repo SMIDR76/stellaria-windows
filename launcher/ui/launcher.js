@@ -21,6 +21,7 @@ const strings = {
     presetsText: "Les préréglages changent seulement les couleurs et quelques options visuelles. Rien n'est installé : Annuler revient à l'apparence précédente.",
     zebar: 'Zebar', tasks: 'Démarrage automatique', tasksOk: 'Les trois tâches sont en place', tasksMissing: 'Tâches manquantes : utilisez Réparer',
     language: 'Langue', languageText: "Langue de l'application",
+    sound: 'Son', soundText: "Jouer un son à l'ouverture de l'application", soundOn: 'Activé', soundOff: 'Désactivé',
     catalog: 'Catalogue', catalogText: 'Version {0}, valable jusqu’au {1} ({2})', refresh: 'Actualiser',
     sources: { online: 'en ligne', cache: 'copie locale', bundled: "fourni avec l'installation", none: 'aucun' },
     about: 'À propos', aboutText: 'Logiciel libre sous licence GPL-3.0, basé sur Caelestia par soramanew et ses contributeurs.',
@@ -78,6 +79,7 @@ const strings = {
     presetsText: 'Presets only change colours and a few visual options. Nothing is installed: Undo goes back to the previous look.',
     zebar: 'Zebar', tasks: 'Start with Windows', tasksOk: 'The three tasks are in place', tasksMissing: 'Missing tasks: use Repair',
     language: 'Language', languageText: 'App language',
+    sound: 'Sound', soundText: 'Play a sound when the app opens', soundOn: 'On', soundOff: 'Off',
     catalog: 'Catalogue', catalogText: 'Version {0}, valid until {1} ({2})', refresh: 'Refresh',
     sources: { online: 'online', cache: 'local copy', bundled: 'shipped with the setup', none: 'none' },
     about: 'About', aboutText: 'Free software under the GPL-3.0 licence, based on Caelestia by soramanew and contributors.',
@@ -148,6 +150,48 @@ const nodes = {
   connection: document.getElementById('connection'),
   dialog: document.getElementById('dialog'),
   snackbar: document.getElementById('snackbar'),
+};
+
+const startSound = {
+  context: null,
+  buffer: null,
+
+  enabled() {
+    try {
+      return localStorage.getItem('caelestia-launcher:start-sound') !== 'off';
+    } catch {
+      return true;
+    }
+  },
+
+  async load() {
+    if (!this.enabled()) return;
+    try {
+      this.context = new AudioContext({ latencyHint: 'interactive' });
+      const data = await (await fetch('./sounds/app-start.mp3')).arrayBuffer();
+      this.buffer = await this.context.decodeAudioData(data);
+    } catch {
+      this.buffer = null;
+    }
+  },
+
+  async play() {
+    if (!this.buffer || !this.context) return;
+    try {
+      if (this.context.state === 'suspended') await this.context.resume();
+      const source = this.context.createBufferSource();
+      const gain = this.context.createGain();
+      const now = this.context.currentTime;
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(0.8, now + 0.06);
+      source.buffer = this.buffer;
+      source.connect(gain).connect(this.context.destination);
+      source.addEventListener('ended', () => this.context.close().catch(() => {}));
+      source.start(now);
+    } catch {
+      this.buffer = null;
+    }
+  },
 };
 
 function storedLanguage() {
@@ -782,12 +826,30 @@ function settingsPage() {
         render();
       },
     }, label)));
+  const soundOn = startSound.enabled();
+  const soundToggle = element('div', { class: 'segmented', role: 'group', 'aria-label': t('sound') }, [[true, t('soundOn')], [false, t('soundOff')]].map(([value, label]) =>
+    element('button', {
+      class: value === soundOn ? 'selected' : '',
+      'aria-pressed': String(value === soundOn),
+      onClick: () => {
+        try {
+          localStorage.setItem('caelestia-launcher:start-sound', value ? 'on' : 'off');
+        } catch {
+          notify(label);
+        }
+        render();
+      },
+    }, label)));
   const catalog = state.catalog;
   const expires = catalog?.expires ? new Date(catalog.expires).toLocaleDateString(state.language === 'fr' ? 'fr-FR' : 'en-GB') : '—';
   return [
     element('section', { class: 'section' }, [
       element('div', { class: 'section-title' }, [element('span', { text: t('language') })]),
       element('div', { class: 'row' }, [icon('translate', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('languageText') })]), segmented]),
+    ]),
+    element('section', { class: 'section' }, [
+      element('div', { class: 'section-title' }, [element('span', { text: t('sound') })]),
+      element('div', { class: 'row' }, [icon('volume_up', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('soundText') })]), soundToggle]),
     ]),
     element('section', { class: 'section' }, [
       element('div', { class: 'section-title' }, [element('span', { text: t('catalog') })]),
@@ -901,10 +963,13 @@ window.addEventListener('focus', () => {
 });
 
 document.documentElement.lang = state.language;
-document.body.classList.add('open');
-await Promise.allSettled([loadSchemes(), refreshInstall()]);
-render();
+await Promise.allSettled([loadSchemes(), refreshInstall(), startSound.load()]);
+paintRail();
+paintConnection();
 await appWindow.show();
+document.body.classList.add('open');
+render();
+startSound.play();
 helper.connect();
 listen('deep-link', event => handleLink(event.payload));
 const initial = await invoke('initial_link');
