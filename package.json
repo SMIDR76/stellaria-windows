@@ -26,7 +26,7 @@
     "eslint": "10.13.0",
     "globals": "17.13.0",
     "material-symbols": "0.48.0",
-    "prettier": "3.9.10",
+    "prettier": "3.10.1",
     "unicode-emoji-json": "0.9.0",
     "zebar": "3.3.1"
   }
