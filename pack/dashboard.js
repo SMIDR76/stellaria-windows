@@ -22,7 +22,10 @@ import {
   store,
   windowOrigin,
   zebar,
+  letClicksThrough,
 } from './common.js';
+
+letClicksThrough();
 
 initTheme();
 const monitor = await currentMonitorName();
@@ -961,6 +964,10 @@ async function openDashboard(trigger) {
   document.body.classList.remove('closing');
   document.body.classList.add('open');
   const [origin] = await Promise.all([windowOrigin(), widgetWindow.setIgnoreCursorEvents(false)]);
+  if (!isOpen) {
+    letClicksThrough();
+    return;
+  }
   session = { trigger, origin, openedAt: Date.now(), lastInside: Date.now(), entered: false };
   syncGpuPolling();
   syncMediaTimers();
@@ -975,9 +982,10 @@ function closeDashboard() {
   syncMediaTimers();
   document.body.classList.remove('open');
   document.body.classList.add('closing');
+  letClicksThrough();
   closeTimer = setTimeout(() => {
     document.body.classList.remove('closing');
-    widgetWindow.setIgnoreCursorEvents(true).catch(() => {});
+    if (!isOpen) letClicksThrough();
   }, 380);
 }
 

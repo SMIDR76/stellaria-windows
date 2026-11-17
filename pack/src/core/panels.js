@@ -46,6 +46,10 @@ function ensureInBackground(name, monitor) {
   ensurePanel(name, monitor).catch(error => console.error(`[caelestia] Chargement de ${name}`, error));
 }
 
+export function letClicksThrough() {
+  return zebar.currentWidget().tauriWindow.setIgnoreCursorEvents(true).catch(error => console.error('[caelestia] Clics traversants', error));
+}
+
 export function drawerKey(name, monitor) {
   return `caelestia:${name}:${monitor}`;
 }
@@ -132,6 +136,10 @@ export async function edgeDrawer(name, { panel, side, autoCloseMs = 1600, onOpen
     document.body.classList.remove('closing');
     requestAnimationFrame(() => document.body.classList.add('open'));
     await widgetWindow.setIgnoreCursorEvents(false);
+    if (!state.open) {
+      await letClicksThrough();
+      return;
+    }
     watch();
   };
 

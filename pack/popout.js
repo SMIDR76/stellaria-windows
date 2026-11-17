@@ -19,7 +19,10 @@ import {
   zebar,
   answerPanelPings,
   pendingRequest,
+  letClicksThrough,
 } from './common.js';
+
+letClicksThrough();
 
 initTheme();
 
@@ -593,6 +596,10 @@ async function open(request) {
   document.body.classList.remove('closing');
   requestAnimationFrame(() => document.body.classList.add('open'));
   await widgetWindow.setIgnoreCursorEvents(false);
+  if (!state.open) {
+    letClicksThrough();
+    return;
+  }
   watchCursor();
 }
 
@@ -606,7 +613,7 @@ function close() {
     document.body.classList.remove('closing');
     state.kind = null;
     page.replaceChildren();
-    widgetWindow.setIgnoreCursorEvents(true).catch(() => {});
+    if (!state.open) letClicksThrough();
   }, 380);
 }
 

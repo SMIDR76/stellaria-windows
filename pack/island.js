@@ -1,4 +1,6 @@
-import { edgeDrawer, element, getOption, helperClient, icon, initTheme, zebar } from './common.js';
+import { edgeDrawer, element, getOption, helperClient, icon, initTheme, zebar, letClicksThrough } from './common.js';
+
+letClicksThrough();
 
 initTheme();
 

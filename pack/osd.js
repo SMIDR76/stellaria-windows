@@ -8,7 +8,10 @@ import {
   initTheme,
   onShared,
   zebar,
+  letClicksThrough,
 } from './common.js';
+
+letClicksThrough();
 
 initTheme();
 

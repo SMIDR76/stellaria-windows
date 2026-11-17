@@ -19,7 +19,10 @@ import {
   store,
   toast,
   zebar,
+  letClicksThrough,
 } from './common.js';
+
+letClicksThrough();
 
 initTheme();
 
