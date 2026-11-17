@@ -14,7 +14,6 @@ using System.Windows.Forms;
 
 [assembly: System.Reflection.AssemblyTitle("Caelestia Switcher")]
 [assembly: System.Reflection.AssemblyProduct("Caelestia")]
-[assembly: System.Reflection.AssemblyVersion("1.0.0.0")]
 
 static class Native
 {

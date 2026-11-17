@@ -49,6 +49,7 @@ and Windows colours must come back).
 
 ## Later
 
-Code signing (SignPath Foundation, or a Certum open source certificate) and winget and Scoop manifests are planned;
-the reasoning is in `docs/research/`. The app's updates need the repository to be public: GitHub answers 404 to
+Code signing through SignPath Foundation is wired into the Release workflow and turns on once the SignPath variables
+exist; see [code-signing.md](code-signing.md). winget and Scoop manifests are planned; the reasoning is in
+`docs/research/`. The app's updates need the repository to be public: GitHub answers 404 to
 `releases/latest/download/update.json` on a private repository.

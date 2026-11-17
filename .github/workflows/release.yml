@@ -12,6 +12,9 @@ jobs:
     runs-on: windows-latest
     permissions:
       contents: read
+      actions: read
+    env:
+      SIGN: ${{ vars.SIGNPATH_ORGANIZATION_ID != '' && github.ref_type == 'tag' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -28,11 +31,78 @@ jobs:
           if ($env:GITHUB_REF_TYPE -eq 'tag') { $version = $env:GITHUB_REF_NAME.TrimStart('v') }
           else { $version = ([xml](Get-Content helper/Directory.Build.props)).Project.PropertyGroup.Version + "-dev.$env:GITHUB_RUN_NUMBER" }
           "value=$version" >> $env:GITHUB_OUTPUT
-      - name: Build
+      - name: Build the binaries
+        shell: pwsh
+        run: ./scripts/build-release.ps1 -Version '${{ steps.version.outputs.value }}' -Phase Binaries
+      - name: Upload the unsigned binaries
+        if: env.SIGN == 'true'
+        id: unsigned-binaries
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: unsigned-binaries-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/unsigned/*.exe
+          if-no-files-found: error
+      - name: Sign the binaries (SignPath)
+        if: env.SIGN == 'true'
+        uses: signpath/github-action-submit-signing-request@f6d04783b4569d051e0c80105fe66e82819d0092
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+          artifact-configuration-slug: binaries
+          github-artifact-id: ${{ steps.unsigned-binaries.outputs.artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 7200
+          output-artifact-directory: artifacts/signed-binaries
+          parameters: |
+            version: ${{ toJSON(steps.version.outputs.value) }}
+      - name: Build the archive and the installer
         shell: pwsh
         env:
           CAELESTIA_SIGNING_KEY: ${{ secrets.CAELESTIA_SIGNING_KEY }}
-        run: ./scripts/build-release.ps1 -Version '${{ steps.version.outputs.value }}'
+        run: |
+          $signed = if ($env:SIGN -eq 'true') { 'artifacts/signed-binaries' } else { '' }
+          ./scripts/build-release.ps1 -Version '${{ steps.version.outputs.value }}' -Phase Package -SignedBinaries $signed
+      - name: Upload the unsigned installer
+        if: env.SIGN == 'true'
+        id: unsigned-setup
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: unsigned-setup-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/CaelestiaSetup-*.exe
+          if-no-files-found: error
+      - name: Sign the installer (SignPath)
+        if: env.SIGN == 'true'
+        uses: signpath/github-action-submit-signing-request@f6d04783b4569d051e0c80105fe66e82819d0092
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+          artifact-configuration-slug: installer
+          github-artifact-id: ${{ steps.unsigned-setup.outputs.artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 7200
+          output-artifact-directory: artifacts/signed-setup
+          parameters: |
+            version: ${{ toJSON(steps.version.outputs.value) }}
+      - name: Update manifest and checksums
+        shell: pwsh
+        env:
+          CAELESTIA_SIGNING_KEY: ${{ secrets.CAELESTIA_SIGNING_KEY }}
+        run: |
+          $signed = if ($env:SIGN -eq 'true') { 'artifacts/signed-setup' } else { '' }
+          ./scripts/build-release.ps1 -Version '${{ steps.version.outputs.value }}' -Phase Finish -SignedSetup $signed
+      - name: Check the signatures
+        if: env.SIGN == 'true'
+        shell: pwsh
+        run: |
+          foreach ($file in (Get-ChildItem artifacts/stage/bin/*.exe) + (Get-Item artifacts/stage/pack/native/CaelestiaSwitcher.exe) + (Get-ChildItem artifacts/CaelestiaSetup-*.exe)) {
+            $signature = Get-AuthenticodeSignature $file.FullName
+            "$($file.Name): $($signature.Status) $($signature.SignerCertificate.Subject)"
+            if ($signature.Status -ne 'Valid') { throw "$($file.Name) is not signed." }
+          }
       - name: Check native dependencies
         shell: pwsh
         run: |

@@ -109,9 +109,27 @@ for the utilities, top-right corner for Task View.
 
 The helper only listens on `127.0.0.1`, requires a per-session token and exposes a closed list of methods; widgets
 cannot run programs. Network use is limited to weather (Open-Meteo, plus ipinfo.io when no location is set) and
-lyrics (LRCLIB), both optional. Notification contents are read from your own Windows history, kept in memory and never
+lyrics (LRCLIB), both optional, and to the Caelestia app checking GitHub for a signed update and reading its release
+notes. Nothing else is sent anywhere: this program will not transfer any information to other networked systems
+unless specifically requested by the user or the person installing or operating it. Notification contents are read from your own Windows history, kept in memory and never
 logged. See [docs/security.md](docs/security.md), [docs/protocol.md](docs/protocol.md) and
 [docs/configuration.md](docs/configuration.md).
+
+## Code signing policy
+
+Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by
+[SignPath Foundation](https://signpath.org).
+
+- Committers and approvers: [the repository owner](https://github.com/SMIDR76).
+- Reviewers: every change from outside the team goes through a pull request reviewed by a committer.
+- Every release is built from this repository by the [Release workflow](.github/workflows/release.yml) on GitHub-hosted
+  runners and signed only after a manual approval. Only files built from this repository are signed: the helper, the
+  Caelestia app, the Alt+Tab switcher and the setup. Third-party files (Zebar, which the setup installs separately,
+  and `e_sqlite3.dll`) keep their own publishers' signatures.
+- Privacy: see [Privacy and security](#privacy-and-security). Third-party services used on request: Open-Meteo,
+  ipinfo.io, LRCLIB and GitHub, under their own privacy policies.
+
+The setup details are in [docs/code-signing.md](docs/code-signing.md).
 
 ## Credits
 
