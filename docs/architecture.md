@@ -118,7 +118,7 @@ which must work while the helper is stopped or missing.
 - **Language**: French by default like the theme, English from the app's settings.
 - **Sounds**: `launcher/ui/sounds/app-start.mp3` and `notification.mp3` are decoded before the window appears. The
   first plays as the window shows, the second with every snackbar notification. Both go through Web
-  Audio with a 60 ms fade-in as the window shows, so sound and opening animation start together. WebView2 gets
+  Audio with a 60 ms fade-in, so the start sound begins with the opening animation. WebView2 gets
   `--autoplay-policy=no-user-gesture-required` in `tauri.conf.json`, and the app's settings turn both sounds off.
 
 ### Recovery
