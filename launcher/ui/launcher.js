@@ -1278,10 +1278,24 @@ function setupSection() {
   ]);
 }
 
+async function wallpaperBlob() {
+  if (state.connected) {
+    try {
+      const preview = await helper.request('launcher.wallpaper');
+      if (preview?.image) {
+        const bytes = Uint8Array.from(atob(preview.image), character => character.charCodeAt(0));
+        return new Blob([bytes], { type: 'image/png' });
+      }
+    } catch {
+      return new Blob([await invoke('wallpaper')]);
+    }
+  }
+  return new Blob([await invoke('wallpaper')]);
+}
+
 async function loadWallpaper() {
   try {
-    const data = await invoke('wallpaper');
-    const url = URL.createObjectURL(new Blob([data]));
+    const url = URL.createObjectURL(await wallpaperBlob());
     if (state.wallpaperUrl) URL.revokeObjectURL(state.wallpaperUrl);
     state.wallpaperUrl = url;
   } catch {

@@ -446,4 +446,8 @@ export default {
   "Averses de neige": "Schneeschauer",
   "Orage": "Gewitter",
   "Orage et grêle": "Gewitter mit Hagel",
+  "Réduire la zone de notification": "Infobereich einklappen",
+  "{0} de plus": "{0} weitere",
+  "Replier la zone de notification": "Infobereich einklappen",
+  "Quatre icônes restent visibles, les autres sont derrière une flèche": "Vier Symbole bleiben sichtbar, die anderen liegen hinter einem Pfeil",
 };

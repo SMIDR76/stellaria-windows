@@ -446,4 +446,8 @@ export default {
   "Averses de neige": "Chubascos de nieve",
   "Orage": "Tormenta",
   "Orage et grêle": "Tormenta con granizo",
+  "Réduire la zone de notification": "Contraer el área de notificación",
+  "{0} de plus": "{0} más",
+  "Replier la zone de notification": "Contraer el área de notificación",
+  "Quatre icônes restent visibles, les autres sont derrière une flèche": "Cuatro iconos quedan visibles, los demás detrás de una flecha",
 };

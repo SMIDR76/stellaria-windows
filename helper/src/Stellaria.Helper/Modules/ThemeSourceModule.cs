@@ -8,6 +8,7 @@ namespace Stellaria.Helper.Modules;
 internal sealed class ThemeSourceModule : IHelperModule
 {
     public const int SampleWidth = 160;
+    public const int PreviewWidth = 480;
     public const double ChangeThreshold = 18;
     public const uint SetDesktopWallpaper = 0x0014;
     public static readonly TimeSpan SettleDelay = TimeSpan.FromMilliseconds(2500);
@@ -29,6 +30,20 @@ internal sealed class ThemeSourceModule : IHelperModule
     public Task StartAsync(ModuleContext context)
     {
         _context = context;
+        context.Router.Register("launcher.wallpaper", async (_, _) =>
+        {
+            var (image, source) = await Task.Run(SampleAsync).ConfigureAwait(false);
+            if (image is null)
+            {
+                return null;
+            }
+
+            return new JsonObject
+            {
+                ["image"] = Convert.ToBase64String(await ImageCodec.EncodePngAsync(image, PreviewWidth).ConfigureAwait(false)),
+                ["source"] = source,
+            };
+        });
         _changed = new Debouncer(context.Loop, SettleDelay, () => _ = CaptureAsync(force: true));
         context.Loop.BroadcastReceived += (message, wParam) =>
         {

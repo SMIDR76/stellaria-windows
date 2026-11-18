@@ -446,4 +446,8 @@ export default {
   "Averses de neige": "Kar sağanağı",
   "Orage": "Gök gürültülü fırtına",
   "Orage et grêle": "Dolu ile fırtına",
+  "Réduire la zone de notification": "Bildirim alanını daralt",
+  "{0} de plus": "{0} tane daha",
+  "Replier la zone de notification": "Bildirim alanını daralt",
+  "Quatre icônes restent visibles, les autres sont derrière une flèche": "Dört simge görünür kalır, diğerleri bir okun arkasında durur",
 };

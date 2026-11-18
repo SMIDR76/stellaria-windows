@@ -128,6 +128,7 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `catalog.undo` | none (scope `launcher`) | Same as `catalog.index`. Raises `theme.undo`; the primary bar restores the look saved before the last preset. |
 | `launcher.status` | none (scope `launcher`) | `{ "helperVersion", "packVersion", "packInstalled", "zebar", "zebarRunning", "tasks": [helper, switcher, Zebar], "sessions" }`. |
 | `launcher.theme` | none (scope `launcher`) | The last `theme.publish` payload, `{ "roles", "transparent" }`, so the Stellaria app wears the theme's colours. `null` before the first publish. |
+| `launcher.wallpaper` | none (scope `launcher`) | `{ "image": "<base64 PNG, 480 px wide>", "source" }`: the desktop background as the theme samples it (Wallpaper Engine included), for the preview on the app's Home page. `null` when nothing could be sampled. |
 | `launcher.openSettings` | none (scope `launcher`) | Opens the theme settings window, like Win+Alt+S. |
 | `wallpapers.apply` | `{ "path" }` inside the configured folder | none, `denied` for any other path |
 | `wallpapers.list` | none | `{ "directory", "current", "items": [ { "path", "name", "thumb": "<384 x 216 jpeg base64>" } ] }`, at most 500 images of the configured folder |

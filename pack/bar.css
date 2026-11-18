@@ -228,6 +228,15 @@ body {
   pointer-events: none;
 }
 
+.tray-item.collapsed {
+  display: none;
+}
+
+.tray-toggle .icon {
+  font-size: 18px;
+  color: var(--m3-on-surface-variant);
+}
+
 .weather {
   padding: 8px 0 7px;
   gap: 2px;

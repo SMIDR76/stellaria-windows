@@ -446,4 +446,8 @@ export default {
   "Averses de neige": "눈 소나기",
   "Orage": "뇌우",
   "Orage et grêle": "우박을 동반한 뇌우",
+  "Réduire la zone de notification": "알림 영역 접기",
+  "{0} de plus": "{0}개 더 보기",
+  "Replier la zone de notification": "알림 영역 접기",
+  "Quatre icônes restent visibles, les autres sont derrière une flèche": "아이콘 네 개만 보이고 나머지는 화살표 뒤에 있습니다",
 };

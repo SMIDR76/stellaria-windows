@@ -446,4 +446,8 @@ export default {
   "Averses de neige": "Przelotny śnieg",
   "Orage": "Burza",
   "Orage et grêle": "Burza z gradem",
+  "Réduire la zone de notification": "Zwiń obszar powiadomień",
+  "{0} de plus": "jeszcze {0}",
+  "Replier la zone de notification": "Zwijaj obszar powiadomień",
+  "Quatre icônes restent visibles, les autres sont derrière une flèche": "Cztery ikony pozostają widoczne, reszta jest za strzałką",
 };

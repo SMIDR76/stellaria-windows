@@ -446,4 +446,8 @@ export default {
   "Averses de neige": "Pancadas de neve",
   "Orage": "Trovoada",
   "Orage et grêle": "Trovoada com granizo",
+  "Réduire la zone de notification": "Recolher a área de notificação",
+  "{0} de plus": "mais {0}",
+  "Replier la zone de notification": "Recolher a área de notificação",
+  "Quatre icônes restent visibles, les autres sont derrière une flèche": "Quatro ícones ficam visíveis, os outros ficam atrás de uma seta",
 };

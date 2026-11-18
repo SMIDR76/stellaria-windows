@@ -245,7 +245,38 @@ function renderTray(systray) {
     entry.button.remove();
     trayNodes.delete(id);
   }
+  paintTrayOverflow(icons.length);
 }
+
+const trayVisibleCount = 4;
+let trayExpanded = false;
+let trayCollapse = true;
+const trayToggle = element('button', {
+  class: 'tray-item tray-toggle state-layer',
+  onClick: () => {
+    trayExpanded = !trayExpanded;
+    paintTrayOverflow(trayNodes.size);
+  },
+}, icon('expand_more'));
+
+function paintTrayOverflow(count) {
+  const hiddenCount = trayCollapse && !trayExpanded ? Math.max(0, count - trayVisibleCount) : 0;
+  [...nodes.tray.querySelectorAll('.tray-item:not(.tray-toggle)')].forEach((button, index) => button.classList.toggle('collapsed', trayCollapse && !trayExpanded && index >= trayVisibleCount));
+  const needed = trayCollapse && count > trayVisibleCount;
+  if (!needed) {
+    trayToggle.remove();
+    return;
+  }
+  nodes.tray.append(trayToggle);
+  trayToggle.querySelector('.icon').textContent = trayExpanded ? 'expand_less' : 'expand_more';
+  trayToggle.title = trayExpanded ? t('Réduire la zone de notification') : t('{0} de plus', hiddenCount);
+}
+
+option('trayCollapse', true, value => {
+  trayCollapse = Boolean(value);
+  trayExpanded = false;
+  paintTrayOverflow(trayNodes.size);
+});
 
 function render(output) {
   const device = output.audio?.defaultPlaybackDevice;

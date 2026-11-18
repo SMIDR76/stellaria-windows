@@ -446,4 +446,8 @@ export default {
   "Averses de neige": "Снегопады",
   "Orage": "Гроза",
   "Orage et grêle": "Гроза с градом",
+  "Réduire la zone de notification": "Свернуть область уведомлений",
+  "{0} de plus": "ещё {0}",
+  "Replier la zone de notification": "Сворачивать область уведомлений",
+  "Quatre icônes restent visibles, les autres sont derrière une flèche": "Четыре значка остаются на виду, остальные скрыты за стрелкой",
 };

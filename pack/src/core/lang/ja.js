@@ -446,4 +446,8 @@ export default {
   "Averses de neige": "にわか雪",
   "Orage": "雷雨",
   "Orage et grêle": "雹を伴う雷雨",
+  "Réduire la zone de notification": "通知領域を折りたたむ",
+  "{0} de plus": "ほか {0} 個",
+  "Replier la zone de notification": "通知領域を折りたたむ",
+  "Quatre icônes restent visibles, les autres sont derrière une flèche": "4 つのアイコンを表示し、残りは矢印の後ろにまとめます",
 };

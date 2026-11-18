@@ -446,4 +446,8 @@ export default {
   "Averses de neige": "Snow showers",
   "Orage": "Thunderstorm",
   "Orage et grêle": "Thunderstorm with hail",
+  "Réduire la zone de notification": "Collapse the notification area",
+  "{0} de plus": "{0} more",
+  "Replier la zone de notification": "Collapse the notification area",
+  "Quatre icônes restent visibles, les autres sont derrière une flèche": "Four icons stay visible, the others sit behind an arrow",
 };

@@ -446,4 +446,8 @@ export default {
   "Averses de neige": "阵雪",
   "Orage": "雷暴",
   "Orage et grêle": "雷暴伴冰雹",
+  "Réduire la zone de notification": "收起通知区域",
+  "{0} de plus": "还有 {0} 个",
+  "Replier la zone de notification": "折叠通知区域",
+  "Quatre icônes restent visibles, les autres sont derrière une flèche": "保留四个图标可见，其余的收在箭头后面",
 };

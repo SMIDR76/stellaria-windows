@@ -446,4 +446,8 @@ export default {
   "Averses de neige": "Rovesci di neve",
   "Orage": "Temporale",
   "Orage et grêle": "Temporale con grandine",
+  "Réduire la zone de notification": "Comprimi l'area di notifica",
+  "{0} de plus": "altre {0}",
+  "Replier la zone de notification": "Comprimi l'area di notifica",
+  "Quatre icônes restent visibles, les autres sont derrière une flèche": "Quattro icone restano visibili, le altre dietro una freccia",
 };
