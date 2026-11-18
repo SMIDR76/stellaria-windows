@@ -1,17 +1,19 @@
 import { language, store } from './store.js';
-import { en } from './lang/en.js';
 
-const dictionaries = { en };
+const dictionary = language === 'fr'
+  ? null
+  : await import(`./lang/${language}.js`).then(module => module.default).catch(() => import('./lang/en.js').then(module => module.default));
 
 export function t(text, ...args) {
-  const translated = dictionaries[language]?.[text] ?? text;
+  const translated = dictionary?.[text] ?? text;
   return args.length ? translated.replace(/\{(\d+)\}/g, (match, index) => String(args[Number(index)] ?? '')) : translated;
 }
 
 const attributes = ['title', 'placeholder', 'aria-label', 'alt'];
 
 export function translateDocument(root = document.body) {
-  if (!dictionaries[language] || !root) return;
+  document.documentElement.lang = language;
+  if (!dictionary || !root) return;
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
   for (let node = walker.nextNode(); node; node = walker.nextNode()) {
     const text = node.nodeValue.trim();
@@ -25,7 +27,6 @@ export function translateDocument(root = document.body) {
       if (value) element.setAttribute(name, t(value));
     }
   }
-  document.documentElement.lang = language;
 }
 
 store.watch('stellaria:option:language', () => location.reload(), 250);

@@ -1,14 +1,40 @@
-export const languages = ['auto', 'fr', 'en'];
+export const languages = {
+  fr: { name: 'Français', locale: 'fr-FR' },
+  en: { name: 'English', locale: 'en-GB' },
+  es: { name: 'Español', locale: 'es-ES' },
+  de: { name: 'Deutsch', locale: 'de-DE' },
+  'pt-BR': { name: 'Português (Brasil)', locale: 'pt-BR' },
+  it: { name: 'Italiano', locale: 'it-IT' },
+  pl: { name: 'Polski', locale: 'pl-PL' },
+  ru: { name: 'Русский', locale: 'ru-RU' },
+  tr: { name: 'Türkçe', locale: 'tr-TR' },
+  'zh-CN': { name: '简体中文', locale: 'zh-CN' },
+  ja: { name: '日本語', locale: 'ja-JP' },
+  ko: { name: '한국어', locale: 'ko-KR' },
+};
+
+const systemTags = () => [...(navigator.languages ?? []), navigator.language].filter(Boolean);
+
+export function languageForTag(tag) {
+  const lower = String(tag ?? '').toLowerCase();
+  if (lower.startsWith('pt')) return 'pt-BR';
+  if (lower.startsWith('zh')) return /^zh-(hant|tw|hk|mo)/.test(lower) ? null : 'zh-CN';
+  const base = lower.split('-')[0];
+  return base in languages ? base : null;
+}
 
 function systemLanguage() {
-  const tags = [...(navigator.languages ?? []), navigator.language].filter(Boolean).map(tag => tag.toLowerCase());
-  return tags[0]?.startsWith('fr') ? 'fr' : 'en';
+  for (const tag of systemTags()) {
+    const match = languageForTag(tag);
+    if (match) return match;
+  }
+  return 'en';
 }
 
 function chosenLanguage() {
   try {
     const value = JSON.parse(localStorage.getItem('stellaria:option:language') ?? 'null');
-    return value === 'fr' || value === 'en' ? value : 'auto';
+    return value in languages ? value : 'auto';
   } catch {
     return 'auto';
   }
@@ -17,9 +43,8 @@ function chosenLanguage() {
 export const language = chosenLanguage() === 'auto' ? systemLanguage() : chosenLanguage();
 
 function localeFor(lang) {
-  if (lang === 'fr') return 'fr-FR';
-  const system = [...(navigator.languages ?? []), navigator.language].find(tag => tag?.toLowerCase().startsWith('en'));
-  return system ?? 'en-GB';
+  const system = systemTags().find(tag => languageForTag(tag) === lang);
+  return system ?? languages[lang].locale;
 }
 
 export const settings = {

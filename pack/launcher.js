@@ -370,7 +370,7 @@ let emojiList = null;
 let emojiRequest = null;
 
 function loadEmoji() {
-  emojiRequest ??= fetch(new URL(`./assets/emoji/${language}.json`, import.meta.url))
+  emojiRequest ??= fetch(new URL(`./assets/emoji/${['fr', 'en', 'es', 'tr'].includes(language) ? language : 'en'}.json`, import.meta.url))
     .then(response => response.json())
     .then(list => {
       emojiList = list.map(([glyph, label, tags]) => ({ glyph, label, search: normalize(`${label} ${tags}`), tags }));

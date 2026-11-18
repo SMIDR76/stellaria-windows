@@ -8,6 +8,7 @@ import {
   icon,
   initTheme,
   keys,
+  languages,
   loadSchemes,
   openFolder,
   openLauncher,
@@ -135,17 +136,17 @@ function appearancePage() {
   }, [icon(symbol), element('span', { text: label })])));
   renderModes(mode);
 
-  const languageChoice = getOption('language', 'auto');
-  const languageControl = element('div', { class: 'segmented' }, [
-    ['auto', 'translate', t('Automatique')],
-    ['fr', null, 'Français'],
-    ['en', null, 'English'],
-  ].map(([id, symbol, label]) => element('button', {
-    class: id === languageChoice ? 'selected' : '',
+  const languageChoice = getOption('language', 'auto') in languages ? getOption('language', 'auto') : 'auto';
+  const languageControl = element('div', { class: 'chips' }, [
+    ['auto', t('Automatique')],
+    ...Object.entries(languages).map(([id, entry]) => [id, entry.name]),
+  ].map(([id, label]) => element('button', {
+    class: `chip${id === languageChoice ? ' selected' : ''}`,
+    lang: id === 'auto' ? null : id,
     onClick: () => {
       if (id !== getOption('language', 'auto')) setOption('language', id);
     },
-  }, [symbol ? icon(symbol) : null, element('span', { text: label })])));
+  }, [id === languageChoice ? icon('check') : null, element('span', { text: label })])));
 
   const grid = element('div', { class: 'scheme-grid' });
   const chips = element('div', { class: 'chips' });
@@ -221,7 +222,7 @@ function appearancePage() {
       chips,
       optionRow('smartScheme', true, 'auto_awesome', t('Schéma intelligent'), t("Fond d'écran en noir et blanc : palette monochrome au lieu d'une teinte inventée")),
     ]),
-    section(t('Langue'), [row({ symbol: 'language', label: t('Langue du thème'), description: t('Automatique suit la langue d’affichage de Windows'), control: languageControl })]),
+    section(t('Langue'), [row({ symbol: 'language', label: t('Langue du thème'), description: t('Automatique suit la langue d’affichage de Windows') }), languageControl]),
     section(t('Windows'), [
       optionRow('windowsColors', false, 'desktop_windows', t('Accorder Windows au thème'), t("L'accent et le mode clair ou sombre de Windows suivent le thème : Paramètres, Explorateur, menu Démarrer. Vos couleurs d'avant reviennent si vous désactivez.")),
       optionRow('windowsTitleBars', false, 'web_asset', t('Barres de titre colorées'), t("Les barres de titre des fenêtres prennent la couleur d'accent (avec l'option ci-dessus)")),
