@@ -347,7 +347,7 @@ export default {
   "Sortie et entrée audio, disposition du clavier, Verr. Maj / Num, morceau en cours": "오디오 출력 및 입력, 키보드 레이아웃, Caps / Num Lock, 재생 중인 곡",
   "Stellaria pour Windows": "Windows용 Stellaria",
   "Stellaria recrée le shell Material You de Caelestia pour Windows 11 : barre, tiroirs et animations expressives autour de vos fenêtres habituelles.": "Stellaria는 Caelestia의 Material You 셸을 Windows 11용으로 재현합니다. 익숙한 창 주위에 바, 서랍, 표현력 있는 애니메이션을 더합니다.",
-  "Stellaria se lance à chaque ouverture de session. En cas de souci, le menu Démarrer contient « Stellaria - Rétablir la barre des tâches ».": "Stellaria는 로그인할 때마다 시작됩니다. 문제가 생기면 시작 메뉴에 \"Stellaria - Restore the taskbar\"가 있습니다.",
+  "Stellaria se lance à chaque ouverture de session. En cas de souci, le menu Démarrer contient « Stellaria - Rétablir la barre des tâches ».": "Stellaria는 로그인할 때마다 시작됩니다. 문제가 생기면 시작 메뉴에 \"Stellaria - 작업 표시줄 복원\"가 있습니다.",
   "Stockage": "저장소",
   "Suivant": "다음",
   "Supprimer": "삭제",

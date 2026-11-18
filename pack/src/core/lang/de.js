@@ -347,7 +347,7 @@ export default {
   "Sortie et entrée audio, disposition du clavier, Verr. Maj / Num, morceau en cours": "Audioausgang und -eingang, Tastaturlayout, Feststell- / Num-Taste, aktueller Titel",
   "Stellaria pour Windows": "Stellaria für Windows",
   "Stellaria recrée le shell Material You de Caelestia pour Windows 11 : barre, tiroirs et animations expressives autour de vos fenêtres habituelles.": "Stellaria bildet die Material-You-Shell von Caelestia für Windows 11 nach: Leiste, Schubladen und ausdrucksstarke Animationen rund um deine gewohnten Fenster.",
-  "Stellaria se lance à chaque ouverture de session. En cas de souci, le menu Démarrer contient « Stellaria - Rétablir la barre des tâches ».": "Stellaria startet bei jeder Anmeldung. Falls etwas schiefgeht, enthält das Startmenü „Stellaria - Restore the taskbar“.",
+  "Stellaria se lance à chaque ouverture de session. En cas de souci, le menu Démarrer contient « Stellaria - Rétablir la barre des tâches ».": "Stellaria startet bei jeder Anmeldung. Falls etwas schiefgeht, enthält das Startmenü „Stellaria - Taskleiste wiederherstellen“.",
   "Stockage": "Speicher",
   "Suivant": "Weiter",
   "Supprimer": "Löschen",
