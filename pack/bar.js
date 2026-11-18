@@ -679,6 +679,7 @@ if (await isPrimaryMonitor()) {
   option('hideTaskbar', true, hidden => actions.setTaskbarHidden(Boolean(hidden)));
   if (!getOption('welcomed', false)) {
     setTimeout(() => {
+      setOption('welcomed', true);
       store.set('stellaria:settings:page', { page: 'welcome', at: Date.now() });
       togglePopup('settings').catch(error => console.error('[stellaria] Bienvenue', error));
     }, 4000);

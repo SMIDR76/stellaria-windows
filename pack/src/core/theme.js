@@ -96,7 +96,30 @@ export function windowsPalette(primaryHex) {
   return [90, 76, 62, 48, 40, 28, 16].map(tone => hexFromArgb(Hct.from(primary.hue, chroma, tone).toInt()));
 }
 
+const requiredFonts = [['24px "Material Symbols Rounded"', 'home'], ['16px "Google Sans Flex"', 'A']];
+const fontRetryKey = 'stellaria:font-retry';
+
+async function ensureFonts() {
+  try {
+    await document.fonts.ready;
+    const results = await Promise.allSettled(requiredFonts.map(([font, text]) => document.fonts.load(font, text)));
+    const failed = results.some(result => result.status === 'rejected' || result.value.length === 0 || result.value.some(face => face.status !== 'loaded'));
+    if (!failed) {
+      sessionStorage.removeItem(fontRetryKey);
+      return;
+    }
+    const attempt = Number(sessionStorage.getItem(fontRetryKey) ?? '0') + 1;
+    if (attempt > 3) return;
+    sessionStorage.setItem(fontRetryKey, String(attempt));
+    setTimeout(() => location.reload(), 1500 * attempt);
+  } catch (error) {
+    console.error('[stellaria] Polices', error);
+  }
+}
+
 export function initTheme() {
+  if (document.readyState === 'complete') ensureFonts();
+  else window.addEventListener('load', () => ensureFonts(), { once: true });
   applyTheme();
   schemeBundleReady.then(applyTheme);
   for (const key of [keys.source, keys.mode, keys.variant, keys.scheme, keys.achromatic, 'stellaria:option:smartScheme']) store.watch(key, applyTheme);
