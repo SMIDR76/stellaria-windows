@@ -46,7 +46,7 @@ SetupLogging=yes
 UninstallDisplayName={#AppName}
 UninstallDisplayIcon={#Launcher}
 SetupIconFile=..\launcher\icons\icon.ico
-CloseApplications=yes
+CloseApplications=force
 RestartApplications=no
 ShowLanguageDialog=auto
 
@@ -485,10 +485,15 @@ var
   Helper: String;
 begin
   Helper := ExpandConstant('{#Helper}');
-  if not FileExists(Helper) then Exit;
-  if Exec(Helper, '--shutdown', '', SW_HIDE, ewWaitUntilTerminated, Code) and (Code = 0) then Exit;
-  Exec(Helper, '--quit', '', SW_HIDE, ewWaitUntilTerminated, Code);
-  Exec(ExpandConstant('{sys}\taskkill.exe'), '/F /IM zebar.exe /IM StellariaSwitcher.exe /IM stellaria-helper.exe', '', SW_HIDE, ewWaitUntilTerminated, Code);
+  if FileExists(Helper) then
+  begin
+    if not Exec(Helper, '--shutdown', '', SW_HIDE, ewWaitUntilTerminated, Code) or (Code <> 0) then
+    begin
+      Exec(Helper, '--quit', '', SW_HIDE, ewWaitUntilTerminated, Code);
+      Exec(ExpandConstant('{sys}\taskkill.exe'), '/F /IM zebar.exe', '', SW_HIDE, ewWaitUntilTerminated, Code);
+    end;
+  end;
+  Exec(ExpandConstant('{sys}\taskkill.exe'), '/F /IM StellariaSwitcher.exe /IM stellaria-helper.exe /IM stellaria-launcher.exe', '', SW_HIDE, ewWaitUntilTerminated, Code);
 end;
 
 procedure InstallWebView2;
