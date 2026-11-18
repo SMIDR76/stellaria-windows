@@ -4,7 +4,6 @@ on:
   push:
     paths: ['registry/**', 'helper/tools/Stellaria.Registry/**', 'helper/src/Stellaria.Helper/Catalog/**', 'helper/src/Stellaria.Helper/Security/**']
   pull_request:
-    paths: ['registry/**']
   schedule:
     - cron: '17 3 * * *'
   workflow_dispatch:
