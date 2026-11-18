@@ -19,16 +19,16 @@ internal static class ShellRecovery
     public static void RestoreOriginalTaskbar(HelperState state, Log? log)
     {
         ShowTaskbar(log);
-        if (state.OriginalTaskbarAutoHide is not { } original)
-        {
-            return;
-        }
-
         try
         {
-            Taskbar.SetAutoHide(original);
-            state.OriginalTaskbarAutoHide = null;
-            log?.Info("recovery", $"Taskbar auto-hide restored to {original}.");
+            if (state.OriginalTaskbarAutoHide is { } original)
+            {
+                Taskbar.SetAutoHide(original);
+                state.OriginalTaskbarAutoHide = null;
+                log?.Info("recovery", $"Taskbar auto-hide restored to {original}.");
+            }
+
+            Taskbar.Refresh();
         }
         catch (Exception exception)
         {

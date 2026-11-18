@@ -69,7 +69,7 @@ internal sealed class ShellModule(HelperState state) : IHelperModule
         }
         else
         {
-            Taskbar.SetVisible(true);
+            ShellRecovery.RestoreOriginalTaskbar(state, _context.Log);
         }
 
         PublishState();
