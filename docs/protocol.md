@@ -77,7 +77,7 @@ A client that connects or reconnects receives the full state again, so it can ne
 
 | Name | Data |
 | --- | --- |
-| `hotkey` | `{ "name": "launcher", "monitor": "<device under the cursor>" }` |
+| `hotkey` | `{ "name": "launcher", "monitor": "<device under the cursor>" }`, or `"escape"` while a panel opened from the keyboard holds the Escape key |
 | `hotkey.unavailable` | `{ "name": "dashboard", "shortcut": "Win+Alt+A" }` when another program already owns the shortcut |
 | `appbars.repaired` | `{ "count": 2 }` |
 | `appbars.paused` | `{ "minutes": 5 }` when repairs loop and the circuit breaker stops them |
@@ -104,6 +104,7 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `display.brightness` | none | `{ "<device>": <0-100 or -1 when unsupported> }` |
 | `display.setBrightness` | `{ "monitor": "<device>", "value": 0-100 }` | none, `unsupported` when the monitor does not answer DDC/CI |
 | `input.paste` | none | none, sends Ctrl+V to the last user window |
+| `hotkeys.escape` | `{ "owner": "dashboard:<monitor>", "active": true }` | none. While at least one owner is active, the helper holds the Escape key and raises a `hotkey` event named `escape` when it is pressed, then gives the key back to Windows. The hold ends when every owner releases it, after one press, or after two minutes. |
 | `keyboard.setLayout` | `{ "id" }`, one of the installed layouts | none |
 | `media.artwork` | none | `{ "app", "title", "artist", "album", "image", "playing", "shuffle", "repeat": "none" \| "list" \| "track", "canShuffle", "canRepeat" }` or `null` |
 | `media.control` | `{ "action": "playPause" \| "next" \| "previous" \| "shuffle" \| "repeat" }` | none, `unsupported` when the player refuses; repeat cycles off, list, track |
@@ -151,7 +152,7 @@ cannot be registered or are only sent to sessions holding `config`, so new featu
 | `apps` | `apps.list`, `apps.launch`, `folders.open` | |
 | `clipboard` | `clipboard.history`, `clipboard.paste` | |
 | `notifications` | | `notifications`; `notification` |
-| `input` | `input.paste`, `keyboard.setLayout` | `keyboard`; `hotkey`, `hotkey.unavailable` |
+| `input` | `input.paste`, `keyboard.setLayout`, `hotkeys.escape` | `keyboard`; `hotkey`, `hotkey.unavailable` |
 | `system` | `power.*`, `capture.*`, `shell.openSettings` | |
 | `appearance` | `theme.publish`, `wallpapers.apply`, `windows.setColors`, `windows.restoreColors` | |
 | `config` | `config.set` | |

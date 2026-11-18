@@ -55,6 +55,7 @@ export const actions = {
   closeTask: id => call('tasks.close', { id }),
   setTaskbarHidden: hidden => call('config.set', { path: 'taskbar.hide', value: hidden }),
   paste: () => call('input.paste'),
+  holdEscape: (owner, active) => helperClient.request('hotkeys.escape', { owner, active }).catch(() => {}),
   refreshClipboard: async () => share('clipboard', await helperClient.request('clipboard.history', { limit: 40 })),
   pasteClipboardItem: id => call('clipboard.paste', { id }),
   refreshBrightness: async () => share('brightness', { monitors: await helperClient.request('display.brightness') }),

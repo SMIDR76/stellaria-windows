@@ -1,5 +1,6 @@
 import {
   t,
+  closeKeyboardPanels,
   language,
   settings,
   actions,
@@ -469,15 +470,16 @@ async function applyWallpaperSample(wallpaper) {
 async function runHotkey(name, target) {
   target ||= await monitorAtCursor();
   const actions = {
-    wallpapers: () => openLauncher('>fond ', target),
+    wallpapers: () => openLauncher(t('>fond '), target),
     launcher: () => openLauncher('', target),
     clipboard: () => openLauncher('>clip ', target),
     emoji: () => openLauncher('>emoji ', target),
-    shortcuts: () => openLauncher('>raccourcis ', target),
+    shortcuts: () => openLauncher(t('>raccourcis '), target),
     dashboard: () => toggleDashboard(target),
     session: () => togglePopup('session', target),
     utilities: () => toggleDrawer('utilities', target),
     settings: () => togglePopup('settings', target),
+    escape: () => closeKeyboardPanels(),
   };
   await actions[name]?.();
 }

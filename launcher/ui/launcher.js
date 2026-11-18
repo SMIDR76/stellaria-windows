@@ -2193,19 +2193,41 @@ appWindow.onCloseRequested(async event => {
       appWindow.destroy();
       return;
     }
-    await appWindow.hide();
-    closing = false;
+    try {
+      await appWindow.hide();
+    } catch {
+      document.body.classList.remove('closing');
+    } finally {
+      closing = false;
+    }
   }, wait);
 });
+
+function ensureShown() {
+  if (closing) return;
+  document.body.classList.remove('closing');
+  document.body.classList.add('open');
+}
+
 listen('reopened', () => {
+  closing = false;
   document.body.classList.remove('closing', 'open');
-  requestAnimationFrame(() => {
+  let shown = false;
+  const show = () => {
+    if (shown) return;
+    shown = true;
     document.body.classList.add('open');
     render(true);
     sounds.play('start');
     if (state.connected) refreshAll();
     else refreshInstall().then(() => render());
-  });
+  };
+  requestAnimationFrame(show);
+  setTimeout(show, 120);
+});
+window.addEventListener('focus', ensureShown);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') setTimeout(ensureShown, 150);
 });
 listen('open-page', event => showPage(event.payload));
 setTimeout(async () => {

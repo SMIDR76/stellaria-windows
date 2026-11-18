@@ -1,4 +1,5 @@
 import {
+  actions,
   currentMonitorName,
   cursorPosition,
   describeWeather,
@@ -957,6 +958,8 @@ function syncGpuPolling() {
   }
 }
 
+let holdingEscape = false;
+
 async function openDashboard(trigger) {
   clearTimeout(closeTimer);
   if (isOpen) {
@@ -974,6 +977,10 @@ async function openDashboard(trigger) {
     return;
   }
   session = { trigger, origin, openedAt: Date.now(), lastInside: Date.now(), entered: false };
+  if (trigger !== 'hover' && !holdingEscape) {
+    holdingEscape = true;
+    actions.holdEscape(`dashboard:${monitor}`, true);
+  }
   syncGpuPolling();
   syncMediaTimers();
   watchCursor();
@@ -982,6 +989,10 @@ async function openDashboard(trigger) {
 function closeDashboard() {
   if (!isOpen) return;
   isOpen = false;
+  if (holdingEscape) {
+    holdingEscape = false;
+    actions.holdEscape(`dashboard:${monitor}`, false);
+  }
   session = null;
   syncGpuPolling();
   syncMediaTimers();
@@ -1008,7 +1019,7 @@ async function watchCursor() {
       if (inside) {
         session.lastInside = now;
         session.entered = true;
-      } else if ((session.trigger === 'hover' || session.entered) && now - session.lastInside > 140) {
+      } else if (session.trigger === 'hover' && now - session.lastInside > 140) {
         requestDashboard(monitor, false, session.trigger);
         closeDashboard();
         break;
@@ -1027,6 +1038,12 @@ async function watchCursor() {
     await new Promise(resolve => setTimeout(resolve, 50));
   }
 }
+
+document.addEventListener('pointerdown', event => {
+  if (!isOpen || !session || session.trigger === 'hover' || panel.contains(event.target)) return;
+  requestDashboard(monitor, false, session.trigger);
+  closeDashboard();
+});
 
 function applyRequest(state) {
   if (state?.open && !suppressed) openDashboard(state.trigger ?? 'click');
