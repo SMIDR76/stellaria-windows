@@ -17,6 +17,9 @@ project uses [semantic versioning](https://semver.org/).
   at most two minutes and raises a `hotkey` event named `escape`.
 - `launcher.wallpaper` (scope `launcher`): the desktop background as the theme samples it, for the app's Home page.
 - English launcher commands in every language but French: `>wallpaper`, `>scheme`, `>variant`, `>shortcuts`.
+- A redesigned News page in the app: the latest entry as a large card with its highlights, a timeline for the
+  others, filters by kind, dates in the reader's language and a dot on the News tab for unread entries. The news is
+  written in all twelve languages.
 
 ### Changed
 

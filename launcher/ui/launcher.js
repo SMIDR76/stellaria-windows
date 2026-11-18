@@ -26,6 +26,7 @@ const strings = {
     sources: { online: 'en ligne', cache: 'copie locale', bundled: "fourni avec l'installation", none: 'aucun' },
     about: 'À propos', aboutText: 'Logiciel libre sous licence GPL-3.0, basé sur Caelestia de soramanew et ses contributeurs.',
     project: 'Page du projet', readMore: 'En savoir plus', noNews: 'Aucune actualité pour le moment.',
+    newsAll: 'Tout', newsRelease: 'Versions', newsAnnouncement: 'Annonces', newsCommunity: 'Communauté', newsTip: 'Astuces', newsNew: 'Nouveau', newsEarlier: 'Plus tôt', newsKindRelease: 'Version', newsKindAnnouncement: 'Annonce', newsKindCommunity: 'Communauté', newsKindTip: 'Astuce',
     confirmTitle: 'Appliquer ce préréglage ?', confirmText: "Un lien demande d'appliquer le préréglage « {0} ». Vos paramètres actuels sont conservés pour que vous puissiez annuler.",
     unknownLink: 'Lien Stellaria non reconnu.', cancel: 'Annuler',
     helperMissing: 'Service Stellaria introuvable. Réinstallez Stellaria.',
@@ -122,6 +123,7 @@ const strings = {
     sources: { online: 'online', cache: 'local copy', bundled: 'shipped with the setup', none: 'none' },
     about: 'About', aboutText: 'Free software under the GPL-3.0 licence, based on Caelestia by soramanew and contributors.',
     project: 'Project page', readMore: 'Read more', noNews: 'No news yet.',
+    newsAll: 'All', newsRelease: 'Releases', newsAnnouncement: 'Announcements', newsCommunity: 'Community', newsTip: 'Tips', newsNew: 'New', newsEarlier: 'Earlier', newsKindRelease: 'Release', newsKindAnnouncement: 'Announcement', newsKindCommunity: 'Community', newsKindTip: 'Tip',
     confirmTitle: 'Apply this preset?', confirmText: 'A link asks to apply “{0}”. Your current settings are kept so you can undo.',
     unknownLink: 'This Stellaria link is not recognised.', cancel: 'Cancel',
     helperMissing: 'Stellaria service not found. Reinstall Stellaria.',
@@ -270,6 +272,9 @@ const state = {
   log: null,
   themeRoles: null,
   wallpaperUrl: null,
+  newsFilter: 'all',
+  newsSeen: stored('news-seen', ''),
+  newsMarked: stored('news-seen', ''),
 };
 
 function stored(key, fallback) {
@@ -1733,18 +1738,151 @@ function helpPage() {
   return [tabs, ...(state.helpTab === 'shortcuts' ? shortcutsTab() : troubleTab())];
 }
 
+const newsKinds = {
+  release: ['rocket_launch', 'newsRelease', 'newsKindRelease'],
+  announcement: ['campaign', 'newsAnnouncement', 'newsKindAnnouncement'],
+  community: ['diversity_3', 'newsCommunity', 'newsKindCommunity'],
+  tip: ['lightbulb', 'newsTip', 'newsKindTip'],
+};
+
+const newsKind = item => (newsKinds[item.kind] ? item.kind : 'announcement');
+
+function newsItems() {
+  return [...(state.catalog?.news ?? [])].sort((a, b) => String(b.date ?? '').localeCompare(String(a.date ?? '')));
+}
+
+function newsDate(value) {
+  const date = new Date(`${value}T12:00:00`);
+  return Number.isNaN(date.getTime()) ? String(value ?? '') : new Intl.DateTimeFormat(locale(), { dateStyle: 'long' }).format(date);
+}
+
+function newsFresh(item, seen) {
+  const age = Date.now() - new Date(`${item.date}T12:00:00`).getTime();
+  if (!(age < 45 * 86400000)) return false;
+  return seen ? String(item.date ?? '') > seen : item === newsItems()[0] || item.id === newsItems()[0]?.id;
+}
+
+const newsUnread = () => newsItems().some(item => newsFresh(item, state.newsSeen));
+
+function markNewsSeen() {
+  const latest = newsItems()[0]?.date;
+  if (!latest || latest <= state.newsSeen) return;
+  state.newsSeen = latest;
+  store('news-seen', latest);
+}
+
+const openNews = item => () => invoke('open_external', { url: item.url }).catch(() => notify(t('offline'), 'warning'));
+
+function newsMeta(item, fresh) {
+  const [symbol, , key] = newsKinds[newsKind(item)];
+  return element('div', { class: 'news-meta' }, [
+    element('span', { class: 'news-kind' }, [icon(symbol), element('span', { text: t(key) })]),
+    item.version ? element('span', { class: 'news-version', text: `v${item.version}` }) : null,
+    fresh ? element('span', { class: 'news-new', text: t('newsNew') }) : null,
+    element('time', { datetime: item.date, text: newsDate(item.date) }),
+  ]);
+}
+
+function highlightText(text) {
+  const [keys, label] = text.split(' · ');
+  if (!label || !/^[\w.]+(\+[\w.]+)+$/.test(keys)) return element('span', { text });
+  return element('span', { class: 'news-shortcut' }, [
+    element('span', { class: 'news-keys' }, keys.split('+').map(key => element('kbd', { text: key }))),
+    element('span', { text: label }),
+  ]);
+}
+
+function newsHighlights(item) {
+  const highlights = (item.highlights ?? []).filter(entry => local(entry.text));
+  return highlights.length
+    ? element('ul', { class: 'news-highlights' }, highlights.map(entry => element('li', {}, [
+      element('span', { class: 'news-highlight-icon' }, icon(entry.icon ?? 'check')),
+      highlightText(local(entry.text)),
+    ])))
+    : null;
+}
+
+function newsFeature(item) {
+  const kind = newsKind(item);
+  return element('article', { class: `news-feature hero kind-${kind}` }, [
+    element('div', { class: 'hero-ornament' }, shape(7, 0.12)),
+    element('div', { class: 'news-feature-head' }, [
+      element('div', { class: 'hero-mark news-mark' }, [shape(9, 0.07), icon(newsKinds[kind][0])]),
+      newsMeta(item, newsFresh(item, state.newsMarked)),
+    ]),
+    element('h2', { text: local(item.title) }),
+    element('p', { class: 'news-lead', text: local(item.body) }),
+    newsHighlights(item),
+    item.url ? element('div', { class: 'actions' }, [button(t('readMore'), 'open_in_new', openNews(item), { variant: 'filled' })]) : null,
+  ]);
+}
+
+function newsEntry(item) {
+  const kind = newsKind(item);
+  return element('article', { class: `news-entry kind-${kind}` }, [
+    element('div', { class: 'news-node' }, icon(newsKinds[kind][0])),
+    element('div', { class: 'news-entry-body' }, [
+      newsMeta(item, newsFresh(item, state.newsMarked)),
+      element('h3', { text: local(item.title) }),
+      element('p', { text: local(item.body) }),
+      newsHighlights(item),
+      item.url ? element('div', { class: 'actions' }, [button(t('readMore'), 'open_in_new', openNews(item), { variant: 'text' })]) : null,
+    ]),
+  ]);
+}
+
 function newsCard(item, label = '') {
-  return element('article', { class: 'news' }, [
-    element('time', { text: [label, item.date].filter(Boolean).join(' · ') }),
-    element('h3', { text: local(item.title) }),
-    element('p', { text: local(item.body) }),
-    item.url ? element('div', { class: 'actions' }, [button(t('readMore'), 'open_in_new', () => invoke('open_external', { url: item.url }).catch(() => {}), { variant: 'text' })]) : null,
+  const kind = newsKind(item);
+  return element('article', { class: `news news-teaser kind-${kind} state-layer`, role: 'button', tabindex: '0', onClick: () => showPage('news'), onKeydown: event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      showPage('news');
+    }
+  } }, [
+    element('div', { class: 'news-node' }, icon(newsKinds[kind][0])),
+    element('div', { class: 'news-entry-body' }, [
+      element('div', { class: 'news-meta' }, [
+        label ? element('span', { class: 'news-kind', text: label }) : null,
+        item.version ? element('span', { class: 'news-version', text: `v${item.version}` }) : null,
+        newsFresh(item, state.newsSeen) ? element('span', { class: 'news-new', text: t('newsNew') }) : null,
+        element('time', { datetime: item.date, text: newsDate(item.date) }),
+      ]),
+      element('h3', { text: local(item.title) }),
+      element('p', { text: local(item.body) }),
+    ]),
+    icon('arrow_forward', 'news-go'),
   ]);
 }
 
 function newsPage() {
-  const news = state.catalog?.news ?? [];
-  return news.length ? news.map(item => newsCard(item)) : [element('div', { class: 'empty' }, [icon('newspaper'), element('span', { text: t('noNews') })])];
+  const all = newsItems();
+  if (!all.length) return [element('div', { class: 'empty' }, [icon('newspaper'), element('span', { text: t('noNews') })])];
+  const kinds = Object.keys(newsKinds).filter(kind => all.some(item => newsKind(item) === kind));
+  if (state.newsFilter !== 'all' && !kinds.includes(state.newsFilter)) state.newsFilter = 'all';
+  const shown = all.filter(item => state.newsFilter === 'all' || newsKind(item) === state.newsFilter);
+  const filters = kinds.length > 1
+    ? element('div', { class: 'chips news-filters', role: 'tablist' }, [['all', 'newspaper', 'newsAll'], ...kinds.map(kind => [kind, ...newsKinds[kind]])].map(([id, symbol, key]) => element('button', {
+      class: `chip${id === state.newsFilter ? ' selected' : ''}`,
+      role: 'tab',
+      'aria-selected': String(id === state.newsFilter),
+      onClick: () => {
+        state.newsFilter = id;
+        render(true);
+      },
+    }, [icon(id === state.newsFilter ? 'check' : symbol), element('span', { text: t(key) })])))
+    : null;
+  const [first, ...rest] = shown;
+  if (!first) return [filters];
+  return [
+    filters,
+    first ? newsFeature(first) : null,
+    rest.length
+      ? element('section', { class: 'news-timeline' }, [
+        element('div', { class: 'section-title' }, [element('span', { text: t('newsEarlier') })]),
+        ...rest.map(newsEntry),
+      ])
+      : null,
+  ];
 }
 
 function settingsPage() {
@@ -1858,7 +1996,7 @@ function paintRail() {
     class: `rail-item${id === current ? ' current' : ''}`,
     'aria-current': id === current ? 'page' : null,
     onClick: () => showPage(id),
-  }, [element('span', { class: 'rail-pill' }, icon(symbol)), element('span', { text: t(id) })])));
+  }, [element('span', { class: 'rail-pill' }, [icon(symbol), id === 'news' && newsUnread() ? element('span', { class: 'rail-dot', 'aria-hidden': 'true' }) : null]), element('span', { text: t(id) })])));
 }
 
 function render(animate = false) {
@@ -1876,6 +2014,7 @@ function showPage(id) {
   const changed = id !== state.page;
   hoverPreview.leave();
   state.page = id;
+  if (id === 'news') markNewsSeen();
   nodes.pages.scrollTop = 0;
   if (changed) {
     morph.to(...(pageShapes[id] ?? pageShapes.home));

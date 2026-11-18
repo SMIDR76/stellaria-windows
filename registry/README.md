@@ -34,3 +34,18 @@ the last one it accepted, or whose content does not match the signed version. Th
 
 Presets are declarative: they can only set the values above, never run code. Community submissions will open to
 presets first (phase C of `docs/research/Plateforme de thèmes communautaire.md`).
+
+## News format
+
+`news.json` is an array; the app sorts it by date, shows the newest entry as a large card and the others on a timeline,
+with filters by kind and a dot on the News tab while an entry from the last 45 days is unread.
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `id` | yes | Unique, never reused. |
+| `date` | yes | `YYYY-MM-DD`, shown in the reader's language. |
+| `kind` | no | `release`, `announcement` (default), `community` or `tip`. |
+| `version` | no | Shown as a badge, for releases. |
+| `title`, `body` | yes | Objects keyed by language code (`fr`, `en`, `es`, `de`, `pt-BR`, `it`, `pl`, `ru`, `tr`, `zh-CN`, `ja`, `ko`); a missing language falls back to English. |
+| `highlights` | no | Up to six `{ "icon", "text" }`, where `icon` is a Material Symbols name and `text` is keyed by language. |
+| `url` | no | Opened by "Read more". |
