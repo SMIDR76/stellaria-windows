@@ -1,5 +1,7 @@
 # Stellaria
 
+![Stellaria on a Windows 11 desktop](docs/images/promo/hero-en.jpg)
+
 Stellaria is an unofficial Windows 11 port of [Caelestia](https://github.com/caelestia-dots/shell), the Material You desktop shell
 for Hyprland. Windows keep their normal behaviour (snap, maximize, Win+arrows); the shell draws a rounded frame around
 them, a vertical bar, and drawers that slide out of the screen edges with Caelestia's expressive motion.
@@ -25,10 +27,14 @@ Built on [Zebar](https://github.com/glzr-io/zebar) for the widgets and a small n
 
 ## The Stellaria app
 
+![The Stellaria app](docs/images/promo/launcher-en.jpg)
+
 The setup adds a **Stellaria** entry to the Start menu: an app in the theme's colours to start, stop or repair the
 theme, see each part of the installation on its Installation page (Zebar, helper, widgets, start-up tasks) and
 install or repair them step by step, open its settings, apply colour presets from the signed community catalogue (and undo them), and read the
 project's news. Links such as `stellaria://apply/preset-nord` open it on the matching preset and ask before applying.
+
+![Six official colour presets](docs/images/promo/presets-en.jpg)
 
 ## Requirements
 
