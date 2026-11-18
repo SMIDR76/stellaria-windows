@@ -2,6 +2,7 @@ import { createHelperClient } from './helper-client.js';
 import { toast } from './dom.js';
 import { currentMonitorName, widgetName } from './monitor.js';
 import { keys, settings, store } from './store.js';
+import { t } from './i18n.js';
 
 export const helperClient = createHelperClient({ widget: widgetName(), monitor: () => currentMonitorName() });
 helperClient.onEvent('widgets.reload', () => location.reload());
@@ -18,7 +19,7 @@ export function onShared(type, callback) {
 
 function report(method, error) {
   console.error(`[stellaria] ${method} : ${error.message}`);
-  if (error.code === 'unsupported' || error.code === 'denied') toast('Action impossible', { message: error.message, icon: 'block', kind: 'warning' });
+  if (error.code === 'unsupported' || error.code === 'denied') toast(t('Action impossible'), { message: error.message, icon: 'block', kind: 'warning' });
 }
 
 function call(method, params) {

@@ -1,5 +1,29 @@
+export const languages = ['auto', 'fr', 'en'];
+
+function systemLanguage() {
+  const tags = [...(navigator.languages ?? []), navigator.language].filter(Boolean).map(tag => tag.toLowerCase());
+  return tags[0]?.startsWith('fr') ? 'fr' : 'en';
+}
+
+function chosenLanguage() {
+  try {
+    const value = JSON.parse(localStorage.getItem('stellaria:option:language') ?? 'null');
+    return value === 'fr' || value === 'en' ? value : 'auto';
+  } catch {
+    return 'auto';
+  }
+}
+
+export const language = chosenLanguage() === 'auto' ? systemLanguage() : chosenLanguage();
+
+function localeFor(lang) {
+  if (lang === 'fr') return 'fr-FR';
+  const system = [...(navigator.languages ?? []), navigator.language].find(tag => tag?.toLowerCase().startsWith('en'));
+  return system ?? 'en-GB';
+}
+
 export const settings = {
-  locale: 'fr-FR',
+  locale: localeFor(language),
   defaultSource: '#7e57c2',
 };
 

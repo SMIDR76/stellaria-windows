@@ -20,6 +20,7 @@ import {
   shapeSvg,
   smoothValue,
   store,
+  t,
   windowOrigin,
   zebar,
   letClicksThrough,
@@ -104,7 +105,7 @@ function iconButton(symbol, { tonal = true, fill = false, small = false, title, 
 
 
 function formatBytes(bytes, perSecond = false) {
-  const units = ['o', 'Ko', 'Mo', 'Go', 'To'];
+  const units = ['o', 'Ko', 'Mo', 'Go', 'To'].map(unit => t(unit));
   let value = Math.max(0, bytes);
   let unit = 0;
   while (value >= 1024 && unit < units.length - 1) {
@@ -130,9 +131,9 @@ function formatUptime(milliseconds) {
   const days = Math.floor(minutes / 1440);
   const hours = Math.floor((minutes % 1440) / 60);
   const rest = minutes % 60;
-  if (days > 0) return `allumé depuis ${days} j ${hours} h`;
-  if (hours > 0) return `allumé depuis ${hours} h ${String(rest).padStart(2, '0')}`;
-  return `allumé depuis ${rest} min`;
+  if (days > 0) return t('allumé depuis {0} j {1} h', days, hours);
+  if (hours > 0) return t('allumé depuis {0} h {1}', hours, String(rest).padStart(2, '0'));
+  return t('allumé depuis {0} min', rest);
 }
 
 const tabs = [...document.querySelectorAll('.tab')];
@@ -215,9 +216,9 @@ const calendarDays = element('div', { class: 'calendar-days' });
 
 calendar.append(
   element('div', { class: 'calendar-nav' }, [
-    element('button', { class: 'state-layer', title: 'Mois précédent', onClick: () => changeMonth(-1) }, icon('chevron_left')),
+    element('button', { class: 'state-layer', title: t('Mois précédent'), onClick: () => changeMonth(-1) }, icon('chevron_left')),
     calendarTitle,
-    element('button', { class: 'state-layer', title: 'Mois suivant', onClick: () => changeMonth(1) }, icon('chevron_right')),
+    element('button', { class: 'state-layer', title: t('Mois suivant'), onClick: () => changeMonth(1) }, icon('chevron_right')),
   ]),
   element('div', { class: 'calendar-weekdays' }, ['lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.', 'dim.'].map((label, index) =>
     element('span', { class: index >= 5 ? 'weekend' : '', text: label }))),
@@ -282,9 +283,9 @@ const resources = {
   disk: createRing({ size: 61, stroke: 6, color: 'var(--m3-secondary)', className: 'resource', content: icon('hard_disk', { className: 'secondary' }) }),
 };
 $('resources').replaceChildren(resources.cpu.node, resources.ram.node, resources.disk.node);
-resources.cpu.node.title = 'Processeur';
-resources.ram.node.title = 'Mémoire';
-resources.disk.node.title = 'Disque';
+resources.cpu.node.title = t('Processeur');
+resources.ram.node.title = t('Mémoire');
+resources.disk.node.title = t('Disque');
 
 document.querySelector('.dash-weather').prepend(heroOrnament('flower'));
 document.querySelector('.dash-time').prepend(heroOrnament('cookie4'));
@@ -348,7 +349,7 @@ function createHero({ symbol, label, accent }) {
     ring.node,
     element('div', { class: 'perf-hero-title' }, [element('span', { class: 'perf-hero-label', text: label, style: { color: accent } }), sub]),
     element('div', { class: 'perf-hero-temp' }, [element('div', { class: 'perf-hero-temp-row' }, [thermometer, temperatureText]), barTrack]),
-    element('div', { class: 'perf-hero-usage' }, [element('span', { class: 'perf-hero-usage-label', text: 'Utilisation' }), usageShape, usageValue]),
+    element('div', { class: 'perf-hero-usage' }, [element('span', { class: 'perf-hero-usage-label', text: t('Utilisation') }), usageShape, usageValue]),
   ]);
 
   return {
@@ -369,7 +370,7 @@ function createHero({ symbol, label, accent }) {
       if (known) temperatureValue.set(celsius);
       else {
         temperatureValue.set(NaN);
-        temperatureText.textContent = 'Température indisponible';
+        temperatureText.textContent = t('Température indisponible');
       }
       thermometer.textContent = known && celsius > 90 ? 'thermometer_alert' : 'thermometer';
       thermometer.style.color = known && celsius > 90 ? 'var(--m3-error)' : accent;
@@ -381,8 +382,8 @@ function createHero({ symbol, label, accent }) {
 }
 
 const heroes = {
-  cpu: createHero({ symbol: 'memory', label: 'Processeur', accent: 'var(--m3-primary)' }),
-  gpu: createHero({ symbol: 'desktop_windows', label: 'Carte graphique', accent: 'var(--m3-secondary)' }),
+  cpu: createHero({ symbol: 'memory', label: t('Processeur'), accent: 'var(--m3-primary)' }),
+  gpu: createHero({ symbol: 'desktop_windows', label: t('Carte graphique'), accent: 'var(--m3-secondary)' }),
 };
 heroes.cpu.setTemperature(NaN);
 heroes.gpu.setTemperature(NaN);
@@ -393,16 +394,16 @@ const storageRing = createRing({
   content: element('div', { class: 'big-ring-content' }, [
     icon('hard_drive', { className: 'secondary' }),
     element('span', { class: 'big-ring-value', id: 'storage-percent', text: '—', style: { color: 'var(--m3-secondary)' } }),
-    element('span', { class: 'big-ring-label', text: 'Utilisé' }),
+    element('span', { class: 'big-ring-label', text: t('Utilisé') }),
   ]),
 });
 const storageUsage = element('span', { class: 'storage-usage', text: '—' });
 const storagePercent = smoothPercent(storageRing.node.querySelector('.big-ring-value'));
-const diskButton = element('button', { class: 'disk-button state-layer', title: 'Changer de disque' }, [icon('storage'), element('span', { text: 'C:\\' }), icon('unfold_more')]);
+const diskButton = element('button', { class: 'disk-button state-layer', title: t('Changer de disque') }, [icon('storage'), element('span', { text: 'C:\\' }), icon('unfold_more')]);
 const storageCard = element('article', { class: 'card storage' }, [
   element('div', { class: 'storage-row' }, [
     storageRing.node,
-    element('div', { class: 'storage-text' }, [element('span', { class: 'storage-name', text: 'Stockage' }), storageUsage]),
+    element('div', { class: 'storage-text' }, [element('span', { class: 'storage-name', text: t('Stockage') }), storageUsage]),
   ]),
   diskButton,
 ]);
@@ -415,31 +416,31 @@ const graphPaths = {
   downLine: svg('path', { class: 'line', stroke: 'var(--m3-tertiary)' }),
 };
 graph.append(graphPaths.upArea, graphPaths.upLine, graphPaths.downArea, graphPaths.downLine);
-const collecting = element('span', { class: 'collecting', text: 'Collecte des données…' });
+const collecting = element('span', { class: 'collecting', text: t('Collecte des données…') });
 const networkValues = {
-  down: element('span', { class: 'value', style: { color: 'var(--m3-tertiary)' }, text: '0 o/s' }),
-  up: element('span', { class: 'value', style: { color: 'var(--m3-secondary)' }, text: '0 o/s' }),
+  down: element('span', { class: 'value', style: { color: 'var(--m3-tertiary)' }, text: t('0 o/s') }),
+  up: element('span', { class: 'value', style: { color: 'var(--m3-secondary)' }, text: t('0 o/s') }),
   total: element('span', { class: 'value', style: { fontSize: '12.5px', fontWeight: '400' }, text: '—' }),
 };
 const networkCard = element('article', { class: 'card network' }, [
-  element('div', { class: 'perf-card-header' }, [icon('swap_vert', { className: 'primary' }), element('span', { text: 'Réseau' })]),
+  element('div', { class: 'perf-card-header' }, [icon('swap_vert', { className: 'primary' }), element('span', { text: t('Réseau') })]),
   element('div', { class: 'network-graph' }, [graph, collecting]),
-  element('div', { class: 'network-row' }, [icon('download', { className: 'tertiary' }), element('span', { text: 'Réception' }), networkValues.down]),
-  element('div', { class: 'network-row' }, [icon('upload', { className: 'secondary' }), element('span', { text: 'Envoi' }), networkValues.up]),
-  element('div', { class: 'network-row' }, [icon('history'), element('span', { text: 'Total' }), networkValues.total]),
+  element('div', { class: 'network-row' }, [icon('download', { className: 'tertiary' }), element('span', { text: t('Réception') }), networkValues.down]),
+  element('div', { class: 'network-row' }, [icon('upload', { className: 'secondary' }), element('span', { text: t('Envoi') }), networkValues.up]),
+  element('div', { class: 'network-row' }, [icon('history'), element('span', { text: t('Total') }), networkValues.total]),
 ]);
 
 const memoryRing = createRing({
   size: 124, stroke: 8, start: 135, sweep: 270, color: 'var(--m3-tertiary)', className: 'big-ring',
   content: element('div', { class: 'big-ring-content' }, [
     element('span', { class: 'big-ring-value', id: 'memory-percent', text: '—', style: { color: 'var(--m3-tertiary)' } }),
-    element('span', { class: 'big-ring-label', text: 'Utilisée' }),
+    element('span', { class: 'big-ring-label', text: t('Utilisée') }),
   ]),
 });
 const memoryUsage = element('span', { class: 'memory-usage', text: '—' });
 const memoryPercent = smoothPercent($('memory-percent') ?? memoryRing.node.querySelector('.big-ring-value'));
 const memoryCard = element('article', { class: 'card memory' }, [
-  element('div', { class: 'perf-card-header' }, [icon('memory_alt', { filled: true, className: 'tertiary' }), element('span', { text: 'Mémoire' })]),
+  element('div', { class: 'perf-card-header' }, [icon('memory_alt', { filled: true, className: 'tertiary' }), element('span', { text: t('Mémoire') })]),
   memoryRing.node,
   memoryUsage,
 ]);
@@ -502,7 +503,7 @@ function renderDisks() {
   const fraction = used / disk.totalSpace.bytes;
   storageRing.set(fraction);
   storagePercent.set(fraction * 100);
-  storageUsage.textContent = `${formatGib(used)} / ${formatGib(disk.totalSpace.bytes)} Gio`;
+  storageUsage.textContent = t('{0} / {1} Gio', formatGib(used), formatGib(disk.totalSpace.bytes));
   diskButton.children[1].textContent = disk.mountPoint;
   if (disk.mountPoint.toUpperCase().startsWith('C:')) resources.disk.set(fraction);
 }
@@ -531,18 +532,18 @@ wavy.append(svg('defs'), waveContainer, waveRest, waveHandle);
 wavy.firstChild.append(waveClip);
 
 const dashControls = {
-  previous: iconButton('skip_previous', { title: 'Précédent', onClick: () => mediaCommand('previous') }),
-  toggle: iconButton('play_arrow', { fill: true, title: 'Lecture / pause', onClick: () => mediaCommand('togglePlayPause') }),
-  next: iconButton('skip_next', { title: 'Suivant', onClick: () => mediaCommand('next') }),
+  previous: iconButton('skip_previous', { title: t('Précédent'), onClick: () => mediaCommand('previous') }),
+  toggle: iconButton('play_arrow', { fill: true, title: t('Lecture / pause'), onClick: () => mediaCommand('togglePlayPause') }),
+  next: iconButton('skip_next', { title: t('Suivant'), onClick: () => mediaCommand('next') }),
 };
 $('dash-media-controls').replaceChildren(dashControls.previous.node, dashControls.toggle.node, dashControls.next.node);
 
 const tabControls = {
-  shuffle: iconButton('shuffle', { small: true, title: 'Aléatoire (non pris en charge par Windows)' }),
-  previous: iconButton('skip_previous', { title: 'Précédent', onClick: () => mediaCommand('previous') }),
-  toggle: iconButton('play_arrow', { fill: true, title: 'Lecture / pause', onClick: () => mediaCommand('togglePlayPause') }),
-  next: iconButton('skip_next', { title: 'Suivant', onClick: () => mediaCommand('next') }),
-  repeat: iconButton('repeat', { small: true, title: 'Répétition (non prise en charge par Windows)' }),
+  shuffle: iconButton('shuffle', { small: true, title: t('Aléatoire (non pris en charge par Windows)') }),
+  previous: iconButton('skip_previous', { title: t('Précédent'), onClick: () => mediaCommand('previous') }),
+  toggle: iconButton('play_arrow', { fill: true, title: t('Lecture / pause'), onClick: () => mediaCommand('togglePlayPause') }),
+  next: iconButton('skip_next', { title: t('Suivant'), onClick: () => mediaCommand('next') }),
+  repeat: iconButton('repeat', { small: true, title: t('Répétition (non prise en charge par Windows)') }),
 };
 tabControls.shuffle.setDisabled(true);
 tabControls.repeat.setDisabled(true);
@@ -600,9 +601,9 @@ function renderMedia() {
   const playing = Boolean(session?.isPlaying);
   const cover = has ? media.covers.get(session.title) : null;
 
-  $('dash-media-title').textContent = has ? session.title || 'Titre inconnu' : 'Aucun média';
-  $('dash-media-album').textContent = has ? session.albumTitle || 'Album inconnu' : 'Aucun média';
-  $('dash-media-artist').textContent = has ? session.artist || 'Artiste inconnu' : 'Aucun média';
+  $('dash-media-title').textContent = has ? session.title || t('Titre inconnu') : t('Aucun média');
+  $('dash-media-album').textContent = has ? session.albumTitle || t('Album inconnu') : t('Aucun média');
+  $('dash-media-artist').textContent = has ? session.artist || t('Artiste inconnu') : t('Aucun média');
   coverNode($('dash-cover'), cover);
   coverNode($('media-cover'), cover);
 
@@ -618,8 +619,8 @@ function renderMedia() {
   pageNode.classList.toggle('empty', !has);
   pageNode.classList.toggle('playing', playing);
   $('media-title').textContent = session?.title ?? '';
-  $('media-artist').textContent = session?.artist || 'Artiste inconnu';
-  $('media-album').textContent = session?.albumTitle || 'Album inconnu';
+  $('media-artist').textContent = session?.artist || t('Artiste inconnu');
+  $('media-album').textContent = session?.albumTitle || t('Album inconnu');
 
   $('media-players').replaceChildren(...media.sessions.map(candidate => element('button', {
     class: `player state-layer${candidate.sessionId === session?.sessionId ? ' current' : ''}`,
@@ -630,12 +631,12 @@ function renderMedia() {
   }, [
     icon(candidate.isPlaying ? 'graphic_eq' : 'music_note', { filled: true }),
     element('span', { class: 'player-text' }, [
-      element('span', { text: candidate.title || 'Sans titre' }),
+      element('span', { text: candidate.title || t('Sans titre') }),
       element('span', { text: candidate.artist || candidate.sessionId }),
     ]),
   ])));
   if (!media.sessions.length) {
-    $('media-players').replaceChildren(element('span', { class: 'player-text', style: { padding: '4px', opacity: '0.7' } }, element('span', { text: 'Aucun lecteur actif' })));
+    $('media-players').replaceChildren(element('span', { class: 'player-text', style: { padding: '4px', opacity: '0.7' } }, element('span', { text: t('Aucun lecteur actif') })));
   }
 
   renderMediaProgress();
@@ -766,16 +767,16 @@ function requestLyrics() {
   lyrics.key = key;
   lyrics.controller?.abort();
   if (!key) {
-    showLyricsMessage('Rien en lecture');
+    showLyricsMessage(t('Rien en lecture'));
     return;
   }
   if (lyrics.cache.has(key)) {
     const cached = lyrics.cache.get(key);
     if (cached.length) showLyrics(cached);
-    else showLyricsMessage('Paroles introuvables pour ce titre');
+    else showLyricsMessage(t('Paroles introuvables pour ce titre'));
     return;
   }
-  showLyricsMessage('Recherche des paroles…');
+  showLyricsMessage(t('Recherche des paroles…'));
   const controller = new AbortController();
   lyrics.controller = controller;
   fetchLyrics(session, sessionPosition(session).length, controller.signal)
@@ -784,12 +785,12 @@ function requestLyrics() {
       if (lyrics.cache.size > 40) lyrics.cache.delete(lyrics.cache.keys().next().value);
       if (lyrics.key !== key) return;
       if (lines.length) showLyrics(lines);
-      else showLyricsMessage('Paroles introuvables pour ce titre');
+      else showLyricsMessage(t('Paroles introuvables pour ce titre'));
     })
     .catch(error => {
       if (error.name === 'AbortError' || lyrics.key !== key) return;
       console.error('[stellaria] Paroles indisponibles', error);
-      showLyricsMessage('Paroles indisponibles (connexion)');
+      showLyricsMessage(t('Paroles indisponibles (connexion)'));
       lyrics.key = null;
     });
 }
@@ -821,8 +822,8 @@ function syncMediaTimers() {
 
 function renderWeather(weather) {
   if (!weather?.current) {
-    $('dash-weather-label').textContent = 'Météo désactivée';
-    $('weather-city').textContent = 'Météo désactivée';
+    $('dash-weather-label').textContent = t('Météo désactivée');
+    $('weather-city').textContent = t('Météo désactivée');
     return;
   }
   const now = describeWeather(weather.current.code, weather.current.isDay);
@@ -843,7 +844,7 @@ function renderWeather(weather) {
     const date = new Date(`${day.date}T12:00:00`);
     const info = describeWeather(day.code, true);
     return element('div', { class: 'card forecast-day' }, [
-      element('span', { class: 'forecast-name', text: index === 0 ? "Aujourd'hui" : date.toLocaleDateString(settings.locale, { weekday: 'short' }) }),
+      element('span', { class: 'forecast-name', text: index === 0 ? t("Aujourd'hui") : date.toLocaleDateString(settings.locale, { weekday: 'short' }) }),
       element('span', { class: 'forecast-date', text: date.toLocaleDateString(settings.locale, { day: 'numeric', month: 'short' }) }),
       icon(info.icon),
       element('span', { class: 'forecast-range', text: `${Math.round(day.min)}° / ${Math.round(day.max)}°` }),
@@ -856,8 +857,8 @@ async function refreshWeather(force = false) {
     renderWeather(await loadWeather({ force }));
   } catch (error) {
     console.error('[stellaria] Météo indisponible', error);
-    $('dash-weather-label').textContent = 'Météo indisponible';
-    $('weather-city').textContent = 'Météo indisponible';
+    $('dash-weather-label').textContent = t('Météo indisponible');
+    $('weather-city').textContent = t('Météo indisponible');
   }
 }
 
@@ -889,7 +890,7 @@ function render(output) {
     resources.ram.set(fraction);
     memoryRing.set(fraction);
     memoryPercent.set(fraction * 100);
-    memoryUsage.textContent = `${formatGib(output.memory.usedMemory)} / ${formatGib(output.memory.totalMemory)} Gio`;
+    memoryUsage.textContent = t('{0} / {1} Gio', formatGib(output.memory.usedMemory), formatGib(output.memory.totalMemory));
   }
 
   if (output.disk) {

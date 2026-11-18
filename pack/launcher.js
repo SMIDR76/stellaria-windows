@@ -9,6 +9,7 @@ import {
   icon,
   initTheme,
   keys,
+  language,
   loadSchemes,
   onShared,
   openSettings,
@@ -18,6 +19,7 @@ import {
   setupPopup,
   startApp,
   store,
+  t,
   toast,
   togglePopup,
   variants,
@@ -44,14 +46,14 @@ const nodes = {
 };
 
 const heroModes = {
-  apps: { shape: 'cookie9', symbol: 'apps', prefix: '', label: 'Applications' },
-  actions: { shape: 'gem', symbol: 'terminal', prefix: '>', label: 'Actions', subtitle: 'Thème, session et outils' },
-  wallpapers: { shape: 'flower', symbol: 'wallpaper', prefix: '>fond ', label: "Fonds d'écran", subtitle: 'Les couleurs du thème suivent le fond choisi' },
-  variants: { shape: 'softBurst', symbol: 'tune', label: 'Variantes', subtitle: 'Palettes dynamiques Material You' },
-  schemes: { shape: 'flower', symbol: 'palette', label: 'Schémas de couleurs', subtitle: 'Palettes fixes, en clair ou en sombre' },
-  shortcuts: { shape: 'cookie4', symbol: 'keyboard', prefix: '>raccourcis ', label: 'Raccourcis', subtitle: 'Tout le thème au clavier' },
-  emoji: { shape: 'sunny', symbol: 'mood', prefix: ':', label: 'Emojis', subtitle: 'Entrée pour copier' },
-  clipboard: { shape: 'clamShell', symbol: 'content_paste', prefix: '>clip ', label: 'Presse-papiers', subtitle: 'Historique de Windows, Entrée pour coller' },
+  apps: { shape: 'cookie9', symbol: 'apps', prefix: '', label: t('Applications') },
+  actions: { shape: 'gem', symbol: 'terminal', prefix: '>', label: t('Actions'), subtitle: t('Thème, session et outils') },
+  wallpapers: { shape: 'flower', symbol: 'wallpaper', prefix: t('>fond '), label: t("Fonds d'écran"), subtitle: t('Les couleurs du thème suivent le fond choisi') },
+  variants: { shape: 'softBurst', symbol: 'tune', label: t('Variantes'), subtitle: t('Palettes dynamiques Material You') },
+  schemes: { shape: 'flower', symbol: 'palette', label: t('Schémas de couleurs'), subtitle: t('Palettes fixes, en clair ou en sombre') },
+  shortcuts: { shape: 'cookie4', symbol: 'keyboard', prefix: t('>raccourcis '), label: t('Raccourcis'), subtitle: t('Tout le thème au clavier') },
+  emoji: { shape: 'sunny', symbol: 'mood', prefix: ':', label: t('Emojis'), subtitle: t('Entrée pour copier') },
+  clipboard: { shape: 'clamShell', symbol: 'content_paste', prefix: '>clip ', label: t('Presse-papiers'), subtitle: t('Historique de Windows, Entrée pour coller') },
 };
 const heroMarkNode = heroMark('cookie9', 'apps');
 nodes.hero.prepend(heroOrnament('softBurst'), heroMarkNode);
@@ -70,7 +72,7 @@ let heroShownMode = null;
 
 function greeting() {
   const hour = new Date().getHours();
-  return hour < 5 ? 'Bonne nuit' : hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
+  return t(hour < 5 ? 'Bonne nuit' : hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir');
 }
 
 function paintHero(modeId) {
@@ -227,52 +229,52 @@ async function runPower(action) {
 function actionEntries() {
   const dark = store.get(keys.mode, 'dark') !== 'light';
   return [
-    { icon: 'keyboard', title: 'Raccourcis', subtitle: 'Antisèche de tous les raccourcis', keepOpen: true, run: () => setQuery('>raccourcis ') },
-    { icon: 'wallpaper', title: "Fond d'écran", subtitle: 'Choisir parmi tes fonds d\'écran', keepOpen: true, run: () => setQuery('>fond ') },
-    { icon: 'shuffle', title: "Fond d'écran au hasard", subtitle: 'Choisir un fond au hasard dans ton dossier', run: () => randomWallpaper() },
-    { icon: 'content_paste', title: 'Presse-papiers', subtitle: 'Historique des éléments copiés (Win+Alt+V)', keepOpen: true, run: () => setQuery('>clip ') },
-    { icon: 'mood', title: 'Emojis', subtitle: 'Chercher et coller un emoji (Win+Alt+.)', keepOpen: true, run: () => setQuery(':') },
-    { icon: 'palette', title: 'Schéma de couleurs', subtitle: `Actuel : ${currentSchemeLabel()}`, keepOpen: true, run: () => setQuery('>schéma ') },
-    { icon: 'tune', title: 'Variante dynamique', subtitle: `Actuelle : ${variants[store.get(keys.variant, 'tonalspot')]?.label ?? 'Tonal Spot'}`, keepOpen: true, run: () => setQuery('>variante ') },
+    { icon: 'keyboard', title: t('Raccourcis'), subtitle: t('Antisèche de tous les raccourcis'), keepOpen: true, run: () => setQuery(t('>raccourcis ')) },
+    { icon: 'wallpaper', title: t("Fond d'écran"), subtitle: t("Choisir parmi tes fonds d'écran"), keepOpen: true, run: () => setQuery(t('>fond ')) },
+    { icon: 'shuffle', title: t("Fond d'écran au hasard"), subtitle: t('Choisir un fond au hasard dans ton dossier'), run: () => randomWallpaper() },
+    { icon: 'content_paste', title: t('Presse-papiers'), subtitle: t('Historique des éléments copiés (Win+Alt+V)'), keepOpen: true, run: () => setQuery('>clip ') },
+    { icon: 'mood', title: t('Emojis'), subtitle: t('Chercher et coller un emoji (Win+Alt+.)'), keepOpen: true, run: () => setQuery(':') },
+    { icon: 'palette', title: t('Schéma de couleurs'), subtitle: t('Actuel : {0}', currentSchemeLabel()), keepOpen: true, run: () => setQuery(t('>schéma ')) },
+    { icon: 'tune', title: t('Variante dynamique'), subtitle: t('Actuelle : {0}', variants[store.get(keys.variant, 'tonalspot')]?.label ?? 'Tonal Spot'), keepOpen: true, run: () => setQuery(t('>variante ')) },
     {
       icon: dark ? 'light_mode' : 'dark_mode',
-      title: dark ? 'Mode clair' : 'Mode sombre',
-      subtitle: 'Basculer le thème Material You',
+      title: t(dark ? 'Mode clair' : 'Mode sombre'),
+      subtitle: t('Basculer le thème Material You'),
       keepOpen: true,
       run: () => {
         store.set(keys.mode, dark ? 'light' : 'dark');
-        toast(dark ? 'Mode clair' : 'Mode sombre', { icon: dark ? 'light_mode' : 'dark_mode' });
+        toast(t(dark ? 'Mode clair' : 'Mode sombre'), { icon: dark ? 'light_mode' : 'dark_mode' });
         applyTheme();
         render();
       },
     },
     ...[
-      ['island', true, 'smart_display', 'Île dynamique', 'Morceau en cours et notifications en haut de l\'écran'],
-      ['tintIcons', true, 'palette', 'Icônes aux couleurs du thème', "Icônes d'applications teintées par le thème"],
-      ['desktopClock', true, 'schedule', 'Horloge de bureau', "Grande horloge sur le fond d'écran"],
-      ['gameMode', false, 'sports_esports', 'Mode jeu', 'Coupe les animations'],
-      ['idleScreen', true, 'nightlight', "Écran d'inactivité", 'Horloge et météo après quelques minutes sans activité'],
+      ['island', true, 'smart_display', t('Île dynamique'), t("Morceau en cours et notifications en haut de l'écran")],
+      ['tintIcons', true, 'palette', t('Icônes aux couleurs du thème'), t("Icônes d'applications teintées par le thème")],
+      ['desktopClock', true, 'schedule', t('Horloge de bureau'), t("Grande horloge sur le fond d'écran")],
+      ['gameMode', false, 'sports_esports', t('Mode jeu'), t('Coupe les animations')],
+      ['idleScreen', true, 'nightlight', t("Écran d'inactivité"), t('Horloge et météo après quelques minutes sans activité')],
     ].map(([name, fallback, symbol, title, description]) => {
       const enabled = Boolean(getOption(name, fallback));
       return {
         icon: symbol,
-        title: `${title} : ${enabled ? 'activé' : 'désactivé'}`,
+        title: t('{0} : {1}', title, t(enabled ? 'activé' : 'désactivé')),
         subtitle: description,
         keepOpen: true,
         run: () => {
           setOption(name, !enabled);
-          toast(title, { message: enabled ? 'Désactivé' : 'Activé', icon: symbol });
+          toast(title, { message: t(enabled ? 'Désactivé' : 'Activé'), icon: symbol });
           render();
         },
       };
     }),
-    { icon: 'auto_awesome', title: 'Réglages du thème', subtitle: 'Apparence, panneaux, raccourcis (Win+Alt+S)', run: async () => { await togglePopup('settings'); await popup.close(); } },
-    { icon: 'settings', title: 'Paramètres Windows', subtitle: 'Ouvrir les paramètres', run: () => openSettings('') },
-    { icon: 'lock', title: 'Verrouiller', subtitle: 'Verrouiller la session', run: () => runPower('lock') },
-    { icon: 'bedtime', title: 'Veille', subtitle: 'Mettre le PC en veille', run: () => runPower('sleep') },
-    { icon: 'logout', title: 'Déconnexion', subtitle: 'Fermer la session Windows', run: () => runPower('logout') },
-    { icon: 'restart_alt', title: 'Redémarrer', subtitle: 'Redémarrer immédiatement', run: () => runPower('restart') },
-    { icon: 'power_settings_new', title: 'Éteindre', subtitle: 'Arrêter immédiatement', run: () => runPower('shutdown') },
+    { icon: 'auto_awesome', title: t('Réglages du thème'), subtitle: t('Apparence, panneaux, raccourcis (Win+Alt+S)'), run: async () => { await togglePopup('settings'); await popup.close(); } },
+    { icon: 'settings', title: t('Paramètres Windows'), subtitle: t('Ouvrir les paramètres'), run: () => openSettings('') },
+    { icon: 'lock', title: t('Verrouiller'), subtitle: t('Verrouiller la session'), run: () => runPower('lock') },
+    { icon: 'bedtime', title: t('Veille'), subtitle: t('Mettre le PC en veille'), run: () => runPower('sleep') },
+    { icon: 'logout', title: t('Déconnexion'), subtitle: t('Fermer la session Windows'), run: () => runPower('logout') },
+    { icon: 'restart_alt', title: t('Redémarrer'), subtitle: t('Redémarrer immédiatement'), run: () => runPower('restart') },
+    { icon: 'power_settings_new', title: t('Éteindre'), subtitle: t('Arrêter immédiatement'), run: () => runPower('shutdown') },
   ];
 }
 
@@ -282,12 +284,12 @@ function variantEntries() {
   return Object.entries(variants).map(([id, variant]) => ({
     icon: dynamic && id === current ? 'radio_button_checked' : 'radio_button_unchecked',
     title: variant.label,
-    subtitle: dynamic && id === current ? 'Variante active' : "Couleurs tirées du fond d'écran",
+    subtitle: t(dynamic && id === current ? 'Variante active' : "Couleurs tirées du fond d'écran"),
     keepOpen: true,
     run: () => {
       store.set(keys.variant, id);
       store.set(keys.scheme, null);
-      toast('Variante dynamique', { message: variant.label, icon: 'tune' });
+      toast(t('Variante dynamique'), { message: variant.label, icon: 'tune' });
       applyTheme();
       render();
     },
@@ -315,7 +317,7 @@ const capitalize = value => value.charAt(0).toUpperCase() + value.slice(1);
 
 function currentSchemeLabel() {
   const selection = store.get(keys.scheme, null);
-  if (!selection) return "Dynamique (fond d'écran)";
+  if (!selection) return t("Dynamique (fond d'écran)");
   return `${schemeNames[selection.name] ?? capitalize(selection.name)} ${selection.flavour === 'default' || selection.flavour === 'medium' ? '' : capitalize(selection.flavour)}`.trim();
 }
 
@@ -329,12 +331,12 @@ function schemeEntries() {
   const selection = store.get(keys.scheme, null);
   const dynamic = {
     icon: !selection ? 'radio_button_checked' : 'wallpaper',
-    title: "Dynamique (fond d'écran)",
-    subtitle: !selection ? 'Schéma actif' : "Couleurs Material You tirées du fond d'écran",
+    title: t("Dynamique (fond d'écran)"),
+    subtitle: t(!selection ? 'Schéma actif' : "Couleurs Material You tirées du fond d'écran"),
     keepOpen: true,
     run: () => {
       store.set(keys.scheme, null);
-      toast('Schéma de couleurs', { message: "Dynamique (fond d'écran)", icon: 'palette' });
+      toast(t('Schéma de couleurs'), { message: t("Dynamique (fond d'écran)"), icon: 'palette' });
       applyTheme();
       render();
     },
@@ -349,12 +351,12 @@ function schemeEntries() {
       entries.push({
         swatches: [roles.primary, roles.secondary, roles.tertiary, roles.surface],
         title: label,
-        subtitle: active ? 'Schéma actif' : Object.keys(modes).map(mode => (mode === 'dark' ? 'sombre' : 'clair')).join(' et '),
+        subtitle: active ? t('Schéma actif') : Object.keys(modes).map(mode => t(mode === 'dark' ? 'sombre' : 'clair')).join(t(' et ')),
         selected: active,
         keepOpen: true,
         run: () => {
           store.set(keys.scheme, { name, flavour });
-          toast('Schéma de couleurs', { message: label, icon: 'palette' });
+          toast(t('Schéma de couleurs'), { message: label, icon: 'palette' });
           applyTheme();
           render();
         },
@@ -368,7 +370,7 @@ let emojiList = null;
 let emojiRequest = null;
 
 function loadEmoji() {
-  emojiRequest ??= fetch(new URL('./assets/emoji/fr.json', import.meta.url))
+  emojiRequest ??= fetch(new URL(`./assets/emoji/${language}.json`, import.meta.url))
     .then(response => response.json())
     .then(list => {
       emojiList = list.map(([glyph, label, tags]) => ({ glyph, label, search: normalize(`${label} ${tags}`), tags }));
@@ -416,19 +418,19 @@ onShared('clipboard', event => {
 
 function relativeTime(milliseconds) {
   const minutes = Math.round((Date.now() - milliseconds) / 60000);
-  if (minutes < 1) return "à l'instant";
-  if (minutes < 60) return `il y a ${minutes} min`;
+  if (minutes < 1) return t("à l'instant");
+  if (minutes < 60) return t('il y a {0} min', minutes);
   const hours = Math.round(minutes / 60);
-  if (hours < 24) return `il y a ${hours} h`;
-  return `il y a ${Math.round(hours / 24)} j`;
+  if (hours < 24) return t('il y a {0} h', hours);
+  return t('il y a {0} j', Math.round(hours / 24));
 }
 
 function clipboardEntries(text) {
   if (clipboardState && clipboardState.enabled === false) {
     return [{
       icon: 'content_paste_off',
-      title: 'Historique du presse-papiers désactivé',
-      subtitle: 'Appuie sur Win+V puis « Activer » pour le mettre en route',
+      title: t('Historique du presse-papiers désactivé'),
+      subtitle: t('Appuie sur Win+V puis « Activer » pour le mettre en route'),
       keepOpen: true,
       run: () => {},
     }];
@@ -438,11 +440,11 @@ function clipboardEntries(text) {
     .filter(item => !needle || normalize(item.text ?? '').includes(needle))
     .map(item => {
       const firstLine = (item.text ?? '').split(/\r?\n/).find(line => line.trim()) ?? '';
-      const labels = { text: firstLine.trim() || 'Texte vide', image: 'Image', files: item.text || 'Fichiers', other: 'Contenu' };
+      const labels = { text: firstLine.trim() || t('Texte vide'), image: t('Image'), files: item.text || t('Fichiers'), other: t('Contenu') };
       const icons = { text: 'notes', image: 'image', files: 'description', other: 'content_paste' };
       return {
         icon: icons[item.kind] ?? 'content_paste',
-        title: labels[item.kind] ?? 'Contenu',
+        title: labels[item.kind] ?? t('Contenu'),
         subtitle: relativeTime(item.time),
         run: async () => {
           actions.pasteClipboardItem(item.id);
@@ -461,7 +463,7 @@ async function randomWallpaper() {
   await popup.close();
 }
 
-const shortcutList = [
+const shortcutList = () => [
   ['Win', 'Ouvrir le lanceur'],
   ['Alt + Espace', 'Ouvrir le lanceur'],
   ['Win + Alt + A', 'Tableau de bord'],
@@ -487,11 +489,11 @@ const shortcutList = [
   ['Win + Alt + R', "Enregistrer l'écran (Xbox Game Bar)"],
   ['> dans le lanceur', 'Actions, fonds, variantes, schémas, presse-papiers'],
   [': dans le lanceur', 'Rechercher un emoji'],
-];
+].map(([combo, label]) => [t(combo), t(label)]);
 
 function shortcutEntries(text) {
   const needle = normalize(text);
-  return shortcutList
+  return shortcutList()
     .filter(([keys, label]) => !needle || normalize(`${keys} ${label}`).includes(needle))
     .map(([keys, label]) => ({ icon: 'keyboard', title: keys, subtitle: label, keepOpen: true, run: () => {} }));
 }
@@ -508,7 +510,7 @@ function windowEntries(query) {
       image: icons[task.icon || task.exe] ? `data:image/png;base64,${icons[task.icon || task.exe]}` : null,
       icon: 'select_window',
       title: task.title,
-      subtitle: `Fenêtre ouverte · ${task.process}`,
+      subtitle: t('Fenêtre ouverte · {0}', task.process),
       run: async () => {
         await helperClient.request('tasks.activate', { id: task.id }).catch(() => {});
         await popup.close();
@@ -531,7 +533,7 @@ function appEntries(query) {
       image: app.icon ? `data:image/png;base64,${app.icon}` : null,
       icon: 'apps',
       title: app.name,
-      subtitle: app.id.includes('!') ? 'Application Windows' : 'Application',
+      subtitle: t(app.id.includes('!') ? 'Application Windows' : 'Application'),
       app,
       favourite: favourites.has(app.id),
       run: () => launchApp(app),
@@ -542,7 +544,7 @@ function toggleFavourite(app) {
   const favourites = getOption('favouriteApps', []);
   const added = !favourites.includes(app.id);
   setOption('favouriteApps', added ? [...favourites, app.id] : favourites.filter(id => id !== app.id));
-  toast(added ? 'Ajoutée aux favoris' : 'Retirée des favoris', { message: app.name, icon: 'star' });
+  toast(t(added ? 'Ajoutée aux favoris' : 'Retirée des favoris'), { message: app.name, icon: 'star' });
   render();
 }
 
@@ -550,7 +552,7 @@ function hideApp(app) {
   const hidden = getOption('hiddenApps', []);
   if (!hidden.includes(app.id)) setOption('hiddenApps', [...hidden, app.id]);
   setOption('favouriteApps', getOption('favouriteApps', []).filter(id => id !== app.id));
-  toast('Application masquée', { message: `${app.name} — réaffichable dans les réglages`, icon: 'visibility_off' });
+  toast(t('Application masquée'), { message: t('{0} — réaffichable dans les réglages', app.name), icon: 'visibility_off' });
   render();
 }
 
@@ -583,7 +585,7 @@ function parseQuery(raw) {
   if (/^(variant|variante)/.test(keyword) && (rest.includes(' ') || keyword.length >= 7)) {
     return { mode: 'variants', text: others.join(' ') };
   }
-  if (/^(schema|scheme|couleur|theme)/.test(keyword) && (rest.includes(' ') || keyword.length >= 5)) {
+  if (/^(schema|scheme|couleur|colou?r|theme)/.test(keyword) && (rest.includes(' ') || keyword.length >= 5)) {
     return { mode: 'schemes', text: others.join(' ') };
   }
   return { mode: 'actions', text: rest.trim() };
@@ -618,7 +620,7 @@ function renderList(entries) {
     entry.app ? element('span', { class: 'item-actions' }, [
       element('button', {
         class: `item-action state-layer${entry.favourite ? ' active' : ''}`,
-        title: entry.favourite ? 'Retirer des favoris (Ctrl+F)' : 'Ajouter aux favoris (Ctrl+F)',
+        title: t(entry.favourite ? 'Retirer des favoris (Ctrl+F)' : 'Ajouter aux favoris (Ctrl+F)'),
         onClick: event => {
           event.stopPropagation();
           toggleFavourite(entry.app);
@@ -626,7 +628,7 @@ function renderList(entries) {
       }, icon('star', { filled: entry.favourite })),
       element('button', {
         class: 'item-action state-layer',
-        title: 'Masquer du lanceur (Ctrl+H)',
+        title: t('Masquer du lanceur (Ctrl+H)'),
         onClick: event => {
           event.stopPropagation();
           hideApp(entry.app);
@@ -671,7 +673,7 @@ async function applyWallpaper(item) {
   setLoading(true);
   try {
     await helperClient.request('wallpapers.apply', { path: item.path });
-    toast("Fond d'écran appliqué", { message: item.name, icon: 'wallpaper' });
+    toast(t("Fond d'écran appliqué"), { message: item.name, icon: 'wallpaper' });
     state.wallpapers = { ...state.wallpapers, current: item.path };
     store.set(keys.wallpapers, state.wallpapers);
     render();
@@ -709,7 +711,7 @@ function render() {
     if (!state.wallpapersLoaded) loadWallpapers();
     const count = renderWallpapers(parsed.text);
     nodes.empty.hidden = count > 0 || state.pending > 0;
-    nodes.emptyText.textContent = "Aucun fond d'écran trouvé";
+    nodes.emptyText.textContent = t("Aucun fond d'écran trouvé");
     return;
   }
 
@@ -738,7 +740,7 @@ function render() {
       entries.unshift({
         icon: 'calculate',
         title: `= ${formatted}`,
-        subtitle: 'Entrée pour copier le résultat',
+        subtitle: t('Entrée pour copier le résultat'),
         calculation: true,
         run: async () => {
           await navigator.clipboard.writeText(String(result));
@@ -753,8 +755,8 @@ function render() {
   renderList(entries);
   nodes.empty.hidden = entries.length > 0;
   nodes.emptyText.textContent = parsed.mode === 'apps' && state.apps.length === 0 && state.pending > 0
-    ? 'Chargement des applications…'
-    : 'Aucun résultat';
+    ? t('Chargement des applications…')
+    : t('Aucun résultat');
 }
 
 function select(index, scroll) {

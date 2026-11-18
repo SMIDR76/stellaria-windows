@@ -1,4 +1,7 @@
 import {
+  t,
+  language,
+  settings,
   actions,
   analyzeImage,
   applyTheme,
@@ -86,7 +89,7 @@ function renderWeather(weather) {
   weatherNodes.button.hidden = false;
   weatherNodes.icon.textContent = now.icon;
   weatherNodes.temp.textContent = `${Math.round(weather.current.temperature)}°`;
-  weatherNodes.button.title = `${weather.city ?? 'Météo'} : ${now.label}, ${Math.round(weather.current.temperature)} °C`;
+  weatherNodes.button.title = t('{0} : {1}, {2} °C', weather.city ?? t('Météo'), now.label, Math.round(weather.current.temperature));
 }
 
 async function refreshWeather() {
@@ -120,7 +123,7 @@ function renderClock() {
   nodes.hours.textContent = String(now.getHours()).padStart(2, '0');
   nodes.minutes.textContent = String(now.getMinutes()).padStart(2, '0');
   nodes.seconds.textContent = String(now.getSeconds()).padStart(2, '0');
-  nodes.clock.title = now.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  nodes.clock.title = now.toLocaleDateString(settings.locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   const elapsed = (clockState.seconds ? 0 : now.getSeconds() * 1000) + now.getMilliseconds();
   clockState.timer = setTimeout(renderClock, (clockState.seconds ? 1000 : 60000) - elapsed + 20);
 }
@@ -150,15 +153,15 @@ function watchSystemEvents(output) {
   const recording = output.audio?.defaultRecordingDevice;
   const layout = output.keyboard?.layout;
   if (playback) {
-    if (systemEvents.playback && playback.deviceId !== systemEvents.playback) systemToast('Sortie audio', playback.name, 'speaker');
+    if (systemEvents.playback && playback.deviceId !== systemEvents.playback) systemToast(t('Sortie audio'), playback.name, 'speaker');
     systemEvents.playback = playback.deviceId;
   }
   if (recording) {
-    if (systemEvents.recording && recording.deviceId !== systemEvents.recording) systemToast('Entrée audio', recording.name, 'mic');
+    if (systemEvents.recording && recording.deviceId !== systemEvents.recording) systemToast(t('Entrée audio'), recording.name, 'mic');
     systemEvents.recording = recording.deviceId;
   }
   if (layout) {
-    if (systemEvents.layout && layout !== systemEvents.layout) systemToast('Disposition du clavier', layout, 'keyboard');
+    if (systemEvents.layout && layout !== systemEvents.layout) systemToast(t('Disposition du clavier'), layout, 'keyboard');
     systemEvents.layout = layout;
   }
 
@@ -247,15 +250,15 @@ function render(output) {
   const device = output.audio?.defaultPlaybackDevice;
   nodes.volumeIcon.textContent = volumeIcon(device);
   nodes.volume.classList.toggle('muted', Boolean(device?.isMuted));
-  nodes.volume.title = device ? `${device.name} — ${device.isMuted ? 'muet' : `${Math.round(device.volume)} %`}` : 'Aucune sortie audio';
+  nodes.volume.title = device ? `${device.name} — ${device.isMuted ? t('muet') : t('{0} %', Math.round(device.volume))}` : t('Aucune sortie audio');
 
   nodes.networkIcon.textContent = networkIcon(output.network);
   const gateway = output.network?.defaultGateway;
-  nodes.network.title = gateway?.ssid ? `Wi-Fi : ${gateway.ssid}` : output.network?.defaultInterface ? 'Ethernet connecté' : 'Hors ligne';
+  nodes.network.title = gateway?.ssid ? t('Wi-Fi : {0}', gateway.ssid) : t(output.network?.defaultInterface ? 'Ethernet connecté' : 'Hors ligne');
 
   const layout = output.keyboard?.layout ?? '';
   nodes.keyboard.textContent = (layout.split('-').pop() || layout || '--').slice(0, 2).toUpperCase();
-  nodes.keyboard.title = layout ? `Disposition : ${layout}` : 'Disposition du clavier';
+  nodes.keyboard.title = layout ? t('Disposition : {0}', layout) : t('Disposition du clavier');
 
   renderTray(output.systray);
   watchSystemEvents(output);
@@ -320,7 +323,7 @@ function renderNotificationBadge() {
   nodes.notificationsBadge.hidden = unread === 0;
   nodes.notificationsBadge.textContent = unread > 9 ? '9+' : String(unread);
   nodes.notificationsIcon.textContent = unread ? 'notifications_unread' : visible.length ? 'notifications' : 'notifications_none';
-  nodes.notifications.title = unread ? `Notifications (${unread} non lues)` : 'Notifications';
+  nodes.notifications.title = unread ? t('Notifications ({0} non lues)', unread) : t('Notifications');
 }
 helperClient.onState('notifications', renderNotificationBadge);
 store.watch(notificationKeys.dismissed, renderNotificationBadge, 2000);
@@ -370,7 +373,7 @@ function renderDesktops(desktops) {
   const current = [...nodes.workspaces.querySelectorAll('.workspace')];
   current.forEach((button, index) => {
     button.classList.toggle('focused', index === desktops.current);
-    button.title = items[index].name ?? `Bureau ${index + 1}`;
+    button.title = items[index].name ?? t('Bureau {0}', index + 1);
   });
   if (current[desktops.current]) requestAnimationFrame(() => placeIndicator(current[desktops.current]));
 }
@@ -504,8 +507,8 @@ function relayHelperState() {
   });
   helperClient.onState('keyboard', keyboard => {
     if (locks) {
-      if (keyboard.capsLock !== locks.capsLock) systemToast(keyboard.capsLock ? 'Verr. Maj activé' : 'Verr. Maj désactivé', '', 'keyboard_capslock');
-      if (keyboard.numLock !== locks.numLock) systemToast(keyboard.numLock ? 'Verr. Num activé' : 'Verr. Num désactivé', '', 'dialpad');
+      if (keyboard.capsLock !== locks.capsLock) systemToast(t(keyboard.capsLock ? 'Verr. Maj activé' : 'Verr. Maj désactivé'), '', 'keyboard_capslock');
+      if (keyboard.numLock !== locks.numLock) systemToast(t(keyboard.numLock ? 'Verr. Num activé' : 'Verr. Num désactivé'), '', 'dialpad');
     }
     locks = { capsLock: keyboard.capsLock, numLock: keyboard.numLock };
   });
@@ -525,10 +528,10 @@ function relayHelperState() {
     runHotkey(event.name, event.monitor).catch(error => console.error('[stellaria] Raccourci', error));
   });
   helperClient.onEvent('hotkey.unavailable', event => {
-    toast('Raccourci indisponible', { message: `${event.shortcut} est déjà utilisé par une autre application.`, icon: 'keyboard', kind: 'warning', duration: 6000 });
+    toast(t('Raccourci indisponible'), { message: t('{0} est déjà utilisé par une autre application.', event.shortcut), icon: 'keyboard', kind: 'warning', duration: 6000 });
   });
   helperClient.onEvent('appbars.paused', event => {
-    toast('Barres Stellaria', { message: `Réparations suspendues ${event.minutes} min.`, icon: 'warning', kind: 'warning', duration: 8000 });
+    toast(t('Barres Stellaria'), { message: t('Réparations suspendues {0} min.', event.minutes), icon: 'warning', kind: 'warning', duration: 8000 });
   });
 }
 
@@ -643,7 +646,7 @@ function applyPreset(event) {
     variant: preset.variant,
     options: preset.options,
   });
-  toast('Préréglage appliqué', { message: event.name?.fr ?? event.id, icon: 'palette' });
+  toast(t('Préréglage appliqué'), { message: event.name?.[language] ?? event.name?.fr ?? event.id, icon: 'palette' });
 }
 
 function undoPreset() {
@@ -652,7 +655,7 @@ function undoPreset() {
   if (!previous) return;
   store.set(presetHistoryKey, history);
   applyLook(previous);
-  toast('Apparence précédente rétablie', { icon: 'undo' });
+  toast(t('Apparence précédente rétablie'), { icon: 'undo' });
 }
 
 if (await isPrimaryMonitor()) {

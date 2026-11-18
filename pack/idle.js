@@ -1,4 +1,5 @@
 import {
+  t,
   currentMonitorName,
   describeWeather,
   element,
@@ -52,10 +53,10 @@ const providers = zebar.createProviderGroup({
 const capitalize = value => value.charAt(0).toUpperCase() + value.slice(1);
 
 function greeting(hour) {
-  if (hour < 5) return 'Bonne nuit';
-  if (hour < 12) return 'Bonjour';
-  if (hour < 18) return 'Bon après-midi';
-  return 'Bonsoir';
+  if (hour < 5) return t('Bonne nuit');
+  if (hour < 12) return t('Bonjour');
+  if (hour < 18) return t('Bon après-midi');
+  return t('Bonsoir');
 }
 
 function renderClock() {
@@ -84,7 +85,7 @@ function renderWeather() {
   const now = describeWeather(weather.current.code, weather.current.isDay);
   $('weather-icon').textContent = now.icon;
   $('weather-title').textContent = `${Math.round(weather.current.temperature)}°C · ${now.label}`;
-  $('weather-subtitle').textContent = weather.city ?? 'Météo';
+  $('weather-subtitle').textContent = weather.city ?? t('Météo');
 }
 
 function renderOutputs(output) {
@@ -92,8 +93,8 @@ function renderOutputs(output) {
   state.playing = Boolean(session?.isPlaying);
   $('media-card').hidden = !session;
   if (session) {
-    $('media-title').textContent = session.title || 'Titre inconnu';
-    $('media-subtitle').textContent = `${session.artist || 'Artiste inconnu'}${session.isPlaying ? '' : ' · en pause'}`;
+    $('media-title').textContent = session.title || t('Titre inconnu');
+    $('media-subtitle').textContent = `${session.artist || t('Artiste inconnu')}${session.isPlaying ? '' : t(' · en pause')}`;
   }
   if (output.cpu && output.memory) {
     $('system-title').textContent = `CPU ${Math.round(output.cpu.usage)} % · RAM ${Math.round(output.memory.usage)} %`;

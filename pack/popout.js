@@ -1,4 +1,6 @@
 import {
+  t,
+  settings,
   actions,
   currentMonitorName,
   cursorPosition,
@@ -171,7 +173,7 @@ function createAudioView() {
       const device = audio?.defaultPlaybackDevice;
       if (device) audio.setMute(!device.isMuted);
     },
-  }, [icon('volume_off'), element('span', { text: 'Couper le son' })]);
+  }, [icon('volume_off'), element('span', { text: t('Couper le son') })]);
   const mic = element('button', {
     class: 'tonal-button',
     onClick: () => {
@@ -179,10 +181,10 @@ function createAudioView() {
       const device = audio?.defaultRecordingDevice;
       if (device) audio.setMute(!device.isMuted, { deviceId: device.deviceId });
     },
-  }, [icon('mic_off'), element('span', { text: 'Couper le micro' })]);
+  }, [icon('mic_off'), element('span', { text: t('Couper le micro') })]);
   const outputs = element('div', { class: 'options' });
   const inputs = element('div', { class: 'options' });
-  const apps = element('div', { class: 'app-volumes' }, element('span', { class: 'empty', text: 'Chargement…' }));
+  const apps = element('div', { class: 'app-volumes' }, element('span', { class: 'empty', text: t('Chargement…') }));
   const pending = { output: null, input: null };
 
   const changeSession = (method, params) => helperClient.request(method, params)
@@ -192,7 +194,7 @@ function createAudioView() {
     });
 
   const sessionRow = session => {
-    const label = session.system ? 'Sons système' : session.name;
+    const label = session.system ? t('Sons système') : session.name;
     const symbol = () => (session.muted || session.volume === 0 ? 'volume_off' : 'volume_up');
     const appSlider = createSlider((volume, delta) => {
       session.volume = volume ?? Math.min(100, Math.max(0, session.volume + delta));
@@ -201,7 +203,7 @@ function createAudioView() {
     });
     const muteButton = element('button', {
       class: `icon-button${session.muted ? ' active' : ''}`,
-      title: session.muted ? 'Rétablir le son' : 'Couper le son',
+      title: t(session.muted ? 'Rétablir le son' : 'Couper le son'),
       onClick: () => {
         session.muted = !session.muted;
         muteButton.classList.toggle('active', session.muted);
@@ -236,25 +238,25 @@ function createAudioView() {
       const visible = merged.filter(session => !session.system).concat(merged.filter(session => session.system));
       apps.replaceChildren(...(visible.length
         ? visible.map(sessionRow)
-        : [element('span', { class: 'empty', text: 'Aucune application ne joue de son' })]));
+        : [element('span', { class: 'empty', text: t('Aucune application ne joue de son') })]));
     } catch (error) {
       console.error('[stellaria] audio.sessions', error);
-      apps.replaceChildren(element('span', { class: 'empty', text: 'Volumes indisponibles' }));
+      apps.replaceChildren(element('span', { class: 'empty', text: t('Volumes indisponibles') }));
     }
     if (state.kind === 'audio') layoutPanel();
   };
 
   const node = element('div', { class: 'view', style: { width: '340px' } }, [
-    element('div', { class: 'view-header' }, [headerIcon, element('span', { class: 'view-title', text: 'Volume' }), value]),
+    element('div', { class: 'view-header' }, [headerIcon, element('span', { class: 'view-title', text: t('Volume') }), value]),
     slider.node,
     element('div', { class: 'button-line' }, [mute, mic]),
-    element('span', { class: 'section-label', text: 'Sortie' }),
+    element('span', { class: 'section-label', text: t('Sortie') }),
     outputs,
-    element('span', { class: 'section-label', text: 'Entrée' }),
+    element('span', { class: 'section-label', text: t('Entrée') }),
     inputs,
-    element('span', { class: 'section-label', text: 'Applications' }),
+    element('span', { class: 'section-label', text: t('Applications') }),
     apps,
-    element('button', { class: 'tonal-button', onClick: () => openSettings('sound') }, [icon('settings'), element('span', { text: 'Paramètres du son' })]),
+    element('button', { class: 'tonal-button', onClick: () => openSettings('sound') }, [icon('settings'), element('span', { text: t('Paramètres du son') })]),
   ]);
 
   const renderDevices = (container, devices, defaultKey, kind) => {
@@ -271,7 +273,7 @@ function createAudioView() {
           pending[kind] = device.deviceId;
           setTimeout(() => { pending[kind] = null; }, 3000);
           actions.setDefaultAudio(device.deviceId);
-          toast(kind === 'output' ? 'Sortie audio' : 'Entrée audio', { message: device.name, icon: kind === 'output' ? deviceSymbol(device.name) : 'mic' });
+          toast(t(kind === 'output' ? 'Sortie audio' : 'Entrée audio'), { message: device.name, icon: kind === 'output' ? deviceSymbol(device.name) : 'mic' });
           update(providers.outputMap);
         },
       });
@@ -283,13 +285,13 @@ function createAudioView() {
     const device = audio?.defaultPlaybackDevice;
     const symbol = volumeSymbol(device);
     headerIcon.textContent = symbol;
-    value.textContent = device ? (device.isMuted ? 'Muet' : `${Math.round(device.volume)} %`) : '—';
+    value.textContent = device ? (device.isMuted ? t('Muet') : t('{0} %', Math.round(device.volume))) : '—';
     slider.set(device?.isMuted ? 0 : device?.volume ?? 0, symbol);
     mute.classList.toggle('active', Boolean(device?.isMuted));
-    mute.lastChild.textContent = device?.isMuted ? 'Rétablir le son' : 'Couper le son';
+    mute.lastChild.textContent = t(device?.isMuted ? 'Rétablir le son' : 'Couper le son');
     const microphone = audio?.defaultRecordingDevice;
     mic.classList.toggle('active', Boolean(microphone?.isMuted));
-    mic.lastChild.textContent = microphone?.isMuted ? 'Activer le micro' : 'Couper le micro';
+    mic.lastChild.textContent = t(microphone?.isMuted ? 'Activer le micro' : 'Couper le micro');
     renderDevices(outputs, audio?.playbackDevices ?? [], 'isDefaultPlayback', 'output');
     renderDevices(inputs, audio?.recordingDevices ?? [], 'isDefaultRecording', 'input');
   };
@@ -299,7 +301,7 @@ function createAudioView() {
 
 function createNetworkView() {
   const headerIcon = icon('lan');
-  const title = element('span', { class: 'view-title', text: 'Réseau' });
+  const title = element('span', { class: 'view-title', text: t('Réseau') });
   const grid = element('div', { class: 'info-grid' });
   const down = element('strong', { text: '—' });
   const up = element('strong', { text: '—' });
@@ -307,10 +309,10 @@ function createNetworkView() {
     element('div', { class: 'view-header' }, [headerIcon, title]),
     grid,
     element('div', { class: 'traffic' }, [
-      element('div', { class: 'down' }, [icon('download', { filled: true }), element('span', { class: 'traffic-value' }, [down, element('span', { text: 'Réception' })])]),
-      element('div', { class: 'up' }, [icon('upload', { filled: true }), element('span', { class: 'traffic-value' }, [up, element('span', { text: 'Envoi' })])]),
+      element('div', { class: 'down' }, [icon('download', { filled: true }), element('span', { class: 'traffic-value' }, [down, element('span', { text: t('Réception') })])]),
+      element('div', { class: 'up' }, [icon('upload', { filled: true }), element('span', { class: 'traffic-value' }, [up, element('span', { text: t('Envoi') })])]),
     ]),
-    element('button', { class: 'tonal-button', onClick: () => openSettings('network-status') }, [icon('settings'), element('span', { text: 'Paramètres réseau' })]),
+    element('button', { class: 'tonal-button', onClick: () => openSettings('network-status') }, [icon('settings'), element('span', { text: t('Paramètres réseau') })]),
   ]);
 
   const update = output => {
@@ -318,15 +320,15 @@ function createNetworkView() {
     const iface = network?.defaultInterface;
     const gateway = network?.defaultGateway;
     headerIcon.textContent = iface?.type === 'wifi' ? 'wifi' : iface?.type === 'ethernet' ? 'lan' : iface ? 'vpn_lock' : 'signal_wifi_off';
-    title.textContent = gateway?.ssid || iface?.friendlyName || 'Hors ligne';
+    title.textContent = gateway?.ssid || iface?.friendlyName || t('Hors ligne');
     const rows = iface ? [
-      ['Carte', iface.description],
-      ['Adresse IPv4', iface.ipv4Addresses?.[0] ?? '—'],
+      [t('Carte'), iface.description],
+      [t('Adresse IPv4'), iface.ipv4Addresses?.[0] ?? '—'],
       ['DNS', iface.dnsServers?.join(', ') || '—'],
-      ['Vitesse', formatLinkSpeed(iface.receiveSpeed)],
+      [t('Vitesse'), formatLinkSpeed(iface.receiveSpeed)],
       ['MAC', iface.macAddress?.toUpperCase() ?? '—'],
-      Number.isFinite(gateway?.signalStrength) ? ['Signal', `${gateway.signalStrength} %`] : null,
-    ].filter(Boolean) : [['État', 'Aucune connexion']];
+      Number.isFinite(gateway?.signalStrength) ? [t('Signal'), t('{0} %', gateway.signalStrength)] : null,
+    ].filter(Boolean) : [[t('État'), t('Aucune connexion')]];
     const signature = JSON.stringify(rows);
     if (grid.dataset.signature !== signature) {
       grid.dataset.signature = signature;
@@ -342,16 +344,16 @@ function createNetworkView() {
 function createKeyboardView() {
   const list = element('div', { class: 'options' });
   const node = element('div', { class: 'view', style: { width: '300px' } }, [
-    element('div', { class: 'view-header' }, [icon('keyboard'), element('span', { class: 'view-title', text: 'Disposition du clavier' })]),
+    element('div', { class: 'view-header' }, [icon('keyboard'), element('span', { class: 'view-title', text: t('Disposition du clavier') })]),
     list,
-    element('span', { class: 'hint', text: 'Win + Espace bascule aussi entre les dispositions.' }),
-    element('button', { class: 'tonal-button', onClick: () => openSettings('regionlanguage') }, [icon('settings'), element('span', { text: 'Langues et clavier' })]),
+    element('span', { class: 'hint', text: t('Win + Espace bascule aussi entre les dispositions.') }),
+    element('button', { class: 'tonal-button', onClick: () => openSettings('regionlanguage') }, [icon('settings'), element('span', { text: t('Langues et clavier') })]),
   ]);
 
   const render = event => {
     const items = event?.items ?? [];
     if (!items.length) {
-      list.replaceChildren(element('span', { class: 'hint', text: 'Chargement des dispositions…' }));
+      list.replaceChildren(element('span', { class: 'hint', text: t('Chargement des dispositions…') }));
       return;
     }
     list.replaceChildren(...items.map(item => optionButton({
@@ -389,9 +391,9 @@ function createWindowView() {
     preview,
     element('div', { class: 'window-details' }, [iconSlot, element('span', { class: 'option-text' }, [title, process])]),
     element('div', { class: 'button-line' }, [
-      element('button', { class: 'tonal-button', onClick: () => actions.windowAction('minimize') }, [icon('minimize'), element('span', { text: 'Réduire' })]),
-      element('button', { class: 'tonal-button', onClick: () => actions.windowAction('maximize') }, [icon('open_in_full'), element('span', { text: 'Agrandir' })]),
-      element('button', { class: 'tonal-button danger', onClick: () => { actions.windowAction('close'); close(); } }, [icon('close'), element('span', { text: 'Fermer' })]),
+      element('button', { class: 'tonal-button', onClick: () => actions.windowAction('minimize') }, [icon('minimize'), element('span', { text: t('Réduire') })]),
+      element('button', { class: 'tonal-button', onClick: () => actions.windowAction('maximize') }, [icon('open_in_full'), element('span', { text: t('Agrandir') })]),
+      element('button', { class: 'tonal-button danger', onClick: () => { actions.windowAction('close'); close(); } }, [icon('close'), element('span', { text: t('Fermer') })]),
     ]),
   ]);
 
@@ -405,7 +407,7 @@ function createWindowView() {
   const renderDetails = () => {
     const focus = store.get(keys.focus, { byMonitor: {} });
     const entry = focus.byMonitor?.[monitor] ?? {};
-    title.textContent = entry.title || 'Aucune fenêtre';
+    title.textContent = entry.title || t('Aucune fenêtre');
     process.textContent = entry.process || '';
     const slot = node.querySelector('.window-details > :first-child');
     slot.replaceWith(entry.icon
@@ -443,11 +445,11 @@ function fallbackAppName(appId) {
 
 function relativeTime(time) {
   const minutes = Math.round((Date.now() - time) / 60000);
-  if (minutes < 1) return "à l'instant";
-  if (minutes < 60) return `il y a ${minutes} min`;
+  if (minutes < 1) return t("à l'instant");
+  if (minutes < 60) return t('il y a {0} min', minutes);
   const hours = Math.round(minutes / 60);
-  if (hours < 24) return `il y a ${hours} h`;
-  return new Date(time).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+  if (hours < 24) return t('il y a {0} h', hours);
+  return new Date(time).toLocaleDateString(settings.locale, { day: 'numeric', month: 'short' });
 }
 
 function createNotificationsView() {
@@ -460,12 +462,12 @@ function createNotificationsView() {
       store.set(notificationKeys.dismissed, [...new Set([...store.get(notificationKeys.dismissed, []), ...items.map(item => item.id)])].slice(-300));
       render();
     },
-  }, [icon('clear_all'), element('span', { text: 'Tout effacer' })]);
+  }, [icon('clear_all'), element('span', { text: t('Tout effacer') })]);
   const node = element('div', { class: 'view notifications-view', style: { width: '360px' } }, [
     element('div', { class: 'hero notifications-hero' }, [
       heroOrnament('flower'),
       heroMark('cookie9', 'notifications'),
-      element('div', { class: 'hero-text' }, [element('span', { class: 'hero-title', text: 'Notifications' }), subtitle]),
+      element('div', { class: 'hero-text' }, [element('span', { class: 'hero-title', text: t('Notifications') }), subtitle]),
     ]),
     list,
     clear,
@@ -480,10 +482,10 @@ function createNotificationsView() {
     const directory = await loadAppDirectory();
     const dismissed = new Set(store.get(notificationKeys.dismissed, []));
     const items = (helperClient.state('notifications')?.items ?? []).filter(item => !dismissed.has(item.id));
-    subtitle.textContent = items.length ? `${items.length} notification${items.length > 1 ? 's' : ''}` : 'Tout est calme';
+    subtitle.textContent = items.length ? t(items.length > 1 ? '{0} notifications' : '{0} notification', items.length) : t('Tout est calme');
     clear.hidden = items.length === 0;
     if (!items.length) {
-      list.replaceChildren(element('div', { class: 'notification-empty' }, [icon('notifications_paused', { className: 'tonal-icon' }), element('span', { text: 'Aucune notification pour le moment' })]));
+      list.replaceChildren(element('div', { class: 'notification-empty' }, [icon('notifications_paused', { className: 'tonal-icon' }), element('span', { text: t('Aucune notification pour le moment') })]));
     } else {
       const groups = new Map();
       for (const item of items) {
@@ -508,7 +510,7 @@ function createNotificationsView() {
             ]),
             element('button', {
               class: 'icon-button notification-dismiss',
-              title: 'Supprimer',
+              title: t('Supprimer'),
               onClick: event => {
                 event.stopPropagation();
                 dismiss(entry.id);
