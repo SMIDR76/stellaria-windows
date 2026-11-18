@@ -36,6 +36,25 @@ project's news. Links such as `stellaria://apply/preset-nord` open it on the mat
 
 ![Six official colour presets](docs/images/promo/presets-en.jpg)
 
+## Roadmap
+
+![Stellaria roadmap](docs/images/promo/roadmap-en.jpg)
+
+Each step ships when it is ready and safe, so there are no dates.
+
+1. **Foundations (done, v1.0):** bar, dashboard, launcher and utilities, Material You colours and schemes, a secure local
+   service with no telemetry, and a signed preset catalogue.
+2. **Stability and trust (in progress, v1.0.x):** one global fix for the reported bugs, reliable fonts after sleep,
+   publication on winget, and code signing.
+3. **Community catalogue (next):** themes and presets shared by the community, every submission checked automatically,
+   clear reporting and moderation, and a "Show your desktop" gallery.
+4. **Widget packs (then):** widgets made by the community, a human review of every version, permissions shown before
+   install, and a safe preview before installing.
+5. **Further out:** publishing from the Stellaria app, sharing a setup with one code, creator pages, and whatever your
+   feedback asks for.
+
+Ideas and requests are welcome in [Discussions](https://github.com/SMIDR76/stellaria-windows/discussions).
+
 ## Requirements
 
 - Windows 11 (Windows 10 22H2 may work, untested)
