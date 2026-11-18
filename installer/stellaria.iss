@@ -45,6 +45,7 @@ WizardStyle=modern dynamic
 SetupLogging=yes
 UninstallDisplayName={#AppName}
 UninstallDisplayIcon={#Launcher}
+SetupIconFile=..\launcher\icons\icon.ico
 CloseApplications=yes
 RestartApplications=no
 ShowLanguageDialog=auto
