@@ -1521,3 +1521,50 @@ kbd {
     transition: none;
   }
 }
+
+button.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid var(--m3-outline-variant);
+  background: transparent;
+  color: var(--m3-on-surface-variant);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 200ms var(--ease-effects), color 200ms var(--ease-effects);
+}
+
+button.chip:hover {
+  background: color-mix(in srgb, var(--m3-on-surface) 8%, transparent);
+}
+
+button.chip.selected {
+  border-color: transparent;
+  background: var(--m3-secondary-container);
+  color: var(--m3-on-secondary-container);
+}
+
+button.chip .icon {
+  font-size: 18px;
+}
+
+:root:lang(zh-CN) body {
+  font-family: 'Google Sans Flex', 'Microsoft YaHei UI', 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
+}
+
+:root:lang(ja) body {
+  font-family: 'Google Sans Flex', 'Yu Gothic UI', 'Meiryo UI', 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
+}
+
+:root:lang(ko) body {
+  font-family: 'Google Sans Flex', 'Malgun Gothic', 'Segoe UI Variable Text', 'Segoe UI', sans-serif;
+}
+
+.language-chips {
+  padding: 2px 0 8px 52px;
+}

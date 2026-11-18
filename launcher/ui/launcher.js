@@ -20,7 +20,7 @@ const strings = {
     installed: 'Installé', core: 'Thème', presetsTitle: 'Préréglages',
     presetsText: "Un préréglage modifie uniquement les couleurs et quelques options visuelles. Rien n'est installé, et Annuler rétablit l'apparence précédente.",
     zebar: 'Zebar', tasks: 'Démarrage automatique', tasksOk: 'Les trois tâches sont en place', tasksMissing: 'Tâches manquantes. Cliquez sur Réparer.',
-    language: 'Langue', languageText: "Langue de l'application",
+    language: 'Langue', languageText: "Langue de l'application", automatic: 'Automatique (langue de Windows)',
     sound: 'Sons', soundText: "Sons de l'application (ouverture, fermeture, notifications et mises à jour)", soundOn: 'Activé', soundOff: 'Désactivé',
     catalog: 'Catalogue', catalogText: "Version {0}, valide jusqu'au {1} ({2})", refresh: 'Actualiser',
     sources: { online: 'en ligne', cache: 'copie locale', bundled: "fourni avec l'installation", none: 'aucun' },
@@ -116,7 +116,7 @@ const strings = {
     installed: 'Installed', core: 'The theme', presetsTitle: 'Presets',
     presetsText: 'Presets only change colours and a few visual options. Nothing is installed: Undo goes back to the previous look.',
     zebar: 'Zebar', tasks: 'Start with Windows', tasksOk: 'The three tasks are in place', tasksMissing: 'Missing tasks: use Repair',
-    language: 'Language', languageText: 'App language',
+    language: 'Language', languageText: 'App language', automatic: 'Automatic (Windows language)',
     sound: 'Sound', soundText: 'Play the app sounds (opening, closing, notifications, updates)', soundOn: 'On', soundOff: 'Off',
     catalog: 'Catalogue', catalogText: 'Version {0}, valid until {1} ({2})', refresh: 'Refresh',
     sources: { online: 'online', cache: 'local copy', bundled: 'shipped with the setup', none: 'none' },
@@ -207,6 +207,21 @@ const pages = [
   ['settings', 'settings'],
 ];
 
+const appLanguages = {
+  fr: { name: 'Français', locale: 'fr-FR' },
+  en: { name: 'English', locale: 'en-GB' },
+  es: { name: 'Español', locale: 'es-ES' },
+  de: { name: 'Deutsch', locale: 'de-DE' },
+  'pt-BR': { name: 'Português (Brasil)', locale: 'pt-BR' },
+  it: { name: 'Italiano', locale: 'it-IT' },
+  pl: { name: 'Polski', locale: 'pl-PL' },
+  ru: { name: 'Русский', locale: 'ru-RU' },
+  tr: { name: 'Türkçe', locale: 'tr-TR' },
+  'zh-CN': { name: '简体中文', locale: 'zh-CN' },
+  ja: { name: '日本語', locale: 'ja-JP' },
+  ko: { name: '한국어', locale: 'ko-KR' },
+};
+
 const shortcutList = [
   ['Win', 'Lanceur d’applications', 'App launcher'],
   ['Alt+Espace', 'Lanceur d’applications', 'App launcher'],
@@ -223,9 +238,9 @@ const shortcutList = [
 
 const prefixList = [
   ['>', 'Actions', 'Actions'],
-  ['>fond', "Fonds d'écran", 'Wallpapers'],
-  ['>schéma', 'Schémas de couleurs', 'Colour schemes'],
-  ['>variante', 'Variantes dynamiques', 'Dynamic variants'],
+  ['>fond', "Fonds d'écran", 'Wallpapers', '>wallpaper'],
+  ['>schéma', 'Schémas de couleurs', 'Colour schemes', '>scheme'],
+  ['>variante', 'Variantes dynamiques', 'Dynamic variants', '>variant'],
   ['>clip', 'Presse-papiers', 'Clipboard'],
   [':', 'Emojis', 'Emojis'],
   ['2+2', 'Calculatrice', 'Calculator'],
@@ -348,23 +363,88 @@ const sounds = {
   },
 };
 
-function storedLanguage() {
+function languageForTag(tag) {
+  const lower = String(tag ?? '').toLowerCase();
+  if (lower.startsWith('pt')) return 'pt-BR';
+  if (lower.startsWith('zh')) return /^zh-(hant|tw|hk|mo)/.test(lower) ? null : 'zh-CN';
+  const base = lower.split('-')[0];
+  return base in appLanguages ? base : null;
+}
+
+function systemLanguage() {
+  for (const tag of [...(navigator.languages ?? []), navigator.language]) {
+    const match = languageForTag(tag);
+    if (match) return match;
+  }
+  return 'en';
+}
+
+function languageChoice() {
   try {
     const saved = localStorage.getItem('stellaria-launcher:language');
-    if (saved === 'fr' || saved === 'en') return saved;
+    return saved in appLanguages ? saved : 'auto';
   } catch {
-    return 'fr';
+    return 'auto';
   }
-  return 'fr';
+}
+
+function storedLanguage() {
+  const choice = languageChoice();
+  return choice === 'auto' ? systemLanguage() : choice;
+}
+
+const loadedLanguages = {};
+
+async function loadLanguage(code) {
+  if (code === 'fr' || code === 'en' || loadedLanguages[code]) return;
+  try {
+    loadedLanguages[code] = (await import(`./lang/${code}.js`)).default;
+  } catch {
+    loadedLanguages[code] = { strings: {}, labels: {} };
+  }
+}
+
+function locale() {
+  const system = [...(navigator.languages ?? []), navigator.language].find(tag => languageForTag(tag) === state.language);
+  return system ?? appLanguages[state.language]?.locale ?? 'en-GB';
+}
+
+async function setLanguage(choice) {
+  try {
+    localStorage.setItem('stellaria-launcher:language', choice);
+  } catch {
+    return;
+  }
+  state.language = choice === 'auto' ? systemLanguage() : choice;
+  await loadLanguage(state.language);
+  document.documentElement.lang = state.language;
+}
+
+function languageChips(after) {
+  const choice = languageChoice();
+  return element('div', { class: 'chips', role: 'group', 'aria-label': t('language') }, [['auto', t('automatic')], ...Object.entries(appLanguages).map(([code, entry]) => [code, entry.name])].map(([code, label]) => element('button', {
+    class: `chip${code === choice ? ' selected' : ''}`,
+    lang: code === 'auto' ? null : code,
+    'aria-pressed': String(code === choice),
+    onClick: async () => {
+      await setLanguage(code);
+      after();
+    },
+  }, [code === choice ? icon('check') : null, element('span', { text: label })])));
 }
 
 function t(key, ...values) {
-  const text = strings[state.language][key] ?? strings.fr[key] ?? key;
+  const text = strings[state.language]?.[key] ?? loadedLanguages[state.language]?.strings?.[key] ?? strings.en[key] ?? strings.fr[key] ?? key;
   return values.reduce((result, value, index) => result.replace(`{${index}}`, value), text);
 }
 
+function label(fr, en) {
+  if (state.language === 'fr') return fr;
+  return loadedLanguages[state.language]?.labels?.[en] ?? en;
+}
+
 function local(texts) {
-  return texts?.[state.language] ?? texts?.fr ?? texts?.en ?? '';
+  return texts?.[state.language] ?? texts?.en ?? texts?.fr ?? '';
 }
 
 function element(tag, attributes = {}, children = []) {
@@ -931,7 +1011,7 @@ function updateError(error) {
 }
 
 function megabytes(bytes) {
-  return t('megabytes', (bytes / 1048576).toLocaleString(state.language === 'fr' ? 'fr-FR' : 'en-GB', { maximumFractionDigits: 1 }));
+  return t('megabytes', (bytes / 1048576).toLocaleString(locale(), { maximumFractionDigits: 1 }));
 }
 
 async function checkUpdate(quiet = false) {
@@ -1447,8 +1527,8 @@ function mockup(roles) {
     if (roles?.[role]) vars[`--x-${kebab(role)}`] = roles[role];
   }
   const now = new Date();
-  const time = now.toLocaleTimeString(state.language === 'fr' ? 'fr-FR' : 'en-GB', { hour: '2-digit', minute: '2-digit' });
-  const date = now.toLocaleDateString(state.language === 'fr' ? 'fr-FR' : 'en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+  const time = now.toLocaleTimeString(locale(), { hour: '2-digit', minute: '2-digit' });
+  const date = now.toLocaleDateString(locale(), { weekday: 'long', day: 'numeric', month: 'long' });
   const node = element('div', { class: 'mockup', role: 'img', 'aria-label': t('previewTitle') }, [
     state.wallpaperUrl ? element('img', { class: 'mockup-wallpaper', src: state.wallpaperUrl, alt: '' }) : null,
     element('div', { class: 'mockup-frame' }),
@@ -1535,9 +1615,9 @@ async function copyText(text, message) {
 }
 
 function shortcutRows(list, split = true) {
-  return list.map(([keys, fr, en]) => element('div', { class: 'shortcut' }, [
+  return list.map(([frKeys, fr, en, enKeys]) => [state.language === 'fr' ? frKeys : enKeys ?? frKeys.replace('Espace', 'Space'), fr, en]).map(([keys, fr, en]) => element('div', { class: 'shortcut' }, [
     element('span', { class: 'keys' }, (split ? keys.split('+') : [keys]).map(key => element('kbd', { text: key }))),
-    element('span', { class: 'shortcut-label', text: state.language === 'fr' ? fr : en }),
+    element('span', { class: 'shortcut-label', text: label(fr, en) }),
   ]));
 }
 
@@ -1546,7 +1626,7 @@ function shortcutsTab() {
   const body = element('div', { class: 'help-body' });
   const paint = () => {
     const query = state.shortcutQuery.trim().toLowerCase();
-    const match = ([keys, fr, en]) => !query || `${keys} ${fr} ${en}`.toLowerCase().includes(query);
+    const match = ([keys, fr, en, enKeys]) => !query || `${keys} ${enKeys ?? ''} ${fr} ${en} ${label(fr, en)}`.toLowerCase().includes(query);
     const globals = shortcutList.filter(match);
     const prefixes = prefixList.filter(match);
     body.replaceChildren(...[
@@ -1654,22 +1734,10 @@ function newsPage() {
 }
 
 function settingsPage() {
-  const segmented = element('div', { class: 'segmented', role: 'group', 'aria-label': t('language') }, [['fr', 'Français'], ['en', 'English']].map(([code, label]) =>
-    element('button', {
-      class: code === state.language ? 'selected' : '',
-      'aria-pressed': String(code === state.language),
-      onClick: () => {
-        state.language = code;
-        try {
-          localStorage.setItem('stellaria-launcher:language', code);
-        } catch {
-          notify(label);
-        }
-        document.documentElement.lang = code;
-        render();
-        syncTray();
-      },
-    }, label)));
+  const segmented = languageChips(() => {
+    render();
+    syncTray();
+  });
   const soundOn = sounds.enabled();
   const soundToggle = element('div', { class: 'segmented', role: 'group', 'aria-label': t('sound') }, [[true, t('soundOn')], [false, t('soundOff')]].map(([value, label]) =>
     element('button', {
@@ -1711,11 +1779,12 @@ function settingsPage() {
       },
     }, label)));
   const catalog = state.catalog;
-  const expires = catalog?.expires ? new Date(catalog.expires).toLocaleDateString(state.language === 'fr' ? 'fr-FR' : 'en-GB') : '—';
+  const expires = catalog?.expires ? new Date(catalog.expires).toLocaleDateString(locale()) : '—';
   return [
     element('section', { class: 'section' }, [
       element('div', { class: 'section-title' }, [element('span', { text: t('language') })]),
-      element('div', { class: 'row' }, [icon('translate', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('languageText') })]), segmented]),
+      element('div', { class: 'row' }, [icon('translate', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('languageText') })])]),
+      element('div', { class: 'language-chips' }, segmented),
     ]),
     element('section', { class: 'section' }, [
       element('div', { class: 'section-title' }, [element('span', { text: t('sound') })]),
@@ -1910,18 +1979,11 @@ const onboarding = {
         element('div', { class: 'welcome-mark' }, [shape(9, 0.07), icon('auto_awesome')]),
         element('h2', { text: t('welcome') }),
         element('p', { text: t('welcomeText') }),
-        element('div', { class: 'segmented', role: 'group', 'aria-label': t('language') }, [['fr', 'Français'], ['en', 'English']].map(([code, label]) => element('button', {
-          class: code === state.language ? 'selected' : '',
-          'aria-pressed': String(code === state.language),
-          onClick: () => {
-            state.language = code;
-            store('language', code);
-            document.documentElement.lang = code;
-            render();
-            syncTray();
-            this.paint();
-          },
-        }, label))),
+        languageChips(() => {
+          render();
+          syncTray();
+          this.paint();
+        }),
       ];
     } else if (this.step === 1) {
       const options = presets().slice(0, 8);
@@ -2100,6 +2162,7 @@ window.addEventListener('focus', () => {
 });
 
 document.documentElement.lang = state.language;
+await loadLanguage(state.language);
 await Promise.allSettled([loadSchemes(), refreshInstall(), sounds.preload(), loadWallpaper()]);
 paintRail();
 paintConnection();
