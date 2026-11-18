@@ -4,7 +4,7 @@
 
 | File | Contents |
 | --- | --- |
-| `StellariaSetup-<version>.exe` | Per-user Inno Setup installer (English and French). |
+| `StellariaSetup-<version>.exe` | Per-user Inno Setup installer in eleven languages (English, French, Spanish, German, Brazilian Portuguese, Italian, Polish, Russian, Turkish, Japanese and Korean). |
 | `Stellaria-<version>-portable.zip` | The pack, the helper, the switcher, the Stellaria app, `scripts\install.ps1` and `scripts\uninstall.ps1`. |
 | `SHA256SUMS.txt` | SHA-256 of the two files above. |
 | `update.json`, `update.json.minisig` | The update manifest read by the Stellaria app (version, setup name, size and SHA-256), signed with the catalogue key. Only for `x.y.z` versions built with `STELLARIA_SIGNING_KEY`. |
