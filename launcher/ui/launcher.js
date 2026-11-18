@@ -20,12 +20,13 @@ const strings = {
     installed: 'Installé', core: 'Thème', presetsTitle: 'Préréglages',
     presetsText: "Un préréglage modifie uniquement les couleurs et quelques options visuelles. Rien n'est installé, et Annuler rétablit l'apparence précédente.",
     zebar: 'Zebar', tasks: 'Démarrage automatique', tasksOk: 'Les trois tâches sont en place', tasksMissing: 'Tâches manquantes. Cliquez sur Réparer.',
-    language: 'Langue', languageText: "Langue de l'application",
+    language: 'Langue', languageText: "Langue de l'application", automatic: 'Automatique (langue de Windows)',
     sound: 'Sons', soundText: "Sons de l'application (ouverture, fermeture, notifications et mises à jour)", soundOn: 'Activé', soundOff: 'Désactivé',
     catalog: 'Catalogue', catalogText: "Version {0}, valide jusqu'au {1} ({2})", refresh: 'Actualiser',
     sources: { online: 'en ligne', cache: 'copie locale', bundled: "fourni avec l'installation", none: 'aucun' },
     about: 'À propos', aboutText: 'Logiciel libre sous licence GPL-3.0, basé sur Caelestia de soramanew et ses contributeurs.',
     project: 'Page du projet', readMore: 'En savoir plus', noNews: 'Aucune actualité pour le moment.',
+    newsAll: 'Tout', newsRelease: 'Versions', newsAnnouncement: 'Annonces', newsCommunity: 'Communauté', newsTip: 'Astuces', newsNew: 'Nouveau', newsEarlier: 'Plus tôt', newsKindRelease: 'Version', newsKindAnnouncement: 'Annonce', newsKindCommunity: 'Communauté', newsKindTip: 'Astuce',
     confirmTitle: 'Appliquer ce préréglage ?', confirmText: "Un lien demande d'appliquer le préréglage « {0} ». Vos paramètres actuels sont conservés pour que vous puissiez annuler.",
     unknownLink: 'Lien Stellaria non reconnu.', cancel: 'Annuler',
     helperMissing: 'Service Stellaria introuvable. Réinstallez Stellaria.',
@@ -116,12 +117,13 @@ const strings = {
     installed: 'Installed', core: 'The theme', presetsTitle: 'Presets',
     presetsText: 'Presets only change colours and a few visual options. Nothing is installed: Undo goes back to the previous look.',
     zebar: 'Zebar', tasks: 'Start with Windows', tasksOk: 'The three tasks are in place', tasksMissing: 'Missing tasks: use Repair',
-    language: 'Language', languageText: 'App language',
+    language: 'Language', languageText: 'App language', automatic: 'Automatic (Windows language)',
     sound: 'Sound', soundText: 'Play the app sounds (opening, closing, notifications, updates)', soundOn: 'On', soundOff: 'Off',
     catalog: 'Catalogue', catalogText: 'Version {0}, valid until {1} ({2})', refresh: 'Refresh',
     sources: { online: 'online', cache: 'local copy', bundled: 'shipped with the setup', none: 'none' },
     about: 'About', aboutText: 'Free software under the GPL-3.0 licence, based on Caelestia by soramanew and contributors.',
     project: 'Project page', readMore: 'Read more', noNews: 'No news yet.',
+    newsAll: 'All', newsRelease: 'Releases', newsAnnouncement: 'Announcements', newsCommunity: 'Community', newsTip: 'Tips', newsNew: 'New', newsEarlier: 'Earlier', newsKindRelease: 'Release', newsKindAnnouncement: 'Announcement', newsKindCommunity: 'Community', newsKindTip: 'Tip',
     confirmTitle: 'Apply this preset?', confirmText: 'A link asks to apply “{0}”. Your current settings are kept so you can undo.',
     unknownLink: 'This Stellaria link is not recognised.', cancel: 'Cancel',
     helperMissing: 'Stellaria service not found. Reinstall Stellaria.',
@@ -207,6 +209,21 @@ const pages = [
   ['settings', 'settings'],
 ];
 
+const appLanguages = {
+  fr: { name: 'Français', locale: 'fr-FR' },
+  en: { name: 'English', locale: 'en-GB' },
+  es: { name: 'Español', locale: 'es-ES' },
+  de: { name: 'Deutsch', locale: 'de-DE' },
+  'pt-BR': { name: 'Português (Brasil)', locale: 'pt-BR' },
+  it: { name: 'Italiano', locale: 'it-IT' },
+  pl: { name: 'Polski', locale: 'pl-PL' },
+  ru: { name: 'Русский', locale: 'ru-RU' },
+  tr: { name: 'Türkçe', locale: 'tr-TR' },
+  'zh-CN': { name: '简体中文', locale: 'zh-CN' },
+  ja: { name: '日本語', locale: 'ja-JP' },
+  ko: { name: '한국어', locale: 'ko-KR' },
+};
+
 const shortcutList = [
   ['Win', 'Lanceur d’applications', 'App launcher'],
   ['Alt+Espace', 'Lanceur d’applications', 'App launcher'],
@@ -223,9 +240,9 @@ const shortcutList = [
 
 const prefixList = [
   ['>', 'Actions', 'Actions'],
-  ['>fond', "Fonds d'écran", 'Wallpapers'],
-  ['>schéma', 'Schémas de couleurs', 'Colour schemes'],
-  ['>variante', 'Variantes dynamiques', 'Dynamic variants'],
+  ['>fond', "Fonds d'écran", 'Wallpapers', '>wallpaper'],
+  ['>schéma', 'Schémas de couleurs', 'Colour schemes', '>scheme'],
+  ['>variante', 'Variantes dynamiques', 'Dynamic variants', '>variant'],
   ['>clip', 'Presse-papiers', 'Clipboard'],
   [':', 'Emojis', 'Emojis'],
   ['2+2', 'Calculatrice', 'Calculator'],
@@ -255,6 +272,9 @@ const state = {
   log: null,
   themeRoles: null,
   wallpaperUrl: null,
+  newsFilter: 'all',
+  newsSeen: stored('news-seen', ''),
+  newsMarked: stored('news-seen', ''),
 };
 
 function stored(key, fallback) {
@@ -348,23 +368,88 @@ const sounds = {
   },
 };
 
-function storedLanguage() {
+function languageForTag(tag) {
+  const lower = String(tag ?? '').toLowerCase();
+  if (lower.startsWith('pt')) return 'pt-BR';
+  if (lower.startsWith('zh')) return /^zh-(hant|tw|hk|mo)/.test(lower) ? null : 'zh-CN';
+  const base = lower.split('-')[0];
+  return base in appLanguages ? base : null;
+}
+
+function systemLanguage() {
+  for (const tag of [...(navigator.languages ?? []), navigator.language]) {
+    const match = languageForTag(tag);
+    if (match) return match;
+  }
+  return 'en';
+}
+
+function languageChoice() {
   try {
     const saved = localStorage.getItem('stellaria-launcher:language');
-    if (saved === 'fr' || saved === 'en') return saved;
+    return saved in appLanguages ? saved : 'auto';
   } catch {
-    return 'fr';
+    return 'auto';
   }
-  return 'fr';
+}
+
+function storedLanguage() {
+  const choice = languageChoice();
+  return choice === 'auto' ? systemLanguage() : choice;
+}
+
+const loadedLanguages = {};
+
+async function loadLanguage(code) {
+  if (code === 'fr' || code === 'en' || loadedLanguages[code]) return;
+  try {
+    loadedLanguages[code] = (await import(`./lang/${code}.js`)).default;
+  } catch {
+    loadedLanguages[code] = { strings: {}, labels: {} };
+  }
+}
+
+function locale() {
+  const system = [...(navigator.languages ?? []), navigator.language].find(tag => languageForTag(tag) === state.language);
+  return system ?? appLanguages[state.language]?.locale ?? 'en-GB';
+}
+
+async function setLanguage(choice) {
+  try {
+    localStorage.setItem('stellaria-launcher:language', choice);
+  } catch {
+    return;
+  }
+  state.language = choice === 'auto' ? systemLanguage() : choice;
+  await loadLanguage(state.language);
+  document.documentElement.lang = state.language;
+}
+
+function languageChips(after) {
+  const choice = languageChoice();
+  return element('div', { class: 'chips', role: 'group', 'aria-label': t('language') }, [['auto', t('automatic')], ...Object.entries(appLanguages).map(([code, entry]) => [code, entry.name])].map(([code, label]) => element('button', {
+    class: `chip${code === choice ? ' selected' : ''}`,
+    lang: code === 'auto' ? null : code,
+    'aria-pressed': String(code === choice),
+    onClick: async () => {
+      await setLanguage(code);
+      after();
+    },
+  }, [code === choice ? icon('check') : null, element('span', { text: label })])));
 }
 
 function t(key, ...values) {
-  const text = strings[state.language][key] ?? strings.fr[key] ?? key;
+  const text = strings[state.language]?.[key] ?? loadedLanguages[state.language]?.strings?.[key] ?? strings.en[key] ?? strings.fr[key] ?? key;
   return values.reduce((result, value, index) => result.replace(`{${index}}`, value), text);
 }
 
+function label(fr, en) {
+  if (state.language === 'fr') return fr;
+  return loadedLanguages[state.language]?.labels?.[en] ?? en;
+}
+
 function local(texts) {
-  return texts?.[state.language] ?? texts?.fr ?? texts?.en ?? '';
+  return texts?.[state.language] ?? texts?.en ?? texts?.fr ?? '';
 }
 
 function element(tag, attributes = {}, children = []) {
@@ -931,7 +1016,7 @@ function updateError(error) {
 }
 
 function megabytes(bytes) {
-  return t('megabytes', (bytes / 1048576).toLocaleString(state.language === 'fr' ? 'fr-FR' : 'en-GB', { maximumFractionDigits: 1 }));
+  return t('megabytes', (bytes / 1048576).toLocaleString(locale(), { maximumFractionDigits: 1 }));
 }
 
 async function checkUpdate(quiet = false) {
@@ -1198,10 +1283,24 @@ function setupSection() {
   ]);
 }
 
+async function wallpaperBlob() {
+  if (state.connected) {
+    try {
+      const preview = await helper.request('launcher.wallpaper');
+      if (preview?.image) {
+        const bytes = Uint8Array.from(atob(preview.image), character => character.charCodeAt(0));
+        return new Blob([bytes], { type: 'image/png' });
+      }
+    } catch {
+      return new Blob([await invoke('wallpaper')]);
+    }
+  }
+  return new Blob([await invoke('wallpaper')]);
+}
+
 async function loadWallpaper() {
   try {
-    const data = await invoke('wallpaper');
-    const url = URL.createObjectURL(new Blob([data]));
+    const url = URL.createObjectURL(await wallpaperBlob());
     if (state.wallpaperUrl) URL.revokeObjectURL(state.wallpaperUrl);
     state.wallpaperUrl = url;
   } catch {
@@ -1447,8 +1546,8 @@ function mockup(roles) {
     if (roles?.[role]) vars[`--x-${kebab(role)}`] = roles[role];
   }
   const now = new Date();
-  const time = now.toLocaleTimeString(state.language === 'fr' ? 'fr-FR' : 'en-GB', { hour: '2-digit', minute: '2-digit' });
-  const date = now.toLocaleDateString(state.language === 'fr' ? 'fr-FR' : 'en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+  const time = now.toLocaleTimeString(locale(), { hour: '2-digit', minute: '2-digit' });
+  const date = now.toLocaleDateString(locale(), { weekday: 'long', day: 'numeric', month: 'long' });
   const node = element('div', { class: 'mockup', role: 'img', 'aria-label': t('previewTitle') }, [
     state.wallpaperUrl ? element('img', { class: 'mockup-wallpaper', src: state.wallpaperUrl, alt: '' }) : null,
     element('div', { class: 'mockup-frame' }),
@@ -1535,9 +1634,9 @@ async function copyText(text, message) {
 }
 
 function shortcutRows(list, split = true) {
-  return list.map(([keys, fr, en]) => element('div', { class: 'shortcut' }, [
+  return list.map(([frKeys, fr, en, enKeys]) => [state.language === 'fr' ? frKeys : enKeys ?? frKeys.replace('Espace', 'Space'), fr, en]).map(([keys, fr, en]) => element('div', { class: 'shortcut' }, [
     element('span', { class: 'keys' }, (split ? keys.split('+') : [keys]).map(key => element('kbd', { text: key }))),
-    element('span', { class: 'shortcut-label', text: state.language === 'fr' ? fr : en }),
+    element('span', { class: 'shortcut-label', text: label(fr, en) }),
   ]));
 }
 
@@ -1546,7 +1645,7 @@ function shortcutsTab() {
   const body = element('div', { class: 'help-body' });
   const paint = () => {
     const query = state.shortcutQuery.trim().toLowerCase();
-    const match = ([keys, fr, en]) => !query || `${keys} ${fr} ${en}`.toLowerCase().includes(query);
+    const match = ([keys, fr, en, enKeys]) => !query || `${keys} ${enKeys ?? ''} ${fr} ${en} ${label(fr, en)}`.toLowerCase().includes(query);
     const globals = shortcutList.filter(match);
     const prefixes = prefixList.filter(match);
     body.replaceChildren(...[
@@ -1639,37 +1738,158 @@ function helpPage() {
   return [tabs, ...(state.helpTab === 'shortcuts' ? shortcutsTab() : troubleTab())];
 }
 
+const newsKinds = {
+  release: ['rocket_launch', 'newsRelease', 'newsKindRelease'],
+  announcement: ['campaign', 'newsAnnouncement', 'newsKindAnnouncement'],
+  community: ['diversity_3', 'newsCommunity', 'newsKindCommunity'],
+  tip: ['lightbulb', 'newsTip', 'newsKindTip'],
+};
+
+const newsKind = item => (newsKinds[item.kind] ? item.kind : 'announcement');
+
+function newsItems() {
+  return [...(state.catalog?.news ?? [])].sort((a, b) => String(b.date ?? '').localeCompare(String(a.date ?? '')));
+}
+
+function newsDate(value) {
+  const date = new Date(`${value}T12:00:00`);
+  return Number.isNaN(date.getTime()) ? String(value ?? '') : new Intl.DateTimeFormat(locale(), { dateStyle: 'long' }).format(date);
+}
+
+function newsFresh(item, seen) {
+  const age = Date.now() - new Date(`${item.date}T12:00:00`).getTime();
+  if (!(age < 45 * 86400000)) return false;
+  return seen ? String(item.date ?? '') > seen : item === newsItems()[0] || item.id === newsItems()[0]?.id;
+}
+
+const newsUnread = () => newsItems().some(item => newsFresh(item, state.newsSeen));
+
+function markNewsSeen() {
+  const latest = newsItems()[0]?.date;
+  if (!latest || latest <= state.newsSeen) return;
+  state.newsSeen = latest;
+  store('news-seen', latest);
+}
+
+const openNews = item => () => invoke('open_external', { url: item.url }).catch(() => notify(t('offline'), 'warning'));
+
+function newsMeta(item, fresh) {
+  const [symbol, , key] = newsKinds[newsKind(item)];
+  return element('div', { class: 'news-meta' }, [
+    element('span', { class: 'news-kind' }, [icon(symbol), element('span', { text: t(key) })]),
+    item.version ? element('span', { class: 'news-version', text: `v${item.version}` }) : null,
+    fresh ? element('span', { class: 'news-new', text: t('newsNew') }) : null,
+    element('time', { datetime: item.date, text: newsDate(item.date) }),
+  ]);
+}
+
+function highlightText(text) {
+  const [keys, label] = text.split(' · ');
+  if (!label || !/^[\w.]+(\+[\w.]+)+$/.test(keys)) return element('span', { text });
+  return element('span', { class: 'news-shortcut' }, [
+    element('span', { class: 'news-keys' }, keys.split('+').map(key => element('kbd', { text: key }))),
+    element('span', { text: label }),
+  ]);
+}
+
+function newsHighlights(item) {
+  const highlights = (item.highlights ?? []).filter(entry => local(entry.text));
+  return highlights.length
+    ? element('ul', { class: 'news-highlights' }, highlights.map(entry => element('li', {}, [
+      element('span', { class: 'news-highlight-icon' }, icon(entry.icon ?? 'check')),
+      highlightText(local(entry.text)),
+    ])))
+    : null;
+}
+
+function newsFeature(item) {
+  const kind = newsKind(item);
+  return element('article', { class: `news-feature hero kind-${kind}` }, [
+    element('div', { class: 'hero-ornament' }, shape(7, 0.12)),
+    element('div', { class: 'news-feature-head' }, [
+      element('div', { class: 'hero-mark news-mark' }, [shape(9, 0.07), icon(newsKinds[kind][0])]),
+      newsMeta(item, newsFresh(item, state.newsMarked)),
+    ]),
+    element('h2', { text: local(item.title) }),
+    element('p', { class: 'news-lead', text: local(item.body) }),
+    newsHighlights(item),
+    item.url ? element('div', { class: 'actions' }, [button(t('readMore'), 'open_in_new', openNews(item), { variant: 'filled' })]) : null,
+  ]);
+}
+
+function newsEntry(item) {
+  const kind = newsKind(item);
+  return element('article', { class: `news-entry kind-${kind}` }, [
+    element('div', { class: 'news-node' }, icon(newsKinds[kind][0])),
+    element('div', { class: 'news-entry-body' }, [
+      newsMeta(item, newsFresh(item, state.newsMarked)),
+      element('h3', { text: local(item.title) }),
+      element('p', { text: local(item.body) }),
+      newsHighlights(item),
+      item.url ? element('div', { class: 'actions' }, [button(t('readMore'), 'open_in_new', openNews(item), { variant: 'text' })]) : null,
+    ]),
+  ]);
+}
+
 function newsCard(item, label = '') {
-  return element('article', { class: 'news' }, [
-    element('time', { text: [label, item.date].filter(Boolean).join(' · ') }),
-    element('h3', { text: local(item.title) }),
-    element('p', { text: local(item.body) }),
-    item.url ? element('div', { class: 'actions' }, [button(t('readMore'), 'open_in_new', () => invoke('open_external', { url: item.url }).catch(() => {}), { variant: 'text' })]) : null,
+  const kind = newsKind(item);
+  return element('article', { class: `news news-teaser kind-${kind} state-layer`, role: 'button', tabindex: '0', onClick: () => showPage('news'), onKeydown: event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      showPage('news');
+    }
+  } }, [
+    element('div', { class: 'news-node' }, icon(newsKinds[kind][0])),
+    element('div', { class: 'news-entry-body' }, [
+      element('div', { class: 'news-meta' }, [
+        label ? element('span', { class: 'news-kind', text: label }) : null,
+        item.version ? element('span', { class: 'news-version', text: `v${item.version}` }) : null,
+        newsFresh(item, state.newsSeen) ? element('span', { class: 'news-new', text: t('newsNew') }) : null,
+        element('time', { datetime: item.date, text: newsDate(item.date) }),
+      ]),
+      element('h3', { text: local(item.title) }),
+      element('p', { text: local(item.body) }),
+    ]),
+    icon('arrow_forward', 'news-go'),
   ]);
 }
 
 function newsPage() {
-  const news = state.catalog?.news ?? [];
-  return news.length ? news.map(item => newsCard(item)) : [element('div', { class: 'empty' }, [icon('newspaper'), element('span', { text: t('noNews') })])];
+  const all = newsItems();
+  if (!all.length) return [element('div', { class: 'empty' }, [icon('newspaper'), element('span', { text: t('noNews') })])];
+  const kinds = Object.keys(newsKinds).filter(kind => all.some(item => newsKind(item) === kind));
+  if (state.newsFilter !== 'all' && !kinds.includes(state.newsFilter)) state.newsFilter = 'all';
+  const shown = all.filter(item => state.newsFilter === 'all' || newsKind(item) === state.newsFilter);
+  const filters = kinds.length > 1
+    ? element('div', { class: 'chips news-filters', role: 'tablist' }, [['all', 'newspaper', 'newsAll'], ...kinds.map(kind => [kind, ...newsKinds[kind]])].map(([id, symbol, key]) => element('button', {
+      class: `chip${id === state.newsFilter ? ' selected' : ''}`,
+      role: 'tab',
+      'aria-selected': String(id === state.newsFilter),
+      onClick: () => {
+        state.newsFilter = id;
+        render(true);
+      },
+    }, [icon(id === state.newsFilter ? 'check' : symbol), element('span', { text: t(key) })])))
+    : null;
+  const [first, ...rest] = shown;
+  if (!first) return [filters];
+  return [
+    filters,
+    first ? newsFeature(first) : null,
+    rest.length
+      ? element('section', { class: 'news-timeline' }, [
+        element('div', { class: 'section-title' }, [element('span', { text: t('newsEarlier') })]),
+        ...rest.map(newsEntry),
+      ])
+      : null,
+  ];
 }
 
 function settingsPage() {
-  const segmented = element('div', { class: 'segmented', role: 'group', 'aria-label': t('language') }, [['fr', 'Français'], ['en', 'English']].map(([code, label]) =>
-    element('button', {
-      class: code === state.language ? 'selected' : '',
-      'aria-pressed': String(code === state.language),
-      onClick: () => {
-        state.language = code;
-        try {
-          localStorage.setItem('stellaria-launcher:language', code);
-        } catch {
-          notify(label);
-        }
-        document.documentElement.lang = code;
-        render();
-        syncTray();
-      },
-    }, label)));
+  const segmented = languageChips(() => {
+    render();
+    syncTray();
+  });
   const soundOn = sounds.enabled();
   const soundToggle = element('div', { class: 'segmented', role: 'group', 'aria-label': t('sound') }, [[true, t('soundOn')], [false, t('soundOff')]].map(([value, label]) =>
     element('button', {
@@ -1711,11 +1931,12 @@ function settingsPage() {
       },
     }, label)));
   const catalog = state.catalog;
-  const expires = catalog?.expires ? new Date(catalog.expires).toLocaleDateString(state.language === 'fr' ? 'fr-FR' : 'en-GB') : '—';
+  const expires = catalog?.expires ? new Date(catalog.expires).toLocaleDateString(locale()) : '—';
   return [
     element('section', { class: 'section' }, [
       element('div', { class: 'section-title' }, [element('span', { text: t('language') })]),
-      element('div', { class: 'row' }, [icon('translate', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('languageText') })]), segmented]),
+      element('div', { class: 'row' }, [icon('translate', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('languageText') })])]),
+      element('div', { class: 'language-chips' }, segmented),
     ]),
     element('section', { class: 'section' }, [
       element('div', { class: 'section-title' }, [element('span', { text: t('sound') })]),
@@ -1775,7 +1996,7 @@ function paintRail() {
     class: `rail-item${id === current ? ' current' : ''}`,
     'aria-current': id === current ? 'page' : null,
     onClick: () => showPage(id),
-  }, [element('span', { class: 'rail-pill' }, icon(symbol)), element('span', { text: t(id) })])));
+  }, [element('span', { class: 'rail-pill' }, [icon(symbol), id === 'news' && newsUnread() ? element('span', { class: 'rail-dot', 'aria-hidden': 'true' }) : null]), element('span', { text: t(id) })])));
 }
 
 function render(animate = false) {
@@ -1793,6 +2014,7 @@ function showPage(id) {
   const changed = id !== state.page;
   hoverPreview.leave();
   state.page = id;
+  if (id === 'news') markNewsSeen();
   nodes.pages.scrollTop = 0;
   if (changed) {
     morph.to(...(pageShapes[id] ?? pageShapes.home));
@@ -1910,18 +2132,11 @@ const onboarding = {
         element('div', { class: 'welcome-mark' }, [shape(9, 0.07), icon('auto_awesome')]),
         element('h2', { text: t('welcome') }),
         element('p', { text: t('welcomeText') }),
-        element('div', { class: 'segmented', role: 'group', 'aria-label': t('language') }, [['fr', 'Français'], ['en', 'English']].map(([code, label]) => element('button', {
-          class: code === state.language ? 'selected' : '',
-          'aria-pressed': String(code === state.language),
-          onClick: () => {
-            state.language = code;
-            store('language', code);
-            document.documentElement.lang = code;
-            render();
-            syncTray();
-            this.paint();
-          },
-        }, label))),
+        languageChips(() => {
+          render();
+          syncTray();
+          this.paint();
+        }),
       ];
     } else if (this.step === 1) {
       const options = presets().slice(0, 8);
@@ -2100,6 +2315,7 @@ window.addEventListener('focus', () => {
 });
 
 document.documentElement.lang = state.language;
+await loadLanguage(state.language);
 await Promise.allSettled([loadSchemes(), refreshInstall(), sounds.preload(), loadWallpaper()]);
 paintRail();
 paintConnection();
@@ -2130,19 +2346,41 @@ appWindow.onCloseRequested(async event => {
       appWindow.destroy();
       return;
     }
-    await appWindow.hide();
-    closing = false;
+    try {
+      await appWindow.hide();
+    } catch {
+      document.body.classList.remove('closing');
+    } finally {
+      closing = false;
+    }
   }, wait);
 });
+
+function ensureShown() {
+  if (closing) return;
+  document.body.classList.remove('closing');
+  document.body.classList.add('open');
+}
+
 listen('reopened', () => {
+  closing = false;
   document.body.classList.remove('closing', 'open');
-  requestAnimationFrame(() => {
+  let shown = false;
+  const show = () => {
+    if (shown) return;
+    shown = true;
     document.body.classList.add('open');
     render(true);
     sounds.play('start');
     if (state.connected) refreshAll();
     else refreshInstall().then(() => render());
-  });
+  };
+  requestAnimationFrame(show);
+  setTimeout(show, 120);
+});
+window.addEventListener('focus', ensureShown);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') setTimeout(ensureShown, 150);
 });
 listen('open-page', event => showPage(event.payload));
 setTimeout(async () => {

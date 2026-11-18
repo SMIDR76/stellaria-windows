@@ -8,6 +8,7 @@ import {
   icon,
   initTheme,
   keys,
+  languages,
   loadSchemes,
   openFolder,
   openLauncher,
@@ -15,6 +16,7 @@ import {
   setupPopup,
   shapeSvg,
   store,
+  t,
   toast,
   variants,
 } from './common.js';
@@ -114,7 +116,7 @@ function optionRow(name, fallback, symbol, label, description) {
     description,
     control: switchControl(Boolean(getOption(name, fallback)), value => {
       setOption(name, value);
-      toast(label, { message: value ? 'Activé' : 'Désactivé', icon: symbol });
+      toast(label, { message: t(value ? 'Activé' : 'Désactivé'), icon: symbol });
     }),
   });
 }
@@ -122,17 +124,29 @@ function optionRow(name, fallback, symbol, label, description) {
 function appearancePage() {
   const mode = store.get(keys.mode, 'dark') === 'light' ? 'light' : 'dark';
   const segmented = element('div', { class: 'segmented' });
-  const modes = [['dark', 'dark_mode', 'Sombre'], ['light', 'light_mode', 'Clair']];
+  const modes = [['dark', 'dark_mode', t('Sombre')], ['light', 'light_mode', t('Clair')]];
   const renderModes = current => segmented.replaceChildren(...modes.map(([id, symbol, label]) => element('button', {
     class: id === current ? 'selected' : '',
     onClick: () => {
       store.set(keys.mode, id);
       applyTheme();
       renderModes(id);
-      toast('Mode', { message: label, icon: symbol });
+      toast(t('Mode'), { message: label, icon: symbol });
     },
   }, [icon(symbol), element('span', { text: label })])));
   renderModes(mode);
+
+  const languageChoice = getOption('language', 'auto') in languages ? getOption('language', 'auto') : 'auto';
+  const languageControl = element('div', { class: 'chips' }, [
+    ['auto', t('Automatique')],
+    ...Object.entries(languages).map(([id, entry]) => [id, entry.name]),
+  ].map(([id, label]) => element('button', {
+    class: `chip${id === languageChoice ? ' selected' : ''}`,
+    lang: id === 'auto' ? null : id,
+    onClick: () => {
+      if (id !== getOption('language', 'auto')) setOption('language', id);
+    },
+  }, [id === languageChoice ? icon('check') : null, element('span', { text: label })])));
 
   const grid = element('div', { class: 'scheme-grid' });
   const chips = element('div', { class: 'chips' });
@@ -145,9 +159,9 @@ function appearancePage() {
         store.set(keys.scheme, null);
         applyTheme();
         renderSchemes();
-        toast('Schéma de couleurs', { message: "Dynamique (fond d'écran)", icon: 'palette' });
+        toast(t('Schéma de couleurs'), { message: t("Dynamique (fond d'écran)"), icon: 'palette' });
       },
-    }, [element('div', { class: 'scheme-swatches dynamic' }, icon('wallpaper')), element('span', { text: 'Dynamique' })])];
+    }, [element('div', { class: 'scheme-swatches dynamic' }, icon('wallpaper')), element('span', { text: t('Dynamique') })])];
 
     for (const [name, flavours] of Object.entries(schemeBundle ?? {})) {
       for (const [flavour, modesOfScheme] of Object.entries(flavours)) {
@@ -161,7 +175,7 @@ function appearancePage() {
             store.set(keys.scheme, { name, flavour });
             applyTheme();
             renderSchemes();
-            toast('Schéma de couleurs', { message: label, icon: 'palette' });
+            toast(t('Schéma de couleurs'), { message: label, icon: 'palette' });
           },
         }, [
           element('div', { class: 'scheme-swatches' }, [roles.primary, roles.secondary, roles.tertiary].map(color => element('span', { style: { background: color } }))),
@@ -179,7 +193,7 @@ function appearancePage() {
         store.set(keys.scheme, null);
         applyTheme();
         renderSchemes();
-        toast('Variante dynamique', { message: variant.label, icon: 'tune' });
+        toast(t('Variante dynamique'), { message: variant.label, icon: 'tune' });
       },
     }, [!selection && id === currentVariant ? icon('check') : null, element('span', { text: variant.label })])));
   };
@@ -188,47 +202,48 @@ function appearancePage() {
   const selection = store.get(keys.scheme, null);
   const schemeLabel = selection
     ? `${schemeNames[selection.name] ?? capitalize(selection.name)}${selection.flavour === 'default' || selection.flavour === 'medium' ? '' : ` ${capitalize(selection.flavour)}`}`
-    : `Dynamique · ${variants[store.get(keys.variant, 'tonalspot')]?.label ?? ''}`;
-  const modeLabel = { dark: 'Sombre', light: 'Clair' }[mode];
+    : t('Dynamique · {0}', variants[store.get(keys.variant, 'tonalspot')]?.label ?? '');
+  const modeLabel = t({ dark: 'Sombre', light: 'Clair' }[mode]);
   return [
     pageHero({
       symbol: 'palette',
       shape: 'flower',
-      heading: 'Couleurs et mode',
-      text: "Une palette Material You complète, tirée de votre fond d'écran ou d'un schéma fixe, appliquée à tout le thème.",
+      heading: t('Couleurs et mode'),
+      text: t("Une palette Material You complète, tirée de votre fond d'écran ou d'un schéma fixe, appliquée à tout le thème."),
       chips: [
         element('span', { class: 'hero-chip hero-swatches' }, [element('i', { class: 'primary' }), element('i', { class: 'secondary' }), element('i', { class: 'tertiary' })]),
         heroChip(modeLabel, mode === 'light' ? 'light_mode' : 'dark_mode'),
         heroChip(schemeLabel, 'colors'),
       ],
     }),
-    section('Mode', [row({ symbol: 'contrast', label: 'Clair ou sombre', description: 'Choisissez le mode de couleur du thème', control: segmented })]),
-    section('Schéma de couleurs', [grid]),
-    section('Variante du schéma dynamique', [
+    section(t('Mode'), [row({ symbol: 'contrast', label: t('Clair ou sombre'), description: t('Choisissez le mode de couleur du thème'), control: segmented })]),
+    section(t('Schéma de couleurs'), [grid]),
+    section(t('Variante du schéma dynamique'), [
       chips,
-      optionRow('smartScheme', true, 'auto_awesome', 'Schéma intelligent', "Fond d'écran en noir et blanc : palette monochrome au lieu d'une teinte inventée"),
+      optionRow('smartScheme', true, 'auto_awesome', t('Schéma intelligent'), t("Fond d'écran en noir et blanc : palette monochrome au lieu d'une teinte inventée")),
     ]),
-    section('Windows', [
-      optionRow('windowsColors', false, 'desktop_windows', 'Accorder Windows au thème', "L'accent et le mode clair ou sombre de Windows suivent le thème : Paramètres, Explorateur, menu Démarrer. Vos couleurs d'avant reviennent si vous désactivez."),
-      optionRow('windowsTitleBars', false, 'web_asset', 'Barres de titre colorées', "Les barres de titre des fenêtres prennent la couleur d'accent (avec l'option ci-dessus)"),
+    section(t('Langue'), [row({ symbol: 'language', label: t('Langue du thème'), description: t('Automatique suit la langue d’affichage de Windows') }), languageControl]),
+    section(t('Windows'), [
+      optionRow('windowsColors', false, 'desktop_windows', t('Accorder Windows au thème'), t("L'accent et le mode clair ou sombre de Windows suivent le thème : Paramètres, Explorateur, menu Démarrer. Vos couleurs d'avant reviennent si vous désactivez.")),
+      optionRow('windowsTitleBars', false, 'web_asset', t('Barres de titre colorées'), t("Les barres de titre des fenêtres prennent la couleur d'accent (avec l'option ci-dessus)")),
     ]),
   ];
 }
 
 function wallpaperPage() {
-  const field = element('input', { class: 'field', type: 'text', spellcheck: 'false', value: getOption('wallpaperDirectory', ''), placeholder: 'Images (dossier par défaut)' });
+  const field = element('input', { class: 'field', type: 'text', spellcheck: 'false', value: getOption('wallpaperDirectory', ''), placeholder: t('Images (dossier par défaut)') });
   const save = element('button', {
     class: 'button filled',
     onClick: () => {
       const value = field.value.trim();
       if (value && !/^[A-Za-z]:\\/.test(value)) {
-        toast('Dossier invalide', { message: 'Indique un chemin complet, par exemple C:\\Images', icon: 'error', kind: 'warning' });
+        toast(t('Dossier invalide'), { message: t('Indique un chemin complet, par exemple C:\\Images'), icon: 'error', kind: 'warning' });
         return;
       }
       setOption('wallpaperDirectory', value);
-      toast("Dossier des fonds d'écran", { message: value || 'Images (dossier par défaut)', icon: 'folder' });
+      toast(t("Dossier des fonds d'écran"), { message: value || t('Images (dossier par défaut)'), icon: 'folder' });
     },
-  }, [icon('save'), element('span', { text: 'Enregistrer' })]);
+  }, [icon('save'), element('span', { text: t('Enregistrer') })]);
 
   const sample = store.get(keys.wallpaperSample, null);
   const image = sample ? `url(data:image/png;base64,${sample})` : null;
@@ -236,20 +251,20 @@ function wallpaperPage() {
   return [
     pageHero({
       symbol: 'wallpaper',
-      heading: 'Votre fond, vos couleurs',
-      text: "Chaque fond d'écran redonne au thème une palette assortie. Wallpaper Engine est pris en compte. Raccourci : Alt+E.",
+      heading: t('Votre fond, vos couleurs'),
+      text: t("Chaque fond d'écran redonne au thème une palette assortie. Wallpaper Engine est pris en compte. Raccourci : Alt+E."),
       art: image ? element('div', { class: 'page-hero-thumb', style: { backgroundImage: image } }) : null,
       backdrop: image ? element('div', { class: 'page-hero-backdrop', style: { backgroundImage: image } }) : null,
       chips: [heroChip(folder.split('\\').filter(Boolean).pop() ?? 'Images', 'folder')],
-      actions: [element('button', { class: 'button filled', onClick: async () => { await popup.close(); openLauncher('>fond '); } }, [icon('photo_library'), element('span', { text: 'Choisir un fond' })])],
+      actions: [element('button', { class: 'button filled', onClick: async () => { await popup.close(); openLauncher(t('>fond ')); } }, [icon('photo_library'), element('span', { text: t('Choisir un fond') })])],
     }),
-    section("Dossier des fonds d'écran", [
+    section(t("Dossier des fonds d'écran"), [
       element('div', { class: 'row' }, [field, save]),
       row({
         symbol: 'folder_open',
-        label: 'Ouvrir le dossier',
-        description: "Ajoute ou retire des images, le sélecteur se met à jour tout seul",
-        control: element('button', { class: 'button', onClick: () => openFolder('wallpapers') }, [icon('open_in_new'), element('span', { text: 'Ouvrir' })]),
+        label: t('Ouvrir le dossier'),
+        description: t("Ajoute ou retire des images, le sélecteur se met à jour tout seul"),
+        control: element('button', { class: 'button', onClick: () => openFolder('wallpapers') }, [icon('open_in_new'), element('span', { text: t('Ouvrir') })]),
       }),
     ]),
   ];
@@ -267,24 +282,25 @@ function desktopPage() {
     pageHero({
       symbol: 'desktop_windows',
       shape: 'gem',
-      heading: 'Votre bureau',
-      text: "Ce que le thème ajoute autour de vos fenêtres : île dynamique, horloge, coin actif et écran d'inactivité.",
-      chips: [state('island', true, 'Île dynamique'), state('desktopClock', true, 'Horloge'), state('idleScreen', true, 'Inactivité'), state('gameMode', false, 'Mode jeu')],
+      heading: t('Votre bureau'),
+      text: t("Ce que le thème ajoute autour de vos fenêtres : île dynamique, horloge, coin actif et écran d'inactivité."),
+      chips: [state('island', true, t('Île dynamique')), state('desktopClock', true, t('Horloge')), state('idleScreen', true, t('Inactivité')), state('gameMode', false, t('Mode jeu'))],
     }),
-    section('Bureau', [
-      optionRow('hotCorner', true, 'select_window', 'Coin actif', 'Le coin haut droit ouvre la vue des tâches'),
-      optionRow('island', true, 'smart_display', 'Île dynamique', 'Morceau en cours et notifications en haut de l\'écran'),
-      optionRow('tintIcons', true, 'palette', 'Icônes aux couleurs du thème', "Teinte les icônes d'applications avec la couleur principale"),
-      optionRow('desktopClock', true, 'schedule', 'Horloge de bureau', "Grande horloge en bas à droite du fond d'écran"),
-      optionRow('clockSeconds', false, 'timer', 'Afficher les secondes', 'Horloges de la barre et du tableau de bord'),
-      optionRow('hideTaskbar', true, 'dock_to_left', 'Remplacer la barre des tâches', 'Masque la barre Windows : la barre Stellaria liste les fenêtres ouvertes'),
+    section(t('Bureau'), [
+      optionRow('hotCorner', true, 'select_window', t('Coin actif'), t('Le coin haut droit ouvre la vue des tâches')),
+      optionRow('island', true, 'smart_display', t('Île dynamique'), t('Morceau en cours et notifications en haut de l\'écran')),
+      optionRow('tintIcons', true, 'palette', t('Icônes aux couleurs du thème'), t("Teinte les icônes d'applications avec la couleur principale")),
+      optionRow('desktopClock', true, 'schedule', t('Horloge de bureau'), t("Grande horloge en bas à droite du fond d'écran")),
+      optionRow('clockSeconds', false, 'timer', t('Afficher les secondes'), t('Horloges de la barre et du tableau de bord')),
+      optionRow('hideTaskbar', true, 'dock_to_left', t('Remplacer la barre des tâches'), t('Masque la barre Windows : la barre Stellaria liste les fenêtres ouvertes')),
+      optionRow('trayCollapse', true, 'unfold_less', t('Replier la zone de notification'), t('Quatre icônes restent visibles, les autres sont derrière une flèche')),
     ]),
-    section("Écran d'inactivité", [
-      optionRow('idleScreen', true, 'nightlight', "Afficher l'écran d'inactivité", "Horloge, météo et média sur le fond flouté. Le verrouillage de Windows n'est pas modifié."),
-      row({ symbol: 'timer', label: 'Délai avant affichage', description: "Jamais pendant une vidéo, une musique ou un jeu en plein écran", control: element('div', { class: 'range' }, [slider, label]) }),
+    section(t("Écran d'inactivité"), [
+      optionRow('idleScreen', true, 'nightlight', t("Afficher l'écran d'inactivité"), t("Horloge, météo et média sur le fond flouté. Le verrouillage de Windows n'est pas modifié.")),
+      row({ symbol: 'timer', label: t('Délai avant affichage'), description: t("Jamais pendant une vidéo, une musique ou un jeu en plein écran"), control: element('div', { class: 'range' }, [slider, label]) }),
     ]),
-    section('Performances', [
-      optionRow('gameMode', false, 'sports_esports', 'Mode jeu', 'Coupe toutes les animations du thème'),
+    section(t('Performances'), [
+      optionRow('gameMode', false, 'sports_esports', t('Mode jeu'), t('Coupe toutes les animations du thème')),
     ]),
   ];
 }
@@ -294,26 +310,26 @@ function panelsPage() {
     pageHero({
       symbol: 'dock_to_left',
       shape: 'softBurst',
-      heading: 'Tiroirs et panneaux',
-      text: "Les tiroirs sortent des bords de l'écran au survol ou au clavier. Choisissez ce qui s'ouvre tout seul.",
-      chips: [heroChip('Haut : tableau de bord', 'north'), heroChip('Droite : volume', 'east'), heroChip('Coin bas droit : utilitaires', 'south_east')],
+      heading: t('Tiroirs et panneaux'),
+      text: t("Les tiroirs sortent des bords de l'écran au survol ou au clavier. Choisissez ce qui s'ouvre tout seul."),
+      chips: [heroChip(t('Haut : tableau de bord'), 'north'), heroChip(t('Droite : volume'), 'east'), heroChip(t('Coin bas droit : utilitaires'), 'south_east')],
     }),
-    section('Ouverture au survol', [
-      optionRow('hoverDashboard', true, 'dashboard', 'Tableau de bord', "Survol du centre du bord haut"),
-      optionRow('hoverOsd', true, 'volume_up', 'Volume et micro', 'Survol du milieu du bord droit'),
-      optionRow('hoverUtilities', true, 'widgets', 'Utilitaires', 'Survol du coin bas droit'),
-      optionRow('hoverPopouts', true, 'left_panel_open', 'Mini-panneaux de la barre', 'Survol des icônes de la barre'),
+    section(t('Ouverture au survol'), [
+      optionRow('hoverDashboard', true, 'dashboard', t('Tableau de bord'), t("Survol du centre du bord haut")),
+      optionRow('hoverOsd', true, 'volume_up', t('Volume et micro'), t('Survol du milieu du bord droit')),
+      optionRow('hoverUtilities', true, 'widgets', t('Utilitaires'), t('Survol du coin bas droit')),
+      optionRow('hoverPopouts', true, 'left_panel_open', t('Mini-panneaux de la barre'), t('Survol des icônes de la barre')),
     ]),
-    section('Affichage automatique', [
-      optionRow('osdOnVolume', true, 'tune', 'Volume à chaque changement', "Montre l'indicateur quand le volume change"),
-      optionRow('toasts', true, 'notifications', 'Notifications du thème', 'Petites confirmations en bas à droite'),
-      optionRow('systemToasts', true, 'notifications_active', 'Événements système', 'Sortie et entrée audio, disposition du clavier, Verr. Maj / Num, morceau en cours'),
+    section(t('Affichage automatique'), [
+      optionRow('osdOnVolume', true, 'tune', t('Volume à chaque changement'), t("Montre l'indicateur quand le volume change")),
+      optionRow('toasts', true, 'notifications', t('Notifications du thème'), t('Petites confirmations en bas à droite')),
+      optionRow('systemToasts', true, 'notifications_active', t('Événements système'), t('Sortie et entrée audio, disposition du clavier, Verr. Maj / Num, morceau en cours')),
     ]),
-    section('Tableau de bord', [
-      optionRow('weather', true, 'partly_cloudy_day', 'Météo', "Prévisions d'Open-Meteo pour votre position approximative (ipinfo.io). Désactivée, rien n'est envoyé."),
-      optionRow('lyrics', true, 'lyrics', 'Paroles synchronisées', "Onglet Média, paroles fournies par LRCLIB quand elles existent. Désactivées, rien n'est envoyé."),
+    section(t('Tableau de bord'), [
+      optionRow('weather', true, 'partly_cloudy_day', t('Météo'), t("Prévisions d'Open-Meteo pour votre position approximative (ipinfo.io). Désactivée, rien n'est envoyé.")),
+      optionRow('lyrics', true, 'lyrics', t('Paroles synchronisées'), t("Onglet Média, paroles fournies par LRCLIB quand elles existent. Désactivées, rien n'est envoyé.")),
     ]),
-    section('Lanceur', [hiddenAppsList()]),
+    section(t('Lanceur'), [hiddenAppsList()]),
   ];
 }
 
@@ -323,21 +339,21 @@ function hiddenAppsList() {
     const hidden = getOption('hiddenApps', []);
     const names = new Map((store.get(keys.apps)?.items ?? []).map(app => [app.id, app.name]));
     if (!hidden.length) {
-      container.replaceChildren(row({ symbol: 'star', label: 'Favoris et applications masquées', description: "Dans le lanceur : l'étoile ou Ctrl+F épingle une application en tête, l'œil barré ou Ctrl+H la masque" }));
+      container.replaceChildren(row({ symbol: 'star', label: t('Favoris et applications masquées'), description: t("Dans le lanceur : l'étoile ou Ctrl+F épingle une application en tête, l'œil barré ou Ctrl+H la masque") }));
       return;
     }
     container.replaceChildren(...hidden.map(id => row({
       symbol: 'visibility_off',
       label: names.get(id) ?? id,
-      description: 'Masquée du lanceur',
+      description: t('Masquée du lanceur'),
       control: element('button', {
         class: 'button',
         onClick: () => {
           setOption('hiddenApps', getOption('hiddenApps', []).filter(hiddenId => hiddenId !== id));
-          toast('Application réaffichée', { message: names.get(id) ?? id, icon: 'visibility' });
+          toast(t('Application réaffichée'), { message: names.get(id) ?? id, icon: 'visibility' });
           renderList();
         },
-      }, [icon('visibility'), element('span', { text: 'Réafficher' })]),
+      }, [icon('visibility'), element('span', { text: t('Réafficher') })]),
     })));
   };
   renderList();
@@ -354,7 +370,7 @@ function shortcutsPage() {
     ['Win+Alt+.', 'Emojis'],
     ['Win+Alt+P', 'Menu de session'],
     ['Win+Alt+S', 'Réglages du thème'],
-  ];
+  ].map(([combo, label]) => [t(combo), t(label)]);
   const prefixes = [
     ['>', 'Actions'],
     ['>fond', "Fonds d'écran"],
@@ -363,7 +379,7 @@ function shortcutsPage() {
     ['>clip', 'Presse-papiers'],
     [':', 'Emojis'],
     ['2+2', 'Calculatrice'],
-  ];
+  ].map(([combo, label]) => [t(combo), t(label)]);
   const grid = list => element('div', { class: 'shortcuts' }, list.map(([keysText, label]) => element('div', { class: 'shortcut' }, [
     keysOf(keysText),
     element('span', { class: 'shortcut-label', text: label }),
@@ -372,12 +388,12 @@ function shortcutsPage() {
     pageHero({
       symbol: 'keyboard',
       shape: 'cookie4',
-      heading: 'Tout au clavier',
-      text: 'Chaque panneau a son raccourci. Un appui sur Win ouvre le lanceur, Win+Alt+K affiche cette aide partout.',
-      chips: [heroChip('Win : lanceur', 'keyboard_command_key'), heroChip('Win+Alt+K : aide', 'help')],
+      heading: t('Tout au clavier'),
+      text: t('Chaque panneau a son raccourci. Un appui sur Win ouvre le lanceur, Win+Alt+K affiche cette aide partout.'),
+      chips: [heroChip(t('Win : lanceur'), 'keyboard_command_key'), heroChip(t('Win+Alt+K : aide'), 'help')],
     }),
-    section('Raccourcis globaux', [grid(shortcuts)]),
-    section('Dans le lanceur', [grid(prefixes)]),
+    section(t('Raccourcis globaux'), [grid(shortcuts)]),
+    section(t('Dans le lanceur'), [grid(prefixes)]),
   ];
 }
 
@@ -391,36 +407,36 @@ function welcomePage() {
     ['Win + Alt + A', 'Tableau de bord'],
     ['Win + Alt + U', 'Utilitaires'],
     ['Win + Alt + K', 'Tous les raccourcis'],
-  ];
+  ].map(([combo, label]) => [combo, t(label)]);
   return [
     pageHero({
       symbol: 'auto_awesome',
-      heading: 'Bienvenue dans Stellaria',
-      text: 'Quatre étapes rapides pour régler le thème à votre goût. Tout reste modifiable plus tard dans ces réglages.',
+      heading: t('Bienvenue dans Stellaria'),
+      text: t('Quatre étapes rapides pour régler le thème à votre goût. Tout reste modifiable plus tard dans ces réglages.'),
     }),
-    step(1, "Fond d'écran", [
-      element('p', { class: 'welcome-text', text: "Les couleurs de tout le thème viennent de votre fond d'écran." }),
-      element('button', { class: 'button', onClick: async () => { await popup.close(); openLauncher('>fond '); } }, [icon('photo_library'), element('span', { text: 'Choisir un fond' })]),
+    step(1, t("Fond d'écran"), [
+      element('p', { class: 'welcome-text', text: t("Les couleurs de tout le thème viennent de votre fond d'écran.") }),
+      element('button', { class: 'button', onClick: async () => { await popup.close(); openLauncher(t('>fond ')); } }, [icon('photo_library'), element('span', { text: t('Choisir un fond') })]),
     ]),
-    step(2, 'Raccourcis essentiels', [
+    step(2, t('Raccourcis essentiels'), [
       element('div', { class: 'welcome-keys' }, essentials.map(([keys, label]) => element('div', { class: 'welcome-key' }, [
         keysOf(keys),
         element('span', { text: label }),
       ]))),
     ]),
-    step(3, 'Apparence', [
-      optionRow('tintIcons', true, 'palette', 'Icônes aux couleurs du thème', "Teinte les icônes d'applications"),
-      optionRow('island', true, 'smart_display', 'Île dynamique', 'Morceau en cours et notifications en haut de l\'écran'),
+    step(3, t('Apparence'), [
+      optionRow('tintIcons', true, 'palette', t('Icônes aux couleurs du thème'), t("Teinte les icônes d'applications")),
+      optionRow('island', true, 'smart_display', t('Île dynamique'), t('Morceau en cours et notifications en haut de l\'écran')),
     ]),
-    step(4, 'Démarrage', [
-      element('p', { class: 'welcome-text', text: "Stellaria se lance à chaque ouverture de session. En cas de souci, le menu Démarrer contient « Stellaria - Rétablir la barre des tâches »." }),
+    step(4, t('Démarrage'), [
+      element('p', { class: 'welcome-text', text: t("Stellaria se lance à chaque ouverture de session. En cas de souci, le menu Démarrer contient « Stellaria - Rétablir la barre des tâches ».") }),
       element('button', {
         class: 'button primary',
         onClick: () => {
           setOption('welcomed', true);
           showPage('appearance');
         },
-      }, [icon('check'), element('span', { text: "C'est parti" })]),
+      }, [icon('check'), element('span', { text: t("C'est parti") })]),
     ]),
   ];
 }
@@ -433,13 +449,13 @@ helperClient.onConnection(connected => {
 
 function paintStatus(node) {
   node.classList.toggle('online', helperConnected);
-  node.lastChild.textContent = helperConnected ? 'Helper connecté' : 'Helper hors ligne';
+  node.lastChild.textContent = t(helperConnected ? 'Service connecté' : 'Service hors ligne');
 }
 
 let packVersion = '';
 fetch('./zpack.json').then(response => response.json()).then(pack => {
   packVersion = pack.version ?? '';
-  document.querySelectorAll('.about-version').forEach(node => { node.textContent = `Version ${packVersion}`; });
+  document.querySelectorAll('.about-version').forEach(node => { node.textContent = t('Version {0}', packVersion); });
 }).catch(() => {});
 
 function aboutPage() {
@@ -462,30 +478,30 @@ function aboutPage() {
   return [
     pageHero({
       symbol: 'auto_awesome',
-      heading: 'Stellaria pour Windows',
-      text: 'Stellaria recrée le shell Material You de Caelestia pour Windows 11 : barre, tiroirs et animations expressives autour de vos fenêtres habituelles.',
+      heading: t('Stellaria pour Windows'),
+      text: t('Stellaria recrée le shell Material You de Caelestia pour Windows 11 : barre, tiroirs et animations expressives autour de vos fenêtres habituelles.'),
       chips: [
-        element('span', { class: 'hero-chip about-version', text: packVersion ? `Version ${packVersion}` : 'Version' }),
-        element('span', { class: 'hero-chip', text: 'Licence GPL-3.0' }),
+        element('span', { class: 'hero-chip about-version', text: packVersion ? t('Version {0}', packVersion) : t('Version') }),
+        element('span', { class: 'hero-chip', text: t('Licence GPL-3.0') }),
         status,
       ],
     }),
     element('div', { class: 'about-tiles' }, [
-      highlight('palette', 'Material You', "Une palette complète tirée de votre fond d'écran, en clair comme en sombre."),
-      highlight('animation', 'Mouvement expressif', 'Les courbes et les rebonds de Material 3 Expressive, fluides à chaque ouverture.'),
-      highlight('desktop_windows', 'Pensé pour Windows', 'Fenêtres, raccourcis et notifications Windows restent comme vous les connaissez.'),
+      highlight('palette', 'Material You', t("Une palette complète tirée de votre fond d'écran, en clair comme en sombre.")),
+      highlight('animation', t('Mouvement expressif'), t('Les courbes et les rebonds de Material 3 Expressive, fluides à chaque ouverture.')),
+      highlight('desktop_windows', t('Pensé pour Windows'), t('Fenêtres, raccourcis et notifications Windows restent comme vous les connaissez.')),
     ]),
-    section('Crédits', [
-      credit('favorite', 'Caelestia', "soramanew et les contributeurs : design, couleurs et animations d'origine"),
-      credit('widgets', 'Zebar', 'glzr-io : moteur des widgets'),
-      credit('lightbulb', 'Inspirations', "DankMaterialShell, Noctalia, end-4's dots, YASB, FluentFlyout"),
+    section(t('Crédits'), [
+      credit('favorite', 'Caelestia', t("soramanew et les contributeurs : design, couleurs et animations d'origine")),
+      credit('widgets', 'Zebar', t('glzr-io : moteur des widgets')),
+      credit('lightbulb', t('Inspirations'), "DankMaterialShell, Noctalia, end-4's dots, YASB, FluentFlyout"),
     ]),
-    section('Construit avec', [
+    section(t('Construit avec'), [
       element('div', { class: 'about-stack' }, stack.map(name => element('span', { class: 'hero-chip quiet', text: name }))),
     ]),
     element('div', { class: 'about-actions' }, [
-      element('button', { class: 'button', onClick: () => showPage('welcome') }, [icon('waving_hand'), element('span', { text: "Revoir l'accueil" })]),
-      element('button', { class: 'button', onClick: () => showPage('shortcuts') }, [icon('keyboard'), element('span', { text: 'Raccourcis' })]),
+      element('button', { class: 'button', onClick: () => showPage('welcome') }, [icon('waving_hand'), element('span', { text: t("Revoir l'accueil") })]),
+      element('button', { class: 'button', onClick: () => showPage('shortcuts') }, [icon('keyboard'), element('span', { text: t('Raccourcis') })]),
     ]),
   ];
 }
@@ -498,7 +514,7 @@ const pages = [
   ['panels', 'dock_to_left', 'Panneaux', panelsPage],
   ['shortcuts', 'keyboard', 'Raccourcis', shortcutsPage],
   ['about', 'info', 'À propos', aboutPage],
-];
+].map(([id, symbol, label, build]) => [id, symbol, t(label), build]);
 
 const rail = document.getElementById('rail');
 const brand = element('div', { class: 'rail-brand' }, [shapeSvg('sunny'), icon('auto_awesome')]);

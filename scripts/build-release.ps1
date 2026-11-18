@@ -49,7 +49,7 @@ if ($Phase -in 'All', 'Binaries') {
     "[assembly: AssemblyInformationalVersion(`"$Version`")]"
   ) | Set-Content -Path $assemblyInfo -Encoding UTF8
   $csc = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
-  & $csc -nologo -target:winexe -optimize+ -platform:x64 "-out:$switcherBuild" -r:System.Windows.Forms.dll -r:System.Drawing.dll (Join-Path $root 'pack\native\StellariaSwitcher.cs') $assemblyInfo
+  & $csc -nologo -target:winexe -optimize+ -platform:x64 "-out:$switcherBuild" "-win32icon:$(Join-Path $root 'launcher\icons\icon.ico')" -r:System.Windows.Forms.dll -r:System.Drawing.dll (Join-Path $root 'pack\native\StellariaSwitcher.cs') $assemblyInfo
   if ($LASTEXITCODE -ne 0) { throw 'Building the switcher failed.' }
   Remove-Item $assemblyInfo
 

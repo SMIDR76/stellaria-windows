@@ -1,15 +1,366 @@
 [
   {
-    "id": "2026-11-launcher",
-    "date": "2026-11-17",
+    "id": "2026-11-v1-1-0",
+    "date": "2026-11-18",
+    "kind": "release",
+    "version": "1.1.0",
     "title": {
-      "fr": "Le launcher Stellaria arrive",
-      "en": "The Stellaria launcher is coming"
+      "fr": "Stellaria parle désormais votre langue",
+      "en": "Stellaria now speaks your language",
+      "es": "Stellaria ya habla tu idioma",
+      "de": "Stellaria spricht jetzt deine Sprache",
+      "pt-BR": "O Stellaria agora fala o seu idioma",
+      "it": "Stellaria ora parla la tua lingua",
+      "pl": "Stellaria mówi teraz w Twoim języku",
+      "ru": "Stellaria теперь говорит на вашем языке",
+      "tr": "Stellaria artık senin dilini konuşuyor",
+      "zh-CN": "Stellaria 现已支持你的语言",
+      "ja": "Stellaria があなたの言語に対応しました",
+      "ko": "이제 Stellaria가 여러분의 언어를 지원합니다"
     },
     "body": {
-      "fr": "Installez, mettez à jour et personnalisez Stellaria depuis une seule application, avec des préréglages de couleurs officiels.",
-      "en": "Install, update and customise Stellaria from one app, with official colour presets."
+      "fr": "La version 1.1.0 traduit le thème, l'application et l'installateur en douze langues, et corrige les problèmes que vous nous avez signalés.",
+      "en": "Version 1.1.0 translates the theme, the app and the setup into twelve languages, and fixes the problems you reported.",
+      "es": "La versión 1.1.0 traduce el tema, la aplicación y el instalador a doce idiomas, y corrige los problemas que nos reportaste.",
+      "de": "Version 1.1.0 übersetzt Design, App und Installer in zwölf Sprachen und behebt die Probleme, die ihr gemeldet habt.",
+      "pt-BR": "A versão 1.1.0 traduz o tema, o aplicativo e o instalador para doze idiomas e corrige os problemas que você relatou.",
+      "it": "La versione 1.1.0 traduce il tema, l'app e il programma di installazione in dodici lingue e corregge i problemi che ci avete segnalato.",
+      "pl": "Wersja 1.1.0 tłumaczy motyw, aplikację i instalator na dwanaście języków oraz naprawia zgłoszone przez Was problemy.",
+      "ru": "Версия 1.1.0 переводит тему, приложение и установщик на двенадцать языков и исправляет проблемы, о которых вы сообщили.",
+      "tr": "1.1.0 sürümü temayı, uygulamayı ve kurulumu on iki dile çeviriyor ve bildirdiğiniz sorunları düzeltiyor.",
+      "zh-CN": "1.1.0 版将主题、应用和安装程序翻译为十二种语言，并修复了你们反馈的问题。",
+      "ja": "バージョン 1.1.0 では、テーマ・アプリ・インストーラーが 12 言語に対応し、報告いただいた問題を修正しました。",
+      "ko": "버전 1.1.0은 테마, 앱, 설치 프로그램을 12개 언어로 번역하고 제보해 주신 문제를 해결했습니다."
     },
-    "url": "https://github.com/SMIDR76/stellaria-windows"
+    "highlights": [
+      {
+        "icon": "translate",
+        "text": {
+          "fr": "Douze langues, choisies selon Windows",
+          "en": "Twelve languages, picked from Windows",
+          "es": "Doce idiomas, elegidos según Windows",
+          "de": "Zwölf Sprachen, passend zu Windows",
+          "pt-BR": "Doze idiomas, escolhidos pelo Windows",
+          "it": "Dodici lingue, scelte in base a Windows",
+          "pl": "Dwanaście języków, zgodnie z Windows",
+          "ru": "Двенадцать языков, по языку Windows",
+          "tr": "Windows'a göre seçilen on iki dil",
+          "zh-CN": "十二种语言，跟随 Windows 设置",
+          "ja": "Windows に合わせた 12 言語",
+          "ko": "Windows에 맞춘 12개 언어"
+        }
+      },
+      {
+        "icon": "keyboard",
+        "text": {
+          "fr": "Échap ferme le tableau de bord et les utilitaires",
+          "en": "Esc closes the dashboard and the utilities",
+          "es": "Esc cierra el panel y las utilidades",
+          "de": "Esc schließt Dashboard und Werkzeuge",
+          "pt-BR": "Esc fecha o painel e os utilitários",
+          "it": "Esc chiude la dashboard e le utilità",
+          "pl": "Esc zamyka panel i narzędzia",
+          "ru": "Esc закрывает панель и утилиты",
+          "tr": "Esc paneli ve araçları kapatır",
+          "zh-CN": "Esc 可关闭仪表板和实用工具",
+          "ja": "Esc でダッシュボードとユーティリティを閉じる",
+          "ko": "Esc로 대시보드와 유틸리티 닫기"
+        }
+      },
+      {
+        "icon": "unfold_less",
+        "text": {
+          "fr": "Une zone de notification repliable",
+          "en": "A collapsible notification area",
+          "es": "Área de notificación plegable",
+          "de": "Einklappbarer Infobereich",
+          "pt-BR": "Área de notificação recolhível",
+          "it": "Area di notifica comprimibile",
+          "pl": "Zwijany obszar powiadomień",
+          "ru": "Сворачиваемая область уведомлений",
+          "tr": "Daraltılabilir bildirim alanı",
+          "zh-CN": "可折叠的通知区域",
+          "ja": "折りたためる通知領域",
+          "ko": "접을 수 있는 알림 영역"
+        }
+      },
+      {
+        "icon": "wallpaper",
+        "text": {
+          "fr": "Votre vrai fond d'écran dans l'aperçu",
+          "en": "Your real wallpaper in the preview",
+          "es": "Tu fondo de pantalla real en la vista previa",
+          "de": "Dein echtes Hintergrundbild in der Vorschau",
+          "pt-BR": "Seu papel de parede real na prévia",
+          "it": "Il tuo vero sfondo nell’anteprima",
+          "pl": "Twoja prawdziwa tapeta w podglądzie",
+          "ru": "Ваши настоящие обои в предпросмотре",
+          "tr": "Önizlemede gerçek duvar kâğıdınız",
+          "zh-CN": "预览中显示你的真实壁纸",
+          "ja": "プレビューに実際の壁紙を表示",
+          "ko": "미리보기에 실제 배경화면 표시"
+        }
+      },
+      {
+        "icon": "dock_to_bottom",
+        "text": {
+          "fr": "La barre des tâches retrouve son masquage automatique",
+          "en": "The taskbar gets its auto-hide back",
+          "es": "La barra de tareas recupera su ocultación automática",
+          "de": "Die Taskleiste blendet sich wieder automatisch aus",
+          "pt-BR": "A barra de tarefas volta a se ocultar sozinha",
+          "it": "La barra delle applicazioni torna a nascondersi",
+          "pl": "Pasek zadań znów ukrywa się automatycznie",
+          "ru": "Панель задач снова скрывается автоматически",
+          "tr": "Görev çubuğu otomatik gizlenmeye geri döner",
+          "zh-CN": "任务栏恢复自动隐藏设置",
+          "ja": "タスクバーの自動非表示が元に戻る",
+          "ko": "작업 표시줄 자동 숨기기 복원"
+        }
+      },
+      {
+        "icon": "check_circle",
+        "text": {
+          "fr": "L'application ne s'ouvre plus sur une page vide",
+          "en": "The app no longer opens on a blank page",
+          "es": "La aplicación ya no se abre en blanco",
+          "de": "Die App öffnet sich nicht mehr leer",
+          "pt-BR": "O aplicativo não abre mais em branco",
+          "it": "L'app non si apre più su una pagina vuota",
+          "pl": "Aplikacja nie otwiera się już pusta",
+          "ru": "Приложение больше не открывается пустым",
+          "tr": "Uygulama artık boş sayfayla açılmıyor",
+          "zh-CN": "应用不再打开为空白页面",
+          "ja": "アプリが空白で開かなくなりました",
+          "ko": "앱이 더 이상 빈 화면으로 열리지 않음"
+        }
+      }
+    ],
+    "url": "https://github.com/SMIDR76/stellaria-windows/releases/tag/v1.1.0"
+  },
+  {
+    "id": "2026-11-thanks",
+    "date": "2026-11-18",
+    "kind": "community",
+    "title": {
+      "fr": "Merci pour vos retours",
+      "en": "Thank you for your feedback",
+      "es": "Gracias por tus comentarios",
+      "de": "Danke für euer Feedback",
+      "pt-BR": "Obrigado pelo seu feedback",
+      "it": "Grazie per i vostri commenti",
+      "pl": "Dziękujemy za Wasze opinie",
+      "ru": "Спасибо за ваши отзывы",
+      "tr": "Geri bildirimleriniz için teşekkürler",
+      "zh-CN": "感谢你们的反馈",
+      "ja": "フィードバックをありがとうございます",
+      "ko": "소중한 의견 감사합니다"
+    },
+    "body": {
+      "fr": "Vos messages sur Reddit et Discord ont façonné cette mise à jour. La feuille de route est en ligne : dites-nous ce qui vous manque encore.",
+      "en": "Your messages on Reddit and Discord shaped this update. The roadmap is online: tell us what you are still missing.",
+      "es": "Tus mensajes en Reddit y Discord dieron forma a esta actualización. La hoja de ruta ya está en línea: cuéntanos qué te falta.",
+      "de": "Eure Nachrichten auf Reddit und Discord haben dieses Update geprägt. Die Roadmap ist online: sagt uns, was euch noch fehlt.",
+      "pt-BR": "Suas mensagens no Reddit e no Discord moldaram esta atualização. O roteiro está no ar: conte o que ainda falta para você.",
+      "it": "I vostri messaggi su Reddit e Discord hanno dato forma a questo aggiornamento. La roadmap è online: diteci cosa vi manca ancora.",
+      "pl": "Wasze wiadomości na Reddicie i Discordzie ukształtowały tę aktualizację. Plan rozwoju jest dostępny: napiszcie, czego jeszcze brakuje.",
+      "ru": "Ваши сообщения на Reddit и Discord определили это обновление. Дорожная карта опубликована: расскажите, чего вам ещё не хватает.",
+      "tr": "Reddit ve Discord'daki mesajlarınız bu güncellemeyi şekillendirdi. Yol haritası yayında: eksik gördüklerinizi bize söyleyin.",
+      "zh-CN": "你们在 Reddit 和 Discord 上的留言塑造了这次更新。路线图已上线：告诉我们你还需要什么。",
+      "ja": "Reddit や Discord でのご意見がこのアップデートを形作りました。ロードマップを公開したので、足りないものを教えてください。",
+      "ko": "Reddit과 Discord에 남겨 주신 의견이 이번 업데이트를 만들었습니다. 로드맵이 공개되었으니 더 필요한 점을 알려 주세요."
+    },
+    "url": "https://github.com/SMIDR76/stellaria-windows#roadmap"
+  },
+  {
+    "id": "2026-11-shortcuts",
+    "date": "2026-11-17",
+    "kind": "tip",
+    "title": {
+      "fr": "Quatre raccourcis à connaître",
+      "en": "Four shortcuts worth knowing",
+      "es": "Cuatro atajos que conviene conocer",
+      "de": "Vier Tastenkürzel, die sich lohnen",
+      "pt-BR": "Quatro atalhos que vale a pena conhecer",
+      "it": "Quattro scorciatoie da conoscere",
+      "pl": "Cztery skróty, które warto znać",
+      "ru": "Четыре полезных сочетания клавиш",
+      "tr": "Bilmeye değer dört kısayol",
+      "zh-CN": "四个值得了解的快捷键",
+      "ja": "覚えておきたい 4 つのショートカット",
+      "ko": "알아 두면 좋은 단축키 네 가지"
+    },
+    "body": {
+      "fr": "Allez plus vite avec Stellaria, sans quitter le clavier.",
+      "en": "Get around Stellaria faster without leaving the keyboard.",
+      "es": "Muévete por Stellaria más rápido sin soltar el teclado.",
+      "de": "Bewege dich schneller durch Stellaria, ohne die Tastatur loszulassen.",
+      "pt-BR": "Navegue pelo Stellaria mais rápido sem largar o teclado.",
+      "it": "Muoviti più velocemente in Stellaria senza lasciare la tastiera.",
+      "pl": "Poruszaj się po Stellarii szybciej, nie odrywając rąk od klawiatury.",
+      "ru": "Работайте со Stellaria быстрее, не отрываясь от клавиатуры.",
+      "tr": "Klavyeden ayrılmadan Stellaria'da daha hızlı gezinin.",
+      "zh-CN": "无需离开键盘，更快地使用 Stellaria。",
+      "ja": "キーボードから手を離さずに Stellaria をすばやく操作できます。",
+      "ko": "키보드에서 손을 떼지 않고 Stellaria를 더 빠르게 사용하세요."
+    },
+    "highlights": [
+      {
+        "icon": "space_dashboard",
+        "text": {
+          "fr": "Win+Alt+A · Tableau de bord",
+          "en": "Win+Alt+A · Dashboard",
+          "es": "Win+Alt+A · Panel",
+          "de": "Win+Alt+A · Dashboard",
+          "pt-BR": "Win+Alt+A · Painel",
+          "it": "Win+Alt+A · Dashboard",
+          "pl": "Win+Alt+A · Panel",
+          "ru": "Win+Alt+A · Панель",
+          "tr": "Win+Alt+A · Pano",
+          "zh-CN": "Win+Alt+A · 仪表板",
+          "ja": "Win+Alt+A · ダッシュボード",
+          "ko": "Win+Alt+A · 대시보드"
+        }
+      },
+      {
+        "icon": "tune",
+        "text": {
+          "fr": "Win+Alt+U · Utilitaires",
+          "en": "Win+Alt+U · Utilities",
+          "es": "Win+Alt+U · Utilidades",
+          "de": "Win+Alt+U · Werkzeuge",
+          "pt-BR": "Win+Alt+U · Utilitários",
+          "it": "Win+Alt+U · Utilità",
+          "pl": "Win+Alt+U · Narzędzia",
+          "ru": "Win+Alt+U · Утилиты",
+          "tr": "Win+Alt+U · Araçlar",
+          "zh-CN": "Win+Alt+U · 实用工具",
+          "ja": "Win+Alt+U · ユーティリティ",
+          "ko": "Win+Alt+U · 유틸리티"
+        }
+      },
+      {
+        "icon": "keyboard",
+        "text": {
+          "fr": "Win+Alt+K · Tous les raccourcis",
+          "en": "Win+Alt+K · Every shortcut",
+          "es": "Win+Alt+K · Todos los atajos",
+          "de": "Win+Alt+K · Alle Tastenkürzel",
+          "pt-BR": "Win+Alt+K · Todos os atalhos",
+          "it": "Win+Alt+K · Tutte le scorciatoie",
+          "pl": "Win+Alt+K · Wszystkie skróty",
+          "ru": "Win+Alt+K · Все сочетания",
+          "tr": "Win+Alt+K · Tüm kısayollar",
+          "zh-CN": "Win+Alt+K · 全部快捷键",
+          "ja": "Win+Alt+K · すべてのショートカット",
+          "ko": "Win+Alt+K · 모든 단축키"
+        }
+      },
+      {
+        "icon": "search",
+        "text": {
+          "fr": "Ctrl+K · Rechercher dans l'application",
+          "en": "Ctrl+K · Search the app",
+          "es": "Ctrl+K · Buscar en la aplicación",
+          "de": "Ctrl+K · In der App suchen",
+          "pt-BR": "Ctrl+K · Pesquisar no aplicativo",
+          "it": "Ctrl+K · Cerca nell'app",
+          "pl": "Ctrl+K · Szukaj w aplikacji",
+          "ru": "Ctrl+K · Поиск в приложении",
+          "tr": "Ctrl+K · Uygulamada ara",
+          "zh-CN": "Ctrl+K · 在应用中搜索",
+          "ja": "Ctrl+K · アプリ内を検索",
+          "ko": "Ctrl+K · 앱에서 검색"
+        }
+      }
+    ]
+  },
+  {
+    "id": "2026-11-v1-0-0",
+    "date": "2026-11-17",
+    "kind": "release",
+    "version": "1.0.0",
+    "title": {
+      "fr": "Stellaria 1.0 est disponible",
+      "en": "Stellaria 1.0 is here",
+      "es": "Stellaria 1.0 ya está disponible",
+      "de": "Stellaria 1.0 ist da",
+      "pt-BR": "O Stellaria 1.0 chegou",
+      "it": "Stellaria 1.0 è disponibile",
+      "pl": "Stellaria 1.0 jest już dostępna",
+      "ru": "Stellaria 1.0 вышла",
+      "tr": "Stellaria 1.0 yayında",
+      "zh-CN": "Stellaria 1.0 正式发布",
+      "ja": "Stellaria 1.0 をリリースしました",
+      "ko": "Stellaria 1.0 출시"
+    },
+    "body": {
+      "fr": "La première version publique de ce portage non officiel de Caelestia pour Windows 11 : une interface Material You, l'application Stellaria et des mises à jour signées.",
+      "en": "The first public release of this unofficial Windows 11 port of Caelestia: a Material You shell, the Stellaria app and signed updates.",
+      "es": "La primera versión pública de este port no oficial de Caelestia para Windows 11: una interfaz Material You, la aplicación Stellaria y actualizaciones firmadas.",
+      "de": "Die erste öffentliche Version dieser inoffiziellen Windows-11-Portierung von Caelestia: eine Material-You-Oberfläche, die Stellaria-App und signierte Updates.",
+      "pt-BR": "A primeira versão pública deste port não oficial do Caelestia para Windows 11: uma interface Material You, o aplicativo Stellaria e atualizações assinadas.",
+      "it": "La prima versione pubblica di questo port non ufficiale di Caelestia per Windows 11: un'interfaccia Material You, l'app Stellaria e aggiornamenti firmati.",
+      "pl": "Pierwsza publiczna wersja tego nieoficjalnego portu Caelestii na Windows 11: interfejs Material You, aplikacja Stellaria i podpisane aktualizacje.",
+      "ru": "Первый публичный выпуск неофициального порта Caelestia для Windows 11: оболочка Material You, приложение Stellaria и подписанные обновления.",
+      "tr": "Caelestia'nın resmi olmayan Windows 11 uyarlamasının ilk herkese açık sürümü: Material You arayüzü, Stellaria uygulaması ve imzalı güncellemeler.",
+      "zh-CN": "Caelestia 非官方 Windows 11 移植版的首个公开版本：Material You 界面、Stellaria 应用和签名更新。",
+      "ja": "Caelestia の非公式 Windows 11 移植版、初の公開リリースです。Material You のシェル、Stellaria アプリ、署名付きアップデートを搭載。",
+      "ko": "Caelestia의 비공식 Windows 11 포트 첫 공개 버전: Material You 셸, Stellaria 앱, 서명된 업데이트를 제공합니다."
+    },
+    "highlights": [
+      {
+        "icon": "palette",
+        "text": {
+          "fr": "Des couleurs tirées de votre fond d’écran",
+          "en": "Colours drawn from your wallpaper",
+          "es": "Colores tomados de tu fondo de pantalla",
+          "de": "Farben aus deinem Hintergrundbild",
+          "pt-BR": "Cores tiradas do seu papel de parede",
+          "it": "Colori presi dal tuo sfondo",
+          "pl": "Kolory z Twojej tapety",
+          "ru": "Цвета из ваших обоев",
+          "tr": "Duvar kâğıdınızdan alınan renkler",
+          "zh-CN": "取自壁纸的配色",
+          "ja": "壁紙から取り出した配色",
+          "ko": "배경화면에서 가져온 색상"
+        }
+      },
+      {
+        "icon": "style",
+        "text": {
+          "fr": "Des préréglages de couleurs officiels",
+          "en": "Official colour presets",
+          "es": "Ajustes de color oficiales",
+          "de": "Offizielle Farbvorlagen",
+          "pt-BR": "Predefinições de cores oficiais",
+          "it": "Preset di colori ufficiali",
+          "pl": "Oficjalne zestawy kolorów",
+          "ru": "Официальные цветовые пресеты",
+          "tr": "Resmi renk ön ayarları",
+          "zh-CN": "官方配色预设",
+          "ja": "公式カラープリセット",
+          "ko": "공식 색상 프리셋"
+        }
+      },
+      {
+        "icon": "verified_user",
+        "text": {
+          "fr": "Des mises à jour signées et vérifiées",
+          "en": "Signed and verified updates",
+          "es": "Actualizaciones firmadas y verificadas",
+          "de": "Signierte und geprüfte Updates",
+          "pt-BR": "Atualizações assinadas e verificadas",
+          "it": "Aggiornamenti firmati e verificati",
+          "pl": "Podpisane i weryfikowane aktualizacje",
+          "ru": "Подписанные и проверенные обновления",
+          "tr": "İmzalı ve doğrulanmış güncellemeler",
+          "zh-CN": "已签名并验证的更新",
+          "ja": "署名・検証済みのアップデート",
+          "ko": "서명 및 검증된 업데이트"
+        }
+      }
+    ],
+    "url": "https://github.com/SMIDR76/stellaria-windows/releases/tag/v1.0.0"
   }
 ]

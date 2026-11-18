@@ -1,5 +1,6 @@
 import * as zebar from '../../vendor/zebar.mjs';
 import { getOption, keys, store } from './store.js';
+import { t } from './i18n.js';
 
 const weatherCodes = {
   0: ['Ciel dégagé', 'sunny', 'clear_night'],
@@ -34,7 +35,7 @@ const weatherCodes = {
 
 export function describeWeather(code, isDay = true) {
   const [label, day, night] = weatherCodes[code] ?? ['Météo inconnue', 'cloud', 'cloud'];
-  return { label, icon: isDay ? day : night };
+  return { label: t(label), icon: isDay ? day : night };
 }
 
 const weatherTtl = 15 * 60 * 1000;
@@ -45,7 +46,7 @@ async function resolveLocation() {
   if (cached && Date.now() - cached.at < locationTtl) return cached;
   const provider = zebar.createProvider({ type: 'ip' });
   const output = await new Promise((resolve, reject) => {
-    const timeout = setTimeout(() => reject(new Error('Localisation indisponible')), 15000);
+    const timeout = setTimeout(() => reject(new Error(t('Localisation indisponible'))), 15000);
     if (provider.output) {
       clearTimeout(timeout);
       resolve(provider.output);

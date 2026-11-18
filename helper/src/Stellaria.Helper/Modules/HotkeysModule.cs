@@ -1,6 +1,7 @@
 using System.Text.Json.Nodes;
 using Stellaria.Helper.Desktop;
 using Stellaria.Helper.Interop;
+using Stellaria.Helper.Protocol;
 
 namespace Stellaria.Helper.Modules;
 
@@ -27,8 +28,15 @@ internal sealed class HotkeysModule : IHelperModule
         new(9, "shortcuts", Win | Alt, 0x4B, "Win+Alt+K", "Zebar - stellaria / launcher"),
     ];
 
+    public const int EscapeId = 20;
+    public const uint EscapeKey = 0x1B;
+    public const int MaximumOwnerLength = 64;
+    public static readonly TimeSpan EscapeLease = TimeSpan.FromMinutes(2);
+
     private readonly HashSet<int> _registered = [];
     private readonly HashSet<int> _reported = [];
+    private readonly HashSet<string> _escapeOwners = new(StringComparer.Ordinal);
+    private DateTimeOffset _escapeSince;
     private ModuleContext _context = null!;
     private Timer? _retry;
 
@@ -39,8 +47,24 @@ internal sealed class HotkeysModule : IHelperModule
     public async Task StartAsync(ModuleContext context)
     {
         _context = context;
-        _retry = new Timer(_ => context.Loop.Post(RegisterMissing), null, RetryInterval, RetryInterval);
+        _retry = new Timer(_ => context.Loop.Post(() =>
+        {
+            RegisterMissing();
+            ExpireEscape();
+        }), null, RetryInterval, RetryInterval);
         context.Shutdown.Register(() => _retry.Dispose());
+        context.Router.Register("hotkeys.escape", async (request, _) =>
+        {
+            var owner = request.RequireString("owner");
+            if (owner.Length > MaximumOwnerLength)
+            {
+                throw new HelperException(ErrorCode.InvalidParams, "'owner' is too long.");
+            }
+
+            var active = request.RequireBoolean("active");
+            await context.Loop.InvokeAsync(() => SetEscape($"{request.Widget}:{owner}", active)).ConfigureAwait(false);
+            return null;
+        });
         await context.Loop.InvokeAsync(RegisterMissing).ConfigureAwait(false);
 
         var tap = new WinKeyTap(WinTapMaximumHold);
@@ -74,6 +98,53 @@ internal sealed class HotkeysModule : IHelperModule
                 _context.Hub.Raise("hotkey.unavailable", new JsonObject { ["name"] = hotkey.Name, ["shortcut"] = hotkey.Shortcut });
             }
         }
+    }
+
+    private void SetEscape(string owner, bool active)
+    {
+        if (active)
+        {
+            _escapeOwners.Add(owner);
+        }
+        else
+        {
+            _escapeOwners.Remove(owner);
+        }
+
+        var registered = _registered.Contains(EscapeId);
+        if (_escapeOwners.Count > 0 && !registered)
+        {
+            if (_context.Loop.RegisterHotkey(EscapeId, 0, EscapeKey, EscapePressed))
+            {
+                _registered.Add(EscapeId);
+                _escapeSince = _context.Time.GetUtcNow();
+            }
+        }
+        else if (_escapeOwners.Count == 0 && registered)
+        {
+            ReleaseEscape();
+        }
+    }
+
+    private void EscapePressed()
+    {
+        ReleaseEscape();
+        _context.Hub.Raise("hotkey", new JsonObject { ["name"] = "escape", ["monitor"] = DesktopReader.MonitorUnderCursor() });
+    }
+
+    private void ExpireEscape()
+    {
+        if (_registered.Contains(EscapeId) && _context.Time.GetUtcNow() - _escapeSince > EscapeLease)
+        {
+            ReleaseEscape();
+        }
+    }
+
+    private void ReleaseEscape()
+    {
+        _escapeOwners.Clear();
+        _context.Loop.UnregisterHotkey(EscapeId);
+        _registered.Remove(EscapeId);
     }
 
     private void Pressed(Hotkey hotkey, string source)

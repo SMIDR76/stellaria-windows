@@ -34,6 +34,7 @@ internal static class Scopes
         ["system.gpu"] = Basic,
         ["wallpapers.list"] = Basic,
         ["widgets.reload"] = Basic,
+        ["hotkeys.escape"] = Input,
         ["media.artwork"] = Media,
         ["media.control"] = Media,
         ["audio.sessions"] = Audio,

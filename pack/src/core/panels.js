@@ -1,6 +1,7 @@
 import * as zebar from '../../vendor/zebar.mjs';
 import { currentMonitorName, cursorPosition, hideOnFullscreen, layout, primaryMonitorName, tauriInvoke } from './monitor.js';
 import { keys, store } from './store.js';
+import { actions } from './helper.js';
 
 const lazyPanels = new Set(['dashboard', 'utilities', 'popout']);
 const pendingWindow = 5000;
@@ -90,6 +91,10 @@ export async function edgeDrawer(name, { panel, side, autoCloseMs = 1600, onOpen
   const hide = () => {
     if (!state.open) return;
     state.open = false;
+    if (state.holdsEscape) {
+      state.holdsEscape = false;
+      actions.holdEscape(`${name}:${monitorName}`, false);
+    }
     document.body.classList.remove('open');
     document.body.classList.add('closing');
     onClose?.();
@@ -109,7 +114,7 @@ export async function edgeDrawer(name, { panel, side, autoCloseMs = 1600, onOpen
         if (inside(cursor)) {
           state.lastInside = now;
           state.entered = true;
-        } else if (state.trigger === 'hover' || state.entered) {
+        } else if (state.trigger === 'hover' || (state.entered && state.trigger !== 'pinned')) {
           if (now - state.lastInside > 150) hide();
         } else if (state.trigger !== 'pinned' && now - state.openedAt > autoCloseMs) {
           hide();
@@ -132,6 +137,10 @@ export async function edgeDrawer(name, { panel, side, autoCloseMs = 1600, onOpen
     }
     state.open = true;
     state.entered = false;
+    if (state.trigger === 'pinned') {
+      state.holdsEscape = true;
+      actions.holdEscape(`${name}:${monitorName}`, true);
+    }
     onOpen?.(trigger);
     document.body.classList.remove('closing');
     requestAnimationFrame(() => document.body.classList.add('open'));
@@ -165,6 +174,15 @@ export async function edgeDrawer(name, { panel, side, autoCloseMs = 1600, onOpen
     show: trigger => (state.suppressed ? null : show(trigger, true)),
     hide,
   };
+}
+
+export function closeKeyboardPanels() {
+  for (const key of Object.keys(localStorage)) {
+    if (!key.startsWith('stellaria:dashboard:') && !key.startsWith('stellaria:utilities:')) continue;
+    const value = store.get(key);
+    if (!value?.open || value.trigger === 'hover') continue;
+    store.set(key, { open: false, trigger: value.trigger, at: Date.now() });
+  }
 }
 
 export function toggleDrawer(name, monitor) {

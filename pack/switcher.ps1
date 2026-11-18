@@ -23,7 +23,9 @@ switch ($Action) {
   'build' {
     $compiler = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
     Stop-Switcher
-    & $compiler -nologo -target:winexe -optimize+ -platform:x64 "-out:$exe" -r:System.Windows.Forms.dll -r:System.Drawing.dll $source
+    $icon = Join-Path $PSScriptRoot '..\launcher\icons\icon.ico'
+    [string[]]$iconArgument = @(); if (Test-Path $icon) { $iconArgument = @("-win32icon:$icon") }
+    & $compiler -nologo -target:winexe -optimize+ -platform:x64 "-out:$exe" @iconArgument -r:System.Windows.Forms.dll -r:System.Drawing.dll $source
     if ($LASTEXITCODE -ne 0) { throw 'Compilation du sélecteur échouée' }
     Write-Output "Compilé : $exe"
   }

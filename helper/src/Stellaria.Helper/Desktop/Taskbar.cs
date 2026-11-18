@@ -29,6 +29,13 @@ internal static class Taskbar
         Shell32.SHAppBarMessage(Shell32.AbmSetState, ref data);
     }
 
+    public static void Refresh()
+    {
+        var data = NewData();
+        data.LParam = (nint)Shell32.SHAppBarMessage(Shell32.AbmGetState, ref data);
+        Shell32.SHAppBarMessage(Shell32.AbmSetState, ref data);
+    }
+
     public static int SetVisible(bool visible)
     {
         var changed = 0;

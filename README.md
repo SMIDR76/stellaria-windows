@@ -11,8 +11,10 @@ Built on [Zebar](https://github.com/glzr-io/zebar) for the widgets and a small n
 
 ## Features
 
-- **Bar**: virtual desktops with an elastic indicator, open windows, tray, weather, clock, keyboard layout, sound,
-  network and a notification bell. App icons can be tinted with the theme colour.
+- **Twelve languages**: English, French, Spanish, German, Brazilian Portuguese, Italian, Polish, Russian, Turkish,
+  Simplified Chinese, Japanese and Korean, following the Windows display language or chosen in the settings.
+- **Bar**: virtual desktops with an elastic indicator, open windows, a collapsible tray, weather, clock, keyboard
+  layout, sound, network and a notification bell. App icons can be tinted with the theme colour.
 - **Material You colours** taken from the wallpaper, nine variants and fourteen fixed schemes, light and dark modes.
 - **Dashboard** (hover the top edge or Win+Alt+A): calendar, weather, media with synced lyrics, live CPU, GPU,
   memory, storage and network gauges.

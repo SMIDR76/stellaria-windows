@@ -1,4 +1,5 @@
 import {
+  t,
   actions,
   cursorOnCurrentMonitor,
   edgeDrawer,
@@ -83,7 +84,7 @@ const volumeSymbol = device => {
   return 'volume_up';
 };
 
-const volume = createVerticalSlider('Volume', (value, delta) => {
+const volume = createVerticalSlider(t('Volume'), (value, delta) => {
   const audio = providers.outputMap.audio;
   const device = audio?.defaultPlaybackDevice;
   if (!device) return;
@@ -92,7 +93,7 @@ const volume = createVerticalSlider('Volume', (value, delta) => {
   if (device.isMuted && next > 0) audio.setMute(false);
 });
 
-const microphone = createVerticalSlider('Micro', (value, delta) => {
+const microphone = createVerticalSlider(t('Micro'), (value, delta) => {
   const audio = providers.outputMap.audio;
   const device = audio?.defaultRecordingDevice;
   if (!device) return;
@@ -103,7 +104,7 @@ const microphone = createVerticalSlider('Micro', (value, delta) => {
 
 let brightnessValue = -1;
 let brightnessTimer = null;
-const brightness = createVerticalSlider('Luminosité', (value, delta) => {
+const brightness = createVerticalSlider(t('Luminosité'), (value, delta) => {
   if (brightnessValue < 0) return;
   brightnessValue = value ?? Math.min(100, Math.max(0, brightnessValue + delta * 2));
   brightness.set(brightnessValue, `brightness_${Math.min(7, Math.round(brightnessValue / 100 * 6) + 1)}`);

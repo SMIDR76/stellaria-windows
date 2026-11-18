@@ -1,4 +1,4 @@
-import { edgeDrawer, element, getOption, helperClient, icon, initTheme, zebar, letClicksThrough } from './common.js';
+import { edgeDrawer, element, getOption, helperClient, icon, initTheme, t, zebar, letClicksThrough } from './common.js';
 
 letClicksThrough();
 
@@ -41,16 +41,16 @@ function renderMedia() {
       ? element('img', { class: 'island-art', src: `data:image/jpeg;base64,${media.image}`, alt: '' })
       : element('span', { class: 'island-art' }, icon('music_note')),
     element('div', { class: 'island-text' }, [
-      element('span', { class: 'island-label', text: media.playing ? 'En cours' : 'En pause' }),
-      element('span', { class: 'island-title', text: media.title || 'Titre inconnu' }),
+      element('span', { class: 'island-label', text: t(media.playing ? 'En cours' : 'En pause') }),
+      element('span', { class: 'island-title', text: media.title || t('Titre inconnu') }),
       element('span', { class: 'island-subtitle', text: media.artist || media.album || '' }),
     ]),
     element('div', { class: 'island-controls' }, [
-      button('shuffle', { title: 'Lecture aléatoire', active: Boolean(media.shuffle), disabled: !media.canShuffle, onClick: () => control('shuffle') }),
-      button('skip_previous', { title: 'Précédent', onClick: () => control('previous') }),
-      button(media.playing ? 'pause' : 'play_arrow', { title: media.playing ? 'Pause' : 'Lecture', main: true, onClick: () => control('playPause') }),
-      button('skip_next', { title: 'Suivant', onClick: () => control('next') }),
-      button(repeatSymbol, { title: 'Répétition', active: media.repeat !== 'none', disabled: !media.canRepeat, onClick: () => control('repeat') }),
+      button('shuffle', { title: t('Lecture aléatoire'), active: Boolean(media.shuffle), disabled: !media.canShuffle, onClick: () => control('shuffle') }),
+      button('skip_previous', { title: t('Précédent'), onClick: () => control('previous') }),
+      button(media.playing ? 'pause' : 'play_arrow', { title: t(media.playing ? 'Pause' : 'Lecture'), main: true, onClick: () => control('playPause') }),
+      button('skip_next', { title: t('Suivant'), onClick: () => control('next') }),
+      button(repeatSymbol, { title: t('Répétition'), active: media.repeat !== 'none', disabled: !media.canRepeat, onClick: () => control('repeat') }),
     ]),
   ]));
 }
@@ -81,7 +81,7 @@ async function showNotification(item) {
       ? element('img', { class: 'island-app-icon', src: `data:image/png;base64,${app.icon}`, alt: '' })
       : icon('notifications', { className: 'island-app-icon' }),
     element('div', { class: 'island-text' }, [
-      element('span', { class: 'island-label', text: app?.name ?? 'Notification' }),
+      element('span', { class: 'island-label', text: app?.name ?? t('Notification') }),
       element('span', { class: 'island-title', text: item.title }),
       item.body ? element('span', { class: 'island-subtitle', text: item.body }) : null,
     ]),

@@ -2,6 +2,7 @@ import { createHelperClient } from './helper-client.js';
 import { toast } from './dom.js';
 import { currentMonitorName, widgetName } from './monitor.js';
 import { keys, settings, store } from './store.js';
+import { t } from './i18n.js';
 
 export const helperClient = createHelperClient({ widget: widgetName(), monitor: () => currentMonitorName() });
 helperClient.onEvent('widgets.reload', () => location.reload());
@@ -18,7 +19,7 @@ export function onShared(type, callback) {
 
 function report(method, error) {
   console.error(`[stellaria] ${method} : ${error.message}`);
-  if (error.code === 'unsupported' || error.code === 'denied') toast('Action impossible', { message: error.message, icon: 'block', kind: 'warning' });
+  if (error.code === 'unsupported' || error.code === 'denied') toast(t('Action impossible'), { message: error.message, icon: 'block', kind: 'warning' });
 }
 
 function call(method, params) {
@@ -54,6 +55,7 @@ export const actions = {
   closeTask: id => call('tasks.close', { id }),
   setTaskbarHidden: hidden => call('config.set', { path: 'taskbar.hide', value: hidden }),
   paste: () => call('input.paste'),
+  holdEscape: (owner, active) => helperClient.request('hotkeys.escape', { owner, active }).catch(() => {}),
   refreshClipboard: async () => share('clipboard', await helperClient.request('clipboard.history', { limit: 40 })),
   pasteClipboardItem: id => call('clipboard.paste', { id }),
   refreshBrightness: async () => share('brightness', { monitors: await helperClient.request('display.brightness') }),

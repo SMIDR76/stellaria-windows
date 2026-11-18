@@ -16,16 +16,17 @@ import {
   sourceColorFromImage,
 } from '../../vendor/material-color-utilities.mjs';
 import { getOption, keys, option, setOption, settings, store } from './store.js';
+import { t, translateDocument } from './i18n.js';
 
 export const variants = {
   tonalspot: { label: 'Tonal Spot', scheme: SchemeTonalSpot },
   vibrant: { label: 'Vibrant', scheme: SchemeVibrant },
-  expressive: { label: 'Expressif', scheme: SchemeExpressive },
-  fidelity: { label: 'Fidélité', scheme: SchemeFidelity },
-  content: { label: 'Contenu', scheme: SchemeContent },
-  fruitsalad: { label: 'Salade de fruits', scheme: SchemeFruitSalad },
-  rainbow: { label: 'Arc-en-ciel', scheme: SchemeRainbow },
-  neutral: { label: 'Neutre', scheme: SchemeNeutral },
+  expressive: { label: t('Expressif'), scheme: SchemeExpressive },
+  fidelity: { label: t('Fidélité'), scheme: SchemeFidelity },
+  content: { label: t('Contenu'), scheme: SchemeContent },
+  fruitsalad: { label: t('Salade de fruits'), scheme: SchemeFruitSalad },
+  rainbow: { label: t('Arc-en-ciel'), scheme: SchemeRainbow },
+  neutral: { label: t('Neutre'), scheme: SchemeNeutral },
   monochrome: { label: 'Monochrome', scheme: SchemeMonochrome },
 };
 
@@ -118,6 +119,8 @@ async function ensureFonts() {
 }
 
 export function initTheme() {
+  if (document.body) translateDocument();
+  else document.addEventListener('DOMContentLoaded', () => translateDocument(), { once: true });
   if (document.readyState === 'complete') ensureFonts();
   else window.addEventListener('load', () => ensureFonts(), { once: true });
   applyTheme();
