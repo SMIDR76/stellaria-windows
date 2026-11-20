@@ -1,5 +1,19 @@
 # Stellaria
 
+## Fork customizations
+
+This fork includes an integrated **Stellaria customizations** settings page and Launcher shortcut. It adds:
+
+- grouped taskbar apps with a window counter;
+- live previews for both single and grouped windows, captured by the native helper;
+- an option to show tasks from every monitor on every taskbar;
+- active-window visibility and active-click behavior controls;
+- a configurable 0–40 px visual frame, with borderless mode by default;
+- the native Windows Start menu on the Windows key by default;
+- English, Brazilian Portuguese and French interface text, with a safe English fallback for the remaining languages.
+
+The settings are stored by Stellaria itself and do not require the legacy external customizer or preview service.
+
 ![Stellaria on a Windows 11 desktop](docs/images/promo/hero-en.jpg)
 
 Stellaria is an unofficial Windows 11 port of [Caelestia](https://github.com/caelestia-dots/shell), the Material You desktop shell

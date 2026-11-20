@@ -87,12 +87,12 @@
           "offsetX": "0px",
           "offsetY": "0px",
           "width": "100%",
-          "height": "10px",
+          "height": "1px",
           "monitorSelection": {
             "type": "all"
           },
           "dockToEdge": {
-            "enabled": true,
+            "enabled": false,
             "edge": "top",
             "windowMargin": "0px"
           }
@@ -102,13 +102,13 @@
           "anchor": "top_right",
           "offsetX": "0px",
           "offsetY": "0px",
-          "width": "10px",
+          "width": "1px",
           "height": "100%",
           "monitorSelection": {
             "type": "all"
           },
           "dockToEdge": {
-            "enabled": true,
+            "enabled": false,
             "edge": "right",
             "windowMargin": "0px"
           }
@@ -119,12 +119,12 @@
           "offsetX": "0px",
           "offsetY": "0px",
           "width": "100%",
-          "height": "10px",
+          "height": "1px",
           "monitorSelection": {
             "type": "all"
           },
           "dockToEdge": {
-            "enabled": true,
+            "enabled": false,
             "edge": "bottom",
             "windowMargin": "0px"
           }

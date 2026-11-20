@@ -70,3 +70,8 @@ body {
   bottom: calc(var(--border) + var(--seam));
   background: radial-gradient(circle at 0 0, transparent calc(var(--rounding) - 0.5px), var(--surface-base) var(--rounding));
 }
+
+html.borderless .seam,
+html.borderless .corner {
+  display: none !important;
+}

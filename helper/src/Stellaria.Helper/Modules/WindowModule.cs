@@ -26,9 +26,11 @@ internal sealed class WindowModule : IHelperModule
 
             return null;
         });
-        context.Router.Register("window.preview", async (_, _) =>
+        context.Router.Register("window.preview", async (request, _) =>
         {
-            var window = context.Foreground.LastUserWindow;
+            var window = request.Params["id"] is JsonValue id && id.TryGetValue<string>(out var taskId)
+                ? TasksModule.ParseId(taskId)
+                : context.Foreground.LastUserWindow;
             var capture = await context.Loop.InvokeAsync(() => Capture(window)).ConfigureAwait(false);
             var image = capture is null ? null : Convert.ToBase64String(await ImageCodec.EncodeJpegAsync(capture, PreviewWidth).ConfigureAwait(false));
             return new JsonObject { ["image"] = image };

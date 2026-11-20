@@ -570,3 +570,125 @@ body.open .drawer * {
 .notification-dismiss .icon {
   font-size: 16px;
 }
+
+/* STELLARIA CUSTOMIZER START */
+.task-group-view {
+  width: 380px;
+  max-height: calc(100vh - 48px);
+}
+
+.task-group-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  max-height: calc(100vh - 110px);
+  padding: 2px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.task-group-grid.single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.task-card {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--m3-outline) 45%, transparent);
+  border-radius: 14px;
+  background: var(--m3-surface-container);
+  transition: border-color var(--duration) var(--ease-standard), background var(--duration) var(--ease-standard);
+}
+
+.task-card.active {
+  border-color: var(--m3-primary);
+  background: var(--m3-secondary-container);
+}
+
+.task-card.minimized {
+  opacity: 0.78;
+}
+
+.task-card-main {
+  display: block;
+  width: 100%;
+  padding: 0 0 9px;
+  text-align: left;
+  color: inherit;
+}
+
+.task-preview-frame {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--m3-surface-container-highest);
+  color: var(--m3-on-surface-variant);
+}
+
+.task-preview-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: page-in var(--duration-effects-slow) var(--ease-effects);
+}
+
+.task-preview-frame .icon {
+  font-size: 30px;
+  animation: pulse 1.2s var(--ease-standard) infinite;
+}
+
+.task-card-details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 9px 34px 0 10px;
+}
+
+.task-card-icon {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.task-card-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.task-card-title,
+.task-card-meta {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.task-card-title {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.task-card-meta {
+  min-height: 14px;
+  color: var(--m3-on-surface-variant);
+  font-size: 10px;
+}
+
+.task-card-close {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  width: 28px;
+  height: 28px;
+  background: color-mix(in srgb, var(--m3-surface-container-highest) 88%, transparent);
+}
+
+.task-card-close .icon {
+  font-size: 17px;
+}
+/* STELLARIA CUSTOMIZER END */

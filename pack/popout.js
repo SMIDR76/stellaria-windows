@@ -5,6 +5,7 @@ import {
   currentMonitorName,
   cursorPosition,
   element,
+  getOption,
   helperClient,
   heroMark,
   heroOrnament,
@@ -537,7 +538,76 @@ function createNotificationsView() {
   };
 }
 
+/* STELLARIA CUSTOMIZER TASK PREVIEW START */
+function createTaskGroupView() {
+  const title = element('span', { class: 'view-title', text: t('Fenêtres') });
+  const grid = element('div', { class: 'task-group-grid' });
+  let renderedAt = 0;
+  const node = element('div', { class: 'view task-group-view' }, [
+    element('div', { class: 'view-header' }, [icon('select_window'), title]),
+    grid,
+  ]);
+
+  const render = () => {
+    const request = state.request;
+    if (request?.kind !== 'taskGroup' || renderedAt === request.at) return;
+    renderedAt = request.at;
+    const tasks = request.tasks ?? [];
+    grid.classList.toggle('single', tasks.length === 1);
+    title.textContent = `${tasks[0]?.process || t('Application')} · ${tasks.length}`;
+    const icons = store.get(keys.taskIcons, {}) ?? {};
+    grid.replaceChildren(...tasks.map(task => {
+      const preview = element('div', { class: 'task-preview-frame' }, icon('hourglass_empty'));
+      helperClient.request('window.preview', { id: task.id })
+        .then(result => {
+          if (!result?.image) throw new Error('Preview unavailable');
+          preview.replaceChildren(element('img', { src: `data:image/jpeg;base64,${result.image}`, alt: '' }));
+        })
+        .catch(() => preview.replaceChildren(icon('visibility_off')));
+
+      const display = String(task.monitor || '').match(/DISPLAY(\d+)/i)?.[1];
+      const metadata = [display ? `${t('Écran')} ${display}` : '', task.minimized ? t('Réduite') : ''].filter(Boolean).join(' · ');
+      const iconData = icons[task.icon || task.exe];
+      const card = element('article', {
+        class: ['task-card', task.active ? 'active' : '', task.minimized ? 'minimized' : ''].join(' ').trim(),
+      });
+      const main = element('button', {
+        class: 'task-card-main state-layer',
+        title: task.title,
+        onClick: () => {
+          if (getOption('minimizeActiveTaskOnClick', false) || !task.active) actions.activateTask(task.id);
+          close();
+        },
+      }, [
+        preview,
+        element('div', { class: 'task-card-details' }, [
+          iconData ? element('img', { class: 'task-card-icon', src: `data:image/png;base64,${iconData}`, alt: '' }) : icon('select_window'),
+          element('div', { class: 'task-card-copy' }, [
+            element('span', { class: 'task-card-title', text: task.title || task.process || t('Fenêtre') }),
+            element('span', { class: 'task-card-meta', text: metadata }),
+          ]),
+        ]),
+      ]);
+      const closeButton = element('button', {
+        class: 'task-card-close icon-button',
+        title: t('Fermer la fenêtre'),
+        onClick: event => {
+          event.stopPropagation();
+          actions.closeTask(task.id);
+          card.remove();
+          requestAnimationFrame(() => layoutPanel());
+        },
+      }, icon('close'));
+      card.append(main, closeButton);
+      return card;
+    }));
+  };
+  return { node, update: render, onShow: render };
+}
+/* STELLARIA CUSTOMIZER TASK PREVIEW END */
+
 const views = {
+  taskGroup: createTaskGroupView(),
   audio: createAudioView(),
   network: createNetworkView(),
   keyboard: createKeyboardView(),

@@ -1,4 +1,4 @@
 body {
-  background: var(--surface-base);
+  background: transparent !important;
   transition: background var(--duration) var(--ease-standard);
 }

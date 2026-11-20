@@ -750,3 +750,47 @@ kbd {
   font-size: 13.5px;
   color: var(--m3-on-surface);
 }
+
+/* STELLARIA CUSTOMIZER START */
+.customizer-range {
+  min-width: 250px;
+  display: grid;
+  grid-template-columns: minmax(150px, 1fr) 56px;
+  align-items: center;
+  gap: 12px;
+}
+
+.customizer-slider {
+  width: 100%;
+}
+
+.customizer-value {
+  padding: 6px 10px;
+  border-radius: var(--rounding-full);
+  background: var(--m3-secondary-container);
+  color: var(--m3-on-secondary-container);
+  font-family: var(--font-clock);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.customizer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 8px 12px 4px;
+}
+
+.customizer-note {
+  margin: 0;
+  padding: 0 12px 12px;
+  color: var(--m3-on-surface-variant);
+  font-size: 12px;
+}
+
+.customizer-apply:disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+/* STELLARIA CUSTOMIZER END */

@@ -446,30 +446,77 @@ function renderFocus(focus) {
 
 renderFocus(store.get(keys.focus));
 store.watch(keys.focus, renderFocus, 300);
+option('showActiveWindow', false, value => { nodes.activeWindow.hidden = !value; });
 
-function taskButton(task, icons) {
+/* STELLARIA CUSTOMIZER TASK GROUPING START */
+function taskGroupKey(task) {
+  return String(task.exe || task.process || task.id || '').toLowerCase();
+}
+
+function groupTasks(tasks) {
+  if (!getOption('groupTasks', true)) return tasks.map(task => ({ key: String(task.id), tasks: [task] }));
+  const grouped = new Map();
+  for (const task of tasks) {
+    const key = taskGroupKey(task);
+    if (!grouped.has(key)) grouped.set(key, { key, tasks: [] });
+    grouped.get(key).tasks.push(task);
+  }
+  return [...grouped.values()];
+}
+
+function activateTaskWithoutMinimizing(task) {
+  if (task?.active && !getOption('minimizeActiveTaskOnClick', false)) return Promise.resolve();
+  return actions.activateTask(task.id);
+}
+
+function openTaskGroup(group, node) {
+  const rect = node.getBoundingClientRect();
+  requestPopout(monitor, {
+    kind: 'taskGroup',
+    open: true,
+    tasks: group.tasks,
+    top: window.screenY + rect.top,
+    bottom: window.screenY + rect.bottom,
+    at: Date.now(),
+  });
+}
+
+function taskGroupButton(group, icons) {
+  const task = group.tasks.find(item => item.active) ?? group.tasks[0];
   const iconData = icons[task.icon || task.exe];
-  return element('button', {
-    class: ['task', 'state-layer', task.active ? 'active' : '', task.minimized ? 'minimized' : ''].join(' ').trim(),
-    title: task.title,
-    onClick: () => actions.activateTask(task.id),
+  const count = group.tasks.length;
+  const node = element('button', {
+    class: ['task', 'state-layer', count > 1 ? 'grouped' : '', group.tasks.some(item => item.active) ? 'active' : '', group.tasks.every(item => item.minimized) ? 'minimized' : ''].join(' ').trim(),
+    title: count > 1 ? `${task.process || task.title} · ${count}` : task.title,
+    onClick: () => count === 1 ? activateTaskWithoutMinimizing(task) : openTaskGroup(group, node),
     onAuxClick: event => {
       if (event.button === 1) actions.closeTask(task.id);
     },
-  }, iconData
-    ? element('img', { src: `data:image/png;base64,${iconData}`, alt: '' })
-    : icon('select_window'));
+    onMouseEnter: () => {
+      if (getOption('taskPreviews', true) && getOption('hoverPopouts', true)) openTaskGroup(group, node);
+    },
+  }, [
+    iconData ? element('img', { src: `data:image/png;base64,${iconData}`, alt: '' }) : icon('select_window'),
+    count > 1 ? element('span', { class: 'task-count', text: String(count) }) : null,
+  ]);
+  return node;
 }
 
 function renderTasks() {
-  const tasks = (store.get(keys.tasks, []) ?? []).filter(task => task.monitor === monitor);
+  const allTasks = store.get(keys.tasks, []) ?? [];
+  const tasks = getOption('showTasksFromAllMonitors', true) ? allTasks : allTasks.filter(task => task.monitor === monitor);
   const icons = store.get(keys.taskIcons, {}) ?? {};
-  nodes.tasks.hidden = tasks.length === 0;
-  nodes.tasks.replaceChildren(...tasks.map(task => taskButton(task, icons)));
+  const groups = groupTasks(tasks);
+  nodes.tasks.hidden = groups.length === 0;
+  nodes.tasks.replaceChildren(...groups.map(group => taskGroupButton(group, icons)));
 }
 
 renderTasks();
 store.watch(keys.tasks, renderTasks, 150);
+for (const name of ['showTasksFromAllMonitors', 'groupTasks', 'taskPreviews', 'minimizeActiveTaskOnClick']) {
+  option(name, name !== 'minimizeActiveTaskOnClick', renderTasks);
+}
+/* STELLARIA CUSTOMIZER TASK GROUPING END */
 
 function iconFor(exe) {
   return exe ? (store.get(keys.taskIcons, {}) ?? {})[exe] : undefined;

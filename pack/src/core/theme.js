@@ -128,6 +128,11 @@ export function initTheme() {
   for (const key of [keys.source, keys.mode, keys.variant, keys.scheme, keys.achromatic, 'stellaria:option:smartScheme']) store.watch(key, applyTheme);
   if (getOption('transparency', false)) setOption('transparency', false);
   option('gameMode', false, enabled => document.documentElement.classList.toggle('game-mode', Boolean(enabled)));
+  option('borderSize', 0, value => {
+    const size = Math.max(0, Math.min(40, Number(value) || 0));
+    document.documentElement.style.setProperty('--border', `${size}px`);
+    document.documentElement.classList.toggle('borderless', size === 0);
+  });
   installIconTint();
   option('tintIcons', true, enabled => document.documentElement.classList.toggle('tint-icons', Boolean(enabled)));
 }

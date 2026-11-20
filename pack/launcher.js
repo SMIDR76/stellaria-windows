@@ -269,6 +269,13 @@ function actionEntries() {
       };
     }),
     { icon: 'auto_awesome', title: t('Réglages du thème'), subtitle: t('Apparence, panneaux, raccourcis (Win+Alt+S)'), run: async () => { await togglePopup('settings'); await popup.close(); } },
+    /* STELLARIA CUSTOMIZER LAUNCHER ENTRY START */
+    { icon: 'tune', title: t('Personnalisations Stellaria'), subtitle: t('Barre, écrans, aperçus, bordures et touche Windows'), run: async () => {
+      store.set('stellaria:settings:page', { page: 'customizer', at: Date.now() });
+      await togglePopup('settings');
+      await popup.close();
+    } },
+    /* STELLARIA CUSTOMIZER LAUNCHER ENTRY END */
     { icon: 'settings', title: t('Paramètres Windows'), subtitle: t('Ouvrir les paramètres'), run: () => openSettings('') },
     { icon: 'lock', title: t('Verrouiller'), subtitle: t('Verrouiller la session'), run: () => runPower('lock') },
     { icon: 'bedtime', title: t('Veille'), subtitle: t('Mettre le PC en veille'), run: () => runPower('sleep') },
@@ -512,7 +519,9 @@ function windowEntries(query) {
       title: task.title,
       subtitle: t('Fenêtre ouverte · {0}', task.process),
       run: async () => {
-        await helperClient.request('tasks.activate', { id: task.id }).catch(() => {});
+        /* STELLARIA CUSTOMIZER NO MINIMIZE ACTIVE START */
+        if (getOption('minimizeActiveTaskOnClick', false) || !task.active) await helperClient.request('tasks.activate', { id: task.id }).catch(() => {});
+        /* STELLARIA CUSTOMIZER NO MINIMIZE ACTIVE END */
         await popup.close();
       },
     }));

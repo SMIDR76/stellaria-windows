@@ -506,12 +506,114 @@ function aboutPage() {
   ];
 }
 
+/* STELLARIA CUSTOMIZER SETTINGS PAGE START */
+const customizerDefaults = Object.freeze({
+  borderSize: 0,
+  showActiveWindow: false,
+  showTasksFromAllMonitors: true,
+  launcherWinKey: false,
+  groupTasks: true,
+  taskPreviews: true,
+  minimizeActiveTaskOnClick: false,
+});
+
+function customizerConfig() {
+  return Object.fromEntries(Object.entries(customizerDefaults).map(([key, fallback]) => [key, getOption(key, fallback)]));
+}
+
+async function applyCustomizations(draft, button) {
+  if (button?.disabled) return;
+  if (button) button.disabled = true;
+  toast(t('Personnalisations Stellaria'), { message: t('Application et rechargement de l’interface…'), icon: 'sync' });
+  try {
+    for (const [key, value] of Object.entries(draft)) setOption(key, value);
+    await helperClient.request('config.set', { path: 'launcher.winKey', value: draft.launcherWinKey });
+    toast(t('Personnalisations Stellaria'), { message: t('Préférences appliquées.'), icon: 'check_circle' });
+    await helperClient.request('widgets.reload');
+  } catch (error) {
+    if (button) button.disabled = false;
+    console.error('[stellaria] customizations', error);
+    toast(t('Impossible d’appliquer'), { message: String(error?.message || error), icon: 'error', kind: 'warning' });
+  }
+}
+
+function customizerToggle(draft, key, symbol, label, description) {
+  return row({
+    symbol,
+    label,
+    description,
+    control: switchControl(Boolean(draft[key]), value => { draft[key] = value; }),
+  });
+}
+
+function customizerPage() {
+  const draft = customizerConfig();
+  const borderLabel = element('span', { class: 'customizer-value', text: `${draft.borderSize} px` });
+  const borderSlider = element('input', {
+    class: 'customizer-slider',
+    type: 'range',
+    min: '0',
+    max: '40',
+    step: '1',
+    value: String(draft.borderSize),
+  });
+  borderSlider.addEventListener('input', () => {
+    draft.borderSize = Number(borderSlider.value);
+    borderLabel.textContent = `${draft.borderSize} px`;
+  });
+
+  const applyButton = element('button', {
+    class: 'button filled customizer-apply',
+    onClick: () => applyCustomizations(draft, applyButton),
+  }, [icon('save'), element('span', { text: t('Appliquer et recharger') })]);
+
+  return [
+    pageHero({
+      symbol: 'tune',
+      shape: 'gem',
+      heading: t('Personnalisations Stellaria'),
+      text: t('Contrôlez les préférences intégrées. L’interface sera rechargée à l’application.'),
+      chips: [
+        heroChip(t('4 écrans'), 'monitor'),
+        heroChip(t(draft.groupTasks ? 'Applications groupées' : 'Fenêtres séparées'), 'select_window'),
+        heroChip(`${draft.borderSize} px`, 'border_style'),
+      ],
+    }),
+    section(t('Barre des tâches et écrans'), [
+      customizerToggle(draft, 'showActiveWindow', 'title', t('Afficher la fenêtre active'), t('Affiche à nouveau le nom et l’icône de la fenêtre active dans la barre.')),
+      customizerToggle(draft, 'showTasksFromAllMonitors', 'monitor', t('Fenêtres de tous les écrans'), t('Affiche la liste globale des applications dans chacune des quatre barres.')),
+      customizerToggle(draft, 'groupTasks', 'tab_group', t('Grouper les fenêtres de la même application'), t('Combine plusieurs fenêtres dans une icône avec compteur et sélecteur.')),
+    ]),
+    section(t('Aperçus et comportement'), [
+      customizerToggle(draft, 'taskPreviews', 'preview', t('Aperçu au survol'), t('Affiche aussi une miniature lorsque l’application ne possède qu’une fenêtre.')),
+      customizerToggle(draft, 'minimizeActiveTaskOnClick', 'minimize', t('Réduire en cliquant sur la fenêtre active'), t('Désactivé, conserve le focus et évite que la fenêtre se réduise de façon inattendue.')),
+    ]),
+    section(t('Bordures'), [
+      row({
+        symbol: 'border_style',
+        label: t('Épaisseur du cadre'),
+        description: t('0 supprime le cadre sans réserver d’espace ; les déclencheurs invisibles restent à 1 px.'),
+        control: element('div', { class: 'customizer-range' }, [borderSlider, borderLabel]),
+      }),
+    ]),
+    section(t('Windows et lanceur'), [
+      customizerToggle(draft, 'launcherWinKey', 'keyboard_command_key', t('La touche Windows ouvre le lanceur'), t('Désactivé, conserve le menu Démarrer natif de Windows.')),
+    ]),
+    section(t('Application et récupération'), [
+      element('div', { class: 'customizer-actions' }, [applyButton]),
+      element('p', { class: 'customizer-note', text: t('Ces préférences font partie de cette version de Stellaria et ne nécessitent pas de configurateur séparé.') }),
+    ]),
+  ];
+}
+/* STELLARIA CUSTOMIZER SETTINGS PAGE END */
+
 const pages = [
   ['welcome', 'waving_hand', 'Bienvenue', welcomePage],
   ['appearance', 'palette', 'Apparence', appearancePage],
   ['wallpaper', 'wallpaper', "Fond d'écran", wallpaperPage],
   ['desktop', 'desktop_windows', 'Bureau', desktopPage],
   ['panels', 'dock_to_left', 'Panneaux', panelsPage],
+  ['customizer', 'tune', 'Personnalisations', customizerPage],
   ['shortcuts', 'keyboard', 'Raccourcis', shortcutsPage],
   ['about', 'info', 'À propos', aboutPage],
 ].map(([id, symbol, label, build]) => [id, symbol, t(label), build]);
