@@ -185,6 +185,10 @@ body {
   animation: fade-in var(--duration) var(--ease-standard);
 }
 
+.active-window[hidden] {
+  display: none;
+}
+
 .active-window .icon {
   color: var(--m3-secondary);
   font-size: 18px;

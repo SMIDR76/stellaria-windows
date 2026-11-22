@@ -360,10 +360,6 @@ function renderNotificationBadge() {
   nodes.notifications.title = [unread ? t('Notifications ({0} non lues)', unread) : t('Notifications'), quiet ? t('Ne pas déranger') : ''].filter(Boolean).join(' · ');
 }
 option('doNotDisturb', false, renderNotificationBadge);
-option('activeWindow', true, value => {
-  activeWindowShown = Boolean(value);
-  nodes.activeWindow.hidden = !nodes.activeWindow.dataset.label || !activeWindowShown;
-});
 helperClient.onState('notifications', renderNotificationBadge);
 store.watch(notificationKeys.dismissed, renderNotificationBadge, 2000);
 store.watch(notificationKeys.seenAt, renderNotificationBadge, 2000);
@@ -448,6 +444,11 @@ function showActiveWindow(title, process, iconData) {
     current.replaceWith(element('span', { class: 'icon active-icon', text: 'select_window' }));
   }
 }
+
+option('activeWindow', true, value => {
+  activeWindowShown = Boolean(value);
+  nodes.activeWindow.hidden = !nodes.activeWindow.dataset.label || !activeWindowShown;
+});
 
 function renderFocus(focus) {
   const entry = focus?.byMonitor?.[monitor];
