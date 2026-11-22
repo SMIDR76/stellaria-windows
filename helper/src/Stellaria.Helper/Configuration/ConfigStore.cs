@@ -72,6 +72,8 @@ internal sealed class ConfigStore(string path, Log log)
 
     public bool GetFlag(string optionPath) => Get(optionPath)?.GetValue<bool>() ?? false;
 
+    public int GetInteger(string optionPath, int fallback) => Get(optionPath) is JsonValue value && value.TryGetValue<int>(out var number) ? number : fallback;
+
     public string? GetString(string optionPath) => Get(optionPath) is JsonValue value && value.TryGetValue<string>(out var text) ? text : null;
 
     public JsonObject Set(string optionPath, JsonNode? value)

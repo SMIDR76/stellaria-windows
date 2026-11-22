@@ -74,7 +74,7 @@ async function appIcon(appId) {
 }
 
 async function showNotification(item) {
-  if (!getOption('island', true)) return;
+  if (!getOption('island', true) || getOption('doNotDisturb', false)) return;
   const app = await appIcon(item.appId);
   content.replaceChildren(element('div', { class: 'island-notification' }, [
     app?.icon

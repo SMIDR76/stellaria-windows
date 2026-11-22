@@ -450,4 +450,10 @@ export default {
   "{0} de plus": "mais {0}",
   "Replier la zone de notification": "Recolher a área de notificação",
   "Quatre icônes restent visibles, les autres sont derrière une flèche": "Quatro ícones ficam visíveis, os outros ficam atrás de uma seta",
+  "Ne pas déranger": "Não perturbe",
+  "Les notifications arrivent en silence": "As notificações chegam em silêncio",
+  "Masquer les notifications le temps de vous concentrer": "Oculta as notificações enquanto você se concentra",
+  "Fenêtre active dans la barre": "Janela ativa na barra",
+  "Icône et titre de la fenêtre au premier plan": "Ícone e título da janela em primeiro plano",
+  "Masque l'île et les petites confirmations ; l'historique des notifications reste complet": "Oculta a ilha e as pequenas confirmações; o histórico de notificações continua completo",
 };

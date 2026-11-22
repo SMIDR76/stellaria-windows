@@ -27,6 +27,7 @@ const strings = {
     about: 'À propos', aboutText: 'Logiciel libre sous licence GPL-3.0, basé sur Caelestia de soramanew et ses contributeurs.',
     project: 'Page du projet', readMore: 'En savoir plus', noNews: 'Aucune actualité pour le moment.',
     newsAll: 'Tout', newsRelease: 'Versions', newsAnnouncement: 'Annonces', newsCommunity: 'Communauté', newsTip: 'Astuces', newsNew: 'Nouveau', newsEarlier: 'Plus tôt', newsKindRelease: 'Version', newsKindAnnouncement: 'Annonce', newsKindCommunity: 'Communauté', newsKindTip: 'Astuce',
+    customize: 'Personnaliser', roadmap: 'Feuille de route', customizeOffline: "Démarrez le thème pour le personnaliser d'ici.", frameGroup: "Cadre de l'écran", resetFrame: 'Par défaut', pixels: '{0} px', optFrameBorder: 'Épaisseur des bords', optFrameRounding: 'Arrondi des coins', barGroup: 'Barre', notificationsGroup: 'Notifications', desktopGroup: 'Bureau', allThemeSettings: 'Tous les réglages du thème', optActiveWindow: 'Fenêtre active', optActiveWindowText: 'Icône et titre de la fenêtre au premier plan', optClockSeconds: 'Afficher les secondes', optClockSecondsText: 'Horloges de la barre et du tableau de bord', optTintIcons: 'Icônes aux couleurs du thème', optTintIconsText: "Teinte les icônes d'applications", optTrayCollapse: 'Replier la zone de notification', optTrayCollapseText: 'Quatre icônes visibles, les autres derrière une flèche', optDoNotDisturb: 'Ne pas déranger', optDoNotDisturbText: "Masque l'île et les confirmations, l'historique reste complet", optIsland: 'Île dynamique', optIslandText: "Morceau en cours et notifications en haut de l'écran", optToasts: 'Confirmations du thème', optToastsText: 'Petits messages en bas à droite', optSystemToasts: 'Événements système', optSystemToastsText: 'Audio, clavier, Verr. Maj et morceau en cours', optDesktopClock: 'Horloge de bureau', optDesktopClockText: "Grande horloge sur le fond d'écran", optHotCorner: 'Coin actif', optHotCornerText: 'Le coin haut droit ouvre la vue des tâches', optIdleScreen: "Écran d'inactivité", optIdleScreenText: 'Horloge, météo et média après un moment sans activité', optGameMode: 'Mode jeu', optGameModeText: 'Coupe toutes les animations du thème', roadmapIntro: 'Ce qui est fait, ce qui avance et ce qui arrive. Chaque étape sort quand elle est prête, sans date promise.', roadmapCount: '{0} étapes sur {1} terminées', roadmapDone: 'Terminé', roadmapNow: 'En cours', roadmapNext: 'Ensuite', roadmapLater: 'Plus tard', roadmapIdea: 'Une idée ?', roadmapIdeaText: 'Proposez-la dans les discussions du projet, vos retours guident la suite.', roadmapSuggest: 'Proposer une idée', noRoadmap: 'La feuille de route arrive bientôt.', updateVideoKicker: 'Nouvelle version', updateVideoTitle: 'Stellaria {0} est arrivé', updateVideoText: 'Une mise à jour signée est prête à être installée.', updateLater: 'Plus tard',
     confirmTitle: 'Appliquer ce préréglage ?', confirmText: "Un lien demande d'appliquer le préréglage « {0} ». Vos paramètres actuels sont conservés pour que vous puissiez annuler.",
     unknownLink: 'Lien Stellaria non reconnu.', cancel: 'Annuler',
     helperMissing: 'Service Stellaria introuvable. Réinstallez Stellaria.',
@@ -124,6 +125,7 @@ const strings = {
     about: 'About', aboutText: 'Free software under the GPL-3.0 licence, based on Caelestia by soramanew and contributors.',
     project: 'Project page', readMore: 'Read more', noNews: 'No news yet.',
     newsAll: 'All', newsRelease: 'Releases', newsAnnouncement: 'Announcements', newsCommunity: 'Community', newsTip: 'Tips', newsNew: 'New', newsEarlier: 'Earlier', newsKindRelease: 'Release', newsKindAnnouncement: 'Announcement', newsKindCommunity: 'Community', newsKindTip: 'Tip',
+    customize: 'Customise', roadmap: 'Roadmap', customizeOffline: 'Start the theme to customise it from here.', frameGroup: 'Screen frame', resetFrame: 'Default', pixels: '{0} px', optFrameBorder: 'Border thickness', optFrameRounding: 'Corner roundness', barGroup: 'Bar', notificationsGroup: 'Notifications', desktopGroup: 'Desktop', allThemeSettings: 'All theme settings', optActiveWindow: 'Active window', optActiveWindowText: 'Icon and title of the window in front', optClockSeconds: 'Show seconds', optClockSecondsText: 'Clocks on the bar and the dashboard', optTintIcons: 'Icons in theme colours', optTintIconsText: 'Tints app icons', optTrayCollapse: 'Collapse the notification area', optTrayCollapseText: 'Four icons visible, the others behind an arrow', optDoNotDisturb: 'Do not disturb', optDoNotDisturbText: 'Hides the island and confirmations, the history stays complete', optIsland: 'Dynamic island', optIslandText: 'Now playing and notifications at the top of the screen', optToasts: 'Theme confirmations', optToastsText: 'Small messages at the bottom right', optSystemToasts: 'System events', optSystemToastsText: 'Audio, keyboard, Caps Lock and now playing', optDesktopClock: 'Desktop clock', optDesktopClockText: 'A large clock on the wallpaper', optHotCorner: 'Hot corner', optHotCornerText: 'The top right corner opens Task View', optIdleScreen: 'Idle screen', optIdleScreenText: 'Clock, weather and media after a while without activity', optGameMode: 'Game mode', optGameModeText: 'Turns off every theme animation', roadmapIntro: "What's done, what's moving and what's coming. Each step ships when it's ready, with no promised dates.", roadmapCount: '{0} of {1} steps done', roadmapDone: 'Done', roadmapNow: 'In progress', roadmapNext: 'Next', roadmapLater: 'Later', roadmapIdea: 'Got an idea?', roadmapIdeaText: "Share it in the project's discussions, your feedback shapes what comes next.", roadmapSuggest: 'Suggest an idea', noRoadmap: 'The roadmap is coming soon.', updateVideoKicker: 'New version', updateVideoTitle: 'Stellaria {0} is here', updateVideoText: 'A signed update is ready to install.', updateLater: 'Later',
     confirmTitle: 'Apply this preset?', confirmText: 'A link asks to apply “{0}”. Your current settings are kept so you can undo.',
     unknownLink: 'This Stellaria link is not recognised.', cancel: 'Cancel',
     helperMissing: 'Stellaria service not found. Reinstall Stellaria.',
@@ -204,7 +206,9 @@ const pages = [
   ['install', 'install_desktop'],
   ['discover', 'explore'],
   ['library', 'apps'],
+  ['customize', 'palette'],
   ['news', 'newspaper'],
+  ['roadmap', 'route'],
   ['help', 'help'],
   ['settings', 'settings'],
 ];
@@ -251,6 +255,7 @@ const prefixList = [
 const pageShapes = {
   home: [9, 0.07], install: [6, 0.1], discover: [12, 0.05], library: [4, 0.13],
   news: [7, 0.09], help: [5, 0.15], settings: [8, 0.08], preset: [10, 0.06],
+  customize: [11, 0.06], roadmap: [3, 0.18],
 };
 
 const state = {
@@ -272,6 +277,7 @@ const state = {
   log: null,
   themeRoles: null,
   wallpaperUrl: null,
+  themeOptions: null,
   newsFilter: 'all',
   newsSeen: stored('news-seen', ''),
   newsMarked: stored('news-seen', ''),
@@ -638,6 +644,7 @@ function paintRoles(roles) {
 const topoFields = {
   home: [0, 0, 3.0], install: [13.7, 5.1, 2.4], discover: [27.2, 19.4, 3.6], library: [41.9, 8.3, 2.1],
   news: [6.6, 33.8, 2.8], help: [52.4, 27.5, 3.3], settings: [19.1, 47.2, 2.6], preset: [35.5, 41.6, 3.9],
+  customize: [44.7, 52.3, 2.9], roadmap: [9.4, 61.2, 3.4],
 };
 
 const topoShader = `#version 300 es
@@ -880,8 +887,29 @@ async function refreshTheme() {
 }
 
 async function refreshAll() {
-  await Promise.allSettled([refreshTheme(), refreshStatus(), refreshCatalog(false), refreshInstall()]);
+  await Promise.allSettled([refreshTheme(), refreshStatus(), refreshCatalog(false), refreshInstall(), refreshOptions()]);
   render();
+}
+
+async function refreshOptions() {
+  try {
+    state.themeOptions = await helper.request('launcher.options');
+  } catch {
+    state.themeOptions = null;
+  }
+}
+
+async function setThemeOption(name, value) {
+  if (!state.themeOptions) return;
+  state.themeOptions = { ...state.themeOptions, [name]: value };
+  try {
+    const options = await helper.request('launcher.setOption', { name, value });
+    if (options) state.themeOptions = options;
+  } catch {
+    notify(t('offline'), 'warning');
+    await refreshOptions();
+    render();
+  }
 }
 
 async function refreshInstall() {
@@ -1885,6 +1913,221 @@ function newsPage() {
   ];
 }
 
+const optionGroups = [
+  ['barGroup', [['activeWindow', 'select_window'], ['clockSeconds', 'timer'], ['tintIcons', 'colorize'], ['trayCollapse', 'unfold_less']]],
+  ['notificationsGroup', [['doNotDisturb', 'do_not_disturb_on'], ['island', 'smart_display'], ['toasts', 'chat_bubble'], ['systemToasts', 'notifications_active']]],
+  ['desktopGroup', [['desktopClock', 'schedule'], ['hotCorner', 'select_window_2'], ['idleScreen', 'nightlight'], ['gameMode', 'sports_esports']]],
+];
+
+const frameDefaults = { frameBorder: [10, 4, 24], frameRounding: [25, 0, 40] };
+const optionKey = name => `opt${name[0].toUpperCase()}${name.slice(1)}`;
+
+function frameValue(name) {
+  const [fallback, minimum, maximum] = frameDefaults[name];
+  const value = state.themeOptions?.[name];
+  return Number.isInteger(value) && value >= minimum && value <= maximum ? value : fallback;
+}
+
+function framePreview() {
+  return element('div', {
+    class: 'frame-preview',
+    'aria-hidden': 'true',
+    style: { '--pv-border': `${frameValue('frameBorder')}px`, '--pv-rounding': `${frameValue('frameRounding')}px` },
+  }, [
+    element('div', { class: 'pv-bar' }, [element('span', { class: 'pv-dot' }), element('span'), element('span'), element('span')]),
+    element('div', { class: 'pv-screen', style: state.wallpaperUrl ? { backgroundImage: `url("${state.wallpaperUrl}")` } : {} }, [
+      element('div', { class: 'pv-window' }),
+      element('div', { class: 'pv-window small' }),
+    ]),
+  ]);
+}
+
+function frameSlider(name, symbol, preview) {
+  const [, minimum, maximum] = frameDefaults[name];
+  const value = frameValue(name);
+  const label = element('span', { class: 'slider-value', text: t('pixels', value) });
+  const input = element('input', { type: 'range', min: String(minimum), max: String(maximum), step: '1', value: String(value), class: 'slider', 'aria-label': t(optionKey(name)) });
+  let timer = 0;
+  input.addEventListener('input', () => {
+    const next = Number(input.value);
+    label.textContent = t('pixels', next);
+    preview.style.setProperty(name === 'frameBorder' ? '--pv-border' : '--pv-rounding', `${next}px`);
+    if (state.themeOptions) state.themeOptions = { ...state.themeOptions, [name]: next };
+    clearTimeout(timer);
+    timer = setTimeout(() => setThemeOption(name, next), 220);
+  });
+  return element('div', { class: 'row' }, [
+    icon(symbol, 'tonal-icon'),
+    element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t(optionKey(name)) })]),
+    input,
+    label,
+  ]);
+}
+
+function optionSwitch(name, symbol) {
+  const on = Boolean(state.themeOptions?.[name]);
+  const key = optionKey(name);
+  return element('button', {
+    class: 'row option-row state-layer',
+    role: 'switch',
+    'aria-checked': String(on),
+    onClick: () => {
+      setThemeOption(name, !on);
+      render();
+    },
+  }, [
+    icon(symbol, 'tonal-icon'),
+    element('span', { class: 'row-text' }, [
+      element('span', { class: 'row-title', text: t(key) }),
+      element('span', { class: 'row-subtitle', text: t(`${key}Text`) }),
+    ]),
+    element('span', { class: `switch${on ? ' on' : ''}`, 'aria-hidden': 'true' }, element('span', { class: 'switch-thumb' }, on ? icon('check') : null)),
+  ]);
+}
+
+function customizePage() {
+  if (!state.themeOptions) {
+    return [element('div', { class: 'empty' }, [
+      icon('palette'),
+      element('span', { text: t('customizeOffline') }),
+      state.connected ? button(t('start'), 'play_circle', () => runHelper('start', t('started')).then(refreshOptions).then(() => render()), { variant: 'filled', disabled: Boolean(state.busy) }) : null,
+    ])];
+  }
+  const preview = framePreview();
+  return [
+    element('section', { class: 'section frame-section' }, [
+      element('div', { class: 'section-title' }, [
+        element('span', { text: t('frameGroup') }),
+        button(t('resetFrame'), 'restart_alt', async () => {
+          await setThemeOption('frameBorder', frameDefaults.frameBorder[0]);
+          await setThemeOption('frameRounding', frameDefaults.frameRounding[0]);
+          render();
+        }, { variant: 'text' }),
+      ]),
+      preview,
+      frameSlider('frameBorder', 'border_outer', preview),
+      frameSlider('frameRounding', 'rounded_corner', preview),
+    ]),
+    ...optionGroups.map(([group, options]) => element('section', { class: 'section' }, [
+      element('div', { class: 'section-title' }, [element('span', { text: t(group) })]),
+      ...options.map(([name, symbol]) => optionSwitch(name, symbol)),
+    ])),
+    element('div', { class: 'actions customize-more' }, [
+      button(t('allThemeSettings'), 'tune', () => helper.request('launcher.openSettings').catch(() => notify(t('offline'), 'warning')), { variant: 'text', disabled: !state.connected }),
+    ]),
+  ];
+}
+
+const roadmapStates = {
+  done: ['check_circle', 'roadmapDone'],
+  now: ['progress_activity', 'roadmapNow'],
+  next: ['schedule', 'roadmapNext'],
+  later: ['more_horiz', 'roadmapLater'],
+};
+
+function roadmapPage() {
+  const phases = state.catalog?.roadmap ?? [];
+  if (!phases.length) return [element('div', { class: 'empty' }, [icon('route'), element('span', { text: t('noRoadmap') })])];
+  const done = phases.filter(phase => phase.status === 'done').length;
+  return [
+    element('section', { class: 'hero roadmap-hero' }, [
+      element('div', { class: 'hero-ornament' }, shape(3, 0.18)),
+      element('div', { class: 'hero-mark' }, [shape(9, 0.07), icon('route')]),
+      element('div', { class: 'hero-body' }, [
+        element('h2', { text: t('roadmap') }),
+        element('p', { text: t('roadmapIntro') }),
+        element('div', { class: 'roadmap-progress', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': String(phases.length), 'aria-valuenow': String(done) }, element('span', { style: { width: `${(done / phases.length) * 100}%` } })),
+        element('span', { class: 'roadmap-count', text: t('roadmapCount', done, phases.length) }),
+      ]),
+    ]),
+    element('ol', { class: 'roadmap' }, phases.map(phase => {
+      const status = roadmapStates[phase.status] ? phase.status : 'later';
+      const [symbol, key] = roadmapStates[status];
+      return element('li', { class: `roadmap-phase status-${status}` }, [
+        element('div', { class: 'roadmap-node' }, icon(phase.icon ?? symbol)),
+        element('div', { class: 'roadmap-card' }, [
+          element('div', { class: 'news-meta' }, [
+            element('span', { class: 'roadmap-status' }, [icon(symbol), element('span', { text: t(key) })]),
+            phase.version ? element('span', { class: 'news-version', text: `v${phase.version}` }) : null,
+          ]),
+          element('h3', { text: local(phase.title) }),
+          element('ul', { class: 'roadmap-items' }, (phase.items ?? []).map(item => element('li', {}, [
+            icon(status === 'done' ? 'check' : 'radio_button_unchecked'),
+            element('span', { text: local(item.text) }),
+          ]))),
+        ]),
+      ]);
+    })),
+    element('section', { class: 'section' }, [
+      element('div', { class: 'row' }, [
+        icon('lightbulb', 'tonal-icon'),
+        element('div', { class: 'row-text' }, [
+          element('span', { class: 'row-title', text: t('roadmapIdea') }),
+          element('span', { class: 'row-subtitle', text: t('roadmapIdeaText') }),
+        ]),
+        button(t('roadmapSuggest'), 'forum', () => invoke('open_external', { url: 'https://github.com/SMIDR76/stellaria-windows/discussions' }).catch(() => {}), {}),
+      ]),
+    ]),
+  ];
+}
+
+const updateVideo = {
+  node: null,
+  shown: false,
+
+  open(info) {
+    if (this.shown || this.node || !info?.version) return;
+    this.shown = true;
+    const release = (state.catalog?.news ?? []).find(item => item.version === info.version);
+    const highlights = (release?.highlights ?? []).filter(entry => local(entry.text)).slice(0, 4);
+    const video = element('video', { class: 'update-video-media', src: './media/update.mp4', playsinline: true, preload: 'auto', 'aria-hidden': 'true' });
+    video.muted = true;
+    if (reducedMotion.matches) {
+      video.addEventListener('loadedmetadata', () => { video.currentTime = Math.max(0, video.duration - 0.1); }, { once: true });
+    } else {
+      video.autoplay = true;
+    }
+    const close = () => this.close();
+    this.node = element('div', { class: `update-video${reducedMotion.matches ? ' still' : ''}`, role: 'dialog', 'aria-modal': 'true', 'aria-label': t('updateVideoTitle', info.version) }, [
+      video,
+      element('div', { class: 'update-video-scrim' }),
+      element('div', { class: 'update-video-body' }, [
+        element('span', { class: 'update-video-kicker' }, [icon('auto_awesome'), element('span', { text: t('updateVideoKicker') })]),
+        element('h2', { text: t('updateVideoTitle', info.version) }),
+        element('p', { text: release ? local(release.title) : t('updateVideoText') }),
+        highlights.length
+          ? element('ul', { class: 'update-video-highlights' }, highlights.map(entry => element('li', {}, [icon(entry.icon ?? 'check'), element('span', { text: local(entry.text) })])))
+          : null,
+        element('div', { class: 'actions' }, [
+          button(t('updateNow'), 'download', () => {
+            close();
+            showPage('install');
+            downloadUpdate();
+          }, { variant: 'filled' }),
+          button(t('updateLater'), 'schedule', close, { variant: 'text' }),
+        ]),
+      ]),
+    ]);
+    this.keydown = event => {
+      if (event.key === 'Escape') close();
+    };
+    window.addEventListener('keydown', this.keydown);
+    document.body.append(this.node);
+    requestAnimationFrame(() => this.node?.classList.add('visible'));
+    setTimeout(() => this.node?.querySelector('.button.filled')?.focus(), 400);
+  },
+
+  close() {
+    const node = this.node;
+    if (!node) return;
+    this.node = null;
+    window.removeEventListener('keydown', this.keydown);
+    node.classList.remove('visible');
+    node.querySelector('video')?.pause();
+    setTimeout(() => node.remove(), reducedMotion.matches ? 0 : 320);
+  },
+};
+
 function settingsPage() {
   const segmented = languageChips(() => {
     render();
@@ -1976,7 +2219,7 @@ function settingsPage() {
   ];
 }
 
-const builders = { home: homePage, install: installPage, discover: discoverPage, library: libraryPage, news: newsPage, help: helpPage, settings: settingsPage, preset: presetPage };
+const builders = { home: homePage, install: installPage, discover: discoverPage, library: libraryPage, customize: customizePage, news: newsPage, roadmap: roadmapPage, help: helpPage, settings: settingsPage, preset: presetPage };
 
 function paintConnection() {
   nodes.connection.classList.toggle('online', state.connected);
@@ -2386,6 +2629,7 @@ listen('open-page', event => showPage(event.payload));
 setTimeout(async () => {
   await checkUpdate(true);
   syncTray();
+  if (state.update.status === 'available' && stored('onboarded', '') === '1' && nodes.dialog.hidden) updateVideo.open(state.update.info);
 }, 1500);
 setInterval(async () => {
   await checkUpdate(true);

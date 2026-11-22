@@ -3,7 +3,23 @@
 Every notable change to Stellaria. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the
 project uses [semantic versioning](https://semver.org/).
 
-## [1.1.0] - unreleased
+## [1.2.0] - unreleased
+
+### Added
+
+- A Customise page in the Stellaria app: frame border thickness and corner roundness with a live preview, and switches
+  for the active window on the bar, Do not disturb, seconds, tinted icons, the collapsible tray, the island, theme
+  confirmations, system events, the desktop clock, the hot corner, the idle screen and game mode.
+- Do not disturb: a switch in the notification panel and the theme settings hides the island and the small
+  confirmations, keeps the history, and shows a paused bell on the bar.
+- An option to hide the active window on the bar.
+- A Roadmap page in the app, shipped in the signed catalogue (`registry/roadmap.json`).
+- A short video that announces a new version when the app starts, with its highlights and an Update button. It shows a
+  still frame when Windows asks for reduced motion.
+- `frame.border` (4 to 24 px): the helper resizes the frame edges and their screen reservation to match.
+- Requests `theme.options`, `launcher.options` and `launcher.setOption`, and the event `theme.option`.
+
+## [1.1.0] - 2026-11-18
 
 ### Added
 

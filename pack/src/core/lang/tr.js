@@ -450,4 +450,10 @@ export default {
   "{0} de plus": "{0} tane daha",
   "Replier la zone de notification": "Bildirim alanını daralt",
   "Quatre icônes restent visibles, les autres sont derrière une flèche": "Dört simge görünür kalır, diğerleri bir okun arkasında durur",
+  "Ne pas déranger": "Rahatsız etmeyin",
+  "Les notifications arrivent en silence": "Bildirimler sessizce gelir",
+  "Masquer les notifications le temps de vous concentrer": "Odaklanırken bildirimleri gizle",
+  "Fenêtre active dans la barre": "Çubukta etkin pencere",
+  "Icône et titre de la fenêtre au premier plan": "Öndeki pencerenin simgesi ve başlığı",
+  "Masque l'île et les petites confirmations ; l'historique des notifications reste complet": "Adayı ve küçük onayları gizler; bildirim geçmişi eksiksiz kalır",
 };

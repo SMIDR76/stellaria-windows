@@ -450,4 +450,10 @@ export default {
   "{0} de plus": "还有 {0} 个",
   "Replier la zone de notification": "折叠通知区域",
   "Quatre icônes restent visibles, les autres sont derrière une flèche": "保留四个图标可见，其余的收在箭头后面",
+  "Ne pas déranger": "勿扰",
+  "Les notifications arrivent en silence": "通知将静默送达",
+  "Masquer les notifications le temps de vous concentrer": "专注时隐藏通知",
+  "Fenêtre active dans la barre": "栏中显示活动窗口",
+  "Icône et titre de la fenêtre au premier plan": "前台窗口的图标和标题",
+  "Masque l'île et les petites confirmations ; l'historique des notifications reste complet": "隐藏灵动岛和小提示；通知历史保持完整",
 };

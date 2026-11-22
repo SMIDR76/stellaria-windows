@@ -195,6 +195,7 @@ internal sealed class CatalogModule : IHelperModule
                 ["source"] = _source,
                 ["items"] = _index?.Document["items"]?.DeepClone() ?? new JsonArray(),
                 ["news"] = _index?.Document["news"]?.DeepClone() ?? new JsonArray(),
+                ["roadmap"] = _index?.Document["roadmap"]?.DeepClone() ?? new JsonArray(),
                 ["active"] = state["active"]?.DeepClone(),
                 ["canUndo"] = state["history"] is JsonArray history && history.Count > 0,
             };

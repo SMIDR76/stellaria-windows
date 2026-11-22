@@ -450,4 +450,10 @@ export default {
   "{0} de plus": "{0} more",
   "Replier la zone de notification": "Collapse the notification area",
   "Quatre icônes restent visibles, les autres sont derrière une flèche": "Four icons stay visible, the others sit behind an arrow",
+  "Ne pas déranger": "Do not disturb",
+  "Les notifications arrivent en silence": "Notifications arrive silently",
+  "Masquer les notifications le temps de vous concentrer": "Hide notifications while you focus",
+  "Fenêtre active dans la barre": "Active window on the bar",
+  "Icône et titre de la fenêtre au premier plan": "Icon and title of the window in front",
+  "Masque l'île et les petites confirmations ; l'historique des notifications reste complet": "Hides the island and the small confirmations; the notification history stays complete",
 };

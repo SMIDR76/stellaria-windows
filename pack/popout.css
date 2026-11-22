@@ -195,6 +195,20 @@ body.open .drawer * {
   opacity: 0.75;
 }
 
+.notification-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.notification-actions .tonal-button {
+  flex: 1;
+}
+
+.quiet-toggle.selected {
+  background: var(--m3-primary);
+  color: var(--m3-on-primary);
+}
+
 .tonal-button {
   display: inline-flex;
   align-items: center;

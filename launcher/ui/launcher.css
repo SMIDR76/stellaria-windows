@@ -1866,3 +1866,457 @@ button.chip .icon {
 .language-chips {
   padding: 2px 0 8px 52px;
 }
+
+.option-row {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.option-row .row-subtitle {
+  color: var(--m3-on-surface-variant);
+}
+
+.switch {
+  flex: 0 0 auto;
+  position: relative;
+  width: 52px;
+  height: 32px;
+  border-radius: 16px;
+  border: 2px solid var(--m3-outline);
+  background: var(--m3-surface-container-highest);
+  transition: background var(--duration-effects) var(--ease-effects), border-color var(--duration-effects) var(--ease-effects);
+}
+
+.switch-thumb {
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--m3-outline);
+  transform: translateY(-50%);
+  transition: left var(--duration-spatial-fast) var(--ease-spatial-fast), width var(--duration-spatial-fast) var(--ease-spatial-fast), height var(--duration-spatial-fast) var(--ease-spatial-fast), background var(--duration-effects) var(--ease-effects);
+}
+
+.switch.on {
+  border-color: var(--m3-primary);
+  background: var(--m3-primary);
+}
+
+.switch.on .switch-thumb {
+  left: 22px;
+  width: 24px;
+  height: 24px;
+  background: var(--m3-on-primary);
+}
+
+.switch-thumb .icon {
+  font-size: 16px;
+  color: var(--m3-primary);
+}
+
+.slider-value {
+  min-width: 52px;
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--m3-primary);
+}
+
+.frame-preview {
+  --pv-border: 10px;
+  --pv-rounding: 25px;
+  display: flex;
+  height: 230px;
+  margin: 4px 12px 10px;
+  padding: var(--pv-border) var(--pv-border) var(--pv-border) 0;
+  border-radius: 18px;
+  background: var(--m3-surface-container-lowest);
+  box-shadow: inset 0 0 0 1px var(--m3-outline-variant);
+  transition: padding 180ms var(--ease-effects);
+}
+
+.pv-bar {
+  flex: 0 0 34px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-top: 14px;
+}
+
+.pv-bar span {
+  width: 14px;
+  height: 14px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--m3-on-surface) 22%, transparent);
+}
+
+.pv-bar .pv-dot {
+  border-radius: 50%;
+  background: var(--m3-primary);
+}
+
+.pv-screen {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  border-radius: var(--pv-rounding);
+  background:
+    radial-gradient(80% 90% at 20% 10%, color-mix(in srgb, var(--m3-primary) 55%, transparent), transparent 70%),
+    radial-gradient(70% 80% at 90% 100%, color-mix(in srgb, var(--m3-tertiary) 50%, transparent), transparent 70%),
+    var(--m3-surface-container-high);
+  background-size: cover;
+  background-position: center;
+  transition: border-radius 180ms var(--ease-effects);
+}
+
+.pv-window {
+  position: absolute;
+  left: 9%;
+  top: 14%;
+  width: 52%;
+  height: 62%;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--m3-surface-container) 88%, transparent);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--m3-shadow) 40%, transparent);
+}
+
+.pv-window.small {
+  left: 56%;
+  top: 34%;
+  width: 34%;
+  height: 46%;
+  background: color-mix(in srgb, var(--m3-surface-container-high) 92%, transparent);
+}
+
+.customize-more {
+  justify-content: center;
+}
+
+.roadmap-hero {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  padding: 30px;
+  border-radius: 30px;
+}
+
+.roadmap-hero .hero-ornament {
+  width: 320px;
+  height: 320px;
+  right: -90px;
+  top: -110px;
+}
+
+.roadmap-hero .hero-mark {
+  width: 96px;
+  height: 96px;
+}
+
+.roadmap-hero .hero-mark .icon {
+  font-size: 44px;
+}
+
+.roadmap-progress {
+  height: 8px;
+  max-width: 420px;
+  margin-top: 6px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--m3-on-surface) 12%, transparent);
+}
+
+.roadmap-progress span {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--m3-primary), var(--m3-tertiary));
+}
+
+.roadmap-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--m3-primary);
+}
+
+.roadmap {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.roadmap-phase {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.roadmap-phase:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 23px;
+  top: 62px;
+  bottom: -14px;
+  width: 2px;
+  border-radius: 1px;
+  background: var(--m3-outline-variant);
+}
+
+.roadmap-phase.status-done:not(:last-child)::after {
+  background: var(--m3-primary);
+}
+
+.roadmap-node {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  margin-top: 14px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: var(--m3-surface-container-highest);
+  color: var(--m3-on-surface-variant);
+}
+
+.roadmap-node .icon {
+  font-size: 24px;
+  font-variation-settings: "FILL" 1, "wght" 500, "GRAD" 0, "opsz" 24;
+}
+
+.status-done .roadmap-node {
+  background: var(--m3-primary);
+  color: var(--m3-on-primary);
+}
+
+.status-now .roadmap-node {
+  background: var(--m3-tertiary-container);
+  color: var(--m3-on-tertiary-container);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--m3-tertiary) 30%, transparent);
+}
+
+.roadmap-card {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 22px;
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--m3-surface-container) 84%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+.status-later .roadmap-card,
+.status-next .roadmap-card {
+  background: color-mix(in srgb, var(--m3-surface-container-low) 80%, transparent);
+}
+
+.roadmap-card h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.roadmap-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  color: var(--m3-primary);
+}
+
+.status-now .roadmap-status {
+  color: var(--m3-tertiary);
+}
+
+.status-next .roadmap-status,
+.status-later .roadmap-status {
+  color: var(--m3-on-surface-variant);
+}
+
+.roadmap-status .icon {
+  font-size: 16px;
+}
+
+.roadmap-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 6px 14px;
+}
+
+.roadmap-items li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--m3-on-surface-variant);
+}
+
+.roadmap-items .icon {
+  margin-top: 1px;
+  font-size: 17px;
+  color: var(--m3-primary);
+}
+
+.status-next .roadmap-items .icon,
+.status-later .roadmap-items .icon {
+  color: var(--m3-outline);
+}
+
+.update-video {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  overflow: hidden;
+  background: #07050c;
+  opacity: 0;
+  transition: opacity 320ms var(--ease-effects);
+}
+
+.update-video.visible {
+  opacity: 1;
+}
+
+.update-video-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.update-video-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgb(7 5 12 / 0.86) 0%, rgb(7 5 12 / 0.55) 42%, transparent 72%),
+    linear-gradient(0deg, rgb(7 5 12 / 0.7) 0%, transparent 45%);
+}
+
+.update-video-body {
+  position: absolute;
+  left: clamp(32px, 7vw, 96px);
+  bottom: clamp(32px, 9vh, 96px);
+  max-width: min(560px, 80vw);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  color: #f4effa;
+}
+
+.update-video-body > * {
+  animation: video-text-in 700ms var(--ease-emphasized-full) both;
+  animation-delay: calc(2.3s + var(--d, 0) * 110ms);
+}
+
+.update-video-body > :nth-child(2) { --d: 1; }
+.update-video-body > :nth-child(3) { --d: 2; }
+.update-video-body > :nth-child(4) { --d: 3; }
+.update-video-body > :nth-child(5) { --d: 4; }
+
+.update-video.still .update-video-body > * {
+  animation: none;
+}
+
+@keyframes video-text-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(6px);
+  }
+}
+
+.update-video-kicker {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 15px;
+  background: rgb(255 255 255 / 0.1);
+  backdrop-filter: blur(12px);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.update-video-kicker .icon {
+  font-size: 16px;
+  color: #d7b8ff;
+}
+
+.update-video-body h2 {
+  margin: 0;
+  font-size: clamp(32px, 4.6vw, 54px);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.update-video-body p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.5;
+  color: rgb(244 239 250 / 0.78);
+}
+
+.update-video-highlights {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.update-video-highlights li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgb(255 255 255 / 0.08);
+  backdrop-filter: blur(14px);
+  font-size: 13.5px;
+  line-height: 1.35;
+}
+
+.update-video-highlights .icon {
+  font-size: 20px;
+  color: #d7b8ff;
+}
+
+.update-video .button:not(.filled) {
+  color: #f4effa;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .switch,
+  .switch-thumb,
+  .frame-preview,
+  .pv-screen,
+  .update-video {
+    transition: none;
+  }
+}

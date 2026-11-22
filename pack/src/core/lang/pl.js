@@ -450,4 +450,10 @@ export default {
   "{0} de plus": "jeszcze {0}",
   "Replier la zone de notification": "Zwijaj obszar powiadomień",
   "Quatre icônes restent visibles, les autres sont derrière une flèche": "Cztery ikony pozostają widoczne, reszta jest za strzałką",
+  "Ne pas déranger": "Nie przeszkadzać",
+  "Les notifications arrivent en silence": "Powiadomienia przychodzą po cichu",
+  "Masquer les notifications le temps de vous concentrer": "Ukrywa powiadomienia, gdy się skupiasz",
+  "Fenêtre active dans la barre": "Aktywne okno na pasku",
+  "Icône et titre de la fenêtre au premier plan": "Ikona i tytuł okna na pierwszym planie",
+  "Masque l'île et les petites confirmations ; l'historique des notifications reste complet": "Ukrywa wyspę i drobne potwierdzenia; historia powiadomień pozostaje pełna",
 };

@@ -84,6 +84,7 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `notification` | one item of the `notifications` topic, when a toast arrived in the last 30 seconds |
 | `widgets.reload` | `{}`. Every widget reloads its page. Raised by the `widgets.reload` request, used by the settings app to recover a widget that stopped rendering. |
 | `theme.preset` | `{ "id", "name", "preset" }`, scope `appearance` | A catalogue preset to apply. |
+| `theme.option` | `{ "name", "value" }`, scope `appearance` | An option changed from the Stellaria app; the primary bar stores it and every widget follows. |
 | `theme.undo` | `{}`, scope `appearance` | Restore the look saved before the last preset. |
 
 ## Requests
@@ -121,14 +122,17 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `tasks.activate` | `{ "id" }` | none |
 | `tasks.close` | `{ "id" }` | none |
 | `theme.publish` | `{ "roles": { "<role>": "#rrggbb" }, "transparent": false }`, 1 to 64 roles of 1 to 32 letters | none. Written to `%LOCALAPPDATA%\Stellaria\switcher-theme.json` for the optional window switcher. |
+| `theme.options` | `{ "options": { "<name>": bool \| int } }`, at most 64 options | none. The primary bar reports the options the app can change, so the app shows their current values. |
 | `windows.setColors` | `{ "palette": [7 "#rrggbb", lightest first], "dark": bool, "titleBars": bool }` | none. Sets the Windows accent (Settings, File Explorer, Start menu, title bars when `titleBars`) and light or dark mode for apps, in the user's personalisation values only. The previous values are saved to `%LOCALAPPDATA%\Stellaria\windows-colors-backup.json` before the first change. |
 | `windows.restoreColors` | none | none. Writes back the saved colours and deletes the backup; does nothing without one. |
-| `catalog.index` | `{ "refresh"?: bool }` (scope `launcher`) | `{ "version", "expires", "source": "online" \| "cache" \| "bundled", "items", "news", "active", "canUndo" }`. Reads the signed index from `catalog.url` (optional setting), then the cached copy, then the copy shipped with the installer, and keeps the first one that passes `SignedIndex` checks. `not_found` when none does. |
+| `catalog.index` | `{ "refresh"?: bool }` (scope `launcher`) | `{ "version", "expires", "source": "online" \| "cache" \| "bundled", "items", "news", "roadmap", "active", "canUndo" }`. Reads the signed index from `catalog.url` (optional setting), then the cached copy, then the copy shipped with the installer, and keeps the first one that passes `SignedIndex` checks. `not_found` when none does. |
 | `catalog.apply` | `{ "id" }` of a preset (scope `launcher`) | Same as `catalog.index`. Raises `theme.preset`; the primary bar saves the current look, then applies the preset's scheme, mode, variant and visual options. There is no transparency option: a preset that sets one is refused. |
 | `catalog.undo` | none (scope `launcher`) | Same as `catalog.index`. Raises `theme.undo`; the primary bar restores the look saved before the last preset. |
 | `launcher.status` | none (scope `launcher`) | `{ "helperVersion", "packVersion", "packInstalled", "zebar", "zebarRunning", "tasks": [helper, switcher, Zebar], "sessions" }`. |
 | `launcher.theme` | none (scope `launcher`) | The last `theme.publish` payload, `{ "roles", "transparent" }`, so the Stellaria app wears the theme's colours. `null` before the first publish. |
 | `launcher.wallpaper` | none (scope `launcher`) | `{ "image": "<base64 PNG, 480 px wide>", "source" }`: the desktop background as the theme samples it (Wallpaper Engine included), for the preview on the app's Home page. `null` when nothing could be sampled. |
+| `launcher.options` | none (scope `launcher`) | The last `theme.options` report, or `null` while the theme is not running. |
+| `launcher.setOption` | `{ "name", "value" }` (scope `launcher`) | The options after the change. Only `frameBorder` (4 to 24), `frameRounding` (0 to 40) and the flags `activeWindow`, `doNotDisturb`, `clockSeconds`, `tintIcons`, `trayCollapse`, `island`, `desktopClock`, `hotCorner`, `toasts`, `systemToasts`, `idleScreen` and `gameMode` are accepted; anything else is `invalid_params`. Raises `theme.option`. |
 | `launcher.openSettings` | none (scope `launcher`) | Opens the theme settings window, like Win+Alt+S. |
 | `wallpapers.apply` | `{ "path" }` inside the configured folder | none, `denied` for any other path |
 | `wallpapers.list` | none | `{ "directory", "current", "items": [ { "path", "name", "thumb": "<384 x 216 jpeg base64>" } ] }`, at most 500 images of the configured folder |
@@ -155,7 +159,7 @@ cannot be registered or are only sent to sessions holding `config`, so new featu
 | `notifications` | | `notifications`; `notification` |
 | `input` | `input.paste`, `keyboard.setLayout`, `hotkeys.escape` | `keyboard`; `hotkey`, `hotkey.unavailable` |
 | `system` | `power.*`, `capture.*`, `shell.openSettings` | |
-| `appearance` | `theme.publish`, `wallpapers.apply`, `windows.setColors`, `windows.restoreColors` | |
+| `appearance` | `theme.publish`, `theme.options`, `wallpapers.apply`, `windows.setColors`, `windows.restoreColors` | |
 | `config` | `config.set` | |
 | `launcher` | `catalog.*`, `launcher.*` | |
 

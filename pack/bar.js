@@ -354,9 +354,16 @@ function renderNotificationBadge() {
   const unread = visible.filter(item => item.time > seenAt).length;
   nodes.notificationsBadge.hidden = unread === 0;
   nodes.notificationsBadge.textContent = unread > 9 ? '9+' : String(unread);
-  nodes.notificationsIcon.textContent = unread ? 'notifications_unread' : visible.length ? 'notifications' : 'notifications_none';
-  nodes.notifications.title = unread ? t('Notifications ({0} non lues)', unread) : t('Notifications');
+  const quiet = getOption('doNotDisturb', false);
+  nodes.notificationsIcon.textContent = quiet ? 'notifications_paused' : unread ? 'notifications_unread' : visible.length ? 'notifications' : 'notifications_none';
+  nodes.notifications.classList.toggle('quiet', Boolean(quiet));
+  nodes.notifications.title = [unread ? t('Notifications ({0} non lues)', unread) : t('Notifications'), quiet ? t('Ne pas déranger') : ''].filter(Boolean).join(' · ');
 }
+option('doNotDisturb', false, renderNotificationBadge);
+option('activeWindow', true, value => {
+  activeWindowShown = Boolean(value);
+  nodes.activeWindow.hidden = !nodes.activeWindow.dataset.label || !activeWindowShown;
+});
 helperClient.onState('notifications', renderNotificationBadge);
 store.watch(notificationKeys.dismissed, renderNotificationBadge, 2000);
 store.watch(notificationKeys.seenAt, renderNotificationBadge, 2000);
@@ -424,9 +431,12 @@ nodes.workspaces.addEventListener('wheel', event => {
   if (next >= 0 && next < desktops.items.length) switchDesktop(next);
 }, { passive: false });
 
+let activeWindowShown = getOption('activeWindow', true);
+
 function showActiveWindow(title, process, iconData) {
   const label = title?.trim() || process || '';
-  nodes.activeWindow.hidden = !label;
+  nodes.activeWindow.dataset.label = label;
+  nodes.activeWindow.hidden = !label || !activeWindowShown;
   nodes.activeTitle.textContent = label;
   nodes.activeWindow.title = process ? `${label} (${process})` : label;
   const current = nodes.activeWindow.querySelector('.active-icon');
@@ -723,4 +733,29 @@ if (await isPrimaryMonitor()) {
   const configure = (path, value) => helperClient.request('config.set', { path, value })
     .catch(error => console.error(`[stellaria] ${path}`, error));
   option('wallpaperDirectory', '', directory => configure('wallpapers.directory', directory || null));
+  option('frameBorder', 10, value => configure('frame.border', Number.isInteger(value) ? value : 10));
+  const appOptions = {
+    frameBorder: 10, frameRounding: 25, activeWindow: true, doNotDisturb: false, clockSeconds: false, tintIcons: true,
+    trayCollapse: true, island: true, desktopClock: true, hotCorner: true, toasts: true, systemToasts: true,
+    idleScreen: true, gameMode: false,
+  };
+  let reportTimer = 0;
+  const reportOptions = () => {
+    clearTimeout(reportTimer);
+    reportTimer = setTimeout(() => {
+      const options = Object.fromEntries(Object.entries(appOptions).map(([name, fallback]) => {
+        const value = getOption(name, fallback);
+        return [name, typeof fallback === 'number' ? (Number.isInteger(value) ? value : fallback) : Boolean(value)];
+      }));
+      helperClient.request('theme.options', { options }).catch(() => {});
+    }, 300);
+  };
+  for (const name of Object.keys(appOptions)) store.watch(`stellaria:option:${name}`, reportOptions, 250);
+  helperClient.onConnection(connected => connected && reportOptions());
+  reportOptions();
+  helperClient.onEvent('theme.option', ({ name, value }) => {
+    if (!(name in appOptions) || typeof value !== typeof appOptions[name]) return;
+    setOption(name, value);
+    reportOptions();
+  });
 }

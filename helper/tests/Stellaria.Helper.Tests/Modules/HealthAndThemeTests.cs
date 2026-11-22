@@ -46,4 +46,31 @@ public sealed class HealthAndThemeTests
 
         Assert.Equal(ErrorCode.InvalidParams, exception.Code);
     }
+
+    [Fact]
+    public void The_app_can_change_whitelisted_options_within_their_range()
+    {
+        Assert.Equal(16, ThemeModule.ValidateSetting("frameBorder", JsonValue.Create(16))!.GetValue<int>());
+        Assert.True(ThemeModule.ValidateSetting("doNotDisturb", JsonValue.Create(true))!.GetValue<bool>());
+    }
+
+    [Theory]
+    [InlineData("frameBorder", "30")]
+    [InlineData("frameRounding", "true")]
+    [InlineData("activeWindow", "1")]
+    [InlineData("hideTaskbar", "false")]
+    [InlineData("wallpaperDirectory", "\"C:\\\\\"")]
+    public void Unknown_options_or_values_out_of_range_are_refused(string name, string json)
+    {
+        var exception = Assert.Throws<HelperException>(() => ThemeModule.ValidateSetting(name, JsonNode.Parse(json)));
+
+        Assert.Equal(ErrorCode.InvalidParams, exception.Code);
+    }
+
+    [Fact]
+    public void Reported_options_only_carry_flags_and_integers()
+    {
+        Assert.Equal(2, ThemeModule.ValidateOptions(JsonNode.Parse("""{"island":true,"frameBorder":12}""")).Count);
+        Assert.Throws<HelperException>(() => ThemeModule.ValidateOptions(JsonNode.Parse("""{"wallpaperDirectory":"C:\\"}""")));
+    }
 }

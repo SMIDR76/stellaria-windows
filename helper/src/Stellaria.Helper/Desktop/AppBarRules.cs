@@ -35,6 +35,18 @@ internal static class AppBarRules
         return new Dock(handle, window, edge, thickness);
     }
 
+    public static bool IsEdgeTitle(string title) => title.EndsWith(DockTitleSuffixes[1], StringComparison.Ordinal);
+
+    public static int Scaled(int logical, uint dpi) => (int)Math.Round(logical * (dpi == 0 ? 96 : dpi) / 96.0, MidpointRounding.AwayFromZero);
+
+    public static Rect Resized(Dock dock, int thickness) => dock.Edge switch
+    {
+        DockEdge.Left => dock.Bounds with { Right = dock.Bounds.Left + thickness },
+        DockEdge.Top => dock.Bounds with { Bottom = dock.Bounds.Top + thickness },
+        DockEdge.Right => dock.Bounds with { Left = dock.Bounds.Right - thickness },
+        _ => dock.Bounds with { Top = dock.Bounds.Bottom - thickness },
+    };
+
     public static bool TouchesItsEdge(Dock dock, Rect monitor) => dock.Edge switch
     {
         DockEdge.Left => dock.Bounds.Left == monitor.Left,

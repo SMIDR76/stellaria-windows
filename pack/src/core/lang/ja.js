@@ -450,4 +450,10 @@ export default {
   "{0} de plus": "ほか {0} 個",
   "Replier la zone de notification": "通知領域を折りたたむ",
   "Quatre icônes restent visibles, les autres sont derrière une flèche": "4 つのアイコンを表示し、残りは矢印の後ろにまとめます",
+  "Ne pas déranger": "おやすみモード",
+  "Les notifications arrivent en silence": "通知は静かに届きます",
+  "Masquer les notifications le temps de vous concentrer": "集中している間は通知を隠す",
+  "Fenêtre active dans la barre": "バーにアクティブウィンドウを表示",
+  "Icône et titre de la fenêtre au premier plan": "前面のウィンドウのアイコンとタイトル",
+  "Masque l'île et les petites confirmations ; l'historique des notifications reste complet": "アイランドと小さな確認表示を隠します。通知履歴はすべて残ります",
 };

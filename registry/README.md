@@ -49,3 +49,16 @@ with filters by kind and a dot on the News tab while an entry from the last 45 d
 | `title`, `body` | yes | Objects keyed by language code (`fr`, `en`, `es`, `de`, `pt-BR`, `it`, `pl`, `ru`, `tr`, `zh-CN`, `ja`, `ko`); a missing language falls back to English. |
 | `highlights` | no | Up to six `{ "icon", "text" }`, where `icon` is a Material Symbols name and `text` is keyed by language. |
 | `url` | no | Opened by "Read more". |
+
+## Roadmap format
+
+`roadmap.json` is an ordered array of phases for the app's Roadmap page.
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `id` | yes | Unique. |
+| `status` | yes | `done`, `now`, `next` or `later`. |
+| `version` | no | The release that shipped the phase. |
+| `icon` | no | A Material Symbols name. |
+| `title` | yes | Keyed by language code, like the news. |
+| `items` | yes | `{ "text" }` entries, `text` keyed by language code. |

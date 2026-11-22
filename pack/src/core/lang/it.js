@@ -450,4 +450,10 @@ export default {
   "{0} de plus": "altre {0}",
   "Replier la zone de notification": "Comprimi l'area di notifica",
   "Quatre icônes restent visibles, les autres sont derrière une flèche": "Quattro icone restano visibili, le altre dietro una freccia",
+  "Ne pas déranger": "Non disturbare",
+  "Les notifications arrivent en silence": "Le notifiche arrivano in silenzio",
+  "Masquer les notifications le temps de vous concentrer": "Nasconde le notifiche mentre ti concentri",
+  "Fenêtre active dans la barre": "Finestra attiva nella barra",
+  "Icône et titre de la fenêtre au premier plan": "Icona e titolo della finestra in primo piano",
+  "Masque l'île et les petites confirmations ; l'historique des notifications reste complet": "Nasconde l'isola e le piccole conferme; la cronologia delle notifiche resta completa",
 };

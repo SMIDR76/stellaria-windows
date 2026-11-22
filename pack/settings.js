@@ -293,6 +293,7 @@ function desktopPage() {
       optionRow('desktopClock', true, 'schedule', t('Horloge de bureau'), t("Grande horloge en bas à droite du fond d'écran")),
       optionRow('clockSeconds', false, 'timer', t('Afficher les secondes'), t('Horloges de la barre et du tableau de bord')),
       optionRow('hideTaskbar', true, 'dock_to_left', t('Remplacer la barre des tâches'), t('Masque la barre Windows : la barre Stellaria liste les fenêtres ouvertes')),
+      optionRow('activeWindow', true, 'select_window', t('Fenêtre active dans la barre'), t("Icône et titre de la fenêtre au premier plan")),
       optionRow('trayCollapse', true, 'unfold_less', t('Replier la zone de notification'), t('Quatre icônes restent visibles, les autres sont derrière une flèche')),
     ]),
     section(t("Écran d'inactivité"), [
@@ -322,6 +323,7 @@ function panelsPage() {
     ]),
     section(t('Affichage automatique'), [
       optionRow('osdOnVolume', true, 'tune', t('Volume à chaque changement'), t("Montre l'indicateur quand le volume change")),
+      optionRow('doNotDisturb', false, 'do_not_disturb_on', t('Ne pas déranger'), t("Masque l'île et les petites confirmations ; l'historique des notifications reste complet")),
       optionRow('toasts', true, 'notifications', t('Notifications du thème'), t('Petites confirmations en bas à droite')),
       optionRow('systemToasts', true, 'notifications_active', t('Événements système'), t('Sortie et entrée audio, disposition du clavier, Verr. Maj / Num, morceau en cours')),
     ]),

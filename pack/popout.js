@@ -19,6 +19,9 @@ import {
   store,
   toast,
   zebar,
+  getOption,
+  option,
+  setOption,
   answerPanelPings,
   pendingRequest,
   letClicksThrough,
@@ -463,6 +466,20 @@ function createNotificationsView() {
       render();
     },
   }, [icon('clear_all'), element('span', { text: t('Tout effacer') })]);
+  const quietLabel = element('span', { text: t('Ne pas déranger') });
+  const quietIcon = icon('do_not_disturb_off');
+  const quiet = element('button', {
+    class: 'tonal-button quiet-toggle',
+    role: 'switch',
+    onClick: () => setOption('doNotDisturb', !getOption('doNotDisturb', false)),
+  }, [quietIcon, quietLabel]);
+  option('doNotDisturb', false, value => {
+    const on = Boolean(value);
+    quiet.classList.toggle('selected', on);
+    quiet.setAttribute('aria-checked', String(on));
+    quietIcon.textContent = on ? 'do_not_disturb_on' : 'do_not_disturb_off';
+    quiet.title = on ? t('Les notifications arrivent en silence') : t('Masquer les notifications le temps de vous concentrer');
+  });
   const node = element('div', { class: 'view notifications-view', style: { width: '360px' } }, [
     element('div', { class: 'hero notifications-hero' }, [
       heroOrnament('flower'),
@@ -470,7 +487,7 @@ function createNotificationsView() {
       element('div', { class: 'hero-text' }, [element('span', { class: 'hero-title', text: t('Notifications') }), subtitle]),
     ]),
     list,
-    clear,
+    element('div', { class: 'notification-actions' }, [quiet, clear]),
   ]);
 
   const dismiss = id => {

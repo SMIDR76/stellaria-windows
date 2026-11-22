@@ -450,4 +450,10 @@ export default {
   "{0} de plus": "{0}개 더 보기",
   "Replier la zone de notification": "알림 영역 접기",
   "Quatre icônes restent visibles, les autres sont derrière une flèche": "아이콘 네 개만 보이고 나머지는 화살표 뒤에 있습니다",
+  "Ne pas déranger": "방해 금지",
+  "Les notifications arrivent en silence": "알림이 조용히 도착합니다",
+  "Masquer les notifications le temps de vous concentrer": "집중하는 동안 알림 숨기기",
+  "Fenêtre active dans la barre": "바에 활성 창 표시",
+  "Icône et titre de la fenêtre au premier plan": "앞에 있는 창의 아이콘과 제목",
+  "Masque l'île et les petites confirmations ; l'historique des notifications reste complet": "아일랜드와 작은 확인 알림을 숨깁니다. 알림 기록은 모두 유지됩니다",
 };

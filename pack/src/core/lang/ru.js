@@ -450,4 +450,10 @@ export default {
   "{0} de plus": "ещё {0}",
   "Replier la zone de notification": "Сворачивать область уведомлений",
   "Quatre icônes restent visibles, les autres sont derrière une flèche": "Четыре значка остаются на виду, остальные скрыты за стрелкой",
+  "Ne pas déranger": "Не беспокоить",
+  "Les notifications arrivent en silence": "Уведомления приходят беззвучно",
+  "Masquer les notifications le temps de vous concentrer": "Скрыть уведомления, пока вы сосредоточены",
+  "Fenêtre active dans la barre": "Активное окно на панели",
+  "Icône et titre de la fenêtre au premier plan": "Значок и заголовок окна на переднем плане",
+  "Masque l'île et les petites confirmations ; l'historique des notifications reste complet": "Скрывает остров и небольшие подтверждения; история уведомлений сохраняется полностью",
 };

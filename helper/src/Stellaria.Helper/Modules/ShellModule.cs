@@ -90,6 +90,7 @@ internal sealed class ShellModule(HelperState state) : IHelperModule
             return;
         }
 
+        ResizeEdges();
         var repaired = RepairAppBars(out var pushedZebar);
         HandlePushedDocks(pushedZebar);
         if (repaired == 0)
@@ -134,6 +135,56 @@ internal sealed class ShellModule(HelperState state) : IHelperModule
             ZebarWatchdog.TryRestart(_context.Log, _context.Desktop.Processes, pushedZebar, now, "Stellaria docks stayed away from their screen edges"))
         {
             _pushedSince = null;
+        }
+    }
+
+    private unsafe void ResizeEdges()
+    {
+        var border = _context.Config.GetInteger("frame.border", 10);
+        var resized = 0;
+        foreach (var hwnd in User32.TopLevelWindows())
+        {
+            if (!User32.IsWindowVisible(hwnd) || !AppBarRules.IsEdgeTitle(User32.WindowText(hwnd)))
+            {
+                continue;
+            }
+
+            if (!string.Equals(_context.Desktop.Processes.NameOf(User32.ProcessId(hwnd)), "zebar", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            var info = MonitorInfoEx.Create();
+            if (!User32.GetWindowRect(hwnd, out var bounds) || !User32.GetMonitorInfo(User32.MonitorFromWindow(hwnd, User32.MonitorDefaultToNearest), ref info))
+            {
+                continue;
+            }
+
+            if (AppBarRules.Classify(hwnd, bounds, info.Monitor) is not { } dock || !AppBarRules.TouchesItsEdge(dock, info.Monitor))
+            {
+                continue;
+            }
+
+            var thickness = AppBarRules.Scaled(border, User32.GetDpiForWindow(hwnd));
+            if (dock.Thickness == thickness)
+            {
+                continue;
+            }
+
+            var rect = AppBarRules.Resized(dock, thickness);
+            if (!User32.SetWindowPos(hwnd, 0, rect.Left, rect.Top, rect.Width, rect.Height, User32.SwpNoZOrder | User32.SwpNoActivate))
+            {
+                continue;
+            }
+
+            var data = new AppBarData { Size = sizeof(AppBarData), Hwnd = hwnd, Edge = (uint)dock.Edge, Rect = rect };
+            Shell32.SHAppBarMessage(Shell32.AbmSetPos, ref data);
+            resized++;
+        }
+
+        if (resized > 0)
+        {
+            _context.Log.Info("shell", $"Resized {resized} frame edge(s) to {border} px.");
         }
     }
 
