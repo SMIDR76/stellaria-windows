@@ -1098,14 +1098,26 @@ function megabytes(bytes) {
   return t('megabytes', (bytes / 1048576).toLocaleString(locale(), { maximumFractionDigits: 1 }));
 }
 
+let lastUpdateCheck = 0;
+let offeredVersion = '';
+
+function checkUpdateSoon() {
+  if (Date.now() - lastUpdateCheck < 15 * 60 * 1000) return;
+  checkUpdate(true).then(syncTray);
+}
+
 async function checkUpdate(quiet = false) {
   if (['checking', 'downloading', 'ready'].includes(state.update.status)) return;
+  lastUpdateCheck = Date.now();
   state.update = { ...state.update, status: 'checking', error: '' };
   if (!quiet) render();
   try {
     const info = await invoke('check_update');
     state.update = { ...state.update, status: info.available ? 'available' : 'current', info };
-    if (info.available && quiet) notify(t('updateOffered', info.version));
+    if (info.available && quiet && offeredVersion !== info.version) {
+      offeredVersion = info.version;
+      notify(t('updateOffered', info.version));
+    }
   } catch (error) {
     state.update = { ...state.update, status: 'error', error: updateError(error) };
   }
@@ -2669,6 +2681,7 @@ function showPage(id) {
   state.page = id;
   if (id === 'news') markNewsSeen();
   if (id === 'customize' || id === 'roadmap') refreshPageData(id);
+  if (id === 'install') checkUpdateSoon();
   nodes.pages.scrollTop = 0;
   if (changed) {
     railPop = id;
@@ -3228,7 +3241,10 @@ listen('reopened', () => {
   requestAnimationFrame(show);
   setTimeout(show, 120);
 });
-window.addEventListener('focus', ensureShown);
+window.addEventListener('focus', () => {
+  ensureShown();
+  checkUpdateSoon();
+});
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') setTimeout(ensureShown, 150);
 });
@@ -3241,7 +3257,7 @@ setTimeout(async () => {
 setInterval(async () => {
   await checkUpdate(true);
   syncTray();
-}, 6 * 60 * 60 * 1000);
+}, 60 * 60 * 1000);
 if (stored('onboarded', '') !== '1') setTimeout(() => onboarding.open(), 700);
 else setTimeout(showWhatsNew, 900);
 const initial = await invoke('initial_link');
