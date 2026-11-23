@@ -187,6 +187,8 @@ export default {
     optWeatherText: "Open-Meteo の予報。オフなら何も送信しません。",
     optLyrics: "同期歌詞",
     optLyricsText: "メディアタブに LRCLIB の歌詞。オフなら何も送信しません。",
+    optBatteryAlerts: "バッテリーの警告",
+    optBatteryAlertsText: "バッテリー駆動中に 20%・10%・5% で知らせます",
     confirmTitle: "このプリセットを適用しますか?",
     confirmText: "リンクから「{0}」の適用が要求されています。元に戻せるよう、現在の設定は保持されます。",
     unknownLink: "この Stellaria リンクは認識できません。",

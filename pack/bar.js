@@ -6,6 +6,11 @@ import {
   actions,
   analyzeImage,
   applyTheme,
+  batteryCharging,
+  batteryIcon,
+  batteryPercent,
+  batteryStatus,
+  batteryThresholds,
   currentMonitorName,
   dashboardState,
   describeWeather,
@@ -57,6 +62,9 @@ const nodes = {
   volume: document.getElementById('volume'),
   volumeIcon: document.getElementById('volume-icon'),
   network: document.getElementById('network'),
+  battery: document.getElementById('battery'),
+  batteryIcon: document.getElementById('battery-icon'),
+  batteryLevel: document.getElementById('battery-level'),
   notifications: document.getElementById('notifications'),
   notificationsIcon: document.getElementById('notifications-icon'),
   notificationsBadge: document.getElementById('notifications-badge'),
@@ -140,6 +148,7 @@ option('clockSeconds', false, value => {
 const providers = zebar.createProviderGroup({
   audio: { type: 'audio' },
   network: { type: 'network', refreshInterval: 5000 },
+  battery: { type: 'battery', refreshInterval: 10000 },
   keyboard: { type: 'keyboard', refreshInterval: 1000 },
   systray: { type: 'systray' },
   media: { type: 'media' },
@@ -280,6 +289,42 @@ option('trayCollapse', true, value => {
   paintTrayOverflow(trayNodes.size);
 });
 
+const batteryWatch = { primary: false, level: null, charging: null };
+
+function renderBattery(battery) {
+  const present = Boolean(battery) && Number.isFinite(battery.chargePercent);
+  nodes.battery.hidden = !present;
+  if (!present) return;
+  const percent = batteryPercent(battery);
+  const charging = batteryCharging(battery);
+  nodes.batteryIcon.textContent = batteryIcon(battery);
+  nodes.batteryLevel.textContent = String(percent);
+  nodes.battery.classList.toggle('low', !charging && percent <= 15);
+  nodes.battery.classList.toggle('charging', charging);
+  nodes.battery.title = `${t('Batterie : {0} %', percent)} · ${batteryStatus(battery)}`;
+  if (batteryWatch.primary) watchBattery(percent, charging);
+}
+
+function watchBattery(percent, charging) {
+  const previous = batteryWatch.level;
+  if (batteryWatch.charging !== null && charging !== batteryWatch.charging) {
+    systemToast(t(charging ? 'Chargeur branché' : 'Chargeur débranché'), t('{0} %', percent), charging ? 'power' : 'power_off');
+  }
+  if (!charging && previous !== null && getOption('batteryAlerts', true)) {
+    const crossed = batteryThresholds.find(level => previous > level && percent <= level);
+    if (crossed) {
+      toast(t(crossed <= 5 ? 'Batterie très faible' : 'Batterie faible'), {
+        message: t('Plus que {0} %, branchez le chargeur', percent),
+        icon: 'battery_alert',
+        kind: crossed <= 5 ? 'error' : 'warning',
+        duration: 6000,
+      });
+    }
+  }
+  batteryWatch.level = percent;
+  batteryWatch.charging = charging;
+}
+
 function render(output) {
   const device = output.audio?.defaultPlaybackDevice;
   nodes.volumeIcon.textContent = volumeIcon(device);
@@ -289,6 +334,8 @@ function render(output) {
   nodes.networkIcon.textContent = networkIcon(output.network);
   const gateway = output.network?.defaultGateway;
   nodes.network.title = gateway?.ssid ? t('Wi-Fi : {0}', gateway.ssid) : t(output.network?.defaultInterface ? 'Ethernet connecté' : 'Hors ligne');
+
+  renderBattery(output.battery);
 
   const layout = output.keyboard?.layout ?? '';
   nodes.keyboard.textContent = (layout.split('-').pop() || layout || '--').slice(0, 2).toUpperCase();
@@ -323,6 +370,7 @@ nodes.volume.addEventListener('wheel', event => {
 }, { passive: false });
 
 nodes.network.addEventListener('click', () => openSettings('network-status'));
+nodes.battery.addEventListener('click', () => openSettings('batterysaver'));
 
 const popoutTargets = [
   [nodes.activeWindow, 'window'],
@@ -705,6 +753,7 @@ function undoPreset() {
 }
 
 if (await isPrimaryMonitor()) {
+  batteryWatch.primary = true;
   helperClient.onEvent('theme.preset', applyPreset);
   helperClient.onEvent('theme.undo', undoPreset);
   systemEvents.since = Date.now();
@@ -744,7 +793,7 @@ if (await isPrimaryMonitor()) {
     trayCollapse: true, island: true, desktopClock: true, hotCorner: true, toasts: true, systemToasts: true,
     idleScreen: true, gameMode: false, language: 'auto', hideTaskbar: true, smartScheme: true, windowsColors: false,
     windowsTitleBars: false, hoverDashboard: true, hoverOsd: true, hoverUtilities: true, hoverPopouts: true, osdOnVolume: true,
-    weather: true, lyrics: true, idleMinutes: 10, wallpaperDirectory: '',
+    weather: true, lyrics: true, idleMinutes: 10, wallpaperDirectory: '', batteryAlerts: true,
   };
   const schemeId = () => {
     const scheme = store.get(keys.scheme, null);

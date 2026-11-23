@@ -307,6 +307,34 @@ body {
   font-size: 19px;
 }
 
+.status-item.battery {
+  height: auto;
+  min-height: 30px;
+  padding: 4px 0 3px;
+  grid-auto-rows: min-content;
+  gap: 1px;
+}
+
+.status-item.battery[hidden] {
+  display: none;
+}
+
+.battery-level {
+  font-size: 9.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--m3-on-surface-variant);
+}
+
+.status-item.battery.low .icon,
+.status-item.battery.low .battery-level {
+  color: var(--m3-error);
+}
+
+.status-item.battery.charging .icon {
+  color: var(--m3-primary);
+}
+
 .keyboard {
   font-size: 10.5px;
   font-weight: 700;

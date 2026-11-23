@@ -187,6 +187,8 @@ export default {
     optWeatherText: "Vorhersagen von Open-Meteo. Aus, es wird nichts gesendet.",
     optLyrics: "Synchronisierte Songtexte",
     optLyricsText: "Songtexte von LRCLIB im Medien-Tab. Aus, es wird nichts gesendet.",
+    optBatteryAlerts: "Akku-Warnungen",
+    optBatteryAlertsText: "Warnt bei 20, 10 und 5 %, wenn der PC im Akkubetrieb läuft",
     confirmTitle: "Diese Voreinstellung anwenden?",
     confirmText: "Ein Link möchte „{0}“ anwenden. Deine aktuellen Einstellungen bleiben erhalten, damit du es rückgängig machen kannst.",
     unknownLink: "Dieser Stellaria-Link wird nicht erkannt.",

@@ -187,6 +187,8 @@ export default {
     optWeatherText: "Open-Meteo tahminleri. Kapalıyken hiçbir şey gönderilmez.",
     optLyrics: "Senkronize sözler",
     optLyricsText: "Medya sekmesinde LRCLIB sözleri. Kapalıyken hiçbir şey gönderilmez.",
+    optBatteryAlerts: "Pil uyarıları",
+    optBatteryAlertsText: "Bilgisayar pildeyken %20, %10 ve %5 seviyelerinde uyarır",
     confirmTitle: "Bu ön ayar uygulansın mı?",
     confirmText: "Bir bağlantı “{0}” ön ayarını uygulamak istiyor. Geri alabilmeniz için mevcut ayarlarınız korunur.",
     unknownLink: "Bu Stellaria bağlantısı tanınmadı.",

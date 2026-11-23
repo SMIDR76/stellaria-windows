@@ -187,6 +187,8 @@ export default {
     optWeatherText: "Open-Meteo 예보. 끄면 아무것도 보내지 않습니다.",
     optLyrics: "동기화 가사",
     optLyricsText: "미디어 탭의 LRCLIB 가사. 끄면 아무것도 보내지 않습니다.",
+    optBatteryAlerts: "배터리 알림",
+    optBatteryAlertsText: "배터리 사용 중 20%, 10%, 5%에서 알려 줍니다",
     confirmTitle: "이 사전 설정을 적용할까요?",
     confirmText: "링크에서 \"{0}\"의 적용을 요청합니다. 실행 취소할 수 있도록 현재 설정은 유지됩니다.",
     unknownLink: "이 Stellaria 링크를 인식할 수 없습니다.",

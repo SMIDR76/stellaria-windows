@@ -187,6 +187,8 @@ export default {
     optWeatherText: "来自 Open-Meteo 的预报。关闭时不发送任何内容。",
     optLyrics: "同步歌词",
     optLyricsText: "“媒体”选项卡中的 LRCLIB 歌词。关闭时不发送任何内容。",
+    optBatteryAlerts: "电池提醒",
+    optBatteryAlertsText: "使用电池时在 20%、10% 和 5% 发出提醒",
     confirmTitle: "应用此预设？",
     confirmText: "一个链接请求应用“{0}”。你当前的设置会被保留，以便撤销。",
     unknownLink: "无法识别此 Stellaria 链接。",

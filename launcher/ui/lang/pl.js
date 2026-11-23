@@ -187,6 +187,8 @@ export default {
     optWeatherText: "Prognozy z Open-Meteo. Wyłączona, nic nie jest wysyłane.",
     optLyrics: "Zsynchronizowane teksty",
     optLyricsText: "Teksty z LRCLIB w karcie Multimedia. Wyłączone, nic nie jest wysyłane.",
+    optBatteryAlerts: "Alerty baterii",
+    optBatteryAlertsText: "Ostrzega przy 20, 10 i 5%, gdy komputer działa na baterii",
     confirmTitle: "Zastosować to ustawienie wstępne?",
     confirmText: "Link prosi o zastosowanie „{0}”. Twoje obecne ustawienia zostaną zachowane, abyś mógł je cofnąć.",
     unknownLink: "Ten link Stellaria nie jest rozpoznawany.",

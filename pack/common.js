@@ -9,3 +9,4 @@ export * from './src/core/dom.js';
 export * from './src/core/helper.js';
 export * from './src/core/panels.js';
 export * from './src/core/weather.js';
+export * from './src/core/battery.js';

@@ -26,6 +26,9 @@ project uses [semantic versioning](https://semver.org/).
   settings" action and the first-run welcome open the app; the old panel only remains as a fallback.
 - The theme follows the app's language.
 - Icon animations and click sparkles in the app, which stop when Windows asks for reduced motion.
+- Battery support on laptops: a battery icon with its level on the bar (opens Windows battery settings), alerts at
+  20, 10 and 5 %, a toast when the charger is plugged in or out, and a battery card with charge, time left and health in
+  the dashboard's Performance tab. Desktop PCs without a battery show nothing.
 
 ### Fixed
 

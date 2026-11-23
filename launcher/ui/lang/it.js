@@ -187,6 +187,8 @@ export default {
     optWeatherText: "Previsioni di Open-Meteo. Disattivato, non viene inviato nulla.",
     optLyrics: "Testi sincronizzati",
     optLyricsText: "Testi di LRCLIB nella scheda Media. Disattivati, non viene inviato nulla.",
+    optBatteryAlerts: "Avvisi batteria",
+    optBatteryAlertsText: "Avvisa al 20, 10 e 5% quando il PC è a batteria",
     confirmTitle: "Applicare questa preimpostazione?",
     confirmText: "Un link chiede di applicare «{0}». Le tue impostazioni attuali vengono conservate per poter annullare.",
     unknownLink: "Questo link di Stellaria non è riconosciuto.",

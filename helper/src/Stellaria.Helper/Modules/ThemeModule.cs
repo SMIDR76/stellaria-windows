@@ -40,6 +40,7 @@ internal sealed partial class ThemeModule : IHelperModule
         ["weather"] = null,
         ["lyrics"] = null,
         ["idleMinutes"] = (1, 60),
+        ["batteryAlerts"] = null,
     };
 
     public const int MaxHiddenApps = 200;
