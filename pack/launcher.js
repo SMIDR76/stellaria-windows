@@ -22,6 +22,7 @@ import {
   t,
   toast,
   togglePopup,
+  openStellaria,
   variants,
 } from './common.js';
 
@@ -268,7 +269,7 @@ function actionEntries() {
         },
       };
     }),
-    { icon: 'auto_awesome', title: t('Réglages du thème'), subtitle: t('Apparence, panneaux, raccourcis (Win+Alt+S)'), run: async () => { await togglePopup('settings'); await popup.close(); } },
+    { icon: 'auto_awesome', title: t('Réglages du thème'), subtitle: t('Apparence, panneaux, raccourcis (Win+Alt+S)'), run: async () => { await popup.close(); await openStellaria('customize', () => togglePopup('settings')); } },
     { icon: 'settings', title: t('Paramètres Windows'), subtitle: t('Ouvrir les paramètres'), run: () => openSettings('') },
     { icon: 'lock', title: t('Verrouiller'), subtitle: t('Verrouiller la session'), run: () => runPower('lock') },
     { icon: 'bedtime', title: t('Veille'), subtitle: t('Mettre le PC en veille'), run: () => runPower('sleep') },

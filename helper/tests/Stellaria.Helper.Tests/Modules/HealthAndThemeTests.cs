@@ -58,8 +58,8 @@ public sealed class HealthAndThemeTests
     [InlineData("frameBorder", "30")]
     [InlineData("frameRounding", "true")]
     [InlineData("activeWindow", "1")]
-    [InlineData("hideTaskbar", "false")]
-    [InlineData("wallpaperDirectory", "\"C:\\\\\"")]
+    [InlineData("welcomed", "false")]
+    [InlineData("catalogUrl", "\"https://example.org/index.json\"")]
     public void Unknown_options_or_values_out_of_range_are_refused(string name, string json)
     {
         var exception = Assert.Throws<HelperException>(() => ThemeModule.ValidateSetting(name, JsonNode.Parse(json)));
@@ -71,6 +71,44 @@ public sealed class HealthAndThemeTests
     public void Reported_options_only_carry_flags_and_integers()
     {
         Assert.Equal(2, ThemeModule.ValidateOptions(JsonNode.Parse("""{"island":true,"frameBorder":12}""")).Count);
-        Assert.Throws<HelperException>(() => ThemeModule.ValidateOptions(JsonNode.Parse("""{"wallpaperDirectory":"C:\\"}""")));
+        Assert.Equal("fr", ThemeModule.ValidateOptions(JsonNode.Parse("""{"language":"fr"}"""))["language"]!.GetValue<string>());
+        Assert.Throws<HelperException>(() => ThemeModule.ValidateOptions(new JsonObject { ["wallpaperDirectory"] = new string('x', 600) }));
+        Assert.Single(ThemeModule.ValidateOptions(JsonNode.Parse("""{"hiddenApps":[{"id":"steam://rungameid/1","name":"Game"}]}""")));
+        Assert.Throws<HelperException>(() => ThemeModule.ValidateOptions(JsonNode.Parse("""{"folders":["C:\\"]}""")));
+    }
+
+    [Theory]
+    [InlineData("mode", "\"light\"")]
+    [InlineData("variant", "\"expressive\"")]
+    [InlineData("scheme", "\"catppuccin/mocha\"")]
+    [InlineData("scheme", "\"\"")]
+    [InlineData("wallpaperDirectory", "\"D:\\\\Wallpapers\"")]
+    [InlineData("wallpaperDirectory", "\"\"")]
+    [InlineData("hiddenApps", "[\"steam://rungameid/1\"]")]
+    [InlineData("idleMinutes", "30")]
+    public void The_app_can_change_the_look_and_the_lists(string name, string json)
+    {
+        Assert.NotNull(ThemeModule.ValidateSetting(name, JsonNode.Parse(json)));
+    }
+
+    [Theory]
+    [InlineData("mode", "\"blue\"")]
+    [InlineData("variant", "\"neon\"")]
+    [InlineData("scheme", "\"../../evil\"")]
+    [InlineData("wallpaperDirectory", "\"relative\\\\folder\"")]
+    [InlineData("wallpaperDirectory", "\"C:\\\\a\\\\..\\\\Windows\"")]
+    [InlineData("hiddenApps", "\"steam://rungameid/1\"")]
+    [InlineData("idleMinutes", "0")]
+    public void Wrong_looks_and_lists_are_refused(string name, string json)
+    {
+        Assert.Throws<HelperException>(() => ThemeModule.ValidateSetting(name, JsonNode.Parse(json)));
+    }
+
+    [Fact]
+    public void The_app_can_only_pick_a_supported_theme_language()
+    {
+        Assert.Equal("pt-BR", ThemeModule.ValidateSetting("language", JsonValue.Create("pt-BR"))!.GetValue<string>());
+        Assert.Throws<HelperException>(() => ThemeModule.ValidateSetting("language", JsonValue.Create("xx")));
+        Assert.Throws<HelperException>(() => ThemeModule.ValidateSetting("language", JsonValue.Create(true)));
     }
 }

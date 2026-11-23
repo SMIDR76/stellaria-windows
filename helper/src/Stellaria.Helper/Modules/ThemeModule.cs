@@ -28,7 +28,29 @@ internal sealed partial class ThemeModule : IHelperModule
         ["systemToasts"] = null,
         ["idleScreen"] = null,
         ["gameMode"] = null,
+        ["hideTaskbar"] = null,
+        ["smartScheme"] = null,
+        ["windowsColors"] = null,
+        ["windowsTitleBars"] = null,
+        ["hoverDashboard"] = null,
+        ["hoverOsd"] = null,
+        ["hoverUtilities"] = null,
+        ["hoverPopouts"] = null,
+        ["osdOnVolume"] = null,
+        ["weather"] = null,
+        ["lyrics"] = null,
+        ["idleMinutes"] = (1, 60),
     };
+
+    public const int MaxHiddenApps = 200;
+    public const int MaxTextLength = 512;
+
+    private static readonly string[] s_modes = ["dark", "light"];
+    private static readonly string[] s_variants = ["tonalspot", "vibrant", "expressive", "fidelity", "content", "fruitsalad", "rainbow", "neutral", "monochrome"];
+    private static readonly string[] s_actions = ["wallpaperPicker", "wallpaperFolder"];
+    private static readonly string[] s_appPages = ["home", "customize", "customize/appearance", "customize/wallpaper", "customize/desktop", "customize/panels", "help"];
+
+    private static readonly string[] s_languages = ["auto", "fr", "en", "es", "de", "pt-BR", "it", "pl", "ru", "tr", "zh-CN", "ja", "ko"];
 
     private JsonObject? _options;
 
@@ -56,6 +78,35 @@ internal sealed partial class ThemeModule : IHelperModule
             return Task.FromResult<JsonNode?>(null);
         });
         context.Router.Register("launcher.options", (_, _) => Task.FromResult<JsonNode?>(_options?.DeepClone()));
+        context.Router.Register("launcher.themeAction", (request, _) =>
+        {
+            var name = request.RequireString("name");
+            if (!s_actions.Contains(name, StringComparer.Ordinal))
+            {
+                throw new HelperException(ErrorCode.InvalidParams, $"'name' must be one of {string.Join(", ", s_actions)}.");
+            }
+
+            context.Hub.Raise("theme.action", new JsonObject { ["name"] = name });
+            return Task.FromResult<JsonNode?>(null);
+        });
+        context.Router.Register("stellaria.open", (request, _) =>
+        {
+            var page = request.Params["page"] is JsonValue value && value.TryGetValue<string>(out var text) ? text : "customize";
+            if (!s_appPages.Contains(page, StringComparer.Ordinal))
+            {
+                throw new HelperException(ErrorCode.InvalidParams, $"'page' must be one of {string.Join(", ", s_appPages)}.");
+            }
+
+            var app = Path.Combine(AppContext.BaseDirectory, "stellaria-launcher.exe");
+            if (!File.Exists(app))
+            {
+                throw new HelperException(ErrorCode.NotFound, "The Stellaria app is not installed next to the helper.");
+            }
+
+            Stellaria.Helper.Interop.User32.AllowSetForegroundWindow(-1);
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(app, $"stellaria://page/{page}") { UseShellExecute = false })?.Dispose();
+            return Task.FromResult<JsonNode?>(null);
+        });
         context.Router.Register("launcher.setOption", (request, _) =>
         {
             var name = request.RequireString("name");
@@ -81,12 +132,18 @@ internal sealed partial class ThemeModule : IHelperModule
         var clean = new JsonObject();
         foreach (var (name, value) in options)
         {
-            if (!RoleName().IsMatch(name) || value is not JsonValue json || !(json.TryGetValue<bool>(out _) || json.TryGetValue<int>(out _)))
+            var valid = RoleName().IsMatch(name) && value switch
             {
-                throw new HelperException(ErrorCode.InvalidParams, "Every option must be a short name mapped to true, false or an integer.");
+                JsonValue json => json.TryGetValue<bool>(out _) || json.TryGetValue<int>(out _) || (json.TryGetValue<string>(out var text) && text.Length <= MaxTextLength),
+                JsonArray list => list.Count <= MaxHiddenApps && list.All(entry => entry is JsonObject app && app.Count <= 2 && app.All(field => field.Key is "id" or "name" && field.Value is JsonValue part && part.TryGetValue<string>(out var piece) && piece.Length <= MaxTextLength)),
+                _ => false,
+            };
+            if (!valid)
+            {
+                throw new HelperException(ErrorCode.InvalidParams, "Every option must be a short name mapped to true, false, an integer, a short text or a list of applications.");
             }
 
-            clean[name] = value.DeepClone();
+            clean[name] = value!.DeepClone();
         }
 
         return clean;
@@ -94,6 +151,45 @@ internal sealed partial class ThemeModule : IHelperModule
 
     public static JsonNode ValidateSetting(string name, JsonNode? value)
     {
+        switch (name)
+        {
+            case "mode":
+                return Choice(name, value, s_modes);
+            case "variant":
+                return Choice(name, value, s_variants);
+            case "scheme":
+                if (value is JsonValue scheme && scheme.TryGetValue<string>(out var id) && (id.Length == 0 || SchemeId().IsMatch(id)))
+                {
+                    return JsonValue.Create(id);
+                }
+
+                throw new HelperException(ErrorCode.InvalidParams, "'scheme' must be empty (dynamic colours) or name/flavour.");
+            case "wallpaperDirectory":
+                if (value is JsonValue folder && folder.TryGetValue<string>(out var path) && path.Length <= 260 && (path.Length == 0 || DrivePath().IsMatch(path)) && !path.Contains("..", StringComparison.Ordinal))
+                {
+                    return JsonValue.Create(path);
+                }
+
+                throw new HelperException(ErrorCode.InvalidParams, "'wallpaperDirectory' must be empty or a full path such as C:\\Pictures.");
+            case "hiddenApps":
+                if (value is JsonArray ids && ids.Count <= MaxHiddenApps && ids.All(entry => entry is JsonValue item && item.TryGetValue<string>(out var text) && text.Length is > 0 and <= MaxTextLength))
+                {
+                    return ids.DeepClone();
+                }
+
+                throw new HelperException(ErrorCode.InvalidParams, $"'hiddenApps' must be a list of at most {MaxHiddenApps} application identifiers.");
+        }
+
+        if (name == "language")
+        {
+            if (value is JsonValue choice && choice.TryGetValue<string>(out var code) && s_languages.Contains(code, StringComparer.Ordinal))
+            {
+                return JsonValue.Create(code);
+            }
+
+            throw new HelperException(ErrorCode.InvalidParams, $"'language' must be one of {string.Join(", ", s_languages)}.");
+        }
+
         if (!s_settable.TryGetValue(name, out var range))
         {
             throw new HelperException(ErrorCode.InvalidParams, $"'{name}' cannot be changed from the app.");
@@ -138,8 +234,24 @@ internal sealed partial class ThemeModule : IHelperModule
         return new JsonObject { ["roles"] = clean, ["transparent"] = request.RequireBoolean("transparent") };
     }
 
+    private static JsonNode Choice(string name, JsonNode? value, string[] allowed)
+    {
+        if (value is JsonValue choice && choice.TryGetValue<string>(out var text) && allowed.Contains(text, StringComparer.Ordinal))
+        {
+            return JsonValue.Create(text);
+        }
+
+        throw new HelperException(ErrorCode.InvalidParams, $"'{name}' must be one of {string.Join(", ", allowed)}.");
+    }
+
     [GeneratedRegex("^[A-Za-z]{1,32}$")]
     private static partial Regex RoleName();
+
+    [GeneratedRegex("^[a-z0-9-]{1,40}/[a-z0-9-]{1,40}$")]
+    private static partial Regex SchemeId();
+
+    [GeneratedRegex(@"^[A-Za-z]:\\")]
+    private static partial Regex DrivePath();
 
     [GeneratedRegex("^#[0-9a-fA-F]{6}$")]
     private static partial Regex HexColour();

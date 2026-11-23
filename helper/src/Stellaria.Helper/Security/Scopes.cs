@@ -73,6 +73,7 @@ internal static class Scopes
         ["shell.openSettings"] = System,
         ["theme.publish"] = Appearance,
         ["theme.options"] = Appearance,
+        ["stellaria.open"] = Basic,
         ["wallpapers.apply"] = Appearance,
         ["windows.setColors"] = Appearance,
         ["windows.restoreColors"] = Appearance,
@@ -106,6 +107,7 @@ internal static class Scopes
         ["theme.preset"] = Appearance,
         ["theme.undo"] = Appearance,
         ["theme.option"] = Appearance,
+        ["theme.action"] = Appearance,
     }.ToFrozenDictionary(StringComparer.Ordinal);
 
     public static string? ForMethod(string method) =>

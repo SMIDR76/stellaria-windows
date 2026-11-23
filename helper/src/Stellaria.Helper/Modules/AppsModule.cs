@@ -11,6 +11,7 @@ internal sealed class AppsModule : IHelperModule
 
     private readonly SemaphoreSlim _refresh = new(1, 1);
     private List<ShellApp> _apps = [];
+    private Dictionary<string, string> _iconSources = new(StringComparer.OrdinalIgnoreCase);
     private DateTimeOffset _loadedAt = DateTimeOffset.MinValue;
     private ModuleContext _context = null!;
 
@@ -29,7 +30,7 @@ internal sealed class AppsModule : IHelperModule
                 {
                     ["name"] = app.Name,
                     ["id"] = app.Id,
-                    ["icon"] = await context.Icons.GetAsync($"shell:AppsFolder\\{app.Id}").ConfigureAwait(false),
+                    ["icon"] = await context.Icons.GetAsync(IconSource(app.Id)).ConfigureAwait(false),
                 };
                 list.Add(item);
             }
@@ -54,6 +55,9 @@ internal sealed class AppsModule : IHelperModule
         return Task.CompletedTask;
     }
 
+    private string IconSource(string id) =>
+        id.Contains("://", StringComparison.Ordinal) && _iconSources.TryGetValue(id, out var source) ? source : $"shell:AppsFolder\\{id}";
+
     private async Task<bool> IsKnownAsync(string id)
     {
         if ((await AppsAsync(forceRefresh: false).ConfigureAwait(false)).Any(app => app.Id == id))
@@ -72,6 +76,7 @@ internal sealed class AppsModule : IHelperModule
             if (forceRefresh || _context.Time.GetUtcNow() - _loadedAt > CacheLifetime)
             {
                 _apps = await Task.Run(() => AppCatalog.Filter(ShellFolders.StartMenuApps())).ConfigureAwait(false);
+                _iconSources = await Task.Run(() => InternetShortcuts.IconSources(InternetShortcuts.StartMenuRoots())).ConfigureAwait(false);
                 _loadedAt = _context.Time.GetUtcNow();
             }
 

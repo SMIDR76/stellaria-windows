@@ -27,7 +27,8 @@ const strings = {
     about: 'À propos', aboutText: 'Logiciel libre sous licence GPL-3.0, basé sur Caelestia de soramanew et ses contributeurs.',
     project: 'Page du projet', readMore: 'En savoir plus', noNews: 'Aucune actualité pour le moment.',
     newsAll: 'Tout', newsRelease: 'Versions', newsAnnouncement: 'Annonces', newsCommunity: 'Communauté', newsTip: 'Astuces', newsNew: 'Nouveau', newsEarlier: 'Plus tôt', newsKindRelease: 'Version', newsKindAnnouncement: 'Annonce', newsKindCommunity: 'Communauté', newsKindTip: 'Astuce',
-    customize: 'Personnaliser', roadmap: 'Feuille de route', customizeOffline: "Démarrez le thème pour le personnaliser d'ici.", frameGroup: "Cadre de l'écran", resetFrame: 'Par défaut', pixels: '{0} px', optFrameBorder: 'Épaisseur des bords', optFrameRounding: 'Arrondi des coins', barGroup: 'Barre', notificationsGroup: 'Notifications', desktopGroup: 'Bureau', allThemeSettings: 'Tous les réglages du thème', optActiveWindow: 'Fenêtre active', optActiveWindowText: 'Icône et titre de la fenêtre au premier plan', optClockSeconds: 'Afficher les secondes', optClockSecondsText: 'Horloges de la barre et du tableau de bord', optTintIcons: 'Icônes aux couleurs du thème', optTintIconsText: "Teinte les icônes d'applications", optTrayCollapse: 'Replier la zone de notification', optTrayCollapseText: 'Quatre icônes visibles, les autres derrière une flèche', optDoNotDisturb: 'Ne pas déranger', optDoNotDisturbText: "Masque l'île et les confirmations, l'historique reste complet", optIsland: 'Île dynamique', optIslandText: "Morceau en cours et notifications en haut de l'écran", optToasts: 'Confirmations du thème', optToastsText: 'Petits messages en bas à droite', optSystemToasts: 'Événements système', optSystemToastsText: 'Audio, clavier, Verr. Maj et morceau en cours', optDesktopClock: 'Horloge de bureau', optDesktopClockText: "Grande horloge sur le fond d'écran", optHotCorner: 'Coin actif', optHotCornerText: 'Le coin haut droit ouvre la vue des tâches', optIdleScreen: "Écran d'inactivité", optIdleScreenText: 'Horloge, météo et média après un moment sans activité', optGameMode: 'Mode jeu', optGameModeText: 'Coupe toutes les animations du thème', roadmapIntro: 'Ce qui est fait, ce qui avance et ce qui arrive. Chaque étape sort quand elle est prête, sans date promise.', roadmapCount: '{0} étapes sur {1} terminées', roadmapDone: 'Terminé', roadmapNow: 'En cours', roadmapNext: 'Ensuite', roadmapLater: 'Plus tard', roadmapIdea: 'Une idée ?', roadmapIdeaText: 'Proposez-la dans les discussions du projet, vos retours guident la suite.', roadmapSuggest: 'Proposer une idée', noRoadmap: 'La feuille de route arrive bientôt.', updateVideoKicker: 'Nouvelle version', updateVideoTitle: 'Stellaria {0} est arrivé', updateVideoText: 'Une mise à jour signée est prête à être installée.', updateLater: 'Plus tard',
+    customize: 'Personnaliser', roadmap: 'Feuille de route', customizeOffline: "Démarrez le thème pour le personnaliser d'ici.", frameGroup: "Cadre de l'écran", resetFrame: 'Par défaut', pixels: '{0} px', optFrameBorder: 'Épaisseur des bords', optFrameRounding: 'Arrondi des coins', barGroup: 'Barre', notificationsGroup: 'Notifications', desktopGroup: 'Bureau', optActiveWindow: 'Fenêtre active', optActiveWindowText: 'Icône et titre de la fenêtre au premier plan', optClockSeconds: 'Afficher les secondes', optClockSecondsText: 'Horloges de la barre et du tableau de bord', optTintIcons: 'Icônes aux couleurs du thème', optTintIconsText: "Teinte les icônes d'applications", optTrayCollapse: 'Replier la zone de notification', optTrayCollapseText: 'Quatre icônes visibles, les autres derrière une flèche', optDoNotDisturb: 'Ne pas déranger', optDoNotDisturbText: "Masque l'île et les confirmations, l'historique reste complet", optIsland: 'Île dynamique', optIslandText: "Morceau en cours et notifications en haut de l'écran", optToasts: 'Confirmations du thème', optToastsText: 'Petits messages en bas à droite', optSystemToasts: 'Événements système', optSystemToastsText: 'Audio, clavier, Verr. Maj et morceau en cours', optDesktopClock: 'Horloge de bureau', optDesktopClockText: "Grande horloge sur le fond d'écran", optHotCorner: 'Coin actif', optHotCornerText: 'Le coin haut droit ouvre la vue des tâches', optIdleScreen: "Écran d'inactivité", optIdleScreenText: 'Horloge, météo et média après un moment sans activité', optGameMode: 'Mode jeu', optGameModeText: 'Coupe toutes les animations du thème', roadmapIntro: 'Ce qui est fait, ce qui avance et ce qui arrive. Chaque étape sort quand elle est prête, sans date promise.', roadmapCount: '{0} étapes sur {1} terminées', roadmapDone: 'Terminé', roadmapNow: 'En cours', roadmapNext: 'Ensuite', roadmapLater: 'Plus tard', roadmapIdea: 'Une idée ?', roadmapIdeaText: 'Proposez-la dans les discussions du projet, vos retours guident la suite.', roadmapSuggest: 'Proposer une idée', noRoadmap: 'La feuille de route arrive bientôt.', updateVideoKicker: 'Nouvelle version', updateVideoTitle: 'Stellaria {0} est arrivé', updateVideoText: 'Une mise à jour signée est prête à être installée.', updateLater: 'Plus tard',
+    tabAppearance: 'Apparence', tabWallpaper: "Fond d'écran", tabDesktop: 'Bureau', tabPanels: 'Panneaux', modeGroup: 'Mode', modeText: 'Clair ou sombre pour tout le thème', modeDark: 'Sombre', modeLight: 'Clair', schemeGroup: 'Schéma de couleurs', schemeDynamic: 'Dynamique', variantGroup: 'Variante du schéma dynamique', variantTonalspot: 'Tonal Spot', variantVibrant: 'Vibrant', variantExpressive: 'Expressif', variantFidelity: 'Fidélité', variantContent: 'Contenu', variantFruitsalad: 'Salade de fruits', variantRainbow: 'Arc-en-ciel', variantNeutral: 'Neutre', variantMonochrome: 'Monochrome', windowsGroup: 'Windows', wallpaperTitle: 'Votre fond, vos couleurs', wallpaperText: "Le schéma dynamique tire ses couleurs du fond d'écran. Choisissez-en un dans le lanceur ou ouvrez votre dossier.", chooseWallpaper: 'Choisir un fond', openWallpaperFolder: 'Ouvrir le dossier', wallpaperFolderGroup: "Dossier des fonds d'écran", wallpaperFolderPlaceholder: 'Images (dossier par défaut)', wallpaperFolderText: 'Les fonds proposés par le lanceur viennent de ce dossier. Laissez vide pour utiliser Images.', save: 'Enregistrer', folderInvalid: 'Indiquez un chemin complet, par exemple C:\\Images', folderSaved: 'Dossier enregistré', idleGroup: "Écran d'inactivité", performanceGroup: 'Performances', optIdleMinutes: 'Délai avant affichage', minutes: '{0} min', hoverGroup: 'Ouverture au survol', dashboardGroup: 'Tableau de bord', launcherGroup: 'Lanceur', hiddenAppsEmpty: 'Aucune application masquée', hiddenAppsEmptyText: "Dans le lanceur, l'étoile ou Ctrl+F épingle une application et l'œil barré ou Ctrl+H la masque.", hiddenApp: 'Masquée du lanceur', unhide: 'Réafficher', optHideTaskbar: 'Remplacer la barre des tâches', optHideTaskbarText: 'Masque la barre Windows, la barre Stellaria liste les fenêtres ouvertes', optSmartScheme: 'Schéma intelligent', optSmartSchemeText: "Fond en noir et blanc : palette monochrome au lieu d'une teinte inventée", optWindowsColors: 'Accorder Windows au thème', optWindowsColorsText: "L'accent et le mode clair ou sombre de Windows suivent le thème", optWindowsTitleBars: 'Barres de titre colorées', optWindowsTitleBarsText: "Les barres de titre prennent la couleur d'accent", optHoverDashboard: 'Tableau de bord', optHoverDashboardText: 'Survol du centre du bord haut', optHoverOsd: 'Volume et micro', optHoverOsdText: 'Survol du milieu du bord droit', optHoverUtilities: 'Utilitaires', optHoverUtilitiesText: 'Survol du coin bas droit', optHoverPopouts: 'Mini-panneaux de la barre', optHoverPopoutsText: 'Survol des icônes de la barre', optOsdOnVolume: 'Volume à chaque changement', optOsdOnVolumeText: "Montre l'indicateur quand le volume change", optWeather: 'Météo', optWeatherText: "Prévisions d'Open-Meteo. Désactivée, rien n'est envoyé.", optLyrics: 'Paroles synchronisées', optLyricsText: "Paroles de LRCLIB dans l'onglet Média. Désactivées, rien n'est envoyé.",
     confirmTitle: 'Appliquer ce préréglage ?', confirmText: "Un lien demande d'appliquer le préréglage « {0} ». Vos paramètres actuels sont conservés pour que vous puissiez annuler.",
     unknownLink: 'Lien Stellaria non reconnu.', cancel: 'Annuler',
     helperMissing: 'Service Stellaria introuvable. Réinstallez Stellaria.',
@@ -125,7 +126,8 @@ const strings = {
     about: 'About', aboutText: 'Free software under the GPL-3.0 licence, based on Caelestia by soramanew and contributors.',
     project: 'Project page', readMore: 'Read more', noNews: 'No news yet.',
     newsAll: 'All', newsRelease: 'Releases', newsAnnouncement: 'Announcements', newsCommunity: 'Community', newsTip: 'Tips', newsNew: 'New', newsEarlier: 'Earlier', newsKindRelease: 'Release', newsKindAnnouncement: 'Announcement', newsKindCommunity: 'Community', newsKindTip: 'Tip',
-    customize: 'Customise', roadmap: 'Roadmap', customizeOffline: 'Start the theme to customise it from here.', frameGroup: 'Screen frame', resetFrame: 'Default', pixels: '{0} px', optFrameBorder: 'Border thickness', optFrameRounding: 'Corner roundness', barGroup: 'Bar', notificationsGroup: 'Notifications', desktopGroup: 'Desktop', allThemeSettings: 'All theme settings', optActiveWindow: 'Active window', optActiveWindowText: 'Icon and title of the window in front', optClockSeconds: 'Show seconds', optClockSecondsText: 'Clocks on the bar and the dashboard', optTintIcons: 'Icons in theme colours', optTintIconsText: 'Tints app icons', optTrayCollapse: 'Collapse the notification area', optTrayCollapseText: 'Four icons visible, the others behind an arrow', optDoNotDisturb: 'Do not disturb', optDoNotDisturbText: 'Hides the island and confirmations, the history stays complete', optIsland: 'Dynamic island', optIslandText: 'Now playing and notifications at the top of the screen', optToasts: 'Theme confirmations', optToastsText: 'Small messages at the bottom right', optSystemToasts: 'System events', optSystemToastsText: 'Audio, keyboard, Caps Lock and now playing', optDesktopClock: 'Desktop clock', optDesktopClockText: 'A large clock on the wallpaper', optHotCorner: 'Hot corner', optHotCornerText: 'The top right corner opens Task View', optIdleScreen: 'Idle screen', optIdleScreenText: 'Clock, weather and media after a while without activity', optGameMode: 'Game mode', optGameModeText: 'Turns off every theme animation', roadmapIntro: "What's done, what's moving and what's coming. Each step ships when it's ready, with no promised dates.", roadmapCount: '{0} of {1} steps done', roadmapDone: 'Done', roadmapNow: 'In progress', roadmapNext: 'Next', roadmapLater: 'Later', roadmapIdea: 'Got an idea?', roadmapIdeaText: "Share it in the project's discussions, your feedback shapes what comes next.", roadmapSuggest: 'Suggest an idea', noRoadmap: 'The roadmap is coming soon.', updateVideoKicker: 'New version', updateVideoTitle: 'Stellaria {0} is here', updateVideoText: 'A signed update is ready to install.', updateLater: 'Later',
+    customize: 'Customise', roadmap: 'Roadmap', customizeOffline: 'Start the theme to customise it from here.', frameGroup: 'Screen frame', resetFrame: 'Default', pixels: '{0} px', optFrameBorder: 'Border thickness', optFrameRounding: 'Corner roundness', barGroup: 'Bar', notificationsGroup: 'Notifications', desktopGroup: 'Desktop', optActiveWindow: 'Active window', optActiveWindowText: 'Icon and title of the window in front', optClockSeconds: 'Show seconds', optClockSecondsText: 'Clocks on the bar and the dashboard', optTintIcons: 'Icons in theme colours', optTintIconsText: 'Tints app icons', optTrayCollapse: 'Collapse the notification area', optTrayCollapseText: 'Four icons visible, the others behind an arrow', optDoNotDisturb: 'Do not disturb', optDoNotDisturbText: 'Hides the island and confirmations, the history stays complete', optIsland: 'Dynamic island', optIslandText: 'Now playing and notifications at the top of the screen', optToasts: 'Theme confirmations', optToastsText: 'Small messages at the bottom right', optSystemToasts: 'System events', optSystemToastsText: 'Audio, keyboard, Caps Lock and now playing', optDesktopClock: 'Desktop clock', optDesktopClockText: 'A large clock on the wallpaper', optHotCorner: 'Hot corner', optHotCornerText: 'The top right corner opens Task View', optIdleScreen: 'Idle screen', optIdleScreenText: 'Clock, weather and media after a while without activity', optGameMode: 'Game mode', optGameModeText: 'Turns off every theme animation', roadmapIntro: "What's done, what's moving and what's coming. Each step ships when it's ready, with no promised dates.", roadmapCount: '{0} of {1} steps done', roadmapDone: 'Done', roadmapNow: 'In progress', roadmapNext: 'Next', roadmapLater: 'Later', roadmapIdea: 'Got an idea?', roadmapIdeaText: "Share it in the project's discussions, your feedback shapes what comes next.", roadmapSuggest: 'Suggest an idea', noRoadmap: 'The roadmap is coming soon.', updateVideoKicker: 'New version', updateVideoTitle: 'Stellaria {0} is here', updateVideoText: 'A signed update is ready to install.', updateLater: 'Later',
+    tabAppearance: 'Appearance', tabWallpaper: 'Wallpaper', tabDesktop: 'Desktop', tabPanels: 'Panels', modeGroup: 'Mode', modeText: 'Light or dark for the whole theme', modeDark: 'Dark', modeLight: 'Light', schemeGroup: 'Colour scheme', schemeDynamic: 'Dynamic', variantGroup: 'Dynamic scheme variant', variantTonalspot: 'Tonal Spot', variantVibrant: 'Vibrant', variantExpressive: 'Expressive', variantFidelity: 'Fidelity', variantContent: 'Content', variantFruitsalad: 'Fruit salad', variantRainbow: 'Rainbow', variantNeutral: 'Neutral', variantMonochrome: 'Monochrome', windowsGroup: 'Windows', wallpaperTitle: 'Your wallpaper, your colours', wallpaperText: 'The dynamic scheme takes its colours from the wallpaper. Pick one in the launcher or open your folder.', chooseWallpaper: 'Choose a wallpaper', openWallpaperFolder: 'Open the folder', wallpaperFolderGroup: 'Wallpaper folder', wallpaperFolderPlaceholder: 'Pictures (default folder)', wallpaperFolderText: 'The wallpapers offered by the launcher come from this folder. Leave it empty to use Pictures.', save: 'Save', folderInvalid: 'Enter a full path, for example C:\\Pictures', folderSaved: 'Folder saved', idleGroup: 'Idle screen', performanceGroup: 'Performance', optIdleMinutes: 'Delay before it shows', minutes: '{0} min', hoverGroup: 'Open on hover', dashboardGroup: 'Dashboard', launcherGroup: 'Launcher', hiddenAppsEmpty: 'No hidden application', hiddenAppsEmptyText: 'In the launcher, the star or Ctrl+F pins an app and the crossed eye or Ctrl+H hides it.', hiddenApp: 'Hidden from the launcher', unhide: 'Show again', optHideTaskbar: 'Replace the taskbar', optHideTaskbarText: 'Hides the Windows taskbar, the Stellaria bar lists open windows', optSmartScheme: 'Smart scheme', optSmartSchemeText: 'Black and white wallpaper: a monochrome palette instead of an invented tint', optWindowsColors: 'Match Windows to the theme', optWindowsColorsText: "Windows' accent and light or dark mode follow the theme", optWindowsTitleBars: 'Coloured title bars', optWindowsTitleBarsText: 'Title bars take the accent colour', optHoverDashboard: 'Dashboard', optHoverDashboardText: 'Hover the middle of the top edge', optHoverOsd: 'Volume and microphone', optHoverOsdText: 'Hover the middle of the right edge', optHoverUtilities: 'Utilities', optHoverUtilitiesText: 'Hover the bottom right corner', optHoverPopouts: 'Bar mini panels', optHoverPopoutsText: 'Hover the bar icons', optOsdOnVolume: 'Volume on every change', optOsdOnVolumeText: 'Shows the indicator when the volume changes', optWeather: 'Weather', optWeatherText: 'Forecasts from Open-Meteo. Off, nothing is sent.', optLyrics: 'Synced lyrics', optLyricsText: 'Lyrics from LRCLIB in the Media tab. Off, nothing is sent.',
     confirmTitle: 'Apply this preset?', confirmText: 'A link asks to apply “{0}”. Your current settings are kept so you can undo.',
     unknownLink: 'This Stellaria link is not recognised.', cancel: 'Cancel',
     helperMissing: 'Stellaria service not found. Reinstall Stellaria.',
@@ -278,6 +280,7 @@ const state = {
   themeRoles: null,
   wallpaperUrl: null,
   themeOptions: null,
+  customizeTab: 'appearance',
   newsFilter: 'all',
   newsSeen: stored('news-seen', ''),
   newsMarked: stored('news-seen', ''),
@@ -429,6 +432,7 @@ async function setLanguage(choice) {
   state.language = choice === 'auto' ? systemLanguage() : choice;
   await loadLanguage(state.language);
   document.documentElement.lang = state.language;
+  syncThemeLanguage();
 }
 
 function languageChips(after) {
@@ -475,7 +479,36 @@ function element(tag, attributes = {}, children = []) {
   return node;
 }
 
-const icon = (name, className = '') => element('span', { class: `icon${className ? ` ${className}` : ''}`, text: name, 'aria-hidden': 'true' });
+const icon = (name, className = '') => element('span', { class: `icon${className ? ` ${className}` : ''}`, text: name, 'data-icon': name, 'aria-hidden': 'true' });
+
+const sparkle = {
+  colors: ['--m3-primary', '--m3-tertiary', '--m3-secondary'],
+
+  burst(x, y, count = 9) {
+    if (reducedMotion.matches) return;
+    const styles = getComputedStyle(document.documentElement);
+    for (let index = 0; index < count; index++) {
+      const angle = (index / count) * Math.PI * 2 + Math.random() * 0.6;
+      const distance = 18 + Math.random() * 22;
+      const size = 3 + Math.random() * 4;
+      const dot = element('span', {
+        class: 'spark',
+        'aria-hidden': 'true',
+        style: { left: `${x}px`, top: `${y}px`, width: `${size}px`, height: `${size}px`, background: styles.getPropertyValue(this.colors[index % 3]).trim() || '#d0bcff' },
+      });
+      document.body.append(dot);
+      dot.animate([
+        { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+        { transform: `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${Math.sin(angle) * distance}px)) scale(0.2)`, opacity: 0 },
+      ], { duration: 520 + Math.random() * 220, easing: 'cubic-bezier(0.2, 0.7, 0.3, 1)' }).finished.then(() => dot.remove(), () => dot.remove());
+    }
+  },
+};
+
+document.addEventListener('pointerdown', event => {
+  const target = event.target.closest?.('.rail-item, .option-row, .button.filled, button.chip, .news-filters .chip, .rail-brand');
+  if (target && !target.disabled) sparkle.burst(event.clientX, event.clientY, target.classList.contains('button') ? 12 : 9);
+});
 
 function shapePoints(lobes, amplitude) {
   const points = [];
@@ -897,6 +930,24 @@ async function refreshOptions() {
   } catch {
     state.themeOptions = null;
   }
+  syncThemeLanguage();
+}
+
+function syncThemeLanguage() {
+  if (state.themeOptions && state.connected && state.themeOptions.language !== state.language) setThemeOption('language', state.language);
+}
+
+let pageDataTimer = 0;
+
+async function refreshPageData(id) {
+  clearTimeout(pageDataTimer);
+  if (!state.connected) return;
+  if (id === 'customize') await refreshOptions();
+  else await refreshCatalog(false);
+  if (state.page !== id) return;
+  render();
+  const missing = id === 'customize' ? !state.themeOptions : !(state.catalog?.roadmap ?? []).length;
+  if (missing && id === 'customize') pageDataTimer = setTimeout(() => state.page === id && refreshPageData(id), 3000);
 }
 
 async function setThemeOption(name, value) {
@@ -1263,7 +1314,7 @@ function heroCard() {
           : button(t('start'), state.busy === 'start' ? 'progress_activity' : 'play_circle', () => runHelper('start', t('started')), { variant: 'filled', disabled: busy }),
         button(t('repair'), state.busy === 'install' ? 'progress_activity' : 'build', () => runHelper('install', t('repaired')), { disabled: busy }),
         ['available', 'downloading', 'ready'].includes(state.update.status) ? button(t('updateChip', state.update.info.version), 'system_update', () => showPage('install'), { variant: 'filled' }) : null,
-        button(t('themeSettings'), 'tune', () => helper.request('launcher.openSettings').catch(() => notify(t('offline'), 'warning')), { variant: 'text', disabled: !state.connected }),
+        button(t('themeSettings'), 'tune', () => showPage('customize'), { variant: 'text' }),
       ]),
     ]),
   ]);
@@ -1913,11 +1964,22 @@ function newsPage() {
   ];
 }
 
-const optionGroups = [
-  ['barGroup', [['activeWindow', 'select_window'], ['clockSeconds', 'timer'], ['tintIcons', 'colorize'], ['trayCollapse', 'unfold_less']]],
-  ['notificationsGroup', [['doNotDisturb', 'do_not_disturb_on'], ['island', 'smart_display'], ['toasts', 'chat_bubble'], ['systemToasts', 'notifications_active']]],
-  ['desktopGroup', [['desktopClock', 'schedule'], ['hotCorner', 'select_window_2'], ['idleScreen', 'nightlight'], ['gameMode', 'sports_esports']]],
+const customizeTabs = [
+  ['appearance', 'palette', 'tabAppearance'],
+  ['wallpaper', 'wallpaper', 'tabWallpaper'],
+  ['desktop', 'desktop_windows', 'tabDesktop'],
+  ['panels', 'side_navigation', 'tabPanels'],
 ];
+
+const schemeNames = {
+  stellaria: 'Stellaria', catppuccin: 'Catppuccin', darkgreen: 'Dark Green', dracula: 'Dracula', everblush: 'Everblush',
+  everforest: 'Everforest', gruvbox: 'Gruvbox', nord: 'Nord', oldworld: 'Oldworld', onedark: 'One Dark', rosepine: 'Rosé Pine',
+  shadotheme: 'Shadotheme', solarized: 'Solarized', tokyonight: 'Tokyo Night',
+};
+
+const themeVariants = ['tonalspot', 'vibrant', 'expressive', 'fidelity', 'content', 'fruitsalad', 'rainbow', 'neutral', 'monochrome'];
+const capitalized = value => value.charAt(0).toUpperCase() + value.slice(1);
+const schemeLabel = (name, flavour) => `${schemeNames[name] ?? capitalized(name)}${flavour === 'default' || flavour === 'medium' ? '' : ` ${capitalized(flavour)}`}`;
 
 const frameDefaults = { frameBorder: [10, 4, 24], frameRounding: [25, 0, 40] };
 const optionKey = name => `opt${name[0].toUpperCase()}${name.slice(1)}`;
@@ -1953,9 +2015,11 @@ function frameSlider(name, symbol, preview) {
     label.textContent = t('pixels', next);
     preview.style.setProperty(name === 'frameBorder' ? '--pv-border' : '--pv-rounding', `${next}px`);
     if (state.themeOptions) state.themeOptions = { ...state.themeOptions, [name]: next };
+    if (name === 'frameBorder') return;
     clearTimeout(timer);
     timer = setTimeout(() => setThemeOption(name, next), 220);
   });
+  if (name === 'frameBorder') input.addEventListener('change', () => setThemeOption(name, Number(input.value)));
   return element('div', { class: 'row' }, [
     icon(symbol, 'tonal-icon'),
     element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t(optionKey(name)) })]),
@@ -1963,6 +2027,8 @@ function frameSlider(name, symbol, preview) {
     label,
   ]);
 }
+
+let toggledOption = '';
 
 function optionSwitch(name, symbol) {
   const on = Boolean(state.themeOptions?.[name]);
@@ -1972,8 +2038,12 @@ function optionSwitch(name, symbol) {
     role: 'switch',
     'aria-checked': String(on),
     onClick: () => {
+      toggledOption = name;
       setThemeOption(name, !on);
       render();
+      setTimeout(() => {
+        if (toggledOption === name) toggledOption = '';
+      }, 600);
     },
   }, [
     icon(symbol, 'tonal-icon'),
@@ -1981,18 +2051,114 @@ function optionSwitch(name, symbol) {
       element('span', { class: 'row-title', text: t(key) }),
       element('span', { class: 'row-subtitle', text: t(`${key}Text`) }),
     ]),
-    element('span', { class: `switch${on ? ' on' : ''}`, 'aria-hidden': 'true' }, element('span', { class: 'switch-thumb' }, on ? icon('check') : null)),
+    element('span', { class: `switch${on ? ' on' : ''}${toggledOption === name ? ' toggled' : ''}`, 'aria-hidden': 'true' }, element('span', { class: 'switch-thumb' }, on ? icon('check') : null)),
   ]);
 }
 
-function customizePage() {
-  if (!state.themeOptions) {
-    return [element('div', { class: 'empty' }, [
-      icon('palette'),
-      element('span', { text: t('customizeOffline') }),
-      state.connected ? button(t('start'), 'play_circle', () => runHelper('start', t('started')).then(refreshOptions).then(() => render()), { variant: 'filled', disabled: Boolean(state.busy) }) : null,
-    ])];
+function customizeSection(group, children, extra = null) {
+  return element('section', { class: 'section' }, [
+    element('div', { class: 'section-title' }, [element('span', { text: t(group) }), extra]),
+    ...children,
+  ]);
+}
+
+function appearanceTab() {
+  const options = state.themeOptions;
+  if (!state.schemes) loadSchemes().then(() => state.page === 'customize' && render());
+  const mode = options.mode === 'light' ? 'light' : 'dark';
+  const modes = element('div', { class: 'segmented', role: 'group', 'aria-label': t('modeGroup') }, [['dark', 'dark_mode', 'modeDark'], ['light', 'light_mode', 'modeLight']].map(([id, symbol, key]) =>
+    element('button', {
+      class: id === mode ? 'selected' : '',
+      'aria-pressed': String(id === mode),
+      onClick: () => {
+        setThemeOption('mode', id);
+        render();
+      },
+    }, [icon(symbol), element('span', { text: t(key) })])));
+  const selected = options.scheme ?? '';
+  const card = (id, label, swatches) => element('button', {
+    class: `scheme-card state-layer${id === selected ? ' selected' : ''}`,
+    title: label,
+    'aria-pressed': String(id === selected),
+    onClick: () => {
+      setThemeOption('scheme', id);
+      render();
+    },
+  }, [swatches, element('span', { text: label })]);
+  const cards = [card('', t('schemeDynamic'), element('div', { class: 'scheme-swatches dynamic' }, icon('wallpaper')))];
+  for (const [name, flavours] of Object.entries(state.schemes ?? {})) {
+    for (const [flavour, schemeModes] of Object.entries(flavours)) {
+      const roles = schemeModes[mode] ?? schemeModes.dark ?? schemeModes.light ?? {};
+      cards.push(card(`${name}/${flavour}`, schemeLabel(name, flavour), element('div', { class: 'scheme-swatches' }, [roles.primary, roles.secondary, roles.tertiary].map(color => element('span', { style: { background: color } })))));
+    }
   }
+  const variant = options.variant ?? 'tonalspot';
+  const variants = element('div', { class: 'chips variant-chips' }, themeVariants.map(id => {
+    const active = !selected && id === variant;
+    return element('button', {
+      class: `chip${active ? ' selected' : ''}`,
+      'aria-pressed': String(active),
+      onClick: () => {
+        setThemeOption('variant', id);
+        state.themeOptions = { ...state.themeOptions, scheme: '' };
+        render();
+      },
+    }, [active ? icon('check') : null, element('span', { text: t(`variant${capitalized(id)}`) })]);
+  }));
+  return [
+    customizeSection('modeGroup', [element('div', { class: 'row' }, [icon('contrast', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('modeText') })]), modes])]),
+    customizeSection('schemeGroup', [element('div', { class: 'scheme-grid' }, cards)]),
+    customizeSection('variantGroup', [element('div', { class: 'variant-wrap' }, variants), optionSwitch('smartScheme', 'auto_awesome')]),
+    customizeSection('windowsGroup', [optionSwitch('windowsColors', 'desktop_windows'), optionSwitch('windowsTitleBars', 'web_asset')]),
+  ];
+}
+
+function wallpaperTab() {
+  const folder = typeof state.themeOptions.wallpaperDirectory === 'string' ? state.themeOptions.wallpaperDirectory : '';
+  const field = element('input', { class: 'field', type: 'text', spellcheck: 'false', value: folder, placeholder: t('wallpaperFolderPlaceholder'), 'aria-label': t('wallpaperFolderGroup') });
+  const save = () => {
+    const value = field.value.trim();
+    if (value && !/^[A-Za-z]:\\/.test(value)) {
+      notify(t('folderInvalid'), 'warning');
+      return;
+    }
+    setThemeOption('wallpaperDirectory', value).then(() => notify(t('folderSaved')));
+  };
+  field.addEventListener('keydown', event => {
+    if (event.key === 'Enter') save();
+  });
+  const action = name => () => helper.request('launcher.themeAction', { name }).catch(() => notify(t('offline'), 'warning'));
+  return [
+    element('section', { class: 'wallpaper-hero', style: state.wallpaperUrl ? { backgroundImage: `url("${state.wallpaperUrl}")` } : {} }, [
+      element('div', { class: 'wallpaper-hero-body' }, [
+        element('h2', { text: t('wallpaperTitle') }),
+        element('p', { text: t('wallpaperText') }),
+        element('div', { class: 'actions' }, [
+          button(t('chooseWallpaper'), 'photo_library', action('wallpaperPicker'), { variant: 'filled' }),
+          button(t('openWallpaperFolder'), 'folder_open', action('wallpaperFolder'), {}),
+        ]),
+      ]),
+    ]),
+    customizeSection('wallpaperFolderGroup', [
+      element('div', { class: 'row folder-row' }, [icon('folder', 'tonal-icon'), field, button(t('save'), 'save', save, { variant: 'filled' })]),
+      element('p', { class: 'section-note', text: t('wallpaperFolderText') }),
+    ]),
+  ];
+}
+
+function idleSlider() {
+  const value = Number.isInteger(state.themeOptions.idleMinutes) ? state.themeOptions.idleMinutes : 10;
+  const label = element('span', { class: 'slider-value', text: t('minutes', value) });
+  const input = element('input', { type: 'range', min: '1', max: '60', step: '1', value: String(value), class: 'slider', 'aria-label': t('optIdleMinutes') });
+  input.addEventListener('input', () => {
+    label.textContent = t('minutes', input.value);
+    state.themeOptions = { ...state.themeOptions, idleMinutes: Number(input.value) };
+  });
+  input.addEventListener('change', () => setThemeOption('idleMinutes', Number(input.value)));
+  return element('div', { class: 'row' }, [icon('timer', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('optIdleMinutes') })]), input, label]);
+}
+
+function desktopTab() {
   const preview = framePreview();
   return [
     element('section', { class: 'section frame-section' }, [
@@ -2008,14 +2174,82 @@ function customizePage() {
       frameSlider('frameBorder', 'border_outer', preview),
       frameSlider('frameRounding', 'rounded_corner', preview),
     ]),
-    ...optionGroups.map(([group, options]) => element('section', { class: 'section' }, [
-      element('div', { class: 'section-title' }, [element('span', { text: t(group) })]),
-      ...options.map(([name, symbol]) => optionSwitch(name, symbol)),
-    ])),
-    element('div', { class: 'actions customize-more' }, [
-      button(t('allThemeSettings'), 'tune', () => helper.request('launcher.openSettings').catch(() => notify(t('offline'), 'warning')), { variant: 'text', disabled: !state.connected }),
+    customizeSection('barGroup', [
+      optionSwitch('hideTaskbar', 'dock_to_left'),
+      optionSwitch('activeWindow', 'select_window'),
+      optionSwitch('trayCollapse', 'unfold_less'),
+      optionSwitch('clockSeconds', 'timer'),
+      optionSwitch('tintIcons', 'colorize'),
     ]),
+    customizeSection('desktopGroup', [
+      optionSwitch('desktopClock', 'schedule'),
+      optionSwitch('hotCorner', 'select_window_2'),
+      optionSwitch('island', 'smart_display'),
+    ]),
+    customizeSection('idleGroup', [optionSwitch('idleScreen', 'nightlight'), idleSlider()]),
+    customizeSection('performanceGroup', [optionSwitch('gameMode', 'sports_esports')]),
   ];
+}
+
+function hiddenAppsRows() {
+  const hidden = Array.isArray(state.themeOptions.hiddenApps) ? state.themeOptions.hiddenApps : [];
+  if (!hidden.length) {
+    return [element('div', { class: 'row' }, [icon('star', 'tonal-icon'), element('div', { class: 'row-text' }, [
+      element('span', { class: 'row-title', text: t('hiddenAppsEmpty') }),
+      element('span', { class: 'row-subtitle', text: t('hiddenAppsEmptyText') }),
+    ])])];
+  }
+  return hidden.map(app => element('div', { class: 'row' }, [
+    icon('visibility_off', 'tonal-icon'),
+    element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: app.name || app.id }), element('span', { class: 'row-subtitle', text: t('hiddenApp') })]),
+    button(t('unhide'), 'visibility', () => {
+      const remaining = hidden.filter(entry => entry.id !== app.id);
+      setThemeOption('hiddenApps', remaining.map(entry => entry.id)).then(() => {
+        state.themeOptions = { ...state.themeOptions, hiddenApps: remaining };
+        render();
+      });
+    }, {}),
+  ]));
+}
+
+function panelsTab() {
+  return [
+    customizeSection('hoverGroup', [
+      optionSwitch('hoverDashboard', 'dashboard'),
+      optionSwitch('hoverOsd', 'volume_up'),
+      optionSwitch('hoverUtilities', 'widgets'),
+      optionSwitch('hoverPopouts', 'left_panel_open'),
+    ]),
+    customizeSection('notificationsGroup', [
+      optionSwitch('doNotDisturb', 'do_not_disturb_on'),
+      optionSwitch('osdOnVolume', 'tune'),
+      optionSwitch('toasts', 'chat_bubble'),
+      optionSwitch('systemToasts', 'notifications_active'),
+    ]),
+    customizeSection('dashboardGroup', [optionSwitch('weather', 'partly_cloudy_day'), optionSwitch('lyrics', 'lyrics')]),
+    customizeSection('launcherGroup', hiddenAppsRows()),
+  ];
+}
+
+function customizePage() {
+  if (!state.themeOptions) {
+    return [element('div', { class: 'empty' }, [
+      icon('palette'),
+      element('span', { text: t('customizeOffline') }),
+      state.connected ? button(t('start'), 'play_circle', () => runHelper('start', t('started')).then(refreshOptions).then(() => render()), { variant: 'filled', disabled: Boolean(state.busy) }) : null,
+    ])];
+  }
+  const tabs = element('div', { class: 'segmented tabs customize-tabs', role: 'tablist' }, customizeTabs.map(([id, symbol, key]) => element('button', {
+    role: 'tab',
+    class: id === state.customizeTab ? 'selected' : '',
+    'aria-selected': String(id === state.customizeTab),
+    onClick: () => {
+      state.customizeTab = id;
+      render(true);
+    },
+  }, [icon(symbol), element('span', { text: t(key) })])));
+  const builders = { appearance: appearanceTab, wallpaper: wallpaperTab, desktop: desktopTab, panels: panelsTab };
+  return [tabs, ...(builders[state.customizeTab] ?? appearanceTab)()];
 }
 
 const roadmapStates = {
@@ -2227,6 +2461,7 @@ function paintConnection() {
 }
 
 const railItems = element('div', { class: 'rail-items' });
+let railPop = '';
 
 function paintRail() {
   if (!morph.path) {
@@ -2236,7 +2471,7 @@ function paintRail() {
   }
   const current = state.page === 'preset' ? 'discover' : state.page;
   railItems.replaceChildren(...pages.map(([id, symbol]) => element('button', {
-    class: `rail-item${id === current ? ' current' : ''}`,
+    class: `rail-item${id === current ? ' current' : ''}${id === railPop ? ' pop' : ''}`,
     'aria-current': id === current ? 'page' : null,
     onClick: () => showPage(id),
   }, [element('span', { class: 'rail-pill' }, [icon(symbol), id === 'news' && newsUnread() ? element('span', { class: 'rail-dot', 'aria-hidden': 'true' }) : null]), element('span', { text: t(id) })])));
@@ -2258,8 +2493,13 @@ function showPage(id) {
   hoverPreview.leave();
   state.page = id;
   if (id === 'news') markNewsSeen();
+  if (id === 'customize' || id === 'roadmap') refreshPageData(id);
   nodes.pages.scrollTop = 0;
   if (changed) {
+    railPop = id;
+    setTimeout(() => {
+      if (railPop === id) railPop = '';
+    }, 700);
     morph.to(...(pageShapes[id] ?? pageShapes.home));
     topo.page(id);
   }
@@ -2523,6 +2763,12 @@ function confirmPreset(item) {
 async function handleLink(link) {
   if (/^stellaria:\/\/install\/?$/.test(link ?? '')) {
     showPage('install');
+    return;
+  }
+  const page = /^stellaria:\/\/page\/(home|customize|help)(?:\/(appearance|wallpaper|desktop|panels))?\/?$/.exec(link ?? '');
+  if (page) {
+    if (page[2]) state.customizeTab = page[2];
+    showPage(page[1]);
     return;
   }
   const match = /^stellaria:\/\/apply\/([a-z0-9][a-z0-9-]{1,47})\/?$/.exec(link ?? '');

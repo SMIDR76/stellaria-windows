@@ -107,6 +107,7 @@ internal sealed class CatalogModule : IHelperModule
 
         candidates.Add(("cache", () => ReadPairAsync(Path.Combine(_context.Paths.DataDirectory, CacheDirectoryName))));
         candidates.Add(("bundled", () => ReadPairAsync(BundledDirectory())));
+        (string Source, byte[] Bytes, string Signature, IndexEnvelope Envelope)? best = null;
         foreach (var (source, read) in candidates)
         {
             try
@@ -117,25 +118,33 @@ internal sealed class CatalogModule : IHelperModule
                 }
 
                 var envelope = SignedIndex.Open(bytes, signature, TrustedKeys.RegistryKey, lastVersion, _context.Time.GetUtcNow());
-                lock (_gate)
+                if (best is null || envelope.Version > best.Value.Envelope.Version)
                 {
-                    _index = envelope;
-                    _source = source;
+                    best = (source, bytes, signature, envelope);
                 }
-
-                UpdateState(state => state["lastIndexVersion"] = envelope.Version);
-                if (source != "cache")
-                {
-                    WriteCache(bytes, signature);
-                }
-
-                _context.Log.Info("catalog", $"Catalogue version {envelope.Version} loaded from {source}.");
-                return;
             }
             catch (Exception exception) when (exception is CryptographicException or IOException or HttpRequestException or TaskCanceledException or System.Text.Json.JsonException or FormatException)
             {
                 _context.Log.Warning("catalog", $"The {source} catalogue was refused: {exception.Message}");
             }
+        }
+
+        if (best is { } chosen)
+        {
+            lock (_gate)
+            {
+                _index = chosen.Envelope;
+                _source = chosen.Source;
+            }
+
+            UpdateState(state => state["lastIndexVersion"] = chosen.Envelope.Version);
+            if (chosen.Source != "cache")
+            {
+                WriteCache(chosen.Bytes, chosen.Signature);
+            }
+
+            _context.Log.Info("catalog", $"Catalogue version {chosen.Envelope.Version} loaded from {chosen.Source}.");
+            return;
         }
 
         if (_index is null)

@@ -16,8 +16,23 @@ project uses [semantic versioning](https://semver.org/).
 - A Roadmap page in the app, shipped in the signed catalogue (`registry/roadmap.json`).
 - A short video that announces a new version when the app starts, with its highlights and an Update button. It shows a
   still frame when Windows asks for reduced motion.
-- `frame.border` (4 to 24 px): the helper resizes the frame edges and their screen reservation to match.
-- Requests `theme.options`, `launcher.options` and `launcher.setOption`, and the event `theme.option`.
+- `frame.border` (4 to 24 px): the helper writes the thickness into the frame edges of `zpack.json` and restarts Zebar
+  once, so Zebar draws and reserves the new edges itself.
+- Requests `theme.options`, `launcher.options`, `launcher.setOption`, `launcher.themeAction` and `stellaria.open`, and
+  the events `theme.option` and `theme.action`.
+- Every theme setting now lives in the app's Customise page, in four tabs (Appearance, Wallpaper, Desktop, Panels):
+  colour mode, the 25 schemes, dynamic variants, Windows colours, the wallpaper folder, the frame, the bar, the idle
+  screen, hover panels, notifications, weather, lyrics and hidden launcher apps. Win+Alt+S, the launcher's "Theme
+  settings" action and the first-run welcome open the app; the old panel only remains as a fallback.
+- The theme follows the app's language.
+- Icon animations and click sparkles in the app, which stop when Windows asks for reduced motion.
+
+### Fixed
+
+- Steam games and web links in the launcher show their own icon instead of a blank page.
+- After an update, the newer catalogue shipped with the setup wins over the cached one, so news and the roadmap appear.
+- Updates clear Zebar's web cache (never the theme's settings), so widgets no longer show files from the previous
+  version for up to a week.
 
 ## [1.1.0] - 2026-11-18
 

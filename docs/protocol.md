@@ -85,6 +85,7 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `widgets.reload` | `{}`. Every widget reloads its page. Raised by the `widgets.reload` request, used by the settings app to recover a widget that stopped rendering. |
 | `theme.preset` | `{ "id", "name", "preset" }`, scope `appearance` | A catalogue preset to apply. |
 | `theme.option` | `{ "name", "value" }`, scope `appearance` | An option changed from the Stellaria app; the primary bar stores it and every widget follows. |
+| `theme.action` | `{ "name" }`, scope `appearance` | An action asked from the app: `wallpaperPicker` or `wallpaperFolder`. |
 | `theme.undo` | `{}`, scope `appearance` | Restore the look saved before the last preset. |
 
 ## Requests
@@ -131,8 +132,10 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `launcher.status` | none (scope `launcher`) | `{ "helperVersion", "packVersion", "packInstalled", "zebar", "zebarRunning", "tasks": [helper, switcher, Zebar], "sessions" }`. |
 | `launcher.theme` | none (scope `launcher`) | The last `theme.publish` payload, `{ "roles", "transparent" }`, so the Stellaria app wears the theme's colours. `null` before the first publish. |
 | `launcher.wallpaper` | none (scope `launcher`) | `{ "image": "<base64 PNG, 480 px wide>", "source" }`: the desktop background as the theme samples it (Wallpaper Engine included), for the preview on the app's Home page. `null` when nothing could be sampled. |
+| `launcher.themeAction` | `{ "name": "wallpaperPicker" \| "wallpaperFolder" }` (scope `launcher`) | none. Raises `theme.action`; the primary bar opens the launcher's wallpaper picker or the wallpaper folder. |
+| `stellaria.open` | `{ "page"?: "home" \| "customize" \| "customize/<tab>" \| "help" }` (scope `basic`) | none. Starts or reveals the Stellaria app next to the helper with `stellaria://page/<page>`; Win+Alt+S uses it. `not_found` when the app is missing. |
 | `launcher.options` | none (scope `launcher`) | The last `theme.options` report, or `null` while the theme is not running. |
-| `launcher.setOption` | `{ "name", "value" }` (scope `launcher`) | The options after the change. Only `frameBorder` (4 to 24), `frameRounding` (0 to 40) and the flags `activeWindow`, `doNotDisturb`, `clockSeconds`, `tintIcons`, `trayCollapse`, `island`, `desktopClock`, `hotCorner`, `toasts`, `systemToasts`, `idleScreen` and `gameMode` are accepted; anything else is `invalid_params`. Raises `theme.option`. |
+| `launcher.setOption` | `{ "name", "value" }` (scope `launcher`) | The options after the change. Accepted: `frameBorder` (4 to 24), `frameRounding` (0 to 40), `idleMinutes` (1 to 60), `language` (`auto` or a language code), `mode` (`dark`, `light`), `variant` (a dynamic variant), `scheme` (`name/flavour`, empty for dynamic colours), `wallpaperDirectory` (empty or a full path), `hiddenApps` (application ids) and the theme's on/off options listed in `ThemeModule`; anything else is `invalid_params`. Raises `theme.option`. |
 | `launcher.openSettings` | none (scope `launcher`) | Opens the theme settings window, like Win+Alt+S. |
 | `wallpapers.apply` | `{ "path" }` inside the configured folder | none, `denied` for any other path |
 | `wallpapers.list` | none | `{ "directory", "current", "items": [ { "path", "name", "thumb": "<384 x 216 jpeg base64>" } ] }`, at most 500 images of the configured folder |

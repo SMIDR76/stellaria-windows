@@ -22,7 +22,9 @@ import {
   monitorAtCursor,
   onShared,
   openLauncher,
+  openFolder,
   openSettings,
+  openStellaria,
   option,
   setOption,
   smoothValue,
@@ -520,7 +522,7 @@ async function runHotkey(name, target) {
     dashboard: () => toggleDashboard(target),
     session: () => togglePopup('session', target),
     utilities: () => toggleDrawer('utilities', target),
-    settings: () => togglePopup('settings', target),
+    settings: () => openStellaria('customize', () => togglePopup('settings', target)),
     escape: () => closeKeyboardPanels(),
   };
   await actions[name]?.();
@@ -727,8 +729,10 @@ if (await isPrimaryMonitor()) {
   if (!getOption('welcomed', false)) {
     setTimeout(() => {
       setOption('welcomed', true);
-      store.set('stellaria:settings:page', { page: 'welcome', at: Date.now() });
-      togglePopup('settings').catch(error => console.error('[stellaria] Bienvenue', error));
+      openStellaria('home', () => {
+        store.set('stellaria:settings:page', { page: 'welcome', at: Date.now() });
+        togglePopup('settings').catch(error => console.error('[stellaria] Bienvenue', error));
+      });
     }, 4000);
   }
   const configure = (path, value) => helperClient.request('config.set', { path, value })
@@ -738,7 +742,13 @@ if (await isPrimaryMonitor()) {
   const appOptions = {
     frameBorder: 10, frameRounding: 25, activeWindow: true, doNotDisturb: false, clockSeconds: false, tintIcons: true,
     trayCollapse: true, island: true, desktopClock: true, hotCorner: true, toasts: true, systemToasts: true,
-    idleScreen: true, gameMode: false,
+    idleScreen: true, gameMode: false, language: 'auto', hideTaskbar: true, smartScheme: true, windowsColors: false,
+    windowsTitleBars: false, hoverDashboard: true, hoverOsd: true, hoverUtilities: true, hoverPopouts: true, osdOnVolume: true,
+    weather: true, lyrics: true, idleMinutes: 10, wallpaperDirectory: '',
+  };
+  const schemeId = () => {
+    const scheme = store.get(keys.scheme, null);
+    return scheme?.name && scheme?.flavour ? `${scheme.name}/${scheme.flavour}` : '';
   };
   let reportTimer = 0;
   const reportOptions = () => {
@@ -746,17 +756,46 @@ if (await isPrimaryMonitor()) {
     reportTimer = setTimeout(() => {
       const options = Object.fromEntries(Object.entries(appOptions).map(([name, fallback]) => {
         const value = getOption(name, fallback);
+        if (typeof fallback === 'string') return [name, typeof value === 'string' ? value : fallback];
         return [name, typeof fallback === 'number' ? (Number.isInteger(value) ? value : fallback) : Boolean(value)];
       }));
+      const names = new Map((store.get(keys.apps)?.items ?? []).map(app => [app.id, app.name]));
+      Object.assign(options, {
+        mode: store.get(keys.mode, 'dark') === 'light' ? 'light' : 'dark',
+        variant: store.get(keys.variant, 'tonalspot'),
+        scheme: schemeId(),
+        hiddenApps: getOption('hiddenApps', []).filter(id => typeof id === 'string').slice(0, 200).map(id => ({ id, name: names.get(id) ?? id })),
+      });
       helperClient.request('theme.options', { options }).catch(() => {});
     }, 300);
   };
-  for (const name of Object.keys(appOptions)) store.watch(`stellaria:option:${name}`, reportOptions, 250);
+  for (const name of [...Object.keys(appOptions), 'hiddenApps']) store.watch(`stellaria:option:${name}`, reportOptions, 250);
+  for (const key of [keys.mode, keys.variant, keys.scheme]) store.watch(key, reportOptions, 250);
   helperClient.onConnection(connected => connected && reportOptions());
   reportOptions();
   helperClient.onEvent('theme.option', ({ name, value }) => {
-    if (!(name in appOptions) || typeof value !== typeof appOptions[name]) return;
-    setOption(name, value);
+    if (name === 'mode' && (value === 'dark' || value === 'light')) {
+      store.set(keys.mode, value);
+      applyTheme();
+    } else if (name === 'variant' && typeof value === 'string') {
+      store.set(keys.variant, value);
+      store.set(keys.scheme, null);
+      applyTheme();
+    } else if (name === 'scheme' && typeof value === 'string') {
+      const [schemeName, flavour] = value.split('/');
+      store.set(keys.scheme, schemeName && flavour ? { name: schemeName, flavour } : null);
+      applyTheme();
+    } else if (name === 'hiddenApps' && Array.isArray(value)) {
+      setOption('hiddenApps', value.filter(id => typeof id === 'string'));
+    } else if (name in appOptions && typeof value === typeof appOptions[name]) {
+      setOption(name, value);
+    } else {
+      return;
+    }
     reportOptions();
+  });
+  helperClient.onEvent('theme.action', ({ name }) => {
+    if (name === 'wallpaperPicker') openLauncher(t('>fond '));
+    else if (name === 'wallpaperFolder') openFolder('wallpapers').catch(() => {});
   });
 }

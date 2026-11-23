@@ -94,33 +94,4 @@ public sealed class AppBarRulesTests
             time.Advance(TimeSpan.FromSeconds(20));
         }
     }
-
-    [Fact]
-    public void An_edge_is_resized_towards_the_screen_centre_and_keeps_its_outer_side()
-    {
-        var top = AppBarRules.Classify(1, new Rect(0, 0, 3440, 15), s_monitor)!;
-        var right = AppBarRules.Classify(2, new Rect(3425, 15, 3440, 1425), s_monitor)!;
-        var bottom = AppBarRules.Classify(3, new Rect(0, 1425, 3440, 1440), s_monitor)!;
-
-        Assert.Equal(new Rect(0, 0, 3440, 24), AppBarRules.Resized(top, 24));
-        Assert.Equal(new Rect(3416, 15, 3440, 1425), AppBarRules.Resized(right, 24));
-        Assert.Equal(new Rect(0, 1434, 3440, 1440), AppBarRules.Resized(bottom, 6));
-    }
-
-    [Theory]
-    [InlineData(10, 96u, 10)]
-    [InlineData(10, 144u, 15)]
-    [InlineData(7, 120u, 9)]
-    [InlineData(10, 0u, 10)]
-    public void The_frame_thickness_follows_the_monitor_scale(int logical, uint dpi, int physical)
-    {
-        Assert.Equal(physical, AppBarRules.Scaled(logical, dpi));
-    }
-
-    [Fact]
-    public void Only_edge_windows_are_resized()
-    {
-        Assert.True(AppBarRules.IsEdgeTitle("zebar - stellaria / edge"));
-        Assert.False(AppBarRules.IsEdgeTitle("zebar - stellaria / bar"));
-    }
 }
