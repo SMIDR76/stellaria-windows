@@ -14,7 +14,8 @@ Built on [Zebar](https://github.com/glzr-io/zebar) for the widgets and a small n
 - **Twelve languages**: English, French, Spanish, German, Brazilian Portuguese, Italian, Polish, Russian, Turkish,
   Simplified Chinese, Japanese and Korean, following the Windows display language or chosen in the settings.
 - **Bar**: virtual desktops with an elastic indicator, open windows, a collapsible tray, weather, clock, keyboard
-  layout, sound, network and a notification bell. App icons can be tinted with the theme colour.
+  layout, sound, network, battery, microphone, Bluetooth, Caps Lock and a notification bell. Every item can be moved
+  between the top and the bottom, reordered or hidden from the app. App icons can be tinted with the theme colour.
 - **Material You colours** taken from the wallpaper, nine variants and fourteen fixed schemes, light and dark modes.
 - **Dashboard** (hover the top edge or Win+Alt+A): calendar, weather, media with synced lyrics, live CPU, GPU,
   memory, storage and network gauges.
@@ -24,6 +25,10 @@ Built on [Zebar](https://github.com/glzr-io/zebar) for the widgets and a small n
 - **Dynamic island** that drops from the top of the frame for a new track (with shuffle and repeat) or a notification.
 - **Sound panel** with per-application volume, **utilities** (radios, game mode, keep awake, captures, Pomodoro timer),
   **brightness** over DDC/CI, **Alt+Tab switcher**, **hot corner** for Task View and an **idle screen**.
+- **Battery** on laptops: level on the bar, alerts at 20, 10 and 5 %, charger toasts and a health card in the
+  dashboard.
+- **Audio visualiser** (optional, off by default): bars that move with the music on the wallpaper, behind your windows.
+- **Screen frame** with adjustable border thickness and corner roundness, and a **Do not disturb** mode.
 - **Reduced motion** support, a **game mode** without animations.
 - **Recoverable**: the Windows taskbar comes back if anything stops, and the helper restarts a frozen Zebar.
 
@@ -33,8 +38,9 @@ Built on [Zebar](https://github.com/glzr-io/zebar) for the widgets and a small n
 
 The setup adds a **Stellaria** entry to the Start menu: an app in the theme's colours to start, stop or repair the
 theme, see each part of the installation on its Installation page (Zebar, helper, widgets, start-up tasks) and
-install or repair them step by step, open its settings, apply colour presets from the signed community catalogue (and undo them), and read the
-project's news. Links such as `stellaria://apply/preset-nord` open it on the matching preset and ask before applying.
+install or repair them step by step, apply colour presets from the signed community catalogue (and undo them), read the
+project's news and roadmap, and **customise the whole theme**: its Customise page (also opened by Win+Alt+S) holds the
+appearance, wallpaper, bar, desktop and panel settings. After an update, a short video shows what is new. Links such as `stellaria://apply/preset-nord` open it on the matching preset and ask before applying.
 
 ![Six official colour presets](docs/images/promo/presets-en.jpg)
 
@@ -46,13 +52,15 @@ Each step ships when it is ready and safe, so there are no dates.
 
 1. **Foundations (done, v1.0):** bar, dashboard, launcher and utilities, Material You colours and schemes, a secure local
    service with no telemetry, and a signed preset catalogue.
-2. **Stability and trust (in progress, v1.0.x):** one global fix for the reported bugs, reliable fonts after sleep,
-   publication on winget, and code signing.
-3. **Community catalogue (next):** themes and presets shared by the community, every submission checked automatically,
+2. **Your language (done, v1.1):** the theme, the app and the setup in twelve languages, and the fixes you reported.
+3. **Personalisation (done, v1.2):** every setting in the app, a configurable bar, the battery, an audio visualiser,
+   adjustable borders and corners, Do not disturb, a roadmap and a what's new video.
+4. **Stability and trust (in progress):** publication on winget, code signing, and no more false antivirus alerts.
+5. **Community catalogue (next):** themes and presets shared by the community, every submission checked automatically,
    clear reporting and moderation, and a "Show your desktop" gallery.
-4. **Widget packs (then):** widgets made by the community, a human review of every version, permissions shown before
+6. **Widget packs (then):** widgets made by the community, a human review of every version, permissions shown before
    install, and a safe preview before installing.
-5. **Further out:** publishing from the Stellaria app, sharing a setup with one code, creator pages, and whatever your
+7. **Further out:** publishing from the Stellaria app, sharing a setup with one code, creator pages, and whatever your
    feedback asks for.
 
 Ideas and requests are welcome in [Discussions](https://github.com/SMIDR76/stellaria-windows/discussions).

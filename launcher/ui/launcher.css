@@ -2957,6 +2957,11 @@ button.chip .icon {
   pointer-events: none;
 }
 
+.film.ultrawide .film-cue {
+  left: 14%;
+  max-width: 30%;
+}
+
 .film-cue.low {
   bottom: 11%;
 }

@@ -190,6 +190,38 @@
           "ja": "ロードマップとアップデート動画",
           "ko": "로드맵과 업데이트 영상"
         }
+      },
+      {
+        "text": {
+          "fr": "Une barre configurable",
+          "en": "A configurable bar",
+          "es": "Una barra configurable",
+          "de": "Eine anpassbare Leiste",
+          "pt-BR": "Uma barra configurável",
+          "it": "Una barra configurabile",
+          "pl": "Konfigurowalny pasek",
+          "ru": "Настраиваемая панель",
+          "tr": "Özelleştirilebilir çubuk",
+          "zh-CN": "可自定义的栏",
+          "ja": "カスタマイズできるバー",
+          "ko": "사용자 지정 바"
+        }
+      },
+      {
+        "text": {
+          "fr": "La batterie et un visualiseur audio",
+          "en": "Battery and an audio visualiser",
+          "es": "Batería y visualizador de audio",
+          "de": "Akku und Audio-Visualisierung",
+          "pt-BR": "Bateria e visualizador de áudio",
+          "it": "Batteria e visualizzatore audio",
+          "pl": "Bateria i wizualizer dźwięku",
+          "ru": "Батарея и аудиовизуализатор",
+          "tr": "Pil ve ses görselleştirici",
+          "zh-CN": "电池和音频可视化",
+          "ja": "バッテリーとオーディオビジュアライザー",
+          "ko": "배터리와 오디오 비주얼라이저"
+        }
       }
     ]
   },

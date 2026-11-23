@@ -2843,6 +2843,7 @@ function notesNodes(text) {
 const whatsNewFilms = {
   '1.2': {
     src: './media/whats-new.mp4',
+    wide: './media/whats-new-ultrawide.mp4',
     cues: [
       [2.2, 5.6, 'whatsNewIntro', 'whatsNewIntroText', 'low'],
       [6.1, 10.1, 'whatsNewTagline', null, 'low'],
@@ -2882,7 +2883,9 @@ const whatsNewFilm = {
         subtitle ? element('p', {}, words(t(subtitle))) : null,
       ]),
     }));
-    const video = element('video', { class: 'film-video', src: film.src, playsinline: true, preload: 'auto' });
+    const ultrawide = Boolean(film.wide) && window.innerWidth / window.innerHeight > 2.05;
+    const ratio = ultrawide ? 43 / 18 : 16 / 9;
+    const video = element('video', { class: 'film-video', src: ultrawide ? film.wide : film.src, playsinline: true, preload: 'auto' });
     const sound = button(t('filmSound'), 'volume_up', () => {
       video.muted = false;
       video.volume = 0.9;
@@ -2899,7 +2902,9 @@ const whatsNewFilm = {
     const skip = element('button', { class: 'film-skip state-layer', onClick: () => this.close() }, [element('span', { text: t('filmSkip') }), icon('skip_next')]);
     const canvas = element('canvas', { class: 'film-fx', 'aria-hidden': 'true' });
     const stage = element('div', { class: 'film-stage' }, [video, ...cues.map(cue => cue.node), end]);
-    this.node = element('div', { class: 'film', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('whatsNew', version) }, [canvas, stage, skip]);
+    stage.style.aspectRatio = String(ratio);
+    stage.style.width = `min(92vw, calc(86vh * ${ratio.toFixed(4)}))`;
+    this.node = element('div', { class: `film${ultrawide ? ' ultrawide' : ''}`, role: 'dialog', 'aria-modal': 'true', 'aria-label': t('whatsNew', version) }, [canvas, stage, skip]);
     document.body.append(this.node);
     this.keydown = event => {
       if (event.key === 'Escape') this.close();
