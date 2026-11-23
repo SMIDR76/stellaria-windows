@@ -2818,11 +2818,12 @@ button.chip .icon {
   top: 8px;
   flex: 0 0 auto;
   width: 56px;
-  height: 460px;
+  min-height: 460px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  gap: 28px;
   padding: 12px 0;
   border-radius: 22px;
   background: var(--m3-surface-container-lowest);
@@ -2830,6 +2831,7 @@ button.chip .icon {
 }
 
 .pv-section {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2862,6 +2864,7 @@ button.chip .icon {
 }
 
 .pv-status {
+  flex: 0 0 auto;
   width: 36px;
   display: flex;
   flex-direction: column;
@@ -2879,4 +2882,184 @@ button.chip .icon {
 .pv-power {
   background: transparent;
   color: var(--m3-error);
+}
+
+.film {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  background: rgb(5 4 9 / 0);
+  backdrop-filter: blur(0);
+  transition: background 420ms var(--ease-effects), backdrop-filter 420ms var(--ease-effects);
+}
+
+.film.open {
+  background: rgb(5 4 9 / 0.88);
+  backdrop-filter: blur(14px);
+}
+
+.film.closing {
+  background: rgb(5 4 9 / 0);
+  backdrop-filter: blur(0);
+}
+
+.film-fx {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.film-stage {
+  position: relative;
+  width: min(92vw, calc(86vh * 16 / 9));
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 28px;
+  background: #07050c;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.08), 0 40px 120px rgb(0 0 0 / 0.6), 0 0 90px -20px color-mix(in srgb, var(--m3-primary) 70%, transparent);
+  clip-path: circle(0% at 50% 50%);
+  transform: scale(0.82);
+  opacity: 0;
+  transition: clip-path 760ms cubic-bezier(0.7, 0, 0.2, 1) 260ms, transform 900ms var(--ease-spatial) 220ms, opacity 200ms linear 220ms;
+}
+
+.film.open .film-stage {
+  clip-path: circle(80% at 50% 50%);
+  transform: none;
+  opacity: 1;
+}
+
+.film.closing .film-stage {
+  clip-path: circle(80% at 50% 50%);
+  transform: scale(0.94);
+  opacity: 0;
+  transition: transform 380ms var(--ease-emphasized-accel, ease-in), opacity 380ms ease-in;
+}
+
+.film-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.film-cue {
+  position: absolute;
+  left: 6%;
+  max-width: 44%;
+  color: #f7f2ff;
+  text-shadow: 0 4px 30px rgb(0 0 0 / 0.55);
+  pointer-events: none;
+}
+
+.film-cue.low {
+  bottom: 11%;
+}
+
+.film-cue.high {
+  top: 9%;
+}
+
+.film-cue h2 {
+  margin: 0;
+  font-size: clamp(26px, 3.6vw, 52px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.film-cue p {
+  margin: 12px 0 0;
+  font-size: clamp(14px, 1.45vw, 20px);
+  line-height: 1.45;
+  color: rgb(247 242 255 / 0.82);
+}
+
+.film-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.45em);
+  filter: blur(8px);
+  transition: opacity 420ms var(--ease-effects), transform 620ms var(--ease-spatial), filter 520ms var(--ease-effects);
+  transition-delay: calc(var(--i) * 28ms);
+}
+
+.film-cue.shown .film-word {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.film-skip {
+  position: absolute;
+  right: 28px;
+  bottom: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 16px 0 18px;
+  border: 0;
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.12);
+  color: #f7f2ff;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 300ms var(--ease-effects), transform 400ms var(--ease-spatial);
+}
+
+.film-skip.shown {
+  opacity: 1;
+  transform: none;
+}
+
+.film-end {
+  position: absolute;
+  right: 6%;
+  bottom: 10%;
+  display: flex;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(14px);
+  pointer-events: none;
+  transition: opacity 500ms var(--ease-effects), transform 600ms var(--ease-spatial);
+}
+
+.film-end.shown {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.film-end .button:not(.filled) {
+  background: rgb(255 255 255 / 0.14);
+  color: #f7f2ff;
+  backdrop-filter: blur(10px);
+}
+
+.film-sound {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .film,
+  .film-stage,
+  .film-word,
+  .film-skip,
+  .film-end {
+    transition: none;
+  }
 }

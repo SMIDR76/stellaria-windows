@@ -26,6 +26,8 @@ project uses [semantic versioning](https://semver.org/).
   settings" action and the first-run welcome open the app; the old panel only remains as a fallback.
 - The theme follows the app's language.
 - Icon animations and click sparkles in the app, which stop when Windows asks for reduced motion.
+- A what's new film after the update to 1.2: a light burst and an iris reveal open a 48-second video cut on the beat
+  of "Surrender" by Healer, with titles in the app's language. It can be skipped, and Settings > About replays it.
 - An optional audio visualiser on the wallpaper (off by default): the helper captures what plays on the default output
   only while the option is on, turns it into 48 bars and the bars move behind your windows in the theme's colours. It
   pauses during fullscreen apps and in game mode. Request `visualiser.listen` and event `visualiser`.

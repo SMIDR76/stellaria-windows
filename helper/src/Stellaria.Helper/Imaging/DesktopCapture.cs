@@ -8,7 +8,7 @@ internal static class DesktopCapture
     public const uint PrintFullContent = 2;
     public const int SampleWidth = 480;
 
-    public static PixelImage? PrimaryMonitorBackground()
+    public static PixelImage? PrimaryMonitorBackground(int width = SampleWidth)
     {
         var desktop = User32.FindWindow("Progman", null);
         if (desktop == 0 || !User32.GetWindowRect(desktop, out var bounds) || bounds.IsEmpty)
@@ -23,6 +23,6 @@ internal static class DesktopCapture
         }
 
         return WindowCapture.PrintRegion(desktop, bounds.Width, bounds.Height, PrintFullContent,
-            primary.Bounds.Left - bounds.Left, primary.Bounds.Top - bounds.Top, primary.Bounds.Width, primary.Bounds.Height, SampleWidth);
+            primary.Bounds.Left - bounds.Left, primary.Bounds.Top - bounds.Top, primary.Bounds.Width, primary.Bounds.Height, width);
     }
 }

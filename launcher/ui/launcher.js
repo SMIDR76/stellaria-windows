@@ -28,7 +28,7 @@ const strings = {
     project: 'Page du projet', readMore: 'En savoir plus', noNews: 'Aucune actualité pour le moment.',
     newsAll: 'Tout', newsRelease: 'Versions', newsAnnouncement: 'Annonces', newsCommunity: 'Communauté', newsTip: 'Astuces', newsNew: 'Nouveau', newsEarlier: 'Plus tôt', newsKindRelease: 'Version', newsKindAnnouncement: 'Annonce', newsKindCommunity: 'Communauté', newsKindTip: 'Astuce',
     customize: 'Personnaliser', roadmap: 'Feuille de route', customizeOffline: "Démarrez le thème pour le personnaliser d'ici.", frameGroup: "Cadre de l'écran", resetFrame: 'Par défaut', pixels: '{0} px', optFrameBorder: 'Épaisseur des bords', optFrameRounding: 'Arrondi des coins', barGroup: 'Barre', notificationsGroup: 'Notifications', desktopGroup: 'Bureau', optActiveWindow: 'Fenêtre active', optActiveWindowText: 'Icône et titre de la fenêtre au premier plan', optClockSeconds: 'Afficher les secondes', optClockSecondsText: 'Horloges de la barre et du tableau de bord', optTintIcons: 'Icônes aux couleurs du thème', optTintIconsText: "Teinte les icônes d'applications", optTrayCollapse: 'Replier la zone de notification', optTrayCollapseText: 'Quatre icônes visibles, les autres derrière une flèche', optDoNotDisturb: 'Ne pas déranger', optDoNotDisturbText: "Masque l'île et les confirmations, l'historique reste complet", optIsland: 'Île dynamique', optIslandText: "Morceau en cours et notifications en haut de l'écran", optToasts: 'Confirmations du thème', optToastsText: 'Petits messages en bas à droite', optSystemToasts: 'Événements système', optSystemToastsText: 'Audio, clavier, Verr. Maj et morceau en cours', optDesktopClock: 'Horloge de bureau', optDesktopClockText: "Grande horloge sur le fond d'écran", optHotCorner: 'Coin actif', optHotCornerText: 'Le coin haut droit ouvre la vue des tâches', optIdleScreen: "Écran d'inactivité", optIdleScreenText: 'Horloge, météo et média après un moment sans activité', optGameMode: 'Mode jeu', optGameModeText: 'Coupe toutes les animations du thème', roadmapIntro: 'Ce qui est fait, ce qui avance et ce qui arrive. Chaque étape sort quand elle est prête, sans date promise.', roadmapCount: '{0} étapes sur {1} terminées', roadmapDone: 'Terminé', roadmapNow: 'En cours', roadmapNext: 'Ensuite', roadmapLater: 'Plus tard', roadmapIdea: 'Une idée ?', roadmapIdeaText: 'Proposez-la dans les discussions du projet, vos retours guident la suite.', roadmapSuggest: 'Proposer une idée', noRoadmap: 'La feuille de route arrive bientôt.', updateVideoKicker: 'Nouvelle version', updateVideoTitle: 'Stellaria {0} est arrivé', updateVideoText: 'Une mise à jour signée est prête à être installée.', updateLater: 'Plus tard',
-    tabAppearance: 'Apparence', tabWallpaper: "Fond d'écran", tabDesktop: 'Bureau', tabPanels: 'Panneaux', modeGroup: 'Mode', modeText: 'Clair ou sombre pour tout le thème', modeDark: 'Sombre', modeLight: 'Clair', schemeGroup: 'Schéma de couleurs', schemeDynamic: 'Dynamique', variantGroup: 'Variante du schéma dynamique', variantTonalspot: 'Tonal Spot', variantVibrant: 'Vibrant', variantExpressive: 'Expressif', variantFidelity: 'Fidélité', variantContent: 'Contenu', variantFruitsalad: 'Salade de fruits', variantRainbow: 'Arc-en-ciel', variantNeutral: 'Neutre', variantMonochrome: 'Monochrome', windowsGroup: 'Windows', wallpaperTitle: 'Votre fond, vos couleurs', wallpaperText: "Le schéma dynamique tire ses couleurs du fond d'écran. Choisissez-en un dans le lanceur ou ouvrez votre dossier.", chooseWallpaper: 'Choisir un fond', openWallpaperFolder: 'Ouvrir le dossier', wallpaperFolderGroup: "Dossier des fonds d'écran", wallpaperFolderPlaceholder: 'Images (dossier par défaut)', wallpaperFolderText: 'Les fonds proposés par le lanceur viennent de ce dossier. Laissez vide pour utiliser Images.', save: 'Enregistrer', folderInvalid: 'Indiquez un chemin complet, par exemple C:\\Images', folderSaved: 'Dossier enregistré', idleGroup: "Écran d'inactivité", performanceGroup: 'Performances', optIdleMinutes: 'Délai avant affichage', minutes: '{0} min', hoverGroup: 'Ouverture au survol', dashboardGroup: 'Tableau de bord', launcherGroup: 'Lanceur', hiddenAppsEmpty: 'Aucune application masquée', hiddenAppsEmptyText: "Dans le lanceur, l'étoile ou Ctrl+F épingle une application et l'œil barré ou Ctrl+H la masque.", hiddenApp: 'Masquée du lanceur', unhide: 'Réafficher', optHideTaskbar: 'Remplacer la barre des tâches', optHideTaskbarText: 'Masque la barre Windows, la barre Stellaria liste les fenêtres ouvertes', optSmartScheme: 'Schéma intelligent', optSmartSchemeText: "Fond en noir et blanc : palette monochrome au lieu d'une teinte inventée", optWindowsColors: 'Accorder Windows au thème', optWindowsColorsText: "L'accent et le mode clair ou sombre de Windows suivent le thème", optWindowsTitleBars: 'Barres de titre colorées', optWindowsTitleBarsText: "Les barres de titre prennent la couleur d'accent", optHoverDashboard: 'Tableau de bord', optHoverDashboardText: 'Survol du centre du bord haut', optHoverOsd: 'Volume et micro', optHoverOsdText: 'Survol du milieu du bord droit', optHoverUtilities: 'Utilitaires', optHoverUtilitiesText: 'Survol du coin bas droit', optHoverPopouts: 'Mini-panneaux de la barre', optHoverPopoutsText: 'Survol des icônes de la barre', optOsdOnVolume: 'Volume à chaque changement', optOsdOnVolumeText: "Montre l'indicateur quand le volume change", optWeather: 'Météo', optWeatherText: "Prévisions d'Open-Meteo. Désactivée, rien n'est envoyé.", optLyrics: 'Paroles synchronisées', optLyricsText: "Paroles de LRCLIB dans l'onglet Média. Désactivées, rien n'est envoyé.", optBatteryAlerts: "Alertes de batterie", optBatteryAlertsText: "Prévient à 20, 10 et 5 % quand le PC est sur batterie", tabBar: "Barre", barLayoutGroup: "Éléments de la barre", barLayoutText: "Les flèches déplacent un élément, l’interrupteur l’affiche ou le masque. La séparation marque la limite entre le haut et le bas de la barre.", statusGroup: "Icônes d'état", statusText: "Elles n'apparaissent que quand elles ont quelque chose à montrer : la batterie sur un portable, Verr. Maj quand il est activé.", moveUp: "Monter", moveDown: "Descendre", barLogo: "Lanceur", barWorkspaces: "Bureaux virtuels", barTasks: "Fenêtres ouvertes", barActiveWindow: "Fenêtre active", barSpacer: "Séparation haut / bas", barTray: "Zone de notification", barWeather: "Météo", barClock: "Horloge", barStatus: "Icônes d'état", barPower: "Alimentation", statusKeyboard: "Disposition du clavier", statusCapsLock: "Verr. Maj", statusMic: "Micro", statusVolume: "Volume", statusBluetooth: "Bluetooth", statusBattery: "Batterie", statusNetwork: "Réseau", statusNotifications: "Notifications", optVisualiser: "Visualiseur audio", optVisualiserText: "Des barres qui bougent avec la musique sur le fond d'écran. Le son n'est analysé que lorsque l'option est activée.",
+    tabAppearance: 'Apparence', tabWallpaper: "Fond d'écran", tabDesktop: 'Bureau', tabPanels: 'Panneaux', modeGroup: 'Mode', modeText: 'Clair ou sombre pour tout le thème', modeDark: 'Sombre', modeLight: 'Clair', schemeGroup: 'Schéma de couleurs', schemeDynamic: 'Dynamique', variantGroup: 'Variante du schéma dynamique', variantTonalspot: 'Tonal Spot', variantVibrant: 'Vibrant', variantExpressive: 'Expressif', variantFidelity: 'Fidélité', variantContent: 'Contenu', variantFruitsalad: 'Salade de fruits', variantRainbow: 'Arc-en-ciel', variantNeutral: 'Neutre', variantMonochrome: 'Monochrome', windowsGroup: 'Windows', wallpaperTitle: 'Votre fond, vos couleurs', wallpaperText: "Le schéma dynamique tire ses couleurs du fond d'écran. Choisissez-en un dans le lanceur ou ouvrez votre dossier.", chooseWallpaper: 'Choisir un fond', openWallpaperFolder: 'Ouvrir le dossier', wallpaperFolderGroup: "Dossier des fonds d'écran", wallpaperFolderPlaceholder: 'Images (dossier par défaut)', wallpaperFolderText: 'Les fonds proposés par le lanceur viennent de ce dossier. Laissez vide pour utiliser Images.', save: 'Enregistrer', folderInvalid: 'Indiquez un chemin complet, par exemple C:\\Images', folderSaved: 'Dossier enregistré', idleGroup: "Écran d'inactivité", performanceGroup: 'Performances', optIdleMinutes: 'Délai avant affichage', minutes: '{0} min', hoverGroup: 'Ouverture au survol', dashboardGroup: 'Tableau de bord', launcherGroup: 'Lanceur', hiddenAppsEmpty: 'Aucune application masquée', hiddenAppsEmptyText: "Dans le lanceur, l'étoile ou Ctrl+F épingle une application et l'œil barré ou Ctrl+H la masque.", hiddenApp: 'Masquée du lanceur', unhide: 'Réafficher', optHideTaskbar: 'Remplacer la barre des tâches', optHideTaskbarText: 'Masque la barre Windows, la barre Stellaria liste les fenêtres ouvertes', optSmartScheme: 'Schéma intelligent', optSmartSchemeText: "Fond en noir et blanc : palette monochrome au lieu d'une teinte inventée", optWindowsColors: 'Accorder Windows au thème', optWindowsColorsText: "L'accent et le mode clair ou sombre de Windows suivent le thème", optWindowsTitleBars: 'Barres de titre colorées', optWindowsTitleBarsText: "Les barres de titre prennent la couleur d'accent", optHoverDashboard: 'Tableau de bord', optHoverDashboardText: 'Survol du centre du bord haut', optHoverOsd: 'Volume et micro', optHoverOsdText: 'Survol du milieu du bord droit', optHoverUtilities: 'Utilitaires', optHoverUtilitiesText: 'Survol du coin bas droit', optHoverPopouts: 'Mini-panneaux de la barre', optHoverPopoutsText: 'Survol des icônes de la barre', optOsdOnVolume: 'Volume à chaque changement', optOsdOnVolumeText: "Montre l'indicateur quand le volume change", optWeather: 'Météo', optWeatherText: "Prévisions d'Open-Meteo. Désactivée, rien n'est envoyé.", optLyrics: 'Paroles synchronisées', optLyricsText: "Paroles de LRCLIB dans l'onglet Média. Désactivées, rien n'est envoyé.", optBatteryAlerts: "Alertes de batterie", optBatteryAlertsText: "Prévient à 20, 10 et 5 % quand le PC est sur batterie", tabBar: "Barre", barLayoutGroup: "Éléments de la barre", barLayoutText: "Les flèches déplacent un élément, l’interrupteur l’affiche ou le masque. La séparation marque la limite entre le haut et le bas de la barre.", statusGroup: "Icônes d'état", statusText: "Elles n'apparaissent que quand elles ont quelque chose à montrer : la batterie sur un portable, Verr. Maj quand il est activé.", moveUp: "Monter", moveDown: "Descendre", barLogo: "Lanceur", barWorkspaces: "Bureaux virtuels", barTasks: "Fenêtres ouvertes", barActiveWindow: "Fenêtre active", barSpacer: "Séparation haut / bas", barTray: "Zone de notification", barWeather: "Météo", barClock: "Horloge", barStatus: "Icônes d'état", barPower: "Alimentation", statusKeyboard: "Disposition du clavier", statusCapsLock: "Verr. Maj", statusMic: "Micro", statusVolume: "Volume", statusBluetooth: "Bluetooth", statusBattery: "Batterie", statusNetwork: "Réseau", statusNotifications: "Notifications", optVisualiser: "Visualiseur audio", optVisualiserText: "Des barres qui bougent avec la musique sur le fond d'écran. Le son n'est analysé que lorsque l'option est activée.", whatsNewIntroText: "La mise à jour est installée.", whatsNewTagline: "Votre bureau, vos règles.", whatsNewCustomize: "Tout se règle dans l'app", whatsNewCustomizeText: "Couleurs, fond d'écran, barre et bureau, au même endroit.", whatsNewBar: "Une barre à votre image", whatsNewBarText: "Réordonnez, masquez, ajoutez le micro, le Bluetooth et Verr. Maj.", whatsNewVisualiser: "Le son prend vie", whatsNewVisualiserText: "Un visualiseur audio sur votre fond d'écran, en option.", whatsNewBattery: "La batterie, enfin", whatsNewBatteryText: "Niveau, alertes et santé sur les portables.", whatsNewFrame: "Un cadre sur mesure", whatsNewFrameText: "Épaisseur et arrondis, réglés au pixel près.", whatsNewMore: "Et bien plus", whatsNewMoreText: "Ne pas déranger, feuille de route, icônes, animations…", whatsNewThanks: "Merci pour vos retours", whatsNewThanksText: "Cette version est née de vos idées.", filmSkip: "Passer", filmSound: "Activer le son", filmDiscover: "Découvrir", filmPlay: "Lire", replayWhatsNew: "Revoir la vidéo des nouveautés",
     confirmTitle: 'Appliquer ce préréglage ?', confirmText: "Un lien demande d'appliquer le préréglage « {0} ». Vos paramètres actuels sont conservés pour que vous puissiez annuler.",
     unknownLink: 'Lien Stellaria non reconnu.', cancel: 'Annuler',
     helperMissing: 'Service Stellaria introuvable. Réinstallez Stellaria.',
@@ -127,7 +127,7 @@ const strings = {
     project: 'Project page', readMore: 'Read more', noNews: 'No news yet.',
     newsAll: 'All', newsRelease: 'Releases', newsAnnouncement: 'Announcements', newsCommunity: 'Community', newsTip: 'Tips', newsNew: 'New', newsEarlier: 'Earlier', newsKindRelease: 'Release', newsKindAnnouncement: 'Announcement', newsKindCommunity: 'Community', newsKindTip: 'Tip',
     customize: 'Customise', roadmap: 'Roadmap', customizeOffline: 'Start the theme to customise it from here.', frameGroup: 'Screen frame', resetFrame: 'Default', pixels: '{0} px', optFrameBorder: 'Border thickness', optFrameRounding: 'Corner roundness', barGroup: 'Bar', notificationsGroup: 'Notifications', desktopGroup: 'Desktop', optActiveWindow: 'Active window', optActiveWindowText: 'Icon and title of the window in front', optClockSeconds: 'Show seconds', optClockSecondsText: 'Clocks on the bar and the dashboard', optTintIcons: 'Icons in theme colours', optTintIconsText: 'Tints app icons', optTrayCollapse: 'Collapse the notification area', optTrayCollapseText: 'Four icons visible, the others behind an arrow', optDoNotDisturb: 'Do not disturb', optDoNotDisturbText: 'Hides the island and confirmations, the history stays complete', optIsland: 'Dynamic island', optIslandText: 'Now playing and notifications at the top of the screen', optToasts: 'Theme confirmations', optToastsText: 'Small messages at the bottom right', optSystemToasts: 'System events', optSystemToastsText: 'Audio, keyboard, Caps Lock and now playing', optDesktopClock: 'Desktop clock', optDesktopClockText: 'A large clock on the wallpaper', optHotCorner: 'Hot corner', optHotCornerText: 'The top right corner opens Task View', optIdleScreen: 'Idle screen', optIdleScreenText: 'Clock, weather and media after a while without activity', optGameMode: 'Game mode', optGameModeText: 'Turns off every theme animation', roadmapIntro: "What's done, what's moving and what's coming. Each step ships when it's ready, with no promised dates.", roadmapCount: '{0} of {1} steps done', roadmapDone: 'Done', roadmapNow: 'In progress', roadmapNext: 'Next', roadmapLater: 'Later', roadmapIdea: 'Got an idea?', roadmapIdeaText: "Share it in the project's discussions, your feedback shapes what comes next.", roadmapSuggest: 'Suggest an idea', noRoadmap: 'The roadmap is coming soon.', updateVideoKicker: 'New version', updateVideoTitle: 'Stellaria {0} is here', updateVideoText: 'A signed update is ready to install.', updateLater: 'Later',
-    tabAppearance: 'Appearance', tabWallpaper: 'Wallpaper', tabDesktop: 'Desktop', tabPanels: 'Panels', modeGroup: 'Mode', modeText: 'Light or dark for the whole theme', modeDark: 'Dark', modeLight: 'Light', schemeGroup: 'Colour scheme', schemeDynamic: 'Dynamic', variantGroup: 'Dynamic scheme variant', variantTonalspot: 'Tonal Spot', variantVibrant: 'Vibrant', variantExpressive: 'Expressive', variantFidelity: 'Fidelity', variantContent: 'Content', variantFruitsalad: 'Fruit salad', variantRainbow: 'Rainbow', variantNeutral: 'Neutral', variantMonochrome: 'Monochrome', windowsGroup: 'Windows', wallpaperTitle: 'Your wallpaper, your colours', wallpaperText: 'The dynamic scheme takes its colours from the wallpaper. Pick one in the launcher or open your folder.', chooseWallpaper: 'Choose a wallpaper', openWallpaperFolder: 'Open the folder', wallpaperFolderGroup: 'Wallpaper folder', wallpaperFolderPlaceholder: 'Pictures (default folder)', wallpaperFolderText: 'The wallpapers offered by the launcher come from this folder. Leave it empty to use Pictures.', save: 'Save', folderInvalid: 'Enter a full path, for example C:\\Pictures', folderSaved: 'Folder saved', idleGroup: 'Idle screen', performanceGroup: 'Performance', optIdleMinutes: 'Delay before it shows', minutes: '{0} min', hoverGroup: 'Open on hover', dashboardGroup: 'Dashboard', launcherGroup: 'Launcher', hiddenAppsEmpty: 'No hidden application', hiddenAppsEmptyText: 'In the launcher, the star or Ctrl+F pins an app and the crossed eye or Ctrl+H hides it.', hiddenApp: 'Hidden from the launcher', unhide: 'Show again', optHideTaskbar: 'Replace the taskbar', optHideTaskbarText: 'Hides the Windows taskbar, the Stellaria bar lists open windows', optSmartScheme: 'Smart scheme', optSmartSchemeText: 'Black and white wallpaper: a monochrome palette instead of an invented tint', optWindowsColors: 'Match Windows to the theme', optWindowsColorsText: "Windows' accent and light or dark mode follow the theme", optWindowsTitleBars: 'Coloured title bars', optWindowsTitleBarsText: 'Title bars take the accent colour', optHoverDashboard: 'Dashboard', optHoverDashboardText: 'Hover the middle of the top edge', optHoverOsd: 'Volume and microphone', optHoverOsdText: 'Hover the middle of the right edge', optHoverUtilities: 'Utilities', optHoverUtilitiesText: 'Hover the bottom right corner', optHoverPopouts: 'Bar mini panels', optHoverPopoutsText: 'Hover the bar icons', optOsdOnVolume: 'Volume on every change', optOsdOnVolumeText: 'Shows the indicator when the volume changes', optWeather: 'Weather', optWeatherText: 'Forecasts from Open-Meteo. Off, nothing is sent.', optLyrics: 'Synced lyrics', optLyricsText: 'Lyrics from LRCLIB in the Media tab. Off, nothing is sent.', optBatteryAlerts: "Battery alerts", optBatteryAlertsText: "Warns at 20, 10 and 5% when the PC runs on battery", tabBar: "Bar", barLayoutGroup: "Bar items", barLayoutText: "The arrows move an item, the switch shows or hides it. The divider marks where the top of the bar ends and the bottom begins.", statusGroup: "Status icons", statusText: "They only appear when they have something to show: the battery on a laptop, Caps Lock while it is on.", moveUp: "Move up", moveDown: "Move down", barLogo: "Launcher", barWorkspaces: "Virtual desktops", barTasks: "Open windows", barActiveWindow: "Active window", barSpacer: "Top / bottom divider", barTray: "Notification area", barWeather: "Weather", barClock: "Clock", barStatus: "Status icons", barPower: "Power", statusKeyboard: "Keyboard layout", statusCapsLock: "Caps Lock", statusMic: "Microphone", statusVolume: "Volume", statusBluetooth: "Bluetooth", statusBattery: "Battery", statusNetwork: "Network", statusNotifications: "Notifications", optVisualiser: "Audio visualiser", optVisualiserText: "Bars that move with the music on the wallpaper. Sound is only analysed while this is on.",
+    tabAppearance: 'Appearance', tabWallpaper: 'Wallpaper', tabDesktop: 'Desktop', tabPanels: 'Panels', modeGroup: 'Mode', modeText: 'Light or dark for the whole theme', modeDark: 'Dark', modeLight: 'Light', schemeGroup: 'Colour scheme', schemeDynamic: 'Dynamic', variantGroup: 'Dynamic scheme variant', variantTonalspot: 'Tonal Spot', variantVibrant: 'Vibrant', variantExpressive: 'Expressive', variantFidelity: 'Fidelity', variantContent: 'Content', variantFruitsalad: 'Fruit salad', variantRainbow: 'Rainbow', variantNeutral: 'Neutral', variantMonochrome: 'Monochrome', windowsGroup: 'Windows', wallpaperTitle: 'Your wallpaper, your colours', wallpaperText: 'The dynamic scheme takes its colours from the wallpaper. Pick one in the launcher or open your folder.', chooseWallpaper: 'Choose a wallpaper', openWallpaperFolder: 'Open the folder', wallpaperFolderGroup: 'Wallpaper folder', wallpaperFolderPlaceholder: 'Pictures (default folder)', wallpaperFolderText: 'The wallpapers offered by the launcher come from this folder. Leave it empty to use Pictures.', save: 'Save', folderInvalid: 'Enter a full path, for example C:\\Pictures', folderSaved: 'Folder saved', idleGroup: 'Idle screen', performanceGroup: 'Performance', optIdleMinutes: 'Delay before it shows', minutes: '{0} min', hoverGroup: 'Open on hover', dashboardGroup: 'Dashboard', launcherGroup: 'Launcher', hiddenAppsEmpty: 'No hidden application', hiddenAppsEmptyText: 'In the launcher, the star or Ctrl+F pins an app and the crossed eye or Ctrl+H hides it.', hiddenApp: 'Hidden from the launcher', unhide: 'Show again', optHideTaskbar: 'Replace the taskbar', optHideTaskbarText: 'Hides the Windows taskbar, the Stellaria bar lists open windows', optSmartScheme: 'Smart scheme', optSmartSchemeText: 'Black and white wallpaper: a monochrome palette instead of an invented tint', optWindowsColors: 'Match Windows to the theme', optWindowsColorsText: "Windows' accent and light or dark mode follow the theme", optWindowsTitleBars: 'Coloured title bars', optWindowsTitleBarsText: 'Title bars take the accent colour', optHoverDashboard: 'Dashboard', optHoverDashboardText: 'Hover the middle of the top edge', optHoverOsd: 'Volume and microphone', optHoverOsdText: 'Hover the middle of the right edge', optHoverUtilities: 'Utilities', optHoverUtilitiesText: 'Hover the bottom right corner', optHoverPopouts: 'Bar mini panels', optHoverPopoutsText: 'Hover the bar icons', optOsdOnVolume: 'Volume on every change', optOsdOnVolumeText: 'Shows the indicator when the volume changes', optWeather: 'Weather', optWeatherText: 'Forecasts from Open-Meteo. Off, nothing is sent.', optLyrics: 'Synced lyrics', optLyricsText: 'Lyrics from LRCLIB in the Media tab. Off, nothing is sent.', optBatteryAlerts: "Battery alerts", optBatteryAlertsText: "Warns at 20, 10 and 5% when the PC runs on battery", tabBar: "Bar", barLayoutGroup: "Bar items", barLayoutText: "The arrows move an item, the switch shows or hides it. The divider marks where the top of the bar ends and the bottom begins.", statusGroup: "Status icons", statusText: "They only appear when they have something to show: the battery on a laptop, Caps Lock while it is on.", moveUp: "Move up", moveDown: "Move down", barLogo: "Launcher", barWorkspaces: "Virtual desktops", barTasks: "Open windows", barActiveWindow: "Active window", barSpacer: "Top / bottom divider", barTray: "Notification area", barWeather: "Weather", barClock: "Clock", barStatus: "Status icons", barPower: "Power", statusKeyboard: "Keyboard layout", statusCapsLock: "Caps Lock", statusMic: "Microphone", statusVolume: "Volume", statusBluetooth: "Bluetooth", statusBattery: "Battery", statusNetwork: "Network", statusNotifications: "Notifications", optVisualiser: "Audio visualiser", optVisualiserText: "Bars that move with the music on the wallpaper. Sound is only analysed while this is on.", whatsNewIntroText: "The update is installed.", whatsNewTagline: "Your desktop, your rules.", whatsNewCustomize: "Everything in one app", whatsNewCustomizeText: "Colours, wallpaper, bar and desktop, all in one place.", whatsNewBar: "A bar made yours", whatsNewBarText: "Reorder, hide, add the microphone, Bluetooth and Caps Lock.", whatsNewVisualiser: "Sound comes alive", whatsNewVisualiserText: "An optional audio visualiser on your wallpaper.", whatsNewBattery: "Battery, at last", whatsNewBatteryText: "Level, alerts and health on laptops.", whatsNewFrame: "A frame that fits", whatsNewFrameText: "Thickness and corners, tuned to the pixel.", whatsNewMore: "And much more", whatsNewMoreText: "Do not disturb, roadmap, icons, animations…", whatsNewThanks: "Thank you for your feedback", whatsNewThanksText: "This version was born from your ideas.", filmSkip: "Skip", filmSound: "Turn on sound", filmDiscover: "Discover", filmPlay: "Play", replayWhatsNew: "Replay the what's new video",
     confirmTitle: 'Apply this preset?', confirmText: 'A link asks to apply “{0}”. Your current settings are kept so you can undo.',
     unknownLink: 'This Stellaria link is not recognised.', cancel: 'Cancel',
     helperMissing: 'Stellaria service not found. Reinstall Stellaria.',
@@ -1365,10 +1365,11 @@ function setupSection() {
 async function wallpaperBlob() {
   if (state.connected) {
     try {
-      const preview = await helper.request('launcher.wallpaper');
+      const width = Math.round(Math.min(2560, Math.max(640, window.innerWidth * (window.devicePixelRatio || 1))));
+      const preview = await helper.request('launcher.wallpaper', { width });
       if (preview?.image) {
         const bytes = Uint8Array.from(atob(preview.image), character => character.charCodeAt(0));
-        return new Blob([bytes], { type: 'image/png' });
+        return new Blob([bytes], { type: preview.type || 'image/png' });
       }
     } catch {
       return new Blob([await invoke('wallpaper')]);
@@ -2570,6 +2571,11 @@ function settingsPage() {
         element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: 'Stellaria' }), element('span', { class: 'row-subtitle', text: t('aboutText') })]),
         button(t('project'), 'open_in_new', () => invoke('open_external', { url: 'https://github.com/SMIDR76/stellaria-windows' }).catch(() => {}), { variant: 'text' }),
       ]),
+      element('div', { class: 'row' }, [
+        icon('movie', 'tonal-icon'),
+        element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('replayWhatsNew') })]),
+        button(t('filmPlay'), 'play_arrow', () => replayWhatsNew(), {}),
+      ]),
     ]),
   ];
 }
@@ -2834,6 +2840,179 @@ function notesNodes(text) {
   return nodesList.slice(0, 60);
 }
 
+const whatsNewFilms = {
+  '1.2': {
+    src: './media/whats-new.mp4',
+    cues: [
+      [2.2, 5.6, 'whatsNewIntro', 'whatsNewIntroText', 'low'],
+      [6.1, 10.1, 'whatsNewTagline', null, 'low'],
+      [11.8, 15.4, 'whatsNewCustomize', 'whatsNewCustomizeText', 'low'],
+      [16.4, 20.6, 'whatsNewBar', 'whatsNewBarText', 'low'],
+      [21.4, 25.8, 'whatsNewVisualiser', 'whatsNewVisualiserText', 'high'],
+      [26.6, 31.0, 'whatsNewBattery', 'whatsNewBatteryText', 'low'],
+      [31.8, 36.2, 'whatsNewFrame', 'whatsNewFrameText', 'high'],
+      [37.0, 41.4, 'whatsNewMore', 'whatsNewMoreText', 'low'],
+      [42.6, 46.8, 'whatsNewThanks', 'whatsNewThanksText', 'low'],
+    ],
+  },
+};
+
+const filmFor = version => {
+  const [major, minor] = String(version ?? '').split('.');
+  return whatsNewFilms[`${major}.${minor}`] ?? null;
+};
+
+const whatsNewFilm = {
+  node: null,
+  frame: 0,
+
+  open(film, version) {
+    if (this.node || !film) return;
+    const words = text => text.split(/(\s+)/).filter(Boolean).map((word, index) => {
+      if (/^\s+$/.test(word)) return word;
+      const node = element('span', { class: 'film-word', text: word });
+      node.style.setProperty('--i', String(index));
+      return node;
+    });
+    const cues = film.cues.map(([start, end, title, subtitle, place]) => ({
+      start,
+      end,
+      node: element('div', { class: `film-cue ${place}` }, [
+        element('h2', {}, words(title === 'whatsNewIntro' ? `Stellaria ${String(version).split('.').slice(0, 2).join('.')}` : t(title))),
+        subtitle ? element('p', {}, words(t(subtitle))) : null,
+      ]),
+    }));
+    const video = element('video', { class: 'film-video', src: film.src, playsinline: true, preload: 'auto' });
+    const sound = button(t('filmSound'), 'volume_up', () => {
+      video.muted = false;
+      video.volume = 0.9;
+      sound.remove();
+    }, { variant: 'filled' });
+    sound.classList.add('film-sound');
+    const end = element('div', { class: 'film-end' }, [
+      button(t('filmDiscover'), 'palette', () => {
+        this.close();
+        showPage('customize');
+      }, { variant: 'filled' }),
+      button(t('close'), 'close', () => this.close(), {}),
+    ]);
+    const skip = element('button', { class: 'film-skip state-layer', onClick: () => this.close() }, [element('span', { text: t('filmSkip') }), icon('skip_next')]);
+    const canvas = element('canvas', { class: 'film-fx', 'aria-hidden': 'true' });
+    const stage = element('div', { class: 'film-stage' }, [video, ...cues.map(cue => cue.node), end]);
+    this.node = element('div', { class: 'film', role: 'dialog', 'aria-modal': 'true', 'aria-label': t('whatsNew', version) }, [canvas, stage, skip]);
+    document.body.append(this.node);
+    this.keydown = event => {
+      if (event.key === 'Escape') this.close();
+    };
+    window.addEventListener('keydown', this.keydown);
+    this.burst(canvas);
+    requestAnimationFrame(() => this.node?.classList.add('open'));
+    setTimeout(() => {
+      if (!this.node) return;
+      video.volume = 0;
+      video.play().catch(() => {
+        video.muted = true;
+        video.play().catch(() => {});
+        stage.append(sound);
+      });
+      const fadeStart = performance.now();
+      const fade = now => {
+        if (!this.node || video.muted) return;
+        video.volume = Math.min(0.9, (now - fadeStart) / 1100 * 0.9);
+        if (video.volume < 0.9) requestAnimationFrame(fade);
+      };
+      requestAnimationFrame(fade);
+    }, 520);
+    setTimeout(() => skip.classList.add('shown'), 1600);
+    video.addEventListener('ended', () => end.classList.add('shown'));
+    const tick = () => {
+      if (!this.node) return;
+      const time = video.currentTime;
+      for (const cue of cues) cue.node.classList.toggle('shown', time >= cue.start && time < cue.end);
+      if (!video.paused && time > (video.duration || 48) - 2.2) end.classList.add('shown');
+      this.frame = requestAnimationFrame(tick);
+    };
+    this.frame = requestAnimationFrame(tick);
+    this.video = video;
+  },
+
+  burst(canvas) {
+    const context = canvas.getContext('2d');
+    const scale = window.devicePixelRatio || 1;
+    canvas.width = innerWidth * scale;
+    canvas.height = innerHeight * scale;
+    const styles = getComputedStyle(document.documentElement);
+    const colors = ['--m3-primary', '--m3-tertiary', '--m3-secondary'].map(name => styles.getPropertyValue(name).trim() || '#d0bcff');
+    const sparks = Array.from({ length: 90 }, (_, index) => ({ angle: Math.random() * Math.PI * 2, speed: 0.35 + Math.random() * 0.9, size: (1 + Math.random() * 2.6) * scale, color: colors[index % 3] }));
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const reach = Math.hypot(cx, cy);
+    const start = performance.now();
+    const draw = now => {
+      const age = (now - start) / 1000;
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.globalCompositeOperation = 'lighter';
+      const flare = Math.exp(-age / 0.18) * Math.min(1, age / 0.08);
+      const glow = context.createRadialGradient(cx, cy, 0, cx, cy, reach * 0.35);
+      glow.addColorStop(0, `rgba(255,245,255,${0.9 * flare})`);
+      glow.addColorStop(1, 'rgba(255,255,255,0)');
+      context.fillStyle = glow;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      const ring = Math.min(1, age / 0.9);
+      context.strokeStyle = colors[0];
+      context.globalAlpha = (1 - ring) * 0.8;
+      context.lineWidth = (1 - ring) * 24 * scale + scale;
+      context.beginPath();
+      context.arc(cx, cy, (1 - Math.pow(1 - ring, 3)) * reach, 0, Math.PI * 2);
+      context.stroke();
+      for (const spark of sparks) {
+        const travel = (1 - Math.exp(-age * 3.2)) * spark.speed * reach;
+        context.globalAlpha = Math.max(0, 1 - age / 1.3);
+        context.fillStyle = spark.color;
+        context.beginPath();
+        context.arc(cx + Math.cos(spark.angle) * travel, cy + Math.sin(spark.angle) * travel, spark.size, 0, Math.PI * 2);
+        context.fill();
+      }
+      context.globalAlpha = 1;
+      if (age < 1.4 && this.node) requestAnimationFrame(draw);
+      else context.clearRect(0, 0, canvas.width, canvas.height);
+    };
+    if (!reducedMotion.matches) requestAnimationFrame(draw);
+  },
+
+  close() {
+    const node = this.node;
+    if (!node) return;
+    this.node = null;
+    cancelAnimationFrame(this.frame);
+    window.removeEventListener('keydown', this.keydown);
+    const video = this.video;
+    const start = performance.now();
+    const from = video?.volume ?? 0;
+    const fade = now => {
+      if (!video) return;
+      const progress = Math.min(1, (now - start) / 380);
+      video.volume = Math.max(0, from * (1 - progress));
+      if (progress < 1) requestAnimationFrame(fade);
+      else video.pause();
+    };
+    requestAnimationFrame(fade);
+    node.classList.remove('open');
+    node.classList.add('closing');
+    setTimeout(() => node.remove(), reducedMotion.matches ? 0 : 420);
+  },
+};
+
+async function replayWhatsNew() {
+  let installed = '';
+  try {
+    installed = await invoke('installed');
+  } catch {
+    return;
+  }
+  whatsNewFilm.open(filmFor(installed), installed);
+}
+
 async function showWhatsNew() {
   let installed;
   try {
@@ -2844,6 +3023,10 @@ async function showWhatsNew() {
   const seen = stored('seen-version', '');
   store('seen-version', installed);
   if (!seen || !newer(installed, seen)) return;
+  if (filmFor(installed)) {
+    whatsNewFilm.open(filmFor(installed), installed);
+    return;
+  }
   let notes = '';
   try {
     notes = await invoke('release_notes', { version: installed });

@@ -35,4 +35,15 @@ public sealed class ThemeSourceTests
         Assert.True(capture.Width > 0 && capture.Height > 0);
         Assert.Equal(Fingerprint.Length, Fingerprint.Compute(capture).Length);
     }
+
+    [Theory]
+    [InlineData(null, 480)]
+    [InlineData("1920", 1920)]
+    [InlineData("100", 320)]
+    [InlineData("9000", 2560)]
+    [InlineData("\"wide\"", 480)]
+    public void The_app_gets_a_preview_as_wide_as_it_asks_within_bounds(string? json, int expected)
+    {
+        Assert.Equal(expected, ThemeSourceModule.PreviewWidthFor(json is null ? null : System.Text.Json.Nodes.JsonNode.Parse(json)));
+    }
 }
