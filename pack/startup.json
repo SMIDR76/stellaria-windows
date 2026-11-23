@@ -32,6 +32,10 @@
     "preset": "default"
   },
   {
+    "widget": "visualiser",
+    "preset": "default"
+  },
+  {
     "widget": "osd",
     "preset": "default"
   },

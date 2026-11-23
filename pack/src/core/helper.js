@@ -92,6 +92,10 @@ export async function openSettings(page = '') {
   await helperClient.request('shell.openSettings', { page: page || 'home' });
 }
 
+export function openStellaria(page, fallback) {
+  return helperClient.request('stellaria.open', { page }).catch(() => fallback?.());
+}
+
 export async function openFolder(name) {
   await helperClient.request('folders.open', { name });
 }

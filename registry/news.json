@@ -1,5 +1,144 @@
 [
   {
+    "id": "2026-11-v1-2-0",
+    "date": "2026-11-23",
+    "kind": "release",
+    "version": "1.2.0",
+    "title": {
+      "fr": "Stellaria se règle entièrement depuis l’app",
+      "en": "Customise all of Stellaria from the app",
+      "es": "Stellaria se ajusta por completo desde la app",
+      "de": "Stellaria komplett in der App einstellen",
+      "pt-BR": "Ajuste todo o Stellaria pelo aplicativo",
+      "it": "Tutto Stellaria si regola dall'app",
+      "pl": "Całą Stellarię dostosujesz w aplikacji",
+      "ru": "Вся Stellaria настраивается в приложении",
+      "tr": "Stellaria artık tamamen uygulamadan ayarlanıyor",
+      "zh-CN": "在应用中设置 Stellaria 的一切",
+      "ja": "Stellaria のすべてをアプリで設定",
+      "ko": "앱에서 Stellaria의 모든 것을 설정하세요"
+    },
+    "body": {
+      "fr": "La version 1.2.0 réunit tous les réglages du thème dans l’app, rend la barre configurable et ajoute la batterie, un visualiseur audio et une vidéo des nouveautés.",
+      "en": "Version 1.2.0 brings every theme setting into the app, makes the bar configurable and adds the battery, an audio visualiser and a what’s new video.",
+      "es": "La versión 1.2.0 reúne todos los ajustes del tema en la app, hace la barra configurable y añade la batería, un visualizador de audio y un vídeo de novedades.",
+      "de": "Version 1.2.0 bringt alle Designeinstellungen in die App, macht die Leiste anpassbar und ergänzt den Akku, eine Audio-Visualisierung und ein Video zu den Neuerungen.",
+      "pt-BR": "A versão 1.2.0 reúne todas as configurações do tema no aplicativo, deixa a barra configurável e adiciona a bateria, um visualizador de áudio e um vídeo de novidades.",
+      "it": "La versione 1.2.0 riunisce tutte le impostazioni del tema nell'app, rende la barra configurabile e aggiunge la batteria, un visualizzatore audio e un video delle novità.",
+      "pl": "Wersja 1.2.0 przenosi wszystkie ustawienia motywu do aplikacji, pozwala dostosować pasek i dodaje baterię, wizualizer dźwięku oraz film o nowościach.",
+      "ru": "Версия 1.2.0 переносит все настройки темы в приложение, делает панель настраиваемой и добавляет батарею, аудиовизуализатор и видео о новинках.",
+      "tr": "1.2.0 sürümü tüm tema ayarlarını uygulamada topluyor, çubuğu özelleştirilebilir yapıyor ve pil, ses görselleştirici ile yenilikler videosu ekliyor.",
+      "zh-CN": "1.2.0 版将所有主题设置集中到应用中，栏可自定义，并新增电池、音频可视化和新功能视频。",
+      "ja": "バージョン 1.2.0 では、テーマの設定をすべてアプリに集約し、バーをカスタマイズ可能にし、バッテリー、オーディオビジュアライザー、新機能の動画を追加しました。",
+      "ko": "버전 1.2.0은 모든 테마 설정을 앱으로 모으고, 바를 사용자 지정할 수 있게 했으며, 배터리, 오디오 비주얼라이저, 새 기능 영상을 추가했습니다."
+    },
+    "highlights": [
+      {
+        "icon": "palette",
+        "text": {
+          "fr": "Tous les réglages dans l’app",
+          "en": "Every setting in the app",
+          "es": "Todos los ajustes en la app",
+          "de": "Alle Einstellungen in der App",
+          "pt-BR": "Todas as configurações no aplicativo",
+          "it": "Tutte le impostazioni nell'app",
+          "pl": "Wszystkie ustawienia w aplikacji",
+          "ru": "Все настройки в приложении",
+          "tr": "Tüm ayarlar uygulamada",
+          "zh-CN": "所有设置都在应用中",
+          "ja": "すべての設定をアプリに",
+          "ko": "모든 설정을 앱에서"
+        }
+      },
+      {
+        "icon": "side_navigation",
+        "text": {
+          "fr": "Une barre à votre image",
+          "en": "A bar made yours",
+          "es": "Una barra a tu medida",
+          "de": "Eine Leiste nach deinem Geschmack",
+          "pt-BR": "Uma barra do seu jeito",
+          "it": "Una barra su misura",
+          "pl": "Pasek na Twoją miarę",
+          "ru": "Панель под вас",
+          "tr": "Sana göre bir çubuk",
+          "zh-CN": "属于你的栏",
+          "ja": "あなた好みのバー",
+          "ko": "나만의 바"
+        }
+      },
+      {
+        "icon": "battery_5_bar",
+        "text": {
+          "fr": "La batterie sur les portables",
+          "en": "Battery on laptops",
+          "es": "La batería en portátiles",
+          "de": "Akku auf Laptops",
+          "pt-BR": "Bateria em notebooks",
+          "it": "La batteria sui portatili",
+          "pl": "Bateria w laptopach",
+          "ru": "Батарея на ноутбуках",
+          "tr": "Dizüstünde pil",
+          "zh-CN": "笔记本电脑电池",
+          "ja": "ノート PC のバッテリー",
+          "ko": "노트북 배터리"
+        }
+      },
+      {
+        "icon": "graphic_eq",
+        "text": {
+          "fr": "Un visualiseur audio en option",
+          "en": "An optional audio visualiser",
+          "es": "Un visualizador de audio opcional",
+          "de": "Optionale Audio-Visualisierung",
+          "pt-BR": "Um visualizador de áudio opcional",
+          "it": "Un visualizzatore audio opzionale",
+          "pl": "Opcjonalny wizualizer dźwięku",
+          "ru": "Аудиовизуализатор по желанию",
+          "tr": "İsteğe bağlı ses görselleştirici",
+          "zh-CN": "可选的音频可视化",
+          "ja": "オプションのオーディオビジュアライザー",
+          "ko": "선택형 오디오 비주얼라이저"
+        }
+      },
+      {
+        "icon": "border_outer",
+        "text": {
+          "fr": "Bordures et arrondis réglables",
+          "en": "Adjustable borders and corners",
+          "es": "Bordes y esquinas ajustables",
+          "de": "Einstellbare Ränder und Ecken",
+          "pt-BR": "Bordas e cantos ajustáveis",
+          "it": "Bordi e angoli regolabili",
+          "pl": "Regulowane ramki i narożniki",
+          "ru": "Настраиваемые рамки и углы",
+          "tr": "Ayarlanabilir kenarlar ve köşeler",
+          "zh-CN": "可调边框和圆角",
+          "ja": "枠と角を調整可能",
+          "ko": "테두리와 모서리 조정"
+        }
+      },
+      {
+        "icon": "do_not_disturb_on",
+        "text": {
+          "fr": "Mode Ne pas déranger",
+          "en": "Do not disturb mode",
+          "es": "Modo No molestar",
+          "de": "Nicht-stören-Modus",
+          "pt-BR": "Modo Não perturbe",
+          "it": "Modalità Non disturbare",
+          "pl": "Tryb Nie przeszkadzać",
+          "ru": "Режим «Не беспокоить»",
+          "tr": "Rahatsız etmeyin modu",
+          "zh-CN": "勿扰模式",
+          "ja": "おやすみモード",
+          "ko": "방해 금지 모드"
+        }
+      }
+    ],
+    "url": "https://github.com/SMIDR76/stellaria-windows/releases/tag/v1.2.0"
+  },
+  {
     "id": "2026-11-v1-1-0",
     "date": "2026-11-18",
     "kind": "release",

@@ -86,6 +86,7 @@ internal static class Program
         var version = now.ToUnixTimeSeconds();
         var expires = now.AddDays(days);
         var news = File.Exists(Path.Combine(registry, "news.json")) ? JsonNode.Parse(File.ReadAllText(Path.Combine(registry, "news.json"))) : new JsonArray();
+        var roadmap = File.Exists(Path.Combine(registry, "roadmap.json")) ? JsonNode.Parse(File.ReadAllText(Path.Combine(registry, "roadmap.json"))) : new JsonArray();
         var index = new JsonObject
         {
             ["schema"] = SignedIndex.Schema,
@@ -93,6 +94,7 @@ internal static class Program
             ["generated"] = now.UtcDateTime.ToString("yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture),
             ["items"] = new JsonArray([.. items.OrderBy(item => item["id"]!.GetValue<string>(), StringComparer.Ordinal).Select(item => item.DeepClone())]),
             ["news"] = news,
+            ["roadmap"] = roadmap,
         };
 
         Directory.CreateDirectory(output);

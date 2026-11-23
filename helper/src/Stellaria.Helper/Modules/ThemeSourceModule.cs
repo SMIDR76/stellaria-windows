@@ -9,6 +9,8 @@ internal sealed class ThemeSourceModule : IHelperModule
 {
     public const int SampleWidth = 160;
     public const int PreviewWidth = 480;
+    public const int MinimumPreviewWidth = 320;
+    public const int MaximumPreviewWidth = 2560;
     public const double ChangeThreshold = 18;
     public const uint SetDesktopWallpaper = 0x0014;
     public static readonly TimeSpan SettleDelay = TimeSpan.FromMilliseconds(2500);
@@ -30,17 +32,21 @@ internal sealed class ThemeSourceModule : IHelperModule
     public Task StartAsync(ModuleContext context)
     {
         _context = context;
-        context.Router.Register("launcher.wallpaper", async (_, _) =>
+        context.Router.Register("launcher.wallpaper", async (request, _) =>
         {
-            var (image, source) = await Task.Run(SampleAsync).ConfigureAwait(false);
+            var width = PreviewWidthFor(request.Params["width"]);
+            var (image, source) = await Task.Run(() => SampleAsync(width)).ConfigureAwait(false);
             if (image is null)
             {
                 return null;
             }
 
+            var large = width > PreviewWidth;
+            var bytes = large ? await ImageCodec.EncodeJpegAsync(image, width).ConfigureAwait(false) : await ImageCodec.EncodePngAsync(image, width).ConfigureAwait(false);
             return new JsonObject
             {
-                ["image"] = Convert.ToBase64String(await ImageCodec.EncodePngAsync(image, PreviewWidth).ConfigureAwait(false)),
+                ["image"] = Convert.ToBase64String(bytes),
+                ["type"] = large ? "image/jpeg" : "image/png",
                 ["source"] = source,
             };
         });
@@ -62,6 +68,9 @@ internal sealed class ThemeSourceModule : IHelperModule
         });
         return CaptureAsync(force: true);
     }
+
+    public static int PreviewWidthFor(JsonNode? value) =>
+        value is JsonValue json && json.TryGetValue<int>(out var width) ? Math.Clamp(width, MinimumPreviewWidth, MaximumPreviewWidth) : PreviewWidth;
 
     public static bool ShouldPublish(bool force, int[]? published, int[] current) =>
         force || Fingerprint.Difference(published, current) > ChangeThreshold;
@@ -119,7 +128,7 @@ internal sealed class ThemeSourceModule : IHelperModule
 
         try
         {
-            var (image, source) = await Task.Run(SampleAsync).ConfigureAwait(false);
+            var (image, source) = await Task.Run(() => SampleAsync(DesktopCapture.SampleWidth)).ConfigureAwait(false);
             if (image is null)
             {
                 return;
@@ -152,16 +161,16 @@ internal sealed class ThemeSourceModule : IHelperModule
         }
     }
 
-    private static async Task<(PixelImage? Image, string Source)> SampleAsync()
+    private static async Task<(PixelImage? Image, string Source)> SampleAsync(int width)
     {
-        if (DesktopCapture.PrimaryMonitorBackground() is { } capture)
+        if (DesktopCapture.PrimaryMonitorBackground(width) is { } capture)
         {
             return (capture, "capture");
         }
 
         if (WallpapersModule.CurrentWallpaper() is { } path)
         {
-            var image = await ImageCodec.DecodeAsync(await File.ReadAllBytesAsync(path).ConfigureAwait(false), SampleWidth * 4, SampleWidth * 4, ImageFit.Contain).ConfigureAwait(false);
+            var image = await ImageCodec.DecodeAsync(await File.ReadAllBytesAsync(path).ConfigureAwait(false), Math.Max(SampleWidth * 4, width), Math.Max(SampleWidth * 4, width), ImageFit.Contain).ConfigureAwait(false);
             return (image, "file");
         }
 

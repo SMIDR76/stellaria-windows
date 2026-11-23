@@ -27,6 +27,8 @@ internal sealed class ShellModule(HelperState state) : IHelperModule
         _breaker = new RepairBreaker(5, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(5), context.Time);
         context.Config.Changed += _ =>
         {
+            var border = context.Config.GetInteger("frame.border", FrameEdges.DefaultBorder);
+            context.Loop.Post(() => ApplyFrame(border));
             var hidden = context.Config.GetFlag("taskbar.hide");
             context.Loop.Post(() =>
             {
@@ -40,7 +42,11 @@ internal sealed class ShellModule(HelperState state) : IHelperModule
         context.Loop.Resumed += () => _ = RestartAfterResumeAsync();
         _maintenance = new Timer(_ => context.Loop.Post(Maintain), null, MaintenanceInterval, MaintenanceInterval);
         context.Shutdown.Register(() => _maintenance.Dispose());
-        return context.Loop.InvokeAsync(() => ApplyTaskbar(context.Config.GetFlag("taskbar.hide")));
+        return context.Loop.InvokeAsync(() =>
+        {
+            ApplyTaskbar(context.Config.GetFlag("taskbar.hide"));
+            ApplyFrame(context.Config.GetInteger("frame.border", FrameEdges.DefaultBorder));
+        });
     }
 
     private async Task RestartAfterResumeAsync()
@@ -56,6 +62,30 @@ internal sealed class ShellModule(HelperState state) : IHelperModule
         }
 
         ZebarWatchdog.TryRestartRunning(_context.Log, _context.Desktop.Processes, _context.Time.GetUtcNow(), "The PC woke up from sleep", ignoreCooldown: true);
+    }
+
+    private void ApplyFrame(int border)
+    {
+        var path = Path.Combine(_context.Paths.PackDirectory, "zpack.json");
+        try
+        {
+            if (!File.Exists(path) || JsonNode.Parse(File.ReadAllText(path)) is not JsonObject pack || !FrameEdges.Apply(pack, border))
+            {
+                return;
+            }
+
+            var temporary = $"{path}.tmp";
+            File.WriteAllText(temporary, pack.ToJsonString(FrameEdges.Indented) + "\n", new System.Text.UTF8Encoding(false));
+            File.Move(temporary, path, overwrite: true);
+        }
+        catch (Exception error) when (error is IOException or UnauthorizedAccessException or System.Text.Json.JsonException)
+        {
+            _context.Log.Warning("shell", $"The frame edges could not be resized: {error.Message}");
+            return;
+        }
+
+        _context.Log.Info("shell", $"Frame edges set to {border} px; Zebar is restarted to draw them.");
+        ZebarWatchdog.TryRestartRunning(_context.Log, _context.Desktop.Processes, _context.Time.GetUtcNow(), "The frame thickness changed", ignoreCooldown: true);
     }
 
     private void ApplyTaskbar(bool hidden)

@@ -3,7 +3,49 @@
 Every notable change to Stellaria. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the
 project uses [semantic versioning](https://semver.org/).
 
-## [1.1.0] - unreleased
+## [1.2.0] - 2026-11-23
+
+### Added
+
+- A Customise page in the Stellaria app: frame border thickness and corner roundness with a live preview, and switches
+  for the active window on the bar, Do not disturb, seconds, tinted icons, the collapsible tray, the island, theme
+  confirmations, system events, the desktop clock, the hot corner, the idle screen and game mode.
+- Do not disturb: a switch in the notification panel and the theme settings hides the island and the small
+  confirmations, keeps the history, and shows a paused bell on the bar.
+- An option to hide the active window on the bar.
+- A Roadmap page in the app, shipped in the signed catalogue (`registry/roadmap.json`).
+- A short video that announces a new version when the app starts, with its highlights and an Update button. It shows a
+  still frame when Windows asks for reduced motion.
+- `frame.border` (4 to 24 px): the helper writes the thickness into the frame edges of `zpack.json` and restarts Zebar
+  once, so Zebar draws and reserves the new edges itself.
+- Requests `theme.options`, `launcher.options`, `launcher.setOption`, `launcher.themeAction` and `stellaria.open`, and
+  the events `theme.option` and `theme.action`.
+- Every theme setting now lives in the app's Customise page, in four tabs (Appearance, Wallpaper, Desktop, Panels):
+  colour mode, the 25 schemes, dynamic variants, Windows colours, the wallpaper folder, the frame, the bar, the idle
+  screen, hover panels, notifications, weather, lyrics and hidden launcher apps. Win+Alt+S, the launcher's "Theme
+  settings" action and the first-run welcome open the app; the old panel only remains as a fallback.
+- The theme follows the app's language.
+- Icon animations and click sparkles in the app, which stop when Windows asks for reduced motion.
+- A what's new film after the update to 1.2: a light burst and an iris reveal open a 48-second video cut on the beat
+  of "Surrender" by Healer, with titles in the app's language. It can be skipped, and Settings > About replays it.
+- An optional audio visualiser on the wallpaper (off by default): the helper captures what plays on the default output
+  only while the option is on, turns it into 48 bars and the bars move behind your windows in the theme's colours. It
+  pauses during fullscreen apps and in game mode. Request `visualiser.listen` and event `visualiser`.
+- A configurable bar: a Bar tab in the app's Customise page reorders and hides each bar item (launcher, virtual
+  desktops, open windows, active window, notification area, weather, clock, status icons, power) and each status icon,
+  with a live preview. New status icons: microphone (click to mute), Bluetooth and Caps Lock (shown only while it is on).
+- Battery support on laptops: a battery icon with its level on the bar (opens Windows battery settings), alerts at
+  20, 10 and 5 %, a toast when the charger is plugged in or out, and a battery card with charge, time left and health in
+  the dashboard's Performance tab. Desktop PCs without a battery show nothing.
+
+### Fixed
+
+- Steam games and web links in the launcher show their own icon instead of a blank page.
+- After an update, the newer catalogue shipped with the setup wins over the cached one, so news and the roadmap appear.
+- Updates clear Zebar's web cache (never the theme's settings), so widgets no longer show files from the previous
+  version for up to a week.
+
+## [1.1.0] - 2026-11-18
 
 ### Added
 

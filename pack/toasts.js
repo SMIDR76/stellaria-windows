@@ -14,9 +14,9 @@ const dismiss = node => {
 };
 
 const show = async toast => {
-  if (!toast || toast.at < startedAt || Date.now() - toast.at > 4000 || !getOption('toasts', true)) return;
+  if (!toast || toast.at < startedAt || Date.now() - toast.at > 4000 || !getOption('toasts', true) || (getOption('doNotDisturb', false) && toast.kind !== 'error')) return;
   if (!(await cursorOnCurrentMonitor())) return;
-  const node = element('div', { class: `toast${toast.kind === 'warning' ? ' warning' : ''}` }, [
+  const node = element('div', { class: `toast${toast.kind === 'warning' || toast.kind === 'error' ? ' warning' : ''}` }, [
     element('span', { class: 'toast-icon' }, icon(toast.icon ?? 'info')),
     element('span', { class: 'toast-text' }, [
       element('span', { class: 'toast-title', text: toast.title }),

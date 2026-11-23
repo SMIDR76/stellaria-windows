@@ -27,6 +27,8 @@ const strings = {
     about: 'À propos', aboutText: 'Logiciel libre sous licence GPL-3.0, basé sur Caelestia de soramanew et ses contributeurs.',
     project: 'Page du projet', readMore: 'En savoir plus', noNews: 'Aucune actualité pour le moment.',
     newsAll: 'Tout', newsRelease: 'Versions', newsAnnouncement: 'Annonces', newsCommunity: 'Communauté', newsTip: 'Astuces', newsNew: 'Nouveau', newsEarlier: 'Plus tôt', newsKindRelease: 'Version', newsKindAnnouncement: 'Annonce', newsKindCommunity: 'Communauté', newsKindTip: 'Astuce',
+    customize: 'Personnaliser', roadmap: 'Feuille de route', customizeOffline: "Démarrez le thème pour le personnaliser d'ici.", frameGroup: "Cadre de l'écran", resetFrame: 'Par défaut', pixels: '{0} px', optFrameBorder: 'Épaisseur des bords', optFrameRounding: 'Arrondi des coins', barGroup: 'Barre', notificationsGroup: 'Notifications', desktopGroup: 'Bureau', optActiveWindow: 'Fenêtre active', optActiveWindowText: 'Icône et titre de la fenêtre au premier plan', optClockSeconds: 'Afficher les secondes', optClockSecondsText: 'Horloges de la barre et du tableau de bord', optTintIcons: 'Icônes aux couleurs du thème', optTintIconsText: "Teinte les icônes d'applications", optTrayCollapse: 'Replier la zone de notification', optTrayCollapseText: 'Quatre icônes visibles, les autres derrière une flèche', optDoNotDisturb: 'Ne pas déranger', optDoNotDisturbText: "Masque l'île et les confirmations, l'historique reste complet", optIsland: 'Île dynamique', optIslandText: "Morceau en cours et notifications en haut de l'écran", optToasts: 'Confirmations du thème', optToastsText: 'Petits messages en bas à droite', optSystemToasts: 'Événements système', optSystemToastsText: 'Audio, clavier, Verr. Maj et morceau en cours', optDesktopClock: 'Horloge de bureau', optDesktopClockText: "Grande horloge sur le fond d'écran", optHotCorner: 'Coin actif', optHotCornerText: 'Le coin haut droit ouvre la vue des tâches', optIdleScreen: "Écran d'inactivité", optIdleScreenText: 'Horloge, météo et média après un moment sans activité', optGameMode: 'Mode jeu', optGameModeText: 'Coupe toutes les animations du thème', roadmapIntro: 'Ce qui est fait, ce qui avance et ce qui arrive. Chaque étape sort quand elle est prête, sans date promise.', roadmapCount: '{0} étapes sur {1} terminées', roadmapDone: 'Terminé', roadmapNow: 'En cours', roadmapNext: 'Ensuite', roadmapLater: 'Plus tard', roadmapIdea: 'Une idée ?', roadmapIdeaText: 'Proposez-la dans les discussions du projet, vos retours guident la suite.', roadmapSuggest: 'Proposer une idée', noRoadmap: 'La feuille de route arrive bientôt.', updateVideoKicker: 'Nouvelle version', updateVideoTitle: 'Stellaria {0} est arrivé', updateVideoText: 'Une mise à jour signée est prête à être installée.', updateLater: 'Plus tard',
+    tabAppearance: 'Apparence', tabWallpaper: "Fond d'écran", tabDesktop: 'Bureau', tabPanels: 'Panneaux', modeGroup: 'Mode', modeText: 'Clair ou sombre pour tout le thème', modeDark: 'Sombre', modeLight: 'Clair', schemeGroup: 'Schéma de couleurs', schemeDynamic: 'Dynamique', variantGroup: 'Variante du schéma dynamique', variantTonalspot: 'Tonal Spot', variantVibrant: 'Vibrant', variantExpressive: 'Expressif', variantFidelity: 'Fidélité', variantContent: 'Contenu', variantFruitsalad: 'Salade de fruits', variantRainbow: 'Arc-en-ciel', variantNeutral: 'Neutre', variantMonochrome: 'Monochrome', windowsGroup: 'Windows', wallpaperTitle: 'Votre fond, vos couleurs', wallpaperText: "Le schéma dynamique tire ses couleurs du fond d'écran. Choisissez-en un dans le lanceur ou ouvrez votre dossier.", chooseWallpaper: 'Choisir un fond', openWallpaperFolder: 'Ouvrir le dossier', wallpaperFolderGroup: "Dossier des fonds d'écran", wallpaperFolderPlaceholder: 'Images (dossier par défaut)', wallpaperFolderText: 'Les fonds proposés par le lanceur viennent de ce dossier. Laissez vide pour utiliser Images.', save: 'Enregistrer', folderInvalid: 'Indiquez un chemin complet, par exemple C:\\Images', folderSaved: 'Dossier enregistré', idleGroup: "Écran d'inactivité", performanceGroup: 'Performances', optIdleMinutes: 'Délai avant affichage', minutes: '{0} min', hoverGroup: 'Ouverture au survol', dashboardGroup: 'Tableau de bord', launcherGroup: 'Lanceur', hiddenAppsEmpty: 'Aucune application masquée', hiddenAppsEmptyText: "Dans le lanceur, l'étoile ou Ctrl+F épingle une application et l'œil barré ou Ctrl+H la masque.", hiddenApp: 'Masquée du lanceur', unhide: 'Réafficher', optHideTaskbar: 'Remplacer la barre des tâches', optHideTaskbarText: 'Masque la barre Windows, la barre Stellaria liste les fenêtres ouvertes', optSmartScheme: 'Schéma intelligent', optSmartSchemeText: "Fond en noir et blanc : palette monochrome au lieu d'une teinte inventée", optWindowsColors: 'Accorder Windows au thème', optWindowsColorsText: "L'accent et le mode clair ou sombre de Windows suivent le thème", optWindowsTitleBars: 'Barres de titre colorées', optWindowsTitleBarsText: "Les barres de titre prennent la couleur d'accent", optHoverDashboard: 'Tableau de bord', optHoverDashboardText: 'Survol du centre du bord haut', optHoverOsd: 'Volume et micro', optHoverOsdText: 'Survol du milieu du bord droit', optHoverUtilities: 'Utilitaires', optHoverUtilitiesText: 'Survol du coin bas droit', optHoverPopouts: 'Mini-panneaux de la barre', optHoverPopoutsText: 'Survol des icônes de la barre', optOsdOnVolume: 'Volume à chaque changement', optOsdOnVolumeText: "Montre l'indicateur quand le volume change", optWeather: 'Météo', optWeatherText: "Prévisions d'Open-Meteo. Désactivée, rien n'est envoyé.", optLyrics: 'Paroles synchronisées', optLyricsText: "Paroles de LRCLIB dans l'onglet Média. Désactivées, rien n'est envoyé.", optBatteryAlerts: "Alertes de batterie", optBatteryAlertsText: "Prévient à 20, 10 et 5 % quand le PC est sur batterie", tabBar: "Barre", barLayoutGroup: "Éléments de la barre", barLayoutText: "Les flèches déplacent un élément, l’interrupteur l’affiche ou le masque. La séparation marque la limite entre le haut et le bas de la barre.", statusGroup: "Icônes d'état", statusText: "Elles n'apparaissent que quand elles ont quelque chose à montrer : la batterie sur un portable, Verr. Maj quand il est activé.", moveUp: "Monter", moveDown: "Descendre", barLogo: "Lanceur", barWorkspaces: "Bureaux virtuels", barTasks: "Fenêtres ouvertes", barActiveWindow: "Fenêtre active", barSpacer: "Séparation haut / bas", barTray: "Zone de notification", barWeather: "Météo", barClock: "Horloge", barStatus: "Icônes d'état", barPower: "Alimentation", statusKeyboard: "Disposition du clavier", statusCapsLock: "Verr. Maj", statusMic: "Micro", statusVolume: "Volume", statusBluetooth: "Bluetooth", statusBattery: "Batterie", statusNetwork: "Réseau", statusNotifications: "Notifications", optVisualiser: "Visualiseur audio", optVisualiserText: "Des barres qui bougent avec la musique sur le fond d'écran. Le son n'est analysé que lorsque l'option est activée.", whatsNewIntroText: "La mise à jour est installée.", whatsNewTagline: "Votre bureau, vos règles.", whatsNewCustomize: "Tout se règle dans l'app", whatsNewCustomizeText: "Couleurs, fond d'écran, barre et bureau, au même endroit.", whatsNewBar: "Une barre à votre image", whatsNewBarText: "Réordonnez, masquez, ajoutez le micro, le Bluetooth et Verr. Maj.", whatsNewVisualiser: "Le son prend vie", whatsNewVisualiserText: "Un visualiseur audio sur votre fond d'écran, en option.", whatsNewBattery: "La batterie, enfin", whatsNewBatteryText: "Niveau, alertes et santé sur les portables.", whatsNewFrame: "Un cadre sur mesure", whatsNewFrameText: "Épaisseur et arrondis, réglés au pixel près.", whatsNewMore: "Et bien plus", whatsNewMoreText: "Ne pas déranger, feuille de route, icônes, animations…", whatsNewThanks: "Merci pour vos retours", whatsNewThanksText: "Cette version est née de vos idées.", filmSkip: "Passer", filmSound: "Activer le son", filmDiscover: "Découvrir", filmPlay: "Lire", replayWhatsNew: "Revoir la vidéo des nouveautés",
     confirmTitle: 'Appliquer ce préréglage ?', confirmText: "Un lien demande d'appliquer le préréglage « {0} ». Vos paramètres actuels sont conservés pour que vous puissiez annuler.",
     unknownLink: 'Lien Stellaria non reconnu.', cancel: 'Annuler',
     helperMissing: 'Service Stellaria introuvable. Réinstallez Stellaria.',
@@ -124,6 +126,8 @@ const strings = {
     about: 'About', aboutText: 'Free software under the GPL-3.0 licence, based on Caelestia by soramanew and contributors.',
     project: 'Project page', readMore: 'Read more', noNews: 'No news yet.',
     newsAll: 'All', newsRelease: 'Releases', newsAnnouncement: 'Announcements', newsCommunity: 'Community', newsTip: 'Tips', newsNew: 'New', newsEarlier: 'Earlier', newsKindRelease: 'Release', newsKindAnnouncement: 'Announcement', newsKindCommunity: 'Community', newsKindTip: 'Tip',
+    customize: 'Customise', roadmap: 'Roadmap', customizeOffline: 'Start the theme to customise it from here.', frameGroup: 'Screen frame', resetFrame: 'Default', pixels: '{0} px', optFrameBorder: 'Border thickness', optFrameRounding: 'Corner roundness', barGroup: 'Bar', notificationsGroup: 'Notifications', desktopGroup: 'Desktop', optActiveWindow: 'Active window', optActiveWindowText: 'Icon and title of the window in front', optClockSeconds: 'Show seconds', optClockSecondsText: 'Clocks on the bar and the dashboard', optTintIcons: 'Icons in theme colours', optTintIconsText: 'Tints app icons', optTrayCollapse: 'Collapse the notification area', optTrayCollapseText: 'Four icons visible, the others behind an arrow', optDoNotDisturb: 'Do not disturb', optDoNotDisturbText: 'Hides the island and confirmations, the history stays complete', optIsland: 'Dynamic island', optIslandText: 'Now playing and notifications at the top of the screen', optToasts: 'Theme confirmations', optToastsText: 'Small messages at the bottom right', optSystemToasts: 'System events', optSystemToastsText: 'Audio, keyboard, Caps Lock and now playing', optDesktopClock: 'Desktop clock', optDesktopClockText: 'A large clock on the wallpaper', optHotCorner: 'Hot corner', optHotCornerText: 'The top right corner opens Task View', optIdleScreen: 'Idle screen', optIdleScreenText: 'Clock, weather and media after a while without activity', optGameMode: 'Game mode', optGameModeText: 'Turns off every theme animation', roadmapIntro: "What's done, what's moving and what's coming. Each step ships when it's ready, with no promised dates.", roadmapCount: '{0} of {1} steps done', roadmapDone: 'Done', roadmapNow: 'In progress', roadmapNext: 'Next', roadmapLater: 'Later', roadmapIdea: 'Got an idea?', roadmapIdeaText: "Share it in the project's discussions, your feedback shapes what comes next.", roadmapSuggest: 'Suggest an idea', noRoadmap: 'The roadmap is coming soon.', updateVideoKicker: 'New version', updateVideoTitle: 'Stellaria {0} is here', updateVideoText: 'A signed update is ready to install.', updateLater: 'Later',
+    tabAppearance: 'Appearance', tabWallpaper: 'Wallpaper', tabDesktop: 'Desktop', tabPanels: 'Panels', modeGroup: 'Mode', modeText: 'Light or dark for the whole theme', modeDark: 'Dark', modeLight: 'Light', schemeGroup: 'Colour scheme', schemeDynamic: 'Dynamic', variantGroup: 'Dynamic scheme variant', variantTonalspot: 'Tonal Spot', variantVibrant: 'Vibrant', variantExpressive: 'Expressive', variantFidelity: 'Fidelity', variantContent: 'Content', variantFruitsalad: 'Fruit salad', variantRainbow: 'Rainbow', variantNeutral: 'Neutral', variantMonochrome: 'Monochrome', windowsGroup: 'Windows', wallpaperTitle: 'Your wallpaper, your colours', wallpaperText: 'The dynamic scheme takes its colours from the wallpaper. Pick one in the launcher or open your folder.', chooseWallpaper: 'Choose a wallpaper', openWallpaperFolder: 'Open the folder', wallpaperFolderGroup: 'Wallpaper folder', wallpaperFolderPlaceholder: 'Pictures (default folder)', wallpaperFolderText: 'The wallpapers offered by the launcher come from this folder. Leave it empty to use Pictures.', save: 'Save', folderInvalid: 'Enter a full path, for example C:\\Pictures', folderSaved: 'Folder saved', idleGroup: 'Idle screen', performanceGroup: 'Performance', optIdleMinutes: 'Delay before it shows', minutes: '{0} min', hoverGroup: 'Open on hover', dashboardGroup: 'Dashboard', launcherGroup: 'Launcher', hiddenAppsEmpty: 'No hidden application', hiddenAppsEmptyText: 'In the launcher, the star or Ctrl+F pins an app and the crossed eye or Ctrl+H hides it.', hiddenApp: 'Hidden from the launcher', unhide: 'Show again', optHideTaskbar: 'Replace the taskbar', optHideTaskbarText: 'Hides the Windows taskbar, the Stellaria bar lists open windows', optSmartScheme: 'Smart scheme', optSmartSchemeText: 'Black and white wallpaper: a monochrome palette instead of an invented tint', optWindowsColors: 'Match Windows to the theme', optWindowsColorsText: "Windows' accent and light or dark mode follow the theme", optWindowsTitleBars: 'Coloured title bars', optWindowsTitleBarsText: 'Title bars take the accent colour', optHoverDashboard: 'Dashboard', optHoverDashboardText: 'Hover the middle of the top edge', optHoverOsd: 'Volume and microphone', optHoverOsdText: 'Hover the middle of the right edge', optHoverUtilities: 'Utilities', optHoverUtilitiesText: 'Hover the bottom right corner', optHoverPopouts: 'Bar mini panels', optHoverPopoutsText: 'Hover the bar icons', optOsdOnVolume: 'Volume on every change', optOsdOnVolumeText: 'Shows the indicator when the volume changes', optWeather: 'Weather', optWeatherText: 'Forecasts from Open-Meteo. Off, nothing is sent.', optLyrics: 'Synced lyrics', optLyricsText: 'Lyrics from LRCLIB in the Media tab. Off, nothing is sent.', optBatteryAlerts: "Battery alerts", optBatteryAlertsText: "Warns at 20, 10 and 5% when the PC runs on battery", tabBar: "Bar", barLayoutGroup: "Bar items", barLayoutText: "The arrows move an item, the switch shows or hides it. The divider marks where the top of the bar ends and the bottom begins.", statusGroup: "Status icons", statusText: "They only appear when they have something to show: the battery on a laptop, Caps Lock while it is on.", moveUp: "Move up", moveDown: "Move down", barLogo: "Launcher", barWorkspaces: "Virtual desktops", barTasks: "Open windows", barActiveWindow: "Active window", barSpacer: "Top / bottom divider", barTray: "Notification area", barWeather: "Weather", barClock: "Clock", barStatus: "Status icons", barPower: "Power", statusKeyboard: "Keyboard layout", statusCapsLock: "Caps Lock", statusMic: "Microphone", statusVolume: "Volume", statusBluetooth: "Bluetooth", statusBattery: "Battery", statusNetwork: "Network", statusNotifications: "Notifications", optVisualiser: "Audio visualiser", optVisualiserText: "Bars that move with the music on the wallpaper. Sound is only analysed while this is on.", whatsNewIntroText: "The update is installed.", whatsNewTagline: "Your desktop, your rules.", whatsNewCustomize: "Everything in one app", whatsNewCustomizeText: "Colours, wallpaper, bar and desktop, all in one place.", whatsNewBar: "A bar made yours", whatsNewBarText: "Reorder, hide, add the microphone, Bluetooth and Caps Lock.", whatsNewVisualiser: "Sound comes alive", whatsNewVisualiserText: "An optional audio visualiser on your wallpaper.", whatsNewBattery: "Battery, at last", whatsNewBatteryText: "Level, alerts and health on laptops.", whatsNewFrame: "A frame that fits", whatsNewFrameText: "Thickness and corners, tuned to the pixel.", whatsNewMore: "And much more", whatsNewMoreText: "Do not disturb, roadmap, icons, animations…", whatsNewThanks: "Thank you for your feedback", whatsNewThanksText: "This version was born from your ideas.", filmSkip: "Skip", filmSound: "Turn on sound", filmDiscover: "Discover", filmPlay: "Play", replayWhatsNew: "Replay the what's new video",
     confirmTitle: 'Apply this preset?', confirmText: 'A link asks to apply “{0}”. Your current settings are kept so you can undo.',
     unknownLink: 'This Stellaria link is not recognised.', cancel: 'Cancel',
     helperMissing: 'Stellaria service not found. Reinstall Stellaria.',
@@ -204,7 +208,9 @@ const pages = [
   ['install', 'install_desktop'],
   ['discover', 'explore'],
   ['library', 'apps'],
+  ['customize', 'palette'],
   ['news', 'newspaper'],
+  ['roadmap', 'route'],
   ['help', 'help'],
   ['settings', 'settings'],
 ];
@@ -251,6 +257,7 @@ const prefixList = [
 const pageShapes = {
   home: [9, 0.07], install: [6, 0.1], discover: [12, 0.05], library: [4, 0.13],
   news: [7, 0.09], help: [5, 0.15], settings: [8, 0.08], preset: [10, 0.06],
+  customize: [11, 0.06], roadmap: [3, 0.18],
 };
 
 const state = {
@@ -272,6 +279,8 @@ const state = {
   log: null,
   themeRoles: null,
   wallpaperUrl: null,
+  themeOptions: null,
+  customizeTab: 'appearance',
   newsFilter: 'all',
   newsSeen: stored('news-seen', ''),
   newsMarked: stored('news-seen', ''),
@@ -423,6 +432,7 @@ async function setLanguage(choice) {
   state.language = choice === 'auto' ? systemLanguage() : choice;
   await loadLanguage(state.language);
   document.documentElement.lang = state.language;
+  syncThemeLanguage();
 }
 
 function languageChips(after) {
@@ -469,7 +479,36 @@ function element(tag, attributes = {}, children = []) {
   return node;
 }
 
-const icon = (name, className = '') => element('span', { class: `icon${className ? ` ${className}` : ''}`, text: name, 'aria-hidden': 'true' });
+const icon = (name, className = '') => element('span', { class: `icon${className ? ` ${className}` : ''}`, text: name, 'data-icon': name, 'aria-hidden': 'true' });
+
+const sparkle = {
+  colors: ['--m3-primary', '--m3-tertiary', '--m3-secondary'],
+
+  burst(x, y, count = 9) {
+    if (reducedMotion.matches) return;
+    const styles = getComputedStyle(document.documentElement);
+    for (let index = 0; index < count; index++) {
+      const angle = (index / count) * Math.PI * 2 + Math.random() * 0.6;
+      const distance = 18 + Math.random() * 22;
+      const size = 3 + Math.random() * 4;
+      const dot = element('span', {
+        class: 'spark',
+        'aria-hidden': 'true',
+        style: { left: `${x}px`, top: `${y}px`, width: `${size}px`, height: `${size}px`, background: styles.getPropertyValue(this.colors[index % 3]).trim() || '#d0bcff' },
+      });
+      document.body.append(dot);
+      dot.animate([
+        { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+        { transform: `translate(calc(-50% + ${Math.cos(angle) * distance}px), calc(-50% + ${Math.sin(angle) * distance}px)) scale(0.2)`, opacity: 0 },
+      ], { duration: 520 + Math.random() * 220, easing: 'cubic-bezier(0.2, 0.7, 0.3, 1)' }).finished.then(() => dot.remove(), () => dot.remove());
+    }
+  },
+};
+
+document.addEventListener('pointerdown', event => {
+  const target = event.target.closest?.('.rail-item, .option-row, .button.filled, button.chip, .news-filters .chip, .rail-brand');
+  if (target && !target.disabled) sparkle.burst(event.clientX, event.clientY, target.classList.contains('button') ? 12 : 9);
+});
 
 function shapePoints(lobes, amplitude) {
   const points = [];
@@ -638,6 +677,7 @@ function paintRoles(roles) {
 const topoFields = {
   home: [0, 0, 3.0], install: [13.7, 5.1, 2.4], discover: [27.2, 19.4, 3.6], library: [41.9, 8.3, 2.1],
   news: [6.6, 33.8, 2.8], help: [52.4, 27.5, 3.3], settings: [19.1, 47.2, 2.6], preset: [35.5, 41.6, 3.9],
+  customize: [44.7, 52.3, 2.9], roadmap: [9.4, 61.2, 3.4],
 };
 
 const topoShader = `#version 300 es
@@ -880,8 +920,47 @@ async function refreshTheme() {
 }
 
 async function refreshAll() {
-  await Promise.allSettled([refreshTheme(), refreshStatus(), refreshCatalog(false), refreshInstall()]);
+  await Promise.allSettled([refreshTheme(), refreshStatus(), refreshCatalog(false), refreshInstall(), refreshOptions()]);
   render();
+}
+
+async function refreshOptions() {
+  try {
+    state.themeOptions = await helper.request('launcher.options');
+  } catch {
+    state.themeOptions = null;
+  }
+  syncThemeLanguage();
+}
+
+function syncThemeLanguage() {
+  if (state.themeOptions && state.connected && state.themeOptions.language !== state.language) setThemeOption('language', state.language);
+}
+
+let pageDataTimer = 0;
+
+async function refreshPageData(id) {
+  clearTimeout(pageDataTimer);
+  if (!state.connected) return;
+  if (id === 'customize') await refreshOptions();
+  else await refreshCatalog(false);
+  if (state.page !== id) return;
+  render();
+  const missing = id === 'customize' ? !state.themeOptions : !(state.catalog?.roadmap ?? []).length;
+  if (missing && id === 'customize') pageDataTimer = setTimeout(() => state.page === id && refreshPageData(id), 3000);
+}
+
+async function setThemeOption(name, value) {
+  if (!state.themeOptions) return;
+  state.themeOptions = { ...state.themeOptions, [name]: value };
+  try {
+    const options = await helper.request('launcher.setOption', { name, value });
+    if (options) state.themeOptions = options;
+  } catch {
+    notify(t('offline'), 'warning');
+    await refreshOptions();
+    render();
+  }
 }
 
 async function refreshInstall() {
@@ -1019,14 +1098,26 @@ function megabytes(bytes) {
   return t('megabytes', (bytes / 1048576).toLocaleString(locale(), { maximumFractionDigits: 1 }));
 }
 
+let lastUpdateCheck = 0;
+let offeredVersion = '';
+
+function checkUpdateSoon() {
+  if (Date.now() - lastUpdateCheck < 15 * 60 * 1000) return;
+  checkUpdate(true).then(syncTray);
+}
+
 async function checkUpdate(quiet = false) {
   if (['checking', 'downloading', 'ready'].includes(state.update.status)) return;
+  lastUpdateCheck = Date.now();
   state.update = { ...state.update, status: 'checking', error: '' };
   if (!quiet) render();
   try {
     const info = await invoke('check_update');
     state.update = { ...state.update, status: info.available ? 'available' : 'current', info };
-    if (info.available && quiet) notify(t('updateOffered', info.version));
+    if (info.available && quiet && offeredVersion !== info.version) {
+      offeredVersion = info.version;
+      notify(t('updateOffered', info.version));
+    }
   } catch (error) {
     state.update = { ...state.update, status: 'error', error: updateError(error) };
   }
@@ -1235,7 +1326,7 @@ function heroCard() {
           : button(t('start'), state.busy === 'start' ? 'progress_activity' : 'play_circle', () => runHelper('start', t('started')), { variant: 'filled', disabled: busy }),
         button(t('repair'), state.busy === 'install' ? 'progress_activity' : 'build', () => runHelper('install', t('repaired')), { disabled: busy }),
         ['available', 'downloading', 'ready'].includes(state.update.status) ? button(t('updateChip', state.update.info.version), 'system_update', () => showPage('install'), { variant: 'filled' }) : null,
-        button(t('themeSettings'), 'tune', () => helper.request('launcher.openSettings').catch(() => notify(t('offline'), 'warning')), { variant: 'text', disabled: !state.connected }),
+        button(t('themeSettings'), 'tune', () => showPage('customize'), { variant: 'text' }),
       ]),
     ]),
   ]);
@@ -1286,10 +1377,11 @@ function setupSection() {
 async function wallpaperBlob() {
   if (state.connected) {
     try {
-      const preview = await helper.request('launcher.wallpaper');
+      const width = Math.round(Math.min(2560, Math.max(640, window.innerWidth * (window.devicePixelRatio || 1))));
+      const preview = await helper.request('launcher.wallpaper', { width });
       if (preview?.image) {
         const bytes = Uint8Array.from(atob(preview.image), character => character.charCodeAt(0));
-        return new Blob([bytes], { type: 'image/png' });
+        return new Blob([bytes], { type: preview.type || 'image/png' });
       }
     } catch {
       return new Blob([await invoke('wallpaper')]);
@@ -1802,9 +1894,56 @@ function newsHighlights(item) {
     : null;
 }
 
+const newsFilmTiles = new Map();
+
+function newsFilmTile(item) {
+  const film = item.kind === 'release' && item.version ? filmFor(item.version) : null;
+  if (!film) return null;
+  if (newsFilmTiles.has(item.version)) return newsFilmTiles.get(item.version);
+  const preview = element('video', { class: 'news-film-video', src: film.src, playsinline: true, preload: 'metadata', 'aria-hidden': 'true' });
+  preview.muted = true;
+  preview.loop = false;
+  const start = 10.4;
+  const end = 31.2;
+  preview.addEventListener('loadedmetadata', () => {
+    preview.currentTime = start;
+    if (!reducedMotion.matches) preview.play().catch(() => {});
+  });
+  preview.addEventListener('timeupdate', () => {
+    if (preview.currentTime >= end) preview.currentTime = start;
+  });
+  const sparks = Array.from({ length: 14 }, (_, index) => {
+    const spark = element('span', { class: 'news-film-spark', 'aria-hidden': 'true' });
+    spark.style.setProperty('--x', `${(index * 37) % 100}%`);
+    spark.style.setProperty('--d', `${(index * 0.53) % 4.2}s`);
+    spark.style.setProperty('--s', `${3 + (index % 4)}px`);
+    return spark;
+  });
+  const tile = element('button', {
+    class: 'news-film',
+    'aria-label': t('replayWhatsNew'),
+    onClick: () => {
+      preview.pause();
+      whatsNewFilm.open(film, item.version);
+    },
+  }, [
+    element('span', { class: 'news-film-halo', 'aria-hidden': 'true' }),
+    element('span', { class: 'news-film-frame' }, [
+      preview,
+      element('span', { class: 'news-film-shade', 'aria-hidden': 'true' }),
+      element('span', { class: 'news-film-play' }, [element('span', { class: 'news-film-ring', 'aria-hidden': 'true' }), icon('play_arrow')]),
+      element('span', { class: 'news-film-label' }, [icon('movie'), element('span', { text: t('filmPlay') })]),
+    ]),
+    ...sparks,
+  ]);
+  newsFilmTiles.set(item.version, tile);
+  return tile;
+}
+
 function newsFeature(item) {
   const kind = newsKind(item);
-  return element('article', { class: `news-feature hero kind-${kind}` }, [
+  const film = newsFilmTile(item);
+  return element('article', { class: `news-feature hero kind-${kind}${film ? ' with-film' : ''}` }, [
     element('div', { class: 'hero-ornament' }, shape(7, 0.12)),
     element('div', { class: 'news-feature-head' }, [
       element('div', { class: 'hero-mark news-mark' }, [shape(9, 0.07), icon(newsKinds[kind][0])]),
@@ -1812,6 +1951,7 @@ function newsFeature(item) {
     ]),
     element('h2', { text: local(item.title) }),
     element('p', { class: 'news-lead', text: local(item.body) }),
+    film,
     newsHighlights(item),
     item.url ? element('div', { class: 'actions' }, [button(t('readMore'), 'open_in_new', openNews(item), { variant: 'filled' })]) : null,
   ]);
@@ -1884,6 +2024,525 @@ function newsPage() {
       : null,
   ];
 }
+
+const customizeTabs = [
+  ['appearance', 'palette', 'tabAppearance'],
+  ['wallpaper', 'wallpaper', 'tabWallpaper'],
+  ['bar', 'side_navigation', 'tabBar'],
+  ['desktop', 'desktop_windows', 'tabDesktop'],
+  ['panels', 'dashboard_customize', 'tabPanels'],
+];
+
+const barItems = {
+  logo: ['grid_view', 'barLogo'],
+  workspaces: ['view_week', 'barWorkspaces'],
+  tasks: ['tab', 'barTasks'],
+  activeWindow: ['select_window', 'barActiveWindow'],
+  spacer: ['unfold_more', 'barSpacer'],
+  tray: ['more_horiz', 'barTray'],
+  weather: ['partly_cloudy_day', 'barWeather'],
+  clock: ['schedule', 'barClock'],
+  status: ['tune', 'barStatus'],
+  power: ['power_settings_new', 'barPower'],
+};
+
+const statusItems = {
+  keyboard: ['keyboard', 'statusKeyboard'],
+  capsLock: ['keyboard_capslock', 'statusCapsLock'],
+  mic: ['mic', 'statusMic'],
+  volume: ['volume_up', 'statusVolume'],
+  bluetooth: ['bluetooth', 'statusBluetooth'],
+  battery: ['battery_5_bar', 'statusBattery'],
+  network: ['wifi', 'statusNetwork'],
+  notifications: ['notifications', 'statusNotifications'],
+};
+
+const barLayoutDefaults = { barOrder: Object.keys(barItems), barHidden: [], statusOrder: Object.keys(statusItems), statusHidden: ['mic', 'bluetooth'] };
+
+const schemeNames = {
+  stellaria: 'Stellaria', catppuccin: 'Catppuccin', darkgreen: 'Dark Green', dracula: 'Dracula', everblush: 'Everblush',
+  everforest: 'Everforest', gruvbox: 'Gruvbox', nord: 'Nord', oldworld: 'Oldworld', onedark: 'One Dark', rosepine: 'Rosé Pine',
+  shadotheme: 'Shadotheme', solarized: 'Solarized', tokyonight: 'Tokyo Night',
+};
+
+const themeVariants = ['tonalspot', 'vibrant', 'expressive', 'fidelity', 'content', 'fruitsalad', 'rainbow', 'neutral', 'monochrome'];
+const capitalized = value => value.charAt(0).toUpperCase() + value.slice(1);
+const schemeLabel = (name, flavour) => `${schemeNames[name] ?? capitalized(name)}${flavour === 'default' || flavour === 'medium' ? '' : ` ${capitalized(flavour)}`}`;
+
+const frameDefaults = { frameBorder: [10, 4, 24], frameRounding: [25, 0, 40] };
+const optionKey = name => `opt${name[0].toUpperCase()}${name.slice(1)}`;
+
+function frameValue(name) {
+  const [fallback, minimum, maximum] = frameDefaults[name];
+  const value = state.themeOptions?.[name];
+  return Number.isInteger(value) && value >= minimum && value <= maximum ? value : fallback;
+}
+
+function framePreview() {
+  return element('div', {
+    class: 'frame-preview',
+    'aria-hidden': 'true',
+    style: { '--pv-border': `${frameValue('frameBorder')}px`, '--pv-rounding': `${frameValue('frameRounding')}px` },
+  }, [
+    element('div', { class: 'pv-bar' }, [element('span', { class: 'pv-dot' }), element('span'), element('span'), element('span')]),
+    element('div', { class: 'pv-screen', style: state.wallpaperUrl ? { backgroundImage: `url("${state.wallpaperUrl}")` } : {} }, [
+      element('div', { class: 'pv-window' }),
+      element('div', { class: 'pv-window small' }),
+    ]),
+  ]);
+}
+
+function frameSlider(name, symbol, preview) {
+  const [, minimum, maximum] = frameDefaults[name];
+  const value = frameValue(name);
+  const label = element('span', { class: 'slider-value', text: t('pixels', value) });
+  const input = element('input', { type: 'range', min: String(minimum), max: String(maximum), step: '1', value: String(value), class: 'slider', 'aria-label': t(optionKey(name)) });
+  let timer = 0;
+  input.addEventListener('input', () => {
+    const next = Number(input.value);
+    label.textContent = t('pixels', next);
+    preview.style.setProperty(name === 'frameBorder' ? '--pv-border' : '--pv-rounding', `${next}px`);
+    if (state.themeOptions) state.themeOptions = { ...state.themeOptions, [name]: next };
+    if (name === 'frameBorder') return;
+    clearTimeout(timer);
+    timer = setTimeout(() => setThemeOption(name, next), 220);
+  });
+  if (name === 'frameBorder') input.addEventListener('change', () => setThemeOption(name, Number(input.value)));
+  return element('div', { class: 'row' }, [
+    icon(symbol, 'tonal-icon'),
+    element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t(optionKey(name)) })]),
+    input,
+    label,
+  ]);
+}
+
+let toggledOption = '';
+
+function optionSwitch(name, symbol) {
+  const on = Boolean(state.themeOptions?.[name]);
+  const key = optionKey(name);
+  return element('button', {
+    class: 'row option-row state-layer',
+    role: 'switch',
+    'aria-checked': String(on),
+    onClick: () => {
+      toggledOption = name;
+      setThemeOption(name, !on);
+      render();
+      setTimeout(() => {
+        if (toggledOption === name) toggledOption = '';
+      }, 600);
+    },
+  }, [
+    icon(symbol, 'tonal-icon'),
+    element('span', { class: 'row-text' }, [
+      element('span', { class: 'row-title', text: t(key) }),
+      element('span', { class: 'row-subtitle', text: t(`${key}Text`) }),
+    ]),
+    element('span', { class: `switch${on ? ' on' : ''}${toggledOption === name ? ' toggled' : ''}`, 'aria-hidden': 'true' }, element('span', { class: 'switch-thumb' }, on ? icon('check') : null)),
+  ]);
+}
+
+function customizeSection(group, children, extra = null) {
+  return element('section', { class: 'section' }, [
+    element('div', { class: 'section-title' }, [element('span', { text: t(group) }), extra]),
+    ...children,
+  ]);
+}
+
+function appearanceTab() {
+  const options = state.themeOptions;
+  if (!state.schemes) loadSchemes().then(() => state.page === 'customize' && render());
+  const mode = options.mode === 'light' ? 'light' : 'dark';
+  const modes = element('div', { class: 'segmented', role: 'group', 'aria-label': t('modeGroup') }, [['dark', 'dark_mode', 'modeDark'], ['light', 'light_mode', 'modeLight']].map(([id, symbol, key]) =>
+    element('button', {
+      class: id === mode ? 'selected' : '',
+      'aria-pressed': String(id === mode),
+      onClick: () => {
+        setThemeOption('mode', id);
+        render();
+      },
+    }, [icon(symbol), element('span', { text: t(key) })])));
+  const selected = options.scheme ?? '';
+  const card = (id, label, swatches) => element('button', {
+    class: `scheme-card state-layer${id === selected ? ' selected' : ''}`,
+    title: label,
+    'aria-pressed': String(id === selected),
+    onClick: () => {
+      setThemeOption('scheme', id);
+      render();
+    },
+  }, [swatches, element('span', { text: label })]);
+  const cards = [card('', t('schemeDynamic'), element('div', { class: 'scheme-swatches dynamic' }, icon('wallpaper')))];
+  for (const [name, flavours] of Object.entries(state.schemes ?? {})) {
+    for (const [flavour, schemeModes] of Object.entries(flavours)) {
+      const roles = schemeModes[mode] ?? schemeModes.dark ?? schemeModes.light ?? {};
+      cards.push(card(`${name}/${flavour}`, schemeLabel(name, flavour), element('div', { class: 'scheme-swatches' }, [roles.primary, roles.secondary, roles.tertiary].map(color => element('span', { style: { background: color } })))));
+    }
+  }
+  const variant = options.variant ?? 'tonalspot';
+  const variants = element('div', { class: 'chips variant-chips' }, themeVariants.map(id => {
+    const active = !selected && id === variant;
+    return element('button', {
+      class: `chip${active ? ' selected' : ''}`,
+      'aria-pressed': String(active),
+      onClick: () => {
+        setThemeOption('variant', id);
+        state.themeOptions = { ...state.themeOptions, scheme: '' };
+        render();
+      },
+    }, [active ? icon('check') : null, element('span', { text: t(`variant${capitalized(id)}`) })]);
+  }));
+  return [
+    customizeSection('modeGroup', [element('div', { class: 'row' }, [icon('contrast', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('modeText') })]), modes])]),
+    customizeSection('schemeGroup', [element('div', { class: 'scheme-grid' }, cards)]),
+    customizeSection('variantGroup', [element('div', { class: 'variant-wrap' }, variants), optionSwitch('smartScheme', 'auto_awesome')]),
+    customizeSection('windowsGroup', [optionSwitch('windowsColors', 'desktop_windows'), optionSwitch('windowsTitleBars', 'web_asset')]),
+  ];
+}
+
+function wallpaperTab() {
+  const folder = typeof state.themeOptions.wallpaperDirectory === 'string' ? state.themeOptions.wallpaperDirectory : '';
+  const field = element('input', { class: 'field', type: 'text', spellcheck: 'false', value: folder, placeholder: t('wallpaperFolderPlaceholder'), 'aria-label': t('wallpaperFolderGroup') });
+  const save = () => {
+    const value = field.value.trim();
+    if (value && !/^[A-Za-z]:\\/.test(value)) {
+      notify(t('folderInvalid'), 'warning');
+      return;
+    }
+    setThemeOption('wallpaperDirectory', value).then(() => notify(t('folderSaved')));
+  };
+  field.addEventListener('keydown', event => {
+    if (event.key === 'Enter') save();
+  });
+  const action = name => () => helper.request('launcher.themeAction', { name }).catch(() => notify(t('offline'), 'warning'));
+  return [
+    element('section', { class: 'wallpaper-hero', style: state.wallpaperUrl ? { backgroundImage: `url("${state.wallpaperUrl}")` } : {} }, [
+      element('div', { class: 'wallpaper-hero-body' }, [
+        element('h2', { text: t('wallpaperTitle') }),
+        element('p', { text: t('wallpaperText') }),
+        element('div', { class: 'actions' }, [
+          button(t('chooseWallpaper'), 'photo_library', action('wallpaperPicker'), { variant: 'filled' }),
+          button(t('openWallpaperFolder'), 'folder_open', action('wallpaperFolder'), {}),
+        ]),
+      ]),
+    ]),
+    customizeSection('wallpaperFolderGroup', [
+      element('div', { class: 'row folder-row' }, [icon('folder', 'tonal-icon'), field, button(t('save'), 'save', save, { variant: 'filled' })]),
+      element('p', { class: 'section-note', text: t('wallpaperFolderText') }),
+    ]),
+  ];
+}
+
+function idleSlider() {
+  const value = Number.isInteger(state.themeOptions.idleMinutes) ? state.themeOptions.idleMinutes : 10;
+  const label = element('span', { class: 'slider-value', text: t('minutes', value) });
+  const input = element('input', { type: 'range', min: '1', max: '60', step: '1', value: String(value), class: 'slider', 'aria-label': t('optIdleMinutes') });
+  input.addEventListener('input', () => {
+    label.textContent = t('minutes', input.value);
+    state.themeOptions = { ...state.themeOptions, idleMinutes: Number(input.value) };
+  });
+  input.addEventListener('change', () => setThemeOption('idleMinutes', Number(input.value)));
+  return element('div', { class: 'row' }, [icon('timer', 'tonal-icon'), element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('optIdleMinutes') })]), input, label]);
+}
+
+function layoutList(name, items) {
+  const value = state.themeOptions?.[name];
+  const list = Array.isArray(value) ? value.filter(id => id in items) : [];
+  return [...new Set([...list, ...Object.keys(items).filter(id => !list.includes(id))])];
+}
+
+function hiddenList(name) {
+  const value = state.themeOptions?.[name];
+  return Array.isArray(value) ? value.filter(id => typeof id === 'string') : barLayoutDefaults[name];
+}
+
+function saveLayout(name, value) {
+  state.themeOptions = { ...state.themeOptions, [name]: value };
+  setThemeOption(name, value);
+  render();
+}
+
+function layoutEditor(orderName, hiddenName, items) {
+  const order = layoutList(orderName, items);
+  const hidden = new Set(hiddenList(hiddenName));
+  const move = (index, step) => {
+    const next = [...order];
+    const target = index + step;
+    if (target < 0 || target >= next.length) return;
+    [next[index], next[target]] = [next[target], next[index]];
+    saveLayout(orderName, next);
+  };
+  return element('ol', { class: 'layout-list' }, order.map((id, index) => {
+    const [symbol, key] = items[id];
+    const spacer = id === 'spacer';
+    const visible = !hidden.has(id);
+    return element('li', { class: `layout-item${spacer ? ' spacer' : ''}${visible ? '' : ' off'}` }, [
+      icon(symbol, spacer ? '' : 'tonal-icon'),
+      element('span', { class: 'layout-name', text: t(key) }),
+      element('div', { class: 'layout-actions' }, [
+        element('button', { class: 'icon-button state-layer', title: t('moveUp'), 'aria-label': `${t('moveUp')} : ${t(key)}`, disabled: index === 0, onClick: () => move(index, -1) }, icon('arrow_upward')),
+        element('button', { class: 'icon-button state-layer', title: t('moveDown'), 'aria-label': `${t('moveDown')} : ${t(key)}`, disabled: index === order.length - 1, onClick: () => move(index, 1) }, icon('arrow_downward')),
+        spacer
+          ? element('span', { class: 'switch-placeholder' })
+          : element('button', {
+            class: `switch-button${visible ? ' on' : ''}`,
+            role: 'switch',
+            'aria-checked': String(visible),
+            'aria-label': t(key),
+            onClick: () => saveLayout(hiddenName, visible ? [...hidden, id] : [...hidden].filter(entry => entry !== id)),
+          }, element('span', { class: `switch${visible ? ' on' : ''}` }, element('span', { class: 'switch-thumb' }, visible ? icon('check') : null))),
+      ]),
+    ]);
+  }));
+}
+
+function barPreview() {
+  const order = layoutList('barOrder', barItems);
+  const hidden = new Set(hiddenList('barHidden'));
+  const statusOrder = layoutList('statusOrder', statusItems).filter(id => !new Set(hiddenList('statusHidden')).has(id));
+  const split = order.indexOf('spacer');
+  const piece = id => {
+    if (hidden.has(id)) return null;
+    if (id === 'status') return element('div', { class: 'pv-status' }, statusOrder.map(entry => icon(statusItems[entry][0])));
+    if (id === 'logo') return element('div', { class: 'pv-logo' }, icon('grid_view'));
+    return element('div', { class: `pv-piece pv-${id}` }, icon(barItems[id][0]));
+  };
+  return element('div', { class: 'bar-preview', 'aria-hidden': 'true' }, [
+    element('div', { class: 'pv-section' }, order.slice(0, split).map(piece)),
+    element('div', { class: 'pv-section' }, order.slice(split + 1).map(piece)),
+  ]);
+}
+
+function barTab() {
+  return [
+    element('section', { class: 'section bar-editor' }, [
+      element('div', { class: 'section-title' }, [
+        element('span', { text: t('barLayoutGroup') }),
+        button(t('resetFrame'), 'restart_alt', () => {
+          for (const name of Object.keys(barLayoutDefaults)) setThemeOption(name, barLayoutDefaults[name]);
+          state.themeOptions = { ...state.themeOptions, ...barLayoutDefaults };
+          render();
+        }, { variant: 'text' }),
+      ]),
+      element('div', { class: 'bar-editor-body' }, [
+        barPreview(),
+        element('div', { class: 'bar-editor-lists' }, [
+          element('p', { class: 'section-note flush', text: t('barLayoutText') }),
+          layoutEditor('barOrder', 'barHidden', barItems),
+          element('div', { class: 'layout-heading', text: t('statusGroup') }),
+          element('p', { class: 'section-note flush', text: t('statusText') }),
+          layoutEditor('statusOrder', 'statusHidden', statusItems),
+        ]),
+      ]),
+    ]),
+    customizeSection('barGroup', [
+      optionSwitch('hideTaskbar', 'dock_to_left'),
+      optionSwitch('trayCollapse', 'unfold_less'),
+      optionSwitch('clockSeconds', 'timer'),
+      optionSwitch('tintIcons', 'colorize'),
+    ]),
+  ];
+}
+
+function desktopTab() {
+  const preview = framePreview();
+  return [
+    element('section', { class: 'section frame-section' }, [
+      element('div', { class: 'section-title' }, [
+        element('span', { text: t('frameGroup') }),
+        button(t('resetFrame'), 'restart_alt', async () => {
+          await setThemeOption('frameBorder', frameDefaults.frameBorder[0]);
+          await setThemeOption('frameRounding', frameDefaults.frameRounding[0]);
+          render();
+        }, { variant: 'text' }),
+      ]),
+      preview,
+      frameSlider('frameBorder', 'border_outer', preview),
+      frameSlider('frameRounding', 'rounded_corner', preview),
+    ]),
+    customizeSection('desktopGroup', [
+      optionSwitch('desktopClock', 'schedule'),
+      optionSwitch('hotCorner', 'select_window_2'),
+      optionSwitch('island', 'smart_display'),
+      optionSwitch('visualiser', 'graphic_eq'),
+    ]),
+    customizeSection('idleGroup', [optionSwitch('idleScreen', 'nightlight'), idleSlider()]),
+    customizeSection('performanceGroup', [optionSwitch('gameMode', 'sports_esports')]),
+  ];
+}
+
+function hiddenAppsRows() {
+  const hidden = Array.isArray(state.themeOptions.hiddenApps) ? state.themeOptions.hiddenApps : [];
+  if (!hidden.length) {
+    return [element('div', { class: 'row' }, [icon('star', 'tonal-icon'), element('div', { class: 'row-text' }, [
+      element('span', { class: 'row-title', text: t('hiddenAppsEmpty') }),
+      element('span', { class: 'row-subtitle', text: t('hiddenAppsEmptyText') }),
+    ])])];
+  }
+  return hidden.map(app => element('div', { class: 'row' }, [
+    icon('visibility_off', 'tonal-icon'),
+    element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: app.name || app.id }), element('span', { class: 'row-subtitle', text: t('hiddenApp') })]),
+    button(t('unhide'), 'visibility', () => {
+      const remaining = hidden.filter(entry => entry.id !== app.id);
+      setThemeOption('hiddenApps', remaining.map(entry => entry.id)).then(() => {
+        state.themeOptions = { ...state.themeOptions, hiddenApps: remaining };
+        render();
+      });
+    }, {}),
+  ]));
+}
+
+function panelsTab() {
+  return [
+    customizeSection('hoverGroup', [
+      optionSwitch('hoverDashboard', 'dashboard'),
+      optionSwitch('hoverOsd', 'volume_up'),
+      optionSwitch('hoverUtilities', 'widgets'),
+      optionSwitch('hoverPopouts', 'left_panel_open'),
+    ]),
+    customizeSection('notificationsGroup', [
+      optionSwitch('doNotDisturb', 'do_not_disturb_on'),
+      optionSwitch('osdOnVolume', 'tune'),
+      optionSwitch('toasts', 'chat_bubble'),
+      optionSwitch('systemToasts', 'notifications_active'),
+      optionSwitch('batteryAlerts', 'battery_alert'),
+    ]),
+    customizeSection('dashboardGroup', [optionSwitch('weather', 'partly_cloudy_day'), optionSwitch('lyrics', 'lyrics')]),
+    customizeSection('launcherGroup', hiddenAppsRows()),
+  ];
+}
+
+function customizePage() {
+  if (!state.themeOptions) {
+    return [element('div', { class: 'empty' }, [
+      icon('palette'),
+      element('span', { text: t('customizeOffline') }),
+      state.connected ? button(t('start'), 'play_circle', () => runHelper('start', t('started')).then(refreshOptions).then(() => render()), { variant: 'filled', disabled: Boolean(state.busy) }) : null,
+    ])];
+  }
+  const tabs = element('div', { class: 'segmented tabs customize-tabs', role: 'tablist' }, customizeTabs.map(([id, symbol, key]) => element('button', {
+    role: 'tab',
+    class: id === state.customizeTab ? 'selected' : '',
+    'aria-selected': String(id === state.customizeTab),
+    onClick: () => {
+      state.customizeTab = id;
+      render(true);
+    },
+  }, [icon(symbol), element('span', { text: t(key) })])));
+  const builders = { appearance: appearanceTab, wallpaper: wallpaperTab, bar: barTab, desktop: desktopTab, panels: panelsTab };
+  return [tabs, ...(builders[state.customizeTab] ?? appearanceTab)()];
+}
+
+const roadmapStates = {
+  done: ['check_circle', 'roadmapDone'],
+  now: ['progress_activity', 'roadmapNow'],
+  next: ['schedule', 'roadmapNext'],
+  later: ['more_horiz', 'roadmapLater'],
+};
+
+function roadmapPage() {
+  const phases = state.catalog?.roadmap ?? [];
+  if (!phases.length) return [element('div', { class: 'empty' }, [icon('route'), element('span', { text: t('noRoadmap') })])];
+  const done = phases.filter(phase => phase.status === 'done').length;
+  return [
+    element('section', { class: 'hero roadmap-hero' }, [
+      element('div', { class: 'hero-ornament' }, shape(3, 0.18)),
+      element('div', { class: 'hero-mark' }, [shape(9, 0.07), icon('route')]),
+      element('div', { class: 'hero-body' }, [
+        element('h2', { text: t('roadmap') }),
+        element('p', { text: t('roadmapIntro') }),
+        element('div', { class: 'roadmap-progress', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': String(phases.length), 'aria-valuenow': String(done) }, element('span', { style: { width: `${(done / phases.length) * 100}%` } })),
+        element('span', { class: 'roadmap-count', text: t('roadmapCount', done, phases.length) }),
+      ]),
+    ]),
+    element('ol', { class: 'roadmap' }, phases.map(phase => {
+      const status = roadmapStates[phase.status] ? phase.status : 'later';
+      const [symbol, key] = roadmapStates[status];
+      return element('li', { class: `roadmap-phase status-${status}` }, [
+        element('div', { class: 'roadmap-node' }, icon(phase.icon ?? symbol)),
+        element('div', { class: 'roadmap-card' }, [
+          element('div', { class: 'news-meta' }, [
+            element('span', { class: 'roadmap-status' }, [icon(symbol), element('span', { text: t(key) })]),
+            phase.version ? element('span', { class: 'news-version', text: `v${phase.version}` }) : null,
+          ]),
+          element('h3', { text: local(phase.title) }),
+          element('ul', { class: 'roadmap-items' }, (phase.items ?? []).map(item => element('li', {}, [
+            icon(status === 'done' ? 'check' : 'radio_button_unchecked'),
+            element('span', { text: local(item.text) }),
+          ]))),
+        ]),
+      ]);
+    })),
+    element('section', { class: 'section' }, [
+      element('div', { class: 'row' }, [
+        icon('lightbulb', 'tonal-icon'),
+        element('div', { class: 'row-text' }, [
+          element('span', { class: 'row-title', text: t('roadmapIdea') }),
+          element('span', { class: 'row-subtitle', text: t('roadmapIdeaText') }),
+        ]),
+        button(t('roadmapSuggest'), 'forum', () => invoke('open_external', { url: 'https://github.com/SMIDR76/stellaria-windows/discussions' }).catch(() => {}), {}),
+      ]),
+    ]),
+  ];
+}
+
+const updateVideo = {
+  node: null,
+  shown: false,
+
+  open(info) {
+    if (this.shown || this.node || !info?.version) return;
+    this.shown = true;
+    const release = (state.catalog?.news ?? []).find(item => item.version === info.version);
+    const highlights = (release?.highlights ?? []).filter(entry => local(entry.text)).slice(0, 4);
+    const video = element('video', { class: 'update-video-media', src: './media/update.mp4', playsinline: true, preload: 'auto', 'aria-hidden': 'true' });
+    video.muted = true;
+    if (reducedMotion.matches) {
+      video.addEventListener('loadedmetadata', () => { video.currentTime = Math.max(0, video.duration - 0.1); }, { once: true });
+    } else {
+      video.autoplay = true;
+    }
+    const close = () => this.close();
+    this.node = element('div', { class: `update-video${reducedMotion.matches ? ' still' : ''}`, role: 'dialog', 'aria-modal': 'true', 'aria-label': t('updateVideoTitle', info.version) }, [
+      video,
+      element('div', { class: 'update-video-scrim' }),
+      element('div', { class: 'update-video-body' }, [
+        element('span', { class: 'update-video-kicker' }, [icon('auto_awesome'), element('span', { text: t('updateVideoKicker') })]),
+        element('h2', { text: t('updateVideoTitle', info.version) }),
+        element('p', { text: release ? local(release.title) : t('updateVideoText') }),
+        highlights.length
+          ? element('ul', { class: 'update-video-highlights' }, highlights.map(entry => element('li', {}, [icon(entry.icon ?? 'check'), element('span', { text: local(entry.text) })])))
+          : null,
+        element('div', { class: 'actions' }, [
+          button(t('updateNow'), 'download', () => {
+            close();
+            showPage('install');
+            downloadUpdate();
+          }, { variant: 'filled' }),
+          button(t('updateLater'), 'schedule', close, { variant: 'text' }),
+        ]),
+      ]),
+    ]);
+    this.keydown = event => {
+      if (event.key === 'Escape') close();
+    };
+    window.addEventListener('keydown', this.keydown);
+    document.body.append(this.node);
+    requestAnimationFrame(() => this.node?.classList.add('visible'));
+    setTimeout(() => this.node?.querySelector('.button.filled')?.focus(), 400);
+  },
+
+  close() {
+    const node = this.node;
+    if (!node) return;
+    this.node = null;
+    window.removeEventListener('keydown', this.keydown);
+    node.classList.remove('visible');
+    node.querySelector('video')?.pause();
+    setTimeout(() => node.remove(), reducedMotion.matches ? 0 : 320);
+  },
+};
 
 function settingsPage() {
   const segmented = languageChips(() => {
@@ -1972,11 +2631,16 @@ function settingsPage() {
         element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: 'Stellaria' }), element('span', { class: 'row-subtitle', text: t('aboutText') })]),
         button(t('project'), 'open_in_new', () => invoke('open_external', { url: 'https://github.com/SMIDR76/stellaria-windows' }).catch(() => {}), { variant: 'text' }),
       ]),
+      element('div', { class: 'row' }, [
+        icon('movie', 'tonal-icon'),
+        element('div', { class: 'row-text' }, [element('span', { class: 'row-title', text: t('replayWhatsNew') })]),
+        button(t('filmPlay'), 'play_arrow', () => replayWhatsNew(), {}),
+      ]),
     ]),
   ];
 }
 
-const builders = { home: homePage, install: installPage, discover: discoverPage, library: libraryPage, news: newsPage, help: helpPage, settings: settingsPage, preset: presetPage };
+const builders = { home: homePage, install: installPage, discover: discoverPage, library: libraryPage, customize: customizePage, news: newsPage, roadmap: roadmapPage, help: helpPage, settings: settingsPage, preset: presetPage };
 
 function paintConnection() {
   nodes.connection.classList.toggle('online', state.connected);
@@ -1984,6 +2648,7 @@ function paintConnection() {
 }
 
 const railItems = element('div', { class: 'rail-items' });
+let railPop = '';
 
 function paintRail() {
   if (!morph.path) {
@@ -1993,7 +2658,7 @@ function paintRail() {
   }
   const current = state.page === 'preset' ? 'discover' : state.page;
   railItems.replaceChildren(...pages.map(([id, symbol]) => element('button', {
-    class: `rail-item${id === current ? ' current' : ''}`,
+    class: `rail-item${id === current ? ' current' : ''}${id === railPop ? ' pop' : ''}`,
     'aria-current': id === current ? 'page' : null,
     onClick: () => showPage(id),
   }, [element('span', { class: 'rail-pill' }, [icon(symbol), id === 'news' && newsUnread() ? element('span', { class: 'rail-dot', 'aria-hidden': 'true' }) : null]), element('span', { text: t(id) })])));
@@ -2015,8 +2680,14 @@ function showPage(id) {
   hoverPreview.leave();
   state.page = id;
   if (id === 'news') markNewsSeen();
+  if (id === 'customize' || id === 'roadmap') refreshPageData(id);
+  if (id === 'install') checkUpdateSoon();
   nodes.pages.scrollTop = 0;
   if (changed) {
+    railPop = id;
+    setTimeout(() => {
+      if (railPop === id) railPop = '';
+    }, 700);
     morph.to(...(pageShapes[id] ?? pageShapes.home));
     topo.page(id);
   }
@@ -2230,6 +2901,188 @@ function notesNodes(text) {
   return nodesList.slice(0, 60);
 }
 
+const whatsNewFilms = {
+  '1.2': {
+    src: './media/whats-new.mp4',
+    wide: './media/whats-new-ultrawide.mp4',
+    cues: [
+      [2.2, 5.6, 'whatsNewIntro', 'whatsNewIntroText', 'low'],
+      [6.1, 10.1, 'whatsNewTagline', null, 'low'],
+      [11.8, 15.4, 'whatsNewCustomize', 'whatsNewCustomizeText', 'low'],
+      [16.4, 20.6, 'whatsNewBar', 'whatsNewBarText', 'low'],
+      [21.4, 25.8, 'whatsNewVisualiser', 'whatsNewVisualiserText', 'high'],
+      [26.6, 31.0, 'whatsNewBattery', 'whatsNewBatteryText', 'low'],
+      [31.8, 36.2, 'whatsNewFrame', 'whatsNewFrameText', 'high'],
+      [37.0, 41.4, 'whatsNewMore', 'whatsNewMoreText', 'low'],
+      [42.6, 46.8, 'whatsNewThanks', 'whatsNewThanksText', 'low'],
+    ],
+  },
+};
+
+const filmFor = version => {
+  const [major, minor] = String(version ?? '').split('.');
+  return whatsNewFilms[`${major}.${minor}`] ?? null;
+};
+
+const whatsNewFilm = {
+  node: null,
+  frame: 0,
+
+  open(film, version) {
+    if (this.node || !film) return;
+    const words = text => text.split(/(\s+)/).filter(Boolean).map((word, index) => {
+      if (/^\s+$/.test(word)) return word;
+      const node = element('span', { class: 'film-word', text: word });
+      node.style.setProperty('--i', String(index));
+      return node;
+    });
+    const cues = film.cues.map(([start, end, title, subtitle, place]) => ({
+      start,
+      end,
+      node: element('div', { class: `film-cue ${place}` }, [
+        element('h2', {}, words(title === 'whatsNewIntro' ? `Stellaria ${String(version).split('.').slice(0, 2).join('.')}` : t(title))),
+        subtitle ? element('p', {}, words(t(subtitle))) : null,
+      ]),
+    }));
+    const ultrawide = Boolean(film.wide) && window.innerWidth / window.innerHeight > 2.05;
+    const ratio = ultrawide ? 43 / 18 : 16 / 9;
+    const video = element('video', { class: 'film-video', src: ultrawide ? film.wide : film.src, playsinline: true, preload: 'auto' });
+    const sound = button(t('filmSound'), 'volume_up', () => {
+      video.muted = false;
+      video.volume = 0.9;
+      sound.remove();
+    }, { variant: 'filled' });
+    sound.classList.add('film-sound');
+    const end = element('div', { class: 'film-end' }, [
+      button(t('filmDiscover'), 'palette', () => {
+        this.close();
+        showPage('customize');
+      }, { variant: 'filled' }),
+      button(t('close'), 'close', () => this.close(), {}),
+    ]);
+    const skip = element('button', { class: 'film-skip state-layer', onClick: () => this.close() }, [element('span', { text: t('filmSkip') }), icon('skip_next')]);
+    const canvas = element('canvas', { class: 'film-fx', 'aria-hidden': 'true' });
+    const stage = element('div', { class: 'film-stage' }, [video, ...cues.map(cue => cue.node), end]);
+    stage.style.aspectRatio = String(ratio);
+    stage.style.width = `min(92vw, calc(86vh * ${ratio.toFixed(4)}))`;
+    this.node = element('div', { class: `film${ultrawide ? ' ultrawide' : ''}`, role: 'dialog', 'aria-modal': 'true', 'aria-label': t('whatsNew', version) }, [canvas, stage, skip]);
+    document.body.append(this.node);
+    this.keydown = event => {
+      if (event.key === 'Escape') this.close();
+    };
+    window.addEventListener('keydown', this.keydown);
+    this.burst(canvas);
+    requestAnimationFrame(() => this.node?.classList.add('open'));
+    setTimeout(() => {
+      if (!this.node) return;
+      video.volume = 0;
+      video.play().catch(() => {
+        video.muted = true;
+        video.play().catch(() => {});
+        stage.append(sound);
+      });
+      const fadeStart = performance.now();
+      const fade = now => {
+        if (!this.node || video.muted) return;
+        video.volume = Math.min(0.9, (now - fadeStart) / 1100 * 0.9);
+        if (video.volume < 0.9) requestAnimationFrame(fade);
+      };
+      requestAnimationFrame(fade);
+    }, 520);
+    setTimeout(() => skip.classList.add('shown'), 1600);
+    video.addEventListener('ended', () => end.classList.add('shown'));
+    const tick = () => {
+      if (!this.node) return;
+      const time = video.currentTime;
+      for (const cue of cues) cue.node.classList.toggle('shown', time >= cue.start && time < cue.end);
+      if (!video.paused && time > (video.duration || 48) - 2.2) end.classList.add('shown');
+      this.frame = requestAnimationFrame(tick);
+    };
+    this.frame = requestAnimationFrame(tick);
+    this.video = video;
+  },
+
+  burst(canvas) {
+    const context = canvas.getContext('2d');
+    const scale = window.devicePixelRatio || 1;
+    canvas.width = innerWidth * scale;
+    canvas.height = innerHeight * scale;
+    const styles = getComputedStyle(document.documentElement);
+    const colors = ['--m3-primary', '--m3-tertiary', '--m3-secondary'].map(name => styles.getPropertyValue(name).trim() || '#d0bcff');
+    const sparks = Array.from({ length: 90 }, (_, index) => ({ angle: Math.random() * Math.PI * 2, speed: 0.35 + Math.random() * 0.9, size: (1 + Math.random() * 2.6) * scale, color: colors[index % 3] }));
+    const cx = canvas.width / 2;
+    const cy = canvas.height / 2;
+    const reach = Math.hypot(cx, cy);
+    const start = performance.now();
+    const draw = now => {
+      const age = (now - start) / 1000;
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.globalCompositeOperation = 'lighter';
+      const flare = Math.exp(-age / 0.18) * Math.min(1, age / 0.08);
+      const glow = context.createRadialGradient(cx, cy, 0, cx, cy, reach * 0.35);
+      glow.addColorStop(0, `rgba(255,245,255,${0.9 * flare})`);
+      glow.addColorStop(1, 'rgba(255,255,255,0)');
+      context.fillStyle = glow;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      const ring = Math.min(1, age / 0.9);
+      context.strokeStyle = colors[0];
+      context.globalAlpha = (1 - ring) * 0.8;
+      context.lineWidth = (1 - ring) * 24 * scale + scale;
+      context.beginPath();
+      context.arc(cx, cy, (1 - Math.pow(1 - ring, 3)) * reach, 0, Math.PI * 2);
+      context.stroke();
+      for (const spark of sparks) {
+        const travel = (1 - Math.exp(-age * 3.2)) * spark.speed * reach;
+        context.globalAlpha = Math.max(0, 1 - age / 1.3);
+        context.fillStyle = spark.color;
+        context.beginPath();
+        context.arc(cx + Math.cos(spark.angle) * travel, cy + Math.sin(spark.angle) * travel, spark.size, 0, Math.PI * 2);
+        context.fill();
+      }
+      context.globalAlpha = 1;
+      if (age < 1.4 && this.node) requestAnimationFrame(draw);
+      else context.clearRect(0, 0, canvas.width, canvas.height);
+    };
+    if (!reducedMotion.matches) requestAnimationFrame(draw);
+  },
+
+  close() {
+    const node = this.node;
+    if (!node) return;
+    this.node = null;
+    cancelAnimationFrame(this.frame);
+    for (const tile of newsFilmTiles.values()) {
+      const preview = tile.querySelector('video');
+      if (preview && !reducedMotion.matches) preview.play().catch(() => {});
+    }
+    window.removeEventListener('keydown', this.keydown);
+    const video = this.video;
+    const start = performance.now();
+    const from = video?.volume ?? 0;
+    const fade = now => {
+      if (!video) return;
+      const progress = Math.min(1, (now - start) / 380);
+      video.volume = Math.max(0, from * (1 - progress));
+      if (progress < 1) requestAnimationFrame(fade);
+      else video.pause();
+    };
+    requestAnimationFrame(fade);
+    node.classList.remove('open');
+    node.classList.add('closing');
+    setTimeout(() => node.remove(), reducedMotion.matches ? 0 : 420);
+  },
+};
+
+async function replayWhatsNew() {
+  let installed = '';
+  try {
+    installed = await invoke('installed');
+  } catch {
+    return;
+  }
+  whatsNewFilm.open(filmFor(installed), installed);
+}
+
 async function showWhatsNew() {
   let installed;
   try {
@@ -2240,6 +3093,10 @@ async function showWhatsNew() {
   const seen = stored('seen-version', '');
   store('seen-version', installed);
   if (!seen || !newer(installed, seen)) return;
+  if (filmFor(installed)) {
+    whatsNewFilm.open(filmFor(installed), installed);
+    return;
+  }
   let notes = '';
   try {
     notes = await invoke('release_notes', { version: installed });
@@ -2280,6 +3137,12 @@ function confirmPreset(item) {
 async function handleLink(link) {
   if (/^stellaria:\/\/install\/?$/.test(link ?? '')) {
     showPage('install');
+    return;
+  }
+  const page = /^stellaria:\/\/page\/(home|customize|news|roadmap|help)(?:\/(appearance|wallpaper|bar|desktop|panels))?\/?$/.exec(link ?? '');
+  if (page) {
+    if (page[2]) state.customizeTab = page[2];
+    showPage(page[1]);
     return;
   }
   const match = /^stellaria:\/\/apply\/([a-z0-9][a-z0-9-]{1,47})\/?$/.exec(link ?? '');
@@ -2378,7 +3241,10 @@ listen('reopened', () => {
   requestAnimationFrame(show);
   setTimeout(show, 120);
 });
-window.addEventListener('focus', ensureShown);
+window.addEventListener('focus', () => {
+  ensureShown();
+  checkUpdateSoon();
+});
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') setTimeout(ensureShown, 150);
 });
@@ -2386,11 +3252,12 @@ listen('open-page', event => showPage(event.payload));
 setTimeout(async () => {
   await checkUpdate(true);
   syncTray();
+  if (state.update.status === 'available' && stored('onboarded', '') === '1' && nodes.dialog.hidden) updateVideo.open(state.update.info);
 }, 1500);
 setInterval(async () => {
   await checkUpdate(true);
   syncTray();
-}, 6 * 60 * 60 * 1000);
+}, 60 * 60 * 1000);
 if (stored('onboarded', '') !== '1') setTimeout(() => onboarding.open(), 700);
 else setTimeout(showWhatsNew, 900);
 const initial = await invoke('initial_link');

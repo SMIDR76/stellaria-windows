@@ -17,6 +17,7 @@ import {
 } from '../../vendor/material-color-utilities.mjs';
 import { getOption, keys, option, setOption, settings, store } from './store.js';
 import { t, translateDocument } from './i18n.js';
+import { layout } from './monitor.js';
 
 export const variants = {
   tonalspot: { label: 'Tonal Spot', scheme: SchemeTonalSpot },
@@ -130,6 +131,14 @@ export function initTheme() {
   option('gameMode', false, enabled => document.documentElement.classList.toggle('game-mode', Boolean(enabled)));
   installIconTint();
   option('tintIcons', true, enabled => document.documentElement.classList.toggle('tint-icons', Boolean(enabled)));
+  option('frameBorder', 10, value => applyFrame('border', value, 4, 24, 10));
+  option('frameRounding', 25, value => applyFrame('rounding', value, 0, 40, 25));
+}
+
+function applyFrame(name, value, minimum, maximum, fallback) {
+  const number = Number.isInteger(value) && value >= minimum && value <= maximum ? value : fallback;
+  layout[name] = number;
+  document.documentElement.style.setProperty(`--${name}`, `${number}px`);
 }
 
 function installIconTint() {

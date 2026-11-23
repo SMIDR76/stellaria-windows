@@ -304,3 +304,7 @@
 .memory-usage {
   font-size: 14px;
 }
+
+.battery-hero[hidden] {
+  display: none;
+}

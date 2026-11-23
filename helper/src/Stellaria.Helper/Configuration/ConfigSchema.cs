@@ -25,6 +25,7 @@ internal static partial class ConfigSchema
         new("theme.scheme", () => null, ValidateScheme),
         Flag("theme.smartScheme", true),
         Flag("theme.transparency", false),
+        Integer("frame.border", 10, 4, 24),
         Flag("performance.gameMode", false),
         Flag("taskbar.hide", true),
         Flag("clock.seconds", false),

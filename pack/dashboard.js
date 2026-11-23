@@ -1,5 +1,8 @@
 import {
   actions,
+  batteryIcon,
+  batteryPercent,
+  batteryStatus,
   currentMonitorName,
   cursorPosition,
   describeWeather,
@@ -329,7 +332,7 @@ async function loadSysinfo() {
   }
 }
 
-function createHero({ symbol, label, accent }) {
+function createHero({ symbol, label, accent, usageLabel = t('Utilisation') }) {
   const ring = createRing({ size: 52, stroke: 4, color: accent, className: 'perf-hero-ring', content: icon(symbol) });
   ring.node.querySelector('.icon').style.color = accent;
   const sub = element('span', { class: 'perf-hero-sub', text: '—' });
@@ -350,12 +353,19 @@ function createHero({ symbol, label, accent }) {
     ring.node,
     element('div', { class: 'perf-hero-title' }, [element('span', { class: 'perf-hero-label', text: label, style: { color: accent } }), sub]),
     element('div', { class: 'perf-hero-temp' }, [element('div', { class: 'perf-hero-temp-row' }, [thermometer, temperatureText]), barTrack]),
-    element('div', { class: 'perf-hero-usage' }, [element('span', { class: 'perf-hero-usage-label', text: t('Utilisation') }), usageShape, usageValue]),
+    element('div', { class: 'perf-hero-usage' }, [element('span', { class: 'perf-hero-usage-label', text: usageLabel }), usageShape, usageValue]),
   ]);
 
   return {
     node,
     setSub: value => { sub.textContent = value; sub.title = value; },
+    setIcon: name => { ring.node.querySelector('.icon').textContent = name; },
+    setDetail(name, text, percent) {
+      thermometer.textContent = name;
+      temperatureText.textContent = text;
+      barTrack.classList.remove('indeterminate');
+      temperatureBar.set(Math.max(0, Math.min(100, percent)));
+    },
     setUsage(percent) {
       const known = Number.isFinite(percent);
       ring.set(known ? percent / 100 : 0);
@@ -388,7 +398,10 @@ const heroes = {
 };
 heroes.cpu.setTemperature(NaN);
 heroes.gpu.setTemperature(NaN);
-$('perf-heroes').replaceChildren(heroes.cpu.node, heroes.gpu.node);
+const batteryHero = createHero({ symbol: 'battery_full', label: t('Batterie'), accent: 'var(--m3-tertiary)', usageLabel: t('Charge') });
+batteryHero.node.classList.add('battery-hero');
+batteryHero.node.hidden = true;
+$('perf-heroes').replaceChildren(heroes.cpu.node, heroes.gpu.node, batteryHero.node);
 
 const storageRing = createRing({
   size: 124, stroke: 8, start: 135, sweep: 270, color: 'var(--m3-secondary)', className: 'big-ring',
@@ -874,12 +887,26 @@ const providers = zebar.createProviderGroup({
   memory: { type: 'memory', refreshInterval: 2000 },
   disk: { type: 'disk', refreshInterval: 30000 },
   network: { type: 'network', refreshInterval: 1000 },
+  battery: { type: 'battery', refreshInterval: 10000 },
 });
 
 let lastTraffic = null;
 
+function renderBatteryHero(battery) {
+  const present = Boolean(battery) && Number.isFinite(battery.chargePercent);
+  batteryHero.node.hidden = !present;
+  if (!present) return;
+  const percent = batteryPercent(battery);
+  batteryHero.setIcon(batteryIcon(battery));
+  batteryHero.setUsage(percent);
+  batteryHero.setSub(batteryStatus(battery));
+  const health = Number.isFinite(battery.healthPercent) ? Math.round(battery.healthPercent) : NaN;
+  batteryHero.setDetail('health_and_safety', Number.isFinite(health) ? t('Santé {0} %', health) : t('Santé inconnue'), Number.isFinite(health) ? health : 0);
+}
+
 function render(output) {
   if (output.host) $('user-uptime').textContent = formatUptime(output.host.uptime);
+  renderBatteryHero(output.battery);
 
   if (output.cpu) {
     resources.cpu.set(output.cpu.usage / 100);

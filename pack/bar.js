@@ -6,6 +6,11 @@ import {
   actions,
   analyzeImage,
   applyTheme,
+  batteryCharging,
+  batteryIcon,
+  batteryPercent,
+  batteryStatus,
+  batteryThresholds,
   currentMonitorName,
   dashboardState,
   describeWeather,
@@ -22,7 +27,9 @@ import {
   monitorAtCursor,
   onShared,
   openLauncher,
+  openFolder,
   openSettings,
+  openStellaria,
   option,
   setOption,
   smoothValue,
@@ -55,6 +62,15 @@ const nodes = {
   volume: document.getElementById('volume'),
   volumeIcon: document.getElementById('volume-icon'),
   network: document.getElementById('network'),
+  battery: document.getElementById('battery'),
+  mic: document.getElementById('mic'),
+  micIcon: document.getElementById('mic-icon'),
+  capsLock: document.getElementById('caps-lock'),
+  bluetooth: document.getElementById('bluetooth'),
+  bluetoothIcon: document.getElementById('bluetooth-icon'),
+  status: document.getElementById('status'),
+  batteryIcon: document.getElementById('battery-icon'),
+  batteryLevel: document.getElementById('battery-level'),
   notifications: document.getElementById('notifications'),
   notificationsIcon: document.getElementById('notifications-icon'),
   notificationsBadge: document.getElementById('notifications-badge'),
@@ -138,6 +154,7 @@ option('clockSeconds', false, value => {
 const providers = zebar.createProviderGroup({
   audio: { type: 'audio' },
   network: { type: 'network', refreshInterval: 5000 },
+  battery: { type: 'battery', refreshInterval: 10000 },
   keyboard: { type: 'keyboard', refreshInterval: 1000 },
   systray: { type: 'systray' },
   media: { type: 'media' },
@@ -278,6 +295,53 @@ option('trayCollapse', true, value => {
   paintTrayOverflow(trayNodes.size);
 });
 
+const barEntries = ['logo', 'workspaces', 'tasks', 'activeWindow', 'spacer', 'tray', 'weather', 'clock', 'status', 'power'];
+const statusEntries = ['keyboard', 'capsLock', 'mic', 'volume', 'bluetooth', 'battery', 'network', 'notifications'];
+const barDefaults = { barOrder: barEntries, barHidden: [], statusOrder: statusEntries, statusHidden: ['mic', 'bluetooth'] };
+
+const statusAvailability = {
+  capsLock: () => nodes.capsLock.dataset.on === '1',
+  mic: () => nodes.mic.dataset.available === '1',
+  bluetooth: () => nodes.bluetooth.dataset.available === '1',
+  battery: () => nodes.battery.dataset.available === '1',
+};
+
+const batteryWatch = { primary: false, level: null, charging: null };
+
+function renderBattery(battery) {
+  const present = Boolean(battery) && Number.isFinite(battery.chargePercent);
+  nodes.battery.dataset.available = present ? '1' : '';
+  if (!present) return;
+  const percent = batteryPercent(battery);
+  const charging = batteryCharging(battery);
+  nodes.batteryIcon.textContent = batteryIcon(battery);
+  nodes.batteryLevel.textContent = String(percent);
+  nodes.battery.classList.toggle('low', !charging && percent <= 15);
+  nodes.battery.classList.toggle('charging', charging);
+  nodes.battery.title = `${t('Batterie : {0} %', percent)} · ${batteryStatus(battery)}`;
+  if (batteryWatch.primary) watchBattery(percent, charging);
+}
+
+function watchBattery(percent, charging) {
+  const previous = batteryWatch.level;
+  if (batteryWatch.charging !== null && charging !== batteryWatch.charging) {
+    systemToast(t(charging ? 'Chargeur branché' : 'Chargeur débranché'), t('{0} %', percent), charging ? 'power' : 'power_off');
+  }
+  if (!charging && previous !== null && getOption('batteryAlerts', true)) {
+    const crossed = batteryThresholds.find(level => previous > level && percent <= level);
+    if (crossed) {
+      toast(t(crossed <= 5 ? 'Batterie très faible' : 'Batterie faible'), {
+        message: t('Plus que {0} %, branchez le chargeur', percent),
+        icon: 'battery_alert',
+        kind: crossed <= 5 ? 'error' : 'warning',
+        duration: 6000,
+      });
+    }
+  }
+  batteryWatch.level = percent;
+  batteryWatch.charging = charging;
+}
+
 function render(output) {
   const device = output.audio?.defaultPlaybackDevice;
   nodes.volumeIcon.textContent = volumeIcon(device);
@@ -287,6 +351,15 @@ function render(output) {
   nodes.networkIcon.textContent = networkIcon(output.network);
   const gateway = output.network?.defaultGateway;
   nodes.network.title = gateway?.ssid ? t('Wi-Fi : {0}', gateway.ssid) : t(output.network?.defaultInterface ? 'Ethernet connecté' : 'Hors ligne');
+
+  renderBattery(output.battery);
+
+  const recording = output.audio?.defaultRecordingDevice;
+  nodes.mic.dataset.available = recording ? '1' : '';
+  nodes.micIcon.textContent = recording?.isMuted ? 'mic_off' : 'mic';
+  nodes.mic.classList.toggle('mic-muted', Boolean(recording?.isMuted));
+  nodes.mic.title = recording ? `${recording.name} — ${recording.isMuted ? t('muet') : t('{0} %', Math.round(recording.volume))}` : t('Aucun micro');
+  applyStatusVisibility();
 
   const layout = output.keyboard?.layout ?? '';
   nodes.keyboard.textContent = (layout.split('-').pop() || layout || '--').slice(0, 2).toUpperCase();
@@ -306,6 +379,89 @@ nodes.volume.addEventListener('click', () => {
   if (device) audio.setMute(!device.isMuted);
 });
 
+nodes.mic.addEventListener('click', () => {
+  const audio = providers.outputMap.audio;
+  const device = audio?.defaultRecordingDevice;
+  if (device) audio.setMute(!device.isMuted, { deviceId: device.deviceId });
+});
+
+nodes.mic.addEventListener('contextmenu', event => {
+  event.preventDefault();
+  openSettings('sound');
+});
+
+nodes.bluetooth.addEventListener('click', () => openSettings('bluetooth'));
+nodes.capsLock.addEventListener('click', () => {});
+
+
+function orderOf(value, entries) {
+  const list = Array.isArray(value) ? value.filter(id => entries.includes(id)) : [];
+  return [...new Set([...list, ...entries.filter(id => !list.includes(id))])];
+}
+
+function hiddenOf(value, fallback) {
+  return new Set(Array.isArray(value) ? value.filter(id => typeof id === 'string') : fallback);
+}
+
+function applyStatusVisibility() {
+  const hidden = hiddenOf(getOption('statusHidden', barDefaults.statusHidden), barDefaults.statusHidden);
+  for (const node of nodes.status.querySelectorAll('[data-status]')) {
+    const id = node.dataset.status;
+    const available = statusAvailability[id]?.() ?? true;
+    node.hidden = hidden.has(id) || !available;
+  }
+}
+
+function applyBarLayout() {
+  const order = orderOf(getOption('barOrder', barDefaults.barOrder), barEntries);
+  const hidden = hiddenOf(getOption('barHidden', barDefaults.barHidden), barDefaults.barHidden);
+  const start = document.querySelector('.section.start');
+  const end = document.querySelector('.section.end');
+  const split = order.indexOf('spacer');
+  const place = (ids, section) => {
+    for (const id of ids) {
+      const node = document.querySelector(`[data-entry="${id}"]`);
+      if (!node) continue;
+      node.classList.toggle('user-off', hidden.has(id));
+      section.append(node);
+    }
+  };
+  place(order.slice(0, split), start);
+  place(order.slice(split + 1), end);
+  const statusOrder = orderOf(getOption('statusOrder', barDefaults.statusOrder), statusEntries);
+  for (const id of statusOrder) {
+    const node = nodes.status.querySelector(`[data-status="${id}"]`);
+    if (node) nodes.status.append(node);
+  }
+  applyStatusVisibility();
+}
+
+for (const name of ['barOrder', 'barHidden', 'statusOrder', 'statusHidden']) option(name, barDefaults[name], applyBarLayout);
+
+async function refreshBluetooth() {
+  try {
+    const items = await helperClient.request('radios.list');
+    const radio = (Array.isArray(items) ? items : items?.items ?? []).find(item => /bluetooth/i.test(String(item.kind ?? item.name ?? '')));
+    nodes.bluetooth.dataset.available = radio ? '1' : '';
+    const on = Boolean(radio?.on ?? radio?.state === 'On');
+    nodes.bluetoothIcon.textContent = on ? 'bluetooth' : 'bluetooth_disabled';
+    nodes.bluetooth.classList.toggle('bluetooth-off', !on);
+    nodes.bluetooth.title = t('Bluetooth : {0}', t(on ? 'activé' : 'désactivé'));
+  } catch {
+    nodes.bluetooth.dataset.available = '';
+  }
+  applyStatusVisibility();
+}
+
+refreshBluetooth();
+setInterval(refreshBluetooth, 15000);
+onShared('radios', () => refreshBluetooth());
+
+helperClient.onState('keyboard', keyboard => {
+  nodes.capsLock.dataset.on = keyboard?.capsLock ? '1' : '';
+  applyStatusVisibility();
+});
+
 nodes.volume.addEventListener('contextmenu', event => {
   event.preventDefault();
   openSettings('sound');
@@ -321,6 +477,7 @@ nodes.volume.addEventListener('wheel', event => {
 }, { passive: false });
 
 nodes.network.addEventListener('click', () => openSettings('network-status'));
+nodes.battery.addEventListener('click', () => openSettings('batterysaver'));
 
 const popoutTargets = [
   [nodes.activeWindow, 'window'],
@@ -354,9 +511,12 @@ function renderNotificationBadge() {
   const unread = visible.filter(item => item.time > seenAt).length;
   nodes.notificationsBadge.hidden = unread === 0;
   nodes.notificationsBadge.textContent = unread > 9 ? '9+' : String(unread);
-  nodes.notificationsIcon.textContent = unread ? 'notifications_unread' : visible.length ? 'notifications' : 'notifications_none';
-  nodes.notifications.title = unread ? t('Notifications ({0} non lues)', unread) : t('Notifications');
+  const quiet = getOption('doNotDisturb', false);
+  nodes.notificationsIcon.textContent = quiet ? 'notifications_paused' : unread ? 'notifications_unread' : visible.length ? 'notifications' : 'notifications_none';
+  nodes.notifications.classList.toggle('quiet', Boolean(quiet));
+  nodes.notifications.title = [unread ? t('Notifications ({0} non lues)', unread) : t('Notifications'), quiet ? t('Ne pas déranger') : ''].filter(Boolean).join(' · ');
 }
+option('doNotDisturb', false, renderNotificationBadge);
 helperClient.onState('notifications', renderNotificationBadge);
 store.watch(notificationKeys.dismissed, renderNotificationBadge, 2000);
 store.watch(notificationKeys.seenAt, renderNotificationBadge, 2000);
@@ -424,9 +584,12 @@ nodes.workspaces.addEventListener('wheel', event => {
   if (next >= 0 && next < desktops.items.length) switchDesktop(next);
 }, { passive: false });
 
+let activeWindowShown = getOption('activeWindow', true);
+
 function showActiveWindow(title, process, iconData) {
   const label = title?.trim() || process || '';
-  nodes.activeWindow.hidden = !label;
+  nodes.activeWindow.dataset.label = label;
+  nodes.activeWindow.hidden = !label || !activeWindowShown;
   nodes.activeTitle.textContent = label;
   nodes.activeWindow.title = process ? `${label} (${process})` : label;
   const current = nodes.activeWindow.querySelector('.active-icon');
@@ -438,6 +601,11 @@ function showActiveWindow(title, process, iconData) {
     current.replaceWith(element('span', { class: 'icon active-icon', text: 'select_window' }));
   }
 }
+
+option('activeWindow', true, value => {
+  activeWindowShown = Boolean(value);
+  nodes.activeWindow.hidden = !nodes.activeWindow.dataset.label || !activeWindowShown;
+});
 
 function renderFocus(focus) {
   const entry = focus?.byMonitor?.[monitor];
@@ -509,7 +677,7 @@ async function runHotkey(name, target) {
     dashboard: () => toggleDashboard(target),
     session: () => togglePopup('session', target),
     utilities: () => toggleDrawer('utilities', target),
-    settings: () => togglePopup('settings', target),
+    settings: () => openStellaria('customize', () => togglePopup('settings', target)),
     escape: () => closeKeyboardPanels(),
   };
   await actions[name]?.();
@@ -692,6 +860,7 @@ function undoPreset() {
 }
 
 if (await isPrimaryMonitor()) {
+  batteryWatch.primary = true;
   helperClient.onEvent('theme.preset', applyPreset);
   helperClient.onEvent('theme.undo', undoPreset);
   systemEvents.since = Date.now();
@@ -716,11 +885,80 @@ if (await isPrimaryMonitor()) {
   if (!getOption('welcomed', false)) {
     setTimeout(() => {
       setOption('welcomed', true);
-      store.set('stellaria:settings:page', { page: 'welcome', at: Date.now() });
-      togglePopup('settings').catch(error => console.error('[stellaria] Bienvenue', error));
+      openStellaria('home', () => {
+        store.set('stellaria:settings:page', { page: 'welcome', at: Date.now() });
+        togglePopup('settings').catch(error => console.error('[stellaria] Bienvenue', error));
+      });
     }, 4000);
   }
   const configure = (path, value) => helperClient.request('config.set', { path, value })
     .catch(error => console.error(`[stellaria] ${path}`, error));
   option('wallpaperDirectory', '', directory => configure('wallpapers.directory', directory || null));
+  option('frameBorder', 10, value => configure('frame.border', Number.isInteger(value) ? value : 10));
+  const appOptions = {
+    frameBorder: 10, frameRounding: 25, activeWindow: true, doNotDisturb: false, clockSeconds: false, tintIcons: true,
+    trayCollapse: true, island: true, desktopClock: true, hotCorner: true, toasts: true, systemToasts: true,
+    idleScreen: true, gameMode: false, language: 'auto', hideTaskbar: true, smartScheme: true, windowsColors: false,
+    windowsTitleBars: false, hoverDashboard: true, hoverOsd: true, hoverUtilities: true, hoverPopouts: true, osdOnVolume: true,
+    weather: true, lyrics: true, idleMinutes: 10, wallpaperDirectory: '', batteryAlerts: true, visualiser: false,
+  };
+  const layoutOptions = ['barOrder', 'barHidden', 'statusOrder', 'statusHidden'];
+  const schemeId = () => {
+    const scheme = store.get(keys.scheme, null);
+    return scheme?.name && scheme?.flavour ? `${scheme.name}/${scheme.flavour}` : '';
+  };
+  let reportTimer = 0;
+  const reportOptions = () => {
+    clearTimeout(reportTimer);
+    reportTimer = setTimeout(() => {
+      const options = Object.fromEntries(Object.entries(appOptions).map(([name, fallback]) => {
+        const value = getOption(name, fallback);
+        if (typeof fallback === 'string') return [name, typeof value === 'string' ? value : fallback];
+        return [name, typeof fallback === 'number' ? (Number.isInteger(value) ? value : fallback) : Boolean(value)];
+      }));
+      const names = new Map((store.get(keys.apps)?.items ?? []).map(app => [app.id, app.name]));
+      Object.assign(options, {
+        mode: store.get(keys.mode, 'dark') === 'light' ? 'light' : 'dark',
+        variant: store.get(keys.variant, 'tonalspot'),
+        scheme: schemeId(),
+        hiddenApps: getOption('hiddenApps', []).filter(id => typeof id === 'string').slice(0, 200).map(id => ({ id, name: names.get(id) ?? id })),
+        barOrder: orderOf(getOption('barOrder', barDefaults.barOrder), barEntries),
+        barHidden: [...hiddenOf(getOption('barHidden', barDefaults.barHidden), barDefaults.barHidden)],
+        statusOrder: orderOf(getOption('statusOrder', barDefaults.statusOrder), statusEntries),
+        statusHidden: [...hiddenOf(getOption('statusHidden', barDefaults.statusHidden), barDefaults.statusHidden)],
+      });
+      helperClient.request('theme.options', { options }).catch(() => {});
+    }, 300);
+  };
+  for (const name of [...Object.keys(appOptions), 'hiddenApps', ...layoutOptions]) store.watch(`stellaria:option:${name}`, reportOptions, 250);
+  for (const key of [keys.mode, keys.variant, keys.scheme]) store.watch(key, reportOptions, 250);
+  helperClient.onConnection(connected => connected && reportOptions());
+  reportOptions();
+  helperClient.onEvent('theme.option', ({ name, value }) => {
+    if (name === 'mode' && (value === 'dark' || value === 'light')) {
+      store.set(keys.mode, value);
+      applyTheme();
+    } else if (name === 'variant' && typeof value === 'string') {
+      store.set(keys.variant, value);
+      store.set(keys.scheme, null);
+      applyTheme();
+    } else if (name === 'scheme' && typeof value === 'string') {
+      const [schemeName, flavour] = value.split('/');
+      store.set(keys.scheme, schemeName && flavour ? { name: schemeName, flavour } : null);
+      applyTheme();
+    } else if (layoutOptions.includes(name) && Array.isArray(value)) {
+      setOption(name, value.filter(id => typeof id === 'string'));
+    } else if (name === 'hiddenApps' && Array.isArray(value)) {
+      setOption('hiddenApps', value.filter(id => typeof id === 'string'));
+    } else if (name in appOptions && typeof value === typeof appOptions[name]) {
+      setOption(name, value);
+    } else {
+      return;
+    }
+    reportOptions();
+  });
+  helperClient.onEvent('theme.action', ({ name }) => {
+    if (name === 'wallpaperPicker') openLauncher(t('>fond '));
+    else if (name === 'wallpaperFolder') openFolder('wallpapers').catch(() => {});
+  });
 }

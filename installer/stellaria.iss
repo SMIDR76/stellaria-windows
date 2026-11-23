@@ -496,6 +496,15 @@ begin
   Exec(ExpandConstant('{sys}\taskkill.exe'), '/F /IM StellariaSwitcher.exe /IM stellaria-helper.exe /IM stellaria-launcher.exe', '', SW_HIDE, ewWaitUntilTerminated, Code);
 end;
 
+procedure ClearWidgetCache;
+var
+  Profile: String;
+begin
+  Profile := ExpandConstant('{userappdata}\zebar\webview-cache\stellaria\EBWebView\Default');
+  DelTree(Profile + '\Cache', True, True, True);
+  DelTree(Profile + '\Code Cache', True, True, True);
+end;
+
 procedure InstallWebView2;
 var
   Code: Integer;
@@ -533,6 +542,7 @@ end;
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 begin
   StopStellaria;
+  ClearWidgetCache;
   InstallWebView2;
   Result := InstallZebar;
 end;

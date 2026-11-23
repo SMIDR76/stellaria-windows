@@ -1,0 +1,472 @@
+[
+  {
+    "id": "foundations",
+    "status": "done",
+    "version": "1.0",
+    "icon": "foundation",
+    "title": {
+      "fr": "Les fondations",
+      "en": "Foundations",
+      "es": "Los cimientos",
+      "de": "Das Fundament",
+      "pt-BR": "As fundações",
+      "it": "Le fondamenta",
+      "pl": "Fundamenty",
+      "ru": "Основа",
+      "tr": "Temeller",
+      "zh-CN": "基础",
+      "ja": "土台づくり",
+      "ko": "기반"
+    },
+    "items": [
+      {
+        "text": {
+          "fr": "Barre, tableau de bord, lanceur et utilitaires",
+          "en": "Bar, dashboard, launcher and utilities",
+          "es": "Barra, panel, lanzador y utilidades",
+          "de": "Leiste, Dashboard, Starter und Werkzeuge",
+          "pt-BR": "Barra, painel, lançador e utilitários",
+          "it": "Barra, dashboard, launcher e utilità",
+          "pl": "Pasek, panel, launcher i narzędzia",
+          "ru": "Панель, дашборд, лаунчер и утилиты",
+          "tr": "Çubuk, pano, başlatıcı ve araçlar",
+          "zh-CN": "栏、仪表板、启动器和实用工具",
+          "ja": "バー、ダッシュボード、ランチャー、ユーティリティ",
+          "ko": "바, 대시보드, 런처, 유틸리티"
+        }
+      },
+      {
+        "text": {
+          "fr": "Couleurs Material You tirées du fond d'écran",
+          "en": "Material You colours from the wallpaper",
+          "es": "Colores Material You del fondo de pantalla",
+          "de": "Material-You-Farben aus dem Hintergrund",
+          "pt-BR": "Cores Material You do papel de parede",
+          "it": "Colori Material You dallo sfondo",
+          "pl": "Kolory Material You z tapety",
+          "ru": "Цвета Material You из обоев",
+          "tr": "Duvar kâğıdından Material You renkleri",
+          "zh-CN": "取自壁纸的 Material You 配色",
+          "ja": "壁紙から Material You の配色",
+          "ko": "배경화면 기반 Material You 색상"
+        }
+      },
+      {
+        "text": {
+          "fr": "Un service local sûr, sans télémétrie",
+          "en": "A safe local service with no telemetry",
+          "es": "Un servicio local seguro, sin telemetría",
+          "de": "Ein sicherer lokaler Dienst ohne Telemetrie",
+          "pt-BR": "Um serviço local seguro, sem telemetria",
+          "it": "Un servizio locale sicuro, senza telemetria",
+          "pl": "Bezpieczna usługa lokalna bez telemetrii",
+          "ru": "Безопасная локальная служба без телеметрии",
+          "tr": "Telemetrisiz güvenli yerel hizmet",
+          "zh-CN": "安全的本地服务，无遥测",
+          "ja": "テレメトリなしの安全なローカルサービス",
+          "ko": "원격 분석 없는 안전한 로컬 서비스"
+        }
+      }
+    ]
+  },
+  {
+    "id": "languages",
+    "status": "done",
+    "version": "1.1",
+    "icon": "translate",
+    "title": {
+      "fr": "Votre langue",
+      "en": "Your language",
+      "es": "Tu idioma",
+      "de": "Deine Sprache",
+      "pt-BR": "Seu idioma",
+      "it": "La tua lingua",
+      "pl": "Twój język",
+      "ru": "Ваш язык",
+      "tr": "Senin dilin",
+      "zh-CN": "你的语言",
+      "ja": "あなたの言語",
+      "ko": "여러분의 언어"
+    },
+    "items": [
+      {
+        "text": {
+          "fr": "Thème, application et installateur en douze langues",
+          "en": "Theme, app and setup in twelve languages",
+          "es": "Tema, aplicación e instalador en doce idiomas",
+          "de": "Design, App und Installer in zwölf Sprachen",
+          "pt-BR": "Tema, aplicativo e instalador em doze idiomas",
+          "it": "Tema, app e installazione in dodici lingue",
+          "pl": "Motyw, aplikacja i instalator w dwunastu językach",
+          "ru": "Тема, приложение и установщик на двенадцати языках",
+          "tr": "On iki dilde tema, uygulama ve kurulum",
+          "zh-CN": "主题、应用和安装程序支持十二种语言",
+          "ja": "テーマ・アプリ・インストーラーが 12 言語に対応",
+          "ko": "테마, 앱, 설치 프로그램 12개 언어 지원"
+        }
+      },
+      {
+        "text": {
+          "fr": "Les correctifs que vous avez signalés",
+          "en": "The fixes you reported",
+          "es": "Las correcciones que reportaste",
+          "de": "Die Fehler, die ihr gemeldet habt",
+          "pt-BR": "As correções que você relatou",
+          "it": "Le correzioni che avete segnalato",
+          "pl": "Poprawki zgłoszone przez Was",
+          "ru": "Исправления, о которых вы сообщили",
+          "tr": "Bildirdiğiniz düzeltmeler",
+          "zh-CN": "你们反馈的问题修复",
+          "ja": "報告いただいた問題の修正",
+          "ko": "제보해 주신 문제 수정"
+        }
+      }
+    ]
+  },
+  {
+    "id": "personalisation",
+    "status": "done",
+    "version": "1.2",
+    "icon": "palette",
+    "title": {
+      "fr": "Personnalisation",
+      "en": "Personalisation",
+      "es": "Personalización",
+      "de": "Personalisierung",
+      "pt-BR": "Personalização",
+      "it": "Personalizzazione",
+      "pl": "Personalizacja",
+      "ru": "Персонализация",
+      "tr": "Kişiselleştirme",
+      "zh-CN": "个性化",
+      "ja": "パーソナライズ",
+      "ko": "개인 설정"
+    },
+    "items": [
+      {
+        "text": {
+          "fr": "Bordures et arrondis réglables depuis l'application",
+          "en": "Borders and corners adjustable from the app",
+          "es": "Bordes y esquinas ajustables desde la aplicación",
+          "de": "Ränder und Ecken in der App einstellbar",
+          "pt-BR": "Bordas e cantos ajustáveis no aplicativo",
+          "it": "Bordi e angoli regolabili dall'app",
+          "pl": "Ramki i narożniki regulowane w aplikacji",
+          "ru": "Рамки и углы настраиваются в приложении",
+          "tr": "Kenarlar ve köşeler uygulamadan ayarlanır",
+          "zh-CN": "在应用中调整边框和圆角",
+          "ja": "アプリで枠と角を調整",
+          "ko": "앱에서 테두리와 모서리 조정"
+        }
+      },
+      {
+        "text": {
+          "fr": "Mode Ne pas déranger",
+          "en": "Do not disturb mode",
+          "es": "Modo No molestar",
+          "de": "Nicht-stören-Modus",
+          "pt-BR": "Modo Não perturbe",
+          "it": "Modalità Non disturbare",
+          "pl": "Tryb Nie przeszkadzać",
+          "ru": "Режим «Не беспокоить»",
+          "tr": "Rahatsız etmeyin modu",
+          "zh-CN": "勿扰模式",
+          "ja": "おやすみモード",
+          "ko": "방해 금지 모드"
+        }
+      },
+      {
+        "text": {
+          "fr": "Feuille de route et vidéo des nouveautés",
+          "en": "Roadmap and a video for each update",
+          "es": "Hoja de ruta y vídeo de novedades",
+          "de": "Roadmap und Video zu jedem Update",
+          "pt-BR": "Roteiro e vídeo de novidades",
+          "it": "Roadmap e video delle novità",
+          "pl": "Plan rozwoju i film o nowościach",
+          "ru": "Дорожная карта и видео об обновлениях",
+          "tr": "Yol haritası ve güncelleme videosu",
+          "zh-CN": "路线图和更新视频",
+          "ja": "ロードマップとアップデート動画",
+          "ko": "로드맵과 업데이트 영상"
+        }
+      },
+      {
+        "text": {
+          "fr": "Une barre configurable",
+          "en": "A configurable bar",
+          "es": "Una barra configurable",
+          "de": "Eine anpassbare Leiste",
+          "pt-BR": "Uma barra configurável",
+          "it": "Una barra configurabile",
+          "pl": "Konfigurowalny pasek",
+          "ru": "Настраиваемая панель",
+          "tr": "Özelleştirilebilir çubuk",
+          "zh-CN": "可自定义的栏",
+          "ja": "カスタマイズできるバー",
+          "ko": "사용자 지정 바"
+        }
+      },
+      {
+        "text": {
+          "fr": "La batterie et un visualiseur audio",
+          "en": "Battery and an audio visualiser",
+          "es": "Batería y visualizador de audio",
+          "de": "Akku und Audio-Visualisierung",
+          "pt-BR": "Bateria e visualizador de áudio",
+          "it": "Batteria e visualizzatore audio",
+          "pl": "Bateria i wizualizer dźwięku",
+          "ru": "Батарея и аудиовизуализатор",
+          "tr": "Pil ve ses görselleştirici",
+          "zh-CN": "电池和音频可视化",
+          "ja": "バッテリーとオーディオビジュアライザー",
+          "ko": "배터리와 오디오 비주얼라이저"
+        }
+      }
+    ]
+  },
+  {
+    "id": "trust",
+    "status": "now",
+    "icon": "verified_user",
+    "title": {
+      "fr": "Stabilité et confiance",
+      "en": "Stability and trust",
+      "es": "Estabilidad y confianza",
+      "de": "Stabilität und Vertrauen",
+      "pt-BR": "Estabilidade e confiança",
+      "it": "Stabilità e fiducia",
+      "pl": "Stabilność i zaufanie",
+      "ru": "Стабильность и доверие",
+      "tr": "Kararlılık ve güven",
+      "zh-CN": "稳定与信任",
+      "ja": "安定性と信頼",
+      "ko": "안정성과 신뢰"
+    },
+    "items": [
+      {
+        "text": {
+          "fr": "Publication sur winget",
+          "en": "Publishing on winget",
+          "es": "Publicación en winget",
+          "de": "Veröffentlichung auf winget",
+          "pt-BR": "Publicação no winget",
+          "it": "Pubblicazione su winget",
+          "pl": "Publikacja w winget",
+          "ru": "Публикация в winget",
+          "tr": "winget'te yayın",
+          "zh-CN": "发布到 winget",
+          "ja": "winget での配布",
+          "ko": "winget 배포"
+        }
+      },
+      {
+        "text": {
+          "fr": "Signature du code",
+          "en": "Code signing",
+          "es": "Firma de código",
+          "de": "Code-Signierung",
+          "pt-BR": "Assinatura de código",
+          "it": "Firma del codice",
+          "pl": "Podpisywanie kodu",
+          "ru": "Подпись кода",
+          "tr": "Kod imzalama",
+          "zh-CN": "代码签名",
+          "ja": "コード署名",
+          "ko": "코드 서명"
+        }
+      },
+      {
+        "text": {
+          "fr": "Fin des fausses alertes antivirus",
+          "en": "No more false antivirus alerts",
+          "es": "Adiós a las falsas alertas del antivirus",
+          "de": "Schluss mit falschen Virenwarnungen",
+          "pt-BR": "Fim dos falsos alertas de antivírus",
+          "it": "Basta falsi allarmi antivirus",
+          "pl": "Koniec fałszywych alarmów antywirusa",
+          "ru": "Никаких ложных срабатываний антивируса",
+          "tr": "Yanlış antivirüs uyarılarına son",
+          "zh-CN": "消除杀毒软件误报",
+          "ja": "ウイルス対策の誤検知をなくす",
+          "ko": "백신 오탐지 해결"
+        }
+      }
+    ]
+  },
+  {
+    "id": "catalogue",
+    "status": "next",
+    "icon": "diversity_3",
+    "title": {
+      "fr": "Catalogue communautaire",
+      "en": "Community catalogue",
+      "es": "Catálogo de la comunidad",
+      "de": "Community-Katalog",
+      "pt-BR": "Catálogo da comunidade",
+      "it": "Catalogo della community",
+      "pl": "Katalog społeczności",
+      "ru": "Каталог сообщества",
+      "tr": "Topluluk kataloğu",
+      "zh-CN": "社区目录",
+      "ja": "コミュニティカタログ",
+      "ko": "커뮤니티 카탈로그"
+    },
+    "items": [
+      {
+        "text": {
+          "fr": "Thèmes et préréglages partagés par la communauté",
+          "en": "Themes and presets shared by the community",
+          "es": "Temas y ajustes compartidos por la comunidad",
+          "de": "Designs und Vorlagen aus der Community",
+          "pt-BR": "Temas e predefinições da comunidade",
+          "it": "Temi e preset condivisi dalla community",
+          "pl": "Motywy i ustawienia od społeczności",
+          "ru": "Темы и пресеты от сообщества",
+          "tr": "Topluluğun paylaştığı temalar ve ön ayarlar",
+          "zh-CN": "社区分享的主题和预设",
+          "ja": "コミュニティが共有するテーマとプリセット",
+          "ko": "커뮤니티가 공유하는 테마와 프리셋"
+        }
+      },
+      {
+        "text": {
+          "fr": "Chaque envoi vérifié automatiquement",
+          "en": "Every submission checked automatically",
+          "es": "Cada envío revisado automáticamente",
+          "de": "Jede Einsendung automatisch geprüft",
+          "pt-BR": "Cada envio verificado automaticamente",
+          "it": "Ogni invio verificato automaticamente",
+          "pl": "Każde zgłoszenie sprawdzane automatycznie",
+          "ru": "Каждая публикация проверяется автоматически",
+          "tr": "Her gönderim otomatik kontrol edilir",
+          "zh-CN": "每次提交自动检查",
+          "ja": "すべての投稿を自動チェック",
+          "ko": "모든 제출물 자동 검사"
+        }
+      },
+      {
+        "text": {
+          "fr": "Une galerie « Montrez votre bureau »",
+          "en": "A \"Show your desktop\" gallery",
+          "es": "Una galería «Muestra tu escritorio»",
+          "de": "Eine Galerie „Zeig deinen Desktop“",
+          "pt-BR": "Uma galeria \"Mostre sua área de trabalho\"",
+          "it": "Una galleria «Mostra il tuo desktop»",
+          "pl": "Galeria „Pokaż swój pulpit”",
+          "ru": "Галерея «Покажи свой рабочий стол»",
+          "tr": "\"Masaüstünü göster\" galerisi",
+          "zh-CN": "“晒出你的桌面”展示墙",
+          "ja": "「デスクトップを見せて」ギャラリー",
+          "ko": "\"내 바탕화면 자랑\" 갤러리"
+        }
+      }
+    ]
+  },
+  {
+    "id": "packs",
+    "status": "later",
+    "icon": "widgets",
+    "title": {
+      "fr": "Packs de widgets",
+      "en": "Widget packs",
+      "es": "Paquetes de widgets",
+      "de": "Widget-Pakete",
+      "pt-BR": "Pacotes de widgets",
+      "it": "Pacchetti di widget",
+      "pl": "Pakiety widżetów",
+      "ru": "Наборы виджетов",
+      "tr": "Widget paketleri",
+      "zh-CN": "小组件包",
+      "ja": "ウィジェットパック",
+      "ko": "위젯 팩"
+    },
+    "items": [
+      {
+        "text": {
+          "fr": "Des widgets créés par la communauté",
+          "en": "Widgets made by the community",
+          "es": "Widgets creados por la comunidad",
+          "de": "Widgets aus der Community",
+          "pt-BR": "Widgets criados pela comunidade",
+          "it": "Widget creati dalla community",
+          "pl": "Widżety tworzone przez społeczność",
+          "ru": "Виджеты от сообщества",
+          "tr": "Topluluğun yaptığı widgetlar",
+          "zh-CN": "社区制作的小组件",
+          "ja": "コミュニティ製のウィジェット",
+          "ko": "커뮤니티가 만든 위젯"
+        }
+      },
+      {
+        "text": {
+          "fr": "Les permissions affichées avant l'installation",
+          "en": "Permissions shown before install",
+          "es": "Permisos mostrados antes de instalar",
+          "de": "Berechtigungen vor der Installation sichtbar",
+          "pt-BR": "Permissões exibidas antes de instalar",
+          "it": "Permessi mostrati prima dell'installazione",
+          "pl": "Uprawnienia widoczne przed instalacją",
+          "ru": "Разрешения видны до установки",
+          "tr": "Kurulumdan önce izinler gösterilir",
+          "zh-CN": "安装前显示权限",
+          "ja": "インストール前に権限を表示",
+          "ko": "설치 전 권한 표시"
+        }
+      }
+    ]
+  },
+  {
+    "id": "beyond",
+    "status": "later",
+    "icon": "auto_awesome",
+    "title": {
+      "fr": "Et plus loin",
+      "en": "Further out",
+      "es": "Más adelante",
+      "de": "Und weiter",
+      "pt-BR": "Mais adiante",
+      "it": "E oltre",
+      "pl": "I dalej",
+      "ru": "И дальше",
+      "tr": "Ve ötesi",
+      "zh-CN": "更远的未来",
+      "ja": "さらにその先",
+      "ko": "그리고 그 너머"
+    },
+    "items": [
+      {
+        "text": {
+          "fr": "Partager sa configuration avec un code",
+          "en": "Share a setup with one code",
+          "es": "Compartir tu configuración con un código",
+          "de": "Ein Setup per Code teilen",
+          "pt-BR": "Compartilhar sua configuração com um código",
+          "it": "Condividere la configurazione con un codice",
+          "pl": "Udostępnianie konfiguracji jednym kodem",
+          "ru": "Делиться настройками одним кодом",
+          "tr": "Kurulumu tek kodla paylaşma",
+          "zh-CN": "用一个代码分享配置",
+          "ja": "コードひとつで設定を共有",
+          "ko": "코드 하나로 설정 공유"
+        }
+      },
+      {
+        "text": {
+          "fr": "Et ce que vos retours demanderont",
+          "en": "And whatever your feedback asks for",
+          "es": "Y lo que pidan vuestros comentarios",
+          "de": "Und alles, was ihr euch wünscht",
+          "pt-BR": "E o que seu feedback pedir",
+          "it": "E tutto ciò che chiederete",
+          "pl": "I wszystko, o co poprosicie",
+          "ru": "И всё, о чём вы попросите",
+          "tr": "Ve geri bildirimlerinizin istediği her şey",
+          "zh-CN": "以及你们反馈中提出的一切",
+          "ja": "そして皆さんの要望",
+          "ko": "그리고 여러분이 요청하는 모든 것"
+        }
+      }
+    ]
+  }
+]
