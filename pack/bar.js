@@ -63,6 +63,12 @@ const nodes = {
   volumeIcon: document.getElementById('volume-icon'),
   network: document.getElementById('network'),
   battery: document.getElementById('battery'),
+  mic: document.getElementById('mic'),
+  micIcon: document.getElementById('mic-icon'),
+  capsLock: document.getElementById('caps-lock'),
+  bluetooth: document.getElementById('bluetooth'),
+  bluetoothIcon: document.getElementById('bluetooth-icon'),
+  status: document.getElementById('status'),
   batteryIcon: document.getElementById('battery-icon'),
   batteryLevel: document.getElementById('battery-level'),
   notifications: document.getElementById('notifications'),
@@ -289,11 +295,22 @@ option('trayCollapse', true, value => {
   paintTrayOverflow(trayNodes.size);
 });
 
+const barEntries = ['logo', 'workspaces', 'tasks', 'activeWindow', 'spacer', 'tray', 'weather', 'clock', 'status', 'power'];
+const statusEntries = ['keyboard', 'capsLock', 'mic', 'volume', 'bluetooth', 'battery', 'network', 'notifications'];
+const barDefaults = { barOrder: barEntries, barHidden: [], statusOrder: statusEntries, statusHidden: ['mic', 'bluetooth'] };
+
+const statusAvailability = {
+  capsLock: () => nodes.capsLock.dataset.on === '1',
+  mic: () => nodes.mic.dataset.available === '1',
+  bluetooth: () => nodes.bluetooth.dataset.available === '1',
+  battery: () => nodes.battery.dataset.available === '1',
+};
+
 const batteryWatch = { primary: false, level: null, charging: null };
 
 function renderBattery(battery) {
   const present = Boolean(battery) && Number.isFinite(battery.chargePercent);
-  nodes.battery.hidden = !present;
+  nodes.battery.dataset.available = present ? '1' : '';
   if (!present) return;
   const percent = batteryPercent(battery);
   const charging = batteryCharging(battery);
@@ -337,6 +354,13 @@ function render(output) {
 
   renderBattery(output.battery);
 
+  const recording = output.audio?.defaultRecordingDevice;
+  nodes.mic.dataset.available = recording ? '1' : '';
+  nodes.micIcon.textContent = recording?.isMuted ? 'mic_off' : 'mic';
+  nodes.mic.classList.toggle('mic-muted', Boolean(recording?.isMuted));
+  nodes.mic.title = recording ? `${recording.name} — ${recording.isMuted ? t('muet') : t('{0} %', Math.round(recording.volume))}` : t('Aucun micro');
+  applyStatusVisibility();
+
   const layout = output.keyboard?.layout ?? '';
   nodes.keyboard.textContent = (layout.split('-').pop() || layout || '--').slice(0, 2).toUpperCase();
   nodes.keyboard.title = layout ? t('Disposition : {0}', layout) : t('Disposition du clavier');
@@ -353,6 +377,89 @@ nodes.volume.addEventListener('click', () => {
   const audio = providers.outputMap.audio;
   const device = audio?.defaultPlaybackDevice;
   if (device) audio.setMute(!device.isMuted);
+});
+
+nodes.mic.addEventListener('click', () => {
+  const audio = providers.outputMap.audio;
+  const device = audio?.defaultRecordingDevice;
+  if (device) audio.setMute(!device.isMuted, { deviceId: device.deviceId });
+});
+
+nodes.mic.addEventListener('contextmenu', event => {
+  event.preventDefault();
+  openSettings('sound');
+});
+
+nodes.bluetooth.addEventListener('click', () => openSettings('bluetooth'));
+nodes.capsLock.addEventListener('click', () => {});
+
+
+function orderOf(value, entries) {
+  const list = Array.isArray(value) ? value.filter(id => entries.includes(id)) : [];
+  return [...new Set([...list, ...entries.filter(id => !list.includes(id))])];
+}
+
+function hiddenOf(value, fallback) {
+  return new Set(Array.isArray(value) ? value.filter(id => typeof id === 'string') : fallback);
+}
+
+function applyStatusVisibility() {
+  const hidden = hiddenOf(getOption('statusHidden', barDefaults.statusHidden), barDefaults.statusHidden);
+  for (const node of nodes.status.querySelectorAll('[data-status]')) {
+    const id = node.dataset.status;
+    const available = statusAvailability[id]?.() ?? true;
+    node.hidden = hidden.has(id) || !available;
+  }
+}
+
+function applyBarLayout() {
+  const order = orderOf(getOption('barOrder', barDefaults.barOrder), barEntries);
+  const hidden = hiddenOf(getOption('barHidden', barDefaults.barHidden), barDefaults.barHidden);
+  const start = document.querySelector('.section.start');
+  const end = document.querySelector('.section.end');
+  const split = order.indexOf('spacer');
+  const place = (ids, section) => {
+    for (const id of ids) {
+      const node = document.querySelector(`[data-entry="${id}"]`);
+      if (!node) continue;
+      node.classList.toggle('user-off', hidden.has(id));
+      section.append(node);
+    }
+  };
+  place(order.slice(0, split), start);
+  place(order.slice(split + 1), end);
+  const statusOrder = orderOf(getOption('statusOrder', barDefaults.statusOrder), statusEntries);
+  for (const id of statusOrder) {
+    const node = nodes.status.querySelector(`[data-status="${id}"]`);
+    if (node) nodes.status.append(node);
+  }
+  applyStatusVisibility();
+}
+
+for (const name of ['barOrder', 'barHidden', 'statusOrder', 'statusHidden']) option(name, barDefaults[name], applyBarLayout);
+
+async function refreshBluetooth() {
+  try {
+    const items = await helperClient.request('radios.list');
+    const radio = (Array.isArray(items) ? items : items?.items ?? []).find(item => /bluetooth/i.test(String(item.kind ?? item.name ?? '')));
+    nodes.bluetooth.dataset.available = radio ? '1' : '';
+    const on = Boolean(radio?.on ?? radio?.state === 'On');
+    nodes.bluetoothIcon.textContent = on ? 'bluetooth' : 'bluetooth_disabled';
+    nodes.bluetooth.classList.toggle('bluetooth-off', !on);
+    nodes.bluetooth.title = t('Bluetooth : {0}', t(on ? 'activé' : 'désactivé'));
+  } catch {
+    nodes.bluetooth.dataset.available = '';
+  }
+  applyStatusVisibility();
+}
+
+refreshBluetooth();
+setInterval(refreshBluetooth, 15000);
+onShared('radios', () => refreshBluetooth());
+
+helperClient.onState('keyboard', keyboard => {
+  nodes.capsLock.dataset.on = keyboard?.capsLock ? '1' : '';
+  applyStatusVisibility();
 });
 
 nodes.volume.addEventListener('contextmenu', event => {
@@ -795,6 +902,7 @@ if (await isPrimaryMonitor()) {
     windowsTitleBars: false, hoverDashboard: true, hoverOsd: true, hoverUtilities: true, hoverPopouts: true, osdOnVolume: true,
     weather: true, lyrics: true, idleMinutes: 10, wallpaperDirectory: '', batteryAlerts: true,
   };
+  const layoutOptions = ['barOrder', 'barHidden', 'statusOrder', 'statusHidden'];
   const schemeId = () => {
     const scheme = store.get(keys.scheme, null);
     return scheme?.name && scheme?.flavour ? `${scheme.name}/${scheme.flavour}` : '';
@@ -814,11 +922,15 @@ if (await isPrimaryMonitor()) {
         variant: store.get(keys.variant, 'tonalspot'),
         scheme: schemeId(),
         hiddenApps: getOption('hiddenApps', []).filter(id => typeof id === 'string').slice(0, 200).map(id => ({ id, name: names.get(id) ?? id })),
+        barOrder: orderOf(getOption('barOrder', barDefaults.barOrder), barEntries),
+        barHidden: [...hiddenOf(getOption('barHidden', barDefaults.barHidden), barDefaults.barHidden)],
+        statusOrder: orderOf(getOption('statusOrder', barDefaults.statusOrder), statusEntries),
+        statusHidden: [...hiddenOf(getOption('statusHidden', barDefaults.statusHidden), barDefaults.statusHidden)],
       });
       helperClient.request('theme.options', { options }).catch(() => {});
     }, 300);
   };
-  for (const name of [...Object.keys(appOptions), 'hiddenApps']) store.watch(`stellaria:option:${name}`, reportOptions, 250);
+  for (const name of [...Object.keys(appOptions), 'hiddenApps', ...layoutOptions]) store.watch(`stellaria:option:${name}`, reportOptions, 250);
   for (const key of [keys.mode, keys.variant, keys.scheme]) store.watch(key, reportOptions, 250);
   helperClient.onConnection(connected => connected && reportOptions());
   reportOptions();
@@ -834,6 +946,8 @@ if (await isPrimaryMonitor()) {
       const [schemeName, flavour] = value.split('/');
       store.set(keys.scheme, schemeName && flavour ? { name: schemeName, flavour } : null);
       applyTheme();
+    } else if (layoutOptions.includes(name) && Array.isArray(value)) {
+      setOption(name, value.filter(id => typeof id === 'string'));
     } else if (name === 'hiddenApps' && Array.isArray(value)) {
       setOption('hiddenApps', value.filter(id => typeof id === 'string'));
     } else if (name in appOptions && typeof value === typeof appOptions[name]) {

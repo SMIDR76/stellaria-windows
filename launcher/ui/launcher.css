@@ -2709,3 +2709,174 @@ button.chip .icon {
   line-height: 1.5;
   color: var(--m3-on-surface-variant);
 }
+
+.bar-editor-body {
+  display: flex;
+  gap: 22px;
+  padding: 4px 12px 12px;
+  align-items: flex-start;
+}
+
+.bar-editor-lists {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.section-note.flush {
+  padding: 0 4px;
+}
+
+.layout-heading {
+  margin-top: 14px;
+  padding: 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--m3-primary);
+}
+
+.layout-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.layout-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 52px;
+  padding: 4px 10px 4px 10px;
+  border-radius: 16px;
+  background: var(--m3-surface-container-high);
+  transition: opacity var(--duration-effects) var(--ease-effects), background var(--duration-effects) var(--ease-effects);
+}
+
+.layout-item.off {
+  opacity: 0.55;
+}
+
+.layout-item.spacer {
+  min-height: 40px;
+  border: 1px dashed var(--m3-outline);
+  background: transparent;
+  color: var(--m3-on-surface-variant);
+}
+
+.layout-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.layout-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.icon-button {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 18px;
+  background: transparent;
+  color: var(--m3-on-surface-variant);
+  cursor: pointer;
+}
+
+.icon-button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.switch-button {
+  display: flex;
+  flex: 0 0 auto;
+  margin: 0 4px 0 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.switch-placeholder {
+  width: 58px;
+}
+
+.bar-preview {
+  position: sticky;
+  top: 8px;
+  flex: 0 0 auto;
+  width: 56px;
+  height: 460px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-radius: 22px;
+  background: var(--m3-surface-container-lowest);
+  box-shadow: inset 0 0 0 1px var(--m3-outline-variant);
+}
+
+.pv-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.pv-logo,
+.pv-piece {
+  width: 36px;
+  min-height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: var(--m3-surface-container-high);
+  color: var(--m3-on-surface);
+}
+
+.pv-logo {
+  background: transparent;
+  color: var(--m3-primary);
+}
+
+.pv-workspaces,
+.pv-tasks {
+  min-height: 64px;
+}
+
+.pv-clock {
+  min-height: 58px;
+}
+
+.pv-status {
+  width: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+  border-radius: 18px;
+  background: var(--m3-surface-container-high);
+}
+
+.bar-preview .icon {
+  font-size: 18px;
+}
+
+.pv-power {
+  background: transparent;
+  color: var(--m3-error);
+}

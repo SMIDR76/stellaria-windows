@@ -74,7 +74,8 @@ public sealed class HealthAndThemeTests
         Assert.Equal("fr", ThemeModule.ValidateOptions(JsonNode.Parse("""{"language":"fr"}"""))["language"]!.GetValue<string>());
         Assert.Throws<HelperException>(() => ThemeModule.ValidateOptions(new JsonObject { ["wallpaperDirectory"] = new string('x', 600) }));
         Assert.Single(ThemeModule.ValidateOptions(JsonNode.Parse("""{"hiddenApps":[{"id":"steam://rungameid/1","name":"Game"}]}""")));
-        Assert.Throws<HelperException>(() => ThemeModule.ValidateOptions(JsonNode.Parse("""{"folders":["C:\\"]}""")));
+        Assert.Throws<HelperException>(() => ThemeModule.ValidateOptions(JsonNode.Parse("""{"folders":[1, 2]}""")));
+        Assert.Throws<HelperException>(() => ThemeModule.ValidateOptions(new JsonObject { ["barOrder"] = new JsonArray(new string('x', 40)) }));
     }
 
     [Theory]
@@ -86,6 +87,10 @@ public sealed class HealthAndThemeTests
     [InlineData("wallpaperDirectory", "\"\"")]
     [InlineData("hiddenApps", "[\"steam://rungameid/1\"]")]
     [InlineData("idleMinutes", "30")]
+    [InlineData("barOrder", "[\"power\",\"logo\",\"workspaces\",\"tasks\",\"activeWindow\",\"spacer\",\"tray\",\"weather\",\"clock\",\"status\"]")]
+    [InlineData("barHidden", "[\"weather\",\"tasks\"]")]
+    [InlineData("statusOrder", "[\"battery\",\"keyboard\",\"capsLock\",\"mic\",\"volume\",\"bluetooth\",\"network\",\"notifications\"]")]
+    [InlineData("statusHidden", "[]")]
     public void The_app_can_change_the_look_and_the_lists(string name, string json)
     {
         Assert.NotNull(ThemeModule.ValidateSetting(name, JsonNode.Parse(json)));
@@ -99,6 +104,10 @@ public sealed class HealthAndThemeTests
     [InlineData("wallpaperDirectory", "\"C:\\\\a\\\\..\\\\Windows\"")]
     [InlineData("hiddenApps", "\"steam://rungameid/1\"")]
     [InlineData("idleMinutes", "0")]
+    [InlineData("barOrder", "[\"logo\",\"spacer\"]")]
+    [InlineData("barOrder", "[\"logo\",\"logo\",\"workspaces\",\"tasks\",\"activeWindow\",\"spacer\",\"tray\",\"weather\",\"clock\",\"status\"]")]
+    [InlineData("barHidden", "[\"spacer\"]")]
+    [InlineData("statusHidden", "[\"wifi\"]")]
     public void Wrong_looks_and_lists_are_refused(string name, string json)
     {
         Assert.Throws<HelperException>(() => ThemeModule.ValidateSetting(name, JsonNode.Parse(json)));

@@ -307,6 +307,19 @@ body {
   font-size: 19px;
 }
 
+.user-off,
+.status-item[hidden] {
+  display: none !important;
+}
+
+.status-item.mic-muted .icon {
+  color: var(--m3-error);
+}
+
+.status-item.bluetooth-off .icon {
+  color: var(--m3-on-surface-variant);
+}
+
 .status-item.battery {
   height: auto;
   min-height: 30px;

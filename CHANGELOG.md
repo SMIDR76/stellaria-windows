@@ -26,6 +26,9 @@ project uses [semantic versioning](https://semver.org/).
   settings" action and the first-run welcome open the app; the old panel only remains as a fallback.
 - The theme follows the app's language.
 - Icon animations and click sparkles in the app, which stop when Windows asks for reduced motion.
+- A configurable bar: a Bar tab in the app's Customise page reorders and hides each bar item (launcher, virtual
+  desktops, open windows, active window, notification area, weather, clock, status icons, power) and each status icon,
+  with a live preview. New status icons: microphone (click to mute), Bluetooth and Caps Lock (shown only while it is on).
 - Battery support on laptops: a battery icon with its level on the bar (opens Windows battery settings), alerts at
   20, 10 and 5 %, a toast when the charger is plugged in or out, and a battery card with charge, time left and health in
   the dashboard's Performance tab. Desktop PCs without a battery show nothing.

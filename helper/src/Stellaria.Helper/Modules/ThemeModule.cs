@@ -49,7 +49,9 @@ internal sealed partial class ThemeModule : IHelperModule
     private static readonly string[] s_modes = ["dark", "light"];
     private static readonly string[] s_variants = ["tonalspot", "vibrant", "expressive", "fidelity", "content", "fruitsalad", "rainbow", "neutral", "monochrome"];
     private static readonly string[] s_actions = ["wallpaperPicker", "wallpaperFolder"];
-    private static readonly string[] s_appPages = ["home", "customize", "customize/appearance", "customize/wallpaper", "customize/desktop", "customize/panels", "help"];
+    private static readonly string[] s_barEntries = ["logo", "workspaces", "tasks", "activeWindow", "spacer", "tray", "weather", "clock", "status", "power"];
+    private static readonly string[] s_statusEntries = ["keyboard", "capsLock", "mic", "volume", "bluetooth", "battery", "network", "notifications"];
+    private static readonly string[] s_appPages = ["home", "customize", "customize/appearance", "customize/wallpaper", "customize/bar", "customize/desktop", "customize/panels", "help"];
 
     private static readonly string[] s_languages = ["auto", "fr", "en", "es", "de", "pt-BR", "it", "pl", "ru", "tr", "zh-CN", "ja", "ko"];
 
@@ -136,7 +138,9 @@ internal sealed partial class ThemeModule : IHelperModule
             var valid = RoleName().IsMatch(name) && value switch
             {
                 JsonValue json => json.TryGetValue<bool>(out _) || json.TryGetValue<int>(out _) || (json.TryGetValue<string>(out var text) && text.Length <= MaxTextLength),
-                JsonArray list => list.Count <= MaxHiddenApps && list.All(entry => entry is JsonObject app && app.Count <= 2 && app.All(field => field.Key is "id" or "name" && field.Value is JsonValue part && part.TryGetValue<string>(out var piece) && piece.Length <= MaxTextLength)),
+                JsonArray list => list.Count <= MaxHiddenApps && list.All(entry =>
+                    (entry is JsonValue word && word.TryGetValue<string>(out var id) && id.Length <= 32) ||
+                    (entry is JsonObject app && app.Count <= 2 && app.All(field => field.Key is "id" or "name" && field.Value is JsonValue part && part.TryGetValue<string>(out var piece) && piece.Length <= MaxTextLength))),
                 _ => false,
             };
             if (!valid)
@@ -172,6 +176,14 @@ internal sealed partial class ThemeModule : IHelperModule
                 }
 
                 throw new HelperException(ErrorCode.InvalidParams, "'wallpaperDirectory' must be empty or a full path such as C:\\Pictures.");
+            case "barOrder":
+                return Arrangement(name, value, s_barEntries, complete: true);
+            case "barHidden":
+                return Arrangement(name, value, s_barEntries.Where(entry => entry != "spacer").ToArray(), complete: false);
+            case "statusOrder":
+                return Arrangement(name, value, s_statusEntries, complete: true);
+            case "statusHidden":
+                return Arrangement(name, value, s_statusEntries, complete: false);
             case "hiddenApps":
                 if (value is JsonArray ids && ids.Count <= MaxHiddenApps && ids.All(entry => entry is JsonValue item && item.TryGetValue<string>(out var text) && text.Length is > 0 and <= MaxTextLength))
                 {
@@ -233,6 +245,22 @@ internal sealed partial class ThemeModule : IHelperModule
         }
 
         return new JsonObject { ["roles"] = clean, ["transparent"] = request.RequireBoolean("transparent") };
+    }
+
+    private static JsonNode Arrangement(string name, JsonNode? value, string[] allowed, bool complete)
+    {
+        if (value is JsonArray list && list.All(entry => entry is JsonValue item && item.TryGetValue<string>(out var id) && allowed.Contains(id, StringComparer.Ordinal)))
+        {
+            var ids = list.Select(entry => entry!.GetValue<string>()).ToList();
+            if (ids.Distinct(StringComparer.Ordinal).Count() == ids.Count && (!complete || ids.Count == allowed.Length))
+            {
+                return new JsonArray([.. ids.Select(id => (JsonNode?)JsonValue.Create(id))]);
+            }
+        }
+
+        throw new HelperException(ErrorCode.InvalidParams, complete
+            ? $"'{name}' must list each of {string.Join(", ", allowed)} exactly once."
+            : $"'{name}' must be a list of distinct entries among {string.Join(", ", allowed)}.");
     }
 
     private static JsonNode Choice(string name, JsonNode? value, string[] allowed)
