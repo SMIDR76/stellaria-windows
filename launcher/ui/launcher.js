@@ -1882,6 +1882,52 @@ function newsHighlights(item) {
     : null;
 }
 
+const newsFilmTiles = new Map();
+
+function newsFilmTile(item) {
+  const film = item.kind === 'release' && item.version ? filmFor(item.version) : null;
+  if (!film) return null;
+  if (newsFilmTiles.has(item.version)) return newsFilmTiles.get(item.version);
+  const preview = element('video', { class: 'news-film-video', src: film.src, playsinline: true, preload: 'metadata', 'aria-hidden': 'true' });
+  preview.muted = true;
+  preview.loop = false;
+  const start = 10.4;
+  const end = 31.2;
+  preview.addEventListener('loadedmetadata', () => {
+    preview.currentTime = start;
+    if (!reducedMotion.matches) preview.play().catch(() => {});
+  });
+  preview.addEventListener('timeupdate', () => {
+    if (preview.currentTime >= end) preview.currentTime = start;
+  });
+  const sparks = Array.from({ length: 14 }, (_, index) => {
+    const spark = element('span', { class: 'news-film-spark', 'aria-hidden': 'true' });
+    spark.style.setProperty('--x', `${(index * 37) % 100}%`);
+    spark.style.setProperty('--d', `${(index * 0.53) % 4.2}s`);
+    spark.style.setProperty('--s', `${3 + (index % 4)}px`);
+    return spark;
+  });
+  const tile = element('button', {
+    class: 'news-film',
+    'aria-label': t('replayWhatsNew'),
+    onClick: () => {
+      preview.pause();
+      whatsNewFilm.open(film, item.version);
+    },
+  }, [
+    element('span', { class: 'news-film-halo', 'aria-hidden': 'true' }),
+    element('span', { class: 'news-film-frame' }, [
+      preview,
+      element('span', { class: 'news-film-shade', 'aria-hidden': 'true' }),
+      element('span', { class: 'news-film-play' }, [element('span', { class: 'news-film-ring', 'aria-hidden': 'true' }), icon('play_arrow')]),
+      element('span', { class: 'news-film-label' }, [icon('movie'), element('span', { text: t('filmPlay') })]),
+    ]),
+    ...sparks,
+  ]);
+  newsFilmTiles.set(item.version, tile);
+  return tile;
+}
+
 function newsFeature(item) {
   const kind = newsKind(item);
   return element('article', { class: `news-feature hero kind-${kind}` }, [
@@ -1892,6 +1938,7 @@ function newsFeature(item) {
     ]),
     element('h2', { text: local(item.title) }),
     element('p', { class: 'news-lead', text: local(item.body) }),
+    newsFilmTile(item),
     newsHighlights(item),
     item.url ? element('div', { class: 'actions' }, [button(t('readMore'), 'open_in_new', openNews(item), { variant: 'filled' })]) : null,
   ]);
@@ -2990,6 +3037,10 @@ const whatsNewFilm = {
     if (!node) return;
     this.node = null;
     cancelAnimationFrame(this.frame);
+    for (const tile of newsFilmTiles.values()) {
+      const preview = tile.querySelector('video');
+      if (preview && !reducedMotion.matches) preview.play().catch(() => {});
+    }
     window.removeEventListener('keydown', this.keydown);
     const video = this.video;
     const start = performance.now();
@@ -3074,7 +3125,7 @@ async function handleLink(link) {
     showPage('install');
     return;
   }
-  const page = /^stellaria:\/\/page\/(home|customize|help)(?:\/(appearance|wallpaper|bar|desktop|panels))?\/?$/.exec(link ?? '');
+  const page = /^stellaria:\/\/page\/(home|customize|news|roadmap|help)(?:\/(appearance|wallpaper|bar|desktop|panels))?\/?$/.exec(link ?? '');
   if (page) {
     if (page[2]) state.customizeTab = page[2];
     showPage(page[1]);
