@@ -214,6 +214,8 @@ export default {
     statusBattery: "电池",
     statusNetwork: "网络",
     statusNotifications: "通知",
+    optVisualiser: "音频可视化",
+    optVisualiserText: "壁纸上随音乐跳动的音柱。仅在开启时分析声音。",
     confirmTitle: "应用此预设？",
     confirmText: "一个链接请求应用“{0}”。你当前的设置会被保留，以便撤销。",
     unknownLink: "无法识别此 Stellaria 链接。",

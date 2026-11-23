@@ -135,6 +135,7 @@ internal static class Program
         new PowerModule(),
         new HotkeysModule(),
         new AudioModule(),
+        new VisualiserModule(),
         new DisplayModule(),
         new RadiosModule(),
         new WifiModule(),

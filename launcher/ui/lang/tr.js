@@ -214,6 +214,8 @@ export default {
     statusBattery: "Pil",
     statusNetwork: "Ağ",
     statusNotifications: "Bildirimler",
+    optVisualiser: "Ses görselleştirici",
+    optVisualiserText: "Duvar kâğıdında müzikle hareket eden çubuklar. Ses yalnızca bu açıkken analiz edilir.",
     confirmTitle: "Bu ön ayar uygulansın mı?",
     confirmText: "Bir bağlantı “{0}” ön ayarını uygulamak istiyor. Geri alabilmeniz için mevcut ayarlarınız korunur.",
     unknownLink: "Bu Stellaria bağlantısı tanınmadı.",

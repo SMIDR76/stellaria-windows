@@ -900,7 +900,7 @@ if (await isPrimaryMonitor()) {
     trayCollapse: true, island: true, desktopClock: true, hotCorner: true, toasts: true, systemToasts: true,
     idleScreen: true, gameMode: false, language: 'auto', hideTaskbar: true, smartScheme: true, windowsColors: false,
     windowsTitleBars: false, hoverDashboard: true, hoverOsd: true, hoverUtilities: true, hoverPopouts: true, osdOnVolume: true,
-    weather: true, lyrics: true, idleMinutes: 10, wallpaperDirectory: '', batteryAlerts: true,
+    weather: true, lyrics: true, idleMinutes: 10, wallpaperDirectory: '', batteryAlerts: true, visualiser: false,
   };
   const layoutOptions = ['barOrder', 'barHidden', 'statusOrder', 'statusHidden'];
   const schemeId = () => {

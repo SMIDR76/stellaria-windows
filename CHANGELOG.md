@@ -26,6 +26,9 @@ project uses [semantic versioning](https://semver.org/).
   settings" action and the first-run welcome open the app; the old panel only remains as a fallback.
 - The theme follows the app's language.
 - Icon animations and click sparkles in the app, which stop when Windows asks for reduced motion.
+- An optional audio visualiser on the wallpaper (off by default): the helper captures what plays on the default output
+  only while the option is on, turns it into 48 bars and the bars move behind your windows in the theme's colours. It
+  pauses during fullscreen apps and in game mode. Request `visualiser.listen` and event `visualiser`.
 - A configurable bar: a Bar tab in the app's Customise page reorders and hides each bar item (launcher, virtual
   desktops, open windows, active window, notification area, weather, clock, status icons, power) and each status icon,
   with a live preview. New status icons: microphone (click to mute), Bluetooth and Caps Lock (shown only while it is on).

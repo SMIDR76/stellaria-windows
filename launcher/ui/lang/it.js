@@ -214,6 +214,8 @@ export default {
     statusBattery: "Batteria",
     statusNetwork: "Rete",
     statusNotifications: "Notifiche",
+    optVisualiser: "Visualizzatore audio",
+    optVisualiserText: "Barre che si muovono con la musica sullo sfondo. Il suono viene analizzato solo quando è attivo.",
     confirmTitle: "Applicare questa preimpostazione?",
     confirmText: "Un link chiede di applicare «{0}». Le tue impostazioni attuali vengono conservate per poter annullare.",
     unknownLink: "Questo link di Stellaria non è riconosciuto.",

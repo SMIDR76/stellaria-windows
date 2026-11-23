@@ -74,6 +74,7 @@ internal static class Scopes
         ["theme.publish"] = Appearance,
         ["theme.options"] = Appearance,
         ["stellaria.open"] = Basic,
+        ["visualiser.listen"] = Media,
         ["wallpapers.apply"] = Appearance,
         ["windows.setColors"] = Appearance,
         ["windows.restoreColors"] = Appearance,
@@ -108,6 +109,7 @@ internal static class Scopes
         ["theme.undo"] = Appearance,
         ["theme.option"] = Appearance,
         ["theme.action"] = Appearance,
+        ["visualiser"] = Media,
     }.ToFrozenDictionary(StringComparer.Ordinal);
 
     public static string? ForMethod(string method) =>

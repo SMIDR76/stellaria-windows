@@ -214,6 +214,8 @@ export default {
     statusBattery: "배터리",
     statusNetwork: "네트워크",
     statusNotifications: "알림",
+    optVisualiser: "오디오 비주얼라이저",
+    optVisualiserText: "배경화면에서 음악에 맞춰 움직이는 막대. 켜져 있을 때만 소리를 분석합니다.",
     confirmTitle: "이 사전 설정을 적용할까요?",
     confirmText: "링크에서 \"{0}\"의 적용을 요청합니다. 실행 취소할 수 있도록 현재 설정은 유지됩니다.",
     unknownLink: "이 Stellaria 링크를 인식할 수 없습니다.",

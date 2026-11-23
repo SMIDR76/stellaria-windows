@@ -214,6 +214,8 @@ export default {
     statusBattery: "Bateria",
     statusNetwork: "Sieć",
     statusNotifications: "Powiadomienia",
+    optVisualiser: "Wizualizer dźwięku",
+    optVisualiserText: "Słupki poruszające się z muzyką na tapecie. Dźwięk jest analizowany tylko, gdy opcja jest włączona.",
     confirmTitle: "Zastosować to ustawienie wstępne?",
     confirmText: "Link prosi o zastosowanie „{0}”. Twoje obecne ustawienia zostaną zachowane, abyś mógł je cofnąć.",
     unknownLink: "Ten link Stellaria nie jest rozpoznawany.",

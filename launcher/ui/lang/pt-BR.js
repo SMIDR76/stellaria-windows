@@ -214,6 +214,8 @@ export default {
     statusBattery: "Bateria",
     statusNetwork: "Rede",
     statusNotifications: "Notificações",
+    optVisualiser: "Visualizador de áudio",
+    optVisualiserText: "Barras que se movem com a música no papel de parede. O som só é analisado enquanto estiver ativado.",
     confirmTitle: "Aplicar esta predefinição?",
     confirmText: "Um link pede para aplicar “{0}”. Suas configurações atuais são guardadas para que você possa desfazer.",
     unknownLink: "Este link do Stellaria não é reconhecido.",

@@ -396,6 +396,50 @@
       ]
     },
     {
+      "name": "visualiser",
+      "htmlPath": "./visualiser.html",
+      "zOrder": "bottom_most",
+      "shownInTaskbar": false,
+      "focused": false,
+      "resizable": false,
+      "transparent": true,
+      "includeFiles": [
+        "*.html",
+        "*.css",
+        "*.js",
+        "*.json",
+        "src/**/*.js",
+        "vendor/*.mjs",
+        "styles/*.css",
+        "assets/**/*"
+      ],
+      "caching": {
+        "defaultDuration": 604800,
+        "rules": []
+      },
+      "privileges": {
+        "shellCommands": []
+      },
+      "presets": [
+        {
+          "name": "default",
+          "anchor": "bottom_left",
+          "offsetX": "58px",
+          "offsetY": "-10px",
+          "width": "48%",
+          "height": "220px",
+          "monitorSelection": {
+            "type": "primary"
+          },
+          "dockToEdge": {
+            "enabled": false,
+            "edge": null,
+            "windowMargin": "0px"
+          }
+        }
+      ]
+    },
+    {
       "name": "osd",
       "htmlPath": "./osd.html",
       "zOrder": "top_most",

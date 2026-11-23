@@ -85,6 +85,7 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `widgets.reload` | `{}`. Every widget reloads its page. Raised by the `widgets.reload` request, used by the settings app to recover a widget that stopped rendering. |
 | `theme.preset` | `{ "id", "name", "preset" }`, scope `appearance` | A catalogue preset to apply. |
 | `theme.option` | `{ "name", "value" }`, scope `appearance` | An option changed from the Stellaria app; the primary bar stores it and every widget follows. |
+| `visualiser` | `{ "bars": [0..100] }`, scope `media` | 48 bar heights from 40 Hz to 16 kHz on a log scale; a last all-zero frame is sent when the sound stops. |
 | `theme.action` | `{ "name" }`, scope `appearance` | An action asked from the app: `wallpaperPicker` or `wallpaperFolder`. |
 | `theme.undo` | `{}`, scope `appearance` | Restore the look saved before the last preset. |
 
@@ -133,6 +134,7 @@ A client that connects or reconnects receives the full state again, so it can ne
 | `launcher.theme` | none (scope `launcher`) | The last `theme.publish` payload, `{ "roles", "transparent" }`, so the Stellaria app wears the theme's colours. `null` before the first publish. |
 | `launcher.wallpaper` | none (scope `launcher`) | `{ "image": "<base64 PNG, 480 px wide>", "source" }`: the desktop background as the theme samples it (Wallpaper Engine included), for the preview on the app's Home page. `null` when nothing could be sampled. |
 | `launcher.themeAction` | `{ "name": "wallpaperPicker" \| "wallpaperFolder" }` (scope `launcher`) | none. Raises `theme.action`; the primary bar opens the launcher's wallpaper picker or the wallpaper folder. |
+| `visualiser.listen` | `{ "active": bool }` (scope `media`) | `{ "bars": 48 }`. While a lease is active (renewed every 10 s), the helper captures the default output in loopback, analyses it and raises `visualiser` about 30 times a second; nothing is captured once every lease has expired. |
 | `stellaria.open` | `{ "page"?: "home" \| "customize" \| "customize/<tab>" \| "help" }` (scope `basic`) | none. Starts or reveals the Stellaria app next to the helper with `stellaria://page/<page>`; Win+Alt+S uses it. `not_found` when the app is missing. |
 | `launcher.options` | none (scope `launcher`) | The last `theme.options` report, or `null` while the theme is not running. |
 | `launcher.setOption` | `{ "name", "value" }` (scope `launcher`) | The options after the change. Accepted: `frameBorder` (4 to 24), `frameRounding` (0 to 40), `idleMinutes` (1 to 60), `language` (`auto` or a language code), `mode` (`dark`, `light`), `variant` (a dynamic variant), `scheme` (`name/flavour`, empty for dynamic colours), `wallpaperDirectory` (empty or a full path), `hiddenApps` (application ids) and the theme's on/off options listed in `ThemeModule`; anything else is `invalid_params`. Raises `theme.option`. |

@@ -214,6 +214,8 @@ export default {
     statusBattery: "Батарея",
     statusNetwork: "Сеть",
     statusNotifications: "Уведомления",
+    optVisualiser: "Аудиовизуализатор",
+    optVisualiserText: "Полосы на обоях, которые двигаются под музыку. Звук анализируется, только пока функция включена.",
     confirmTitle: "Применить этот пресет?",
     confirmText: "Ссылка просит применить «{0}». Текущие настройки сохранятся, чтобы вы могли отменить.",
     unknownLink: "Эта ссылка Stellaria не распознана.",

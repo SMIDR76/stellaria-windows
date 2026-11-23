@@ -214,6 +214,8 @@ export default {
     statusBattery: "Akku",
     statusNetwork: "Netzwerk",
     statusNotifications: "Benachrichtigungen",
+    optVisualiser: "Audio-Visualisierung",
+    optVisualiserText: "Balken, die sich mit der Musik auf dem Hintergrund bewegen. Der Ton wird nur analysiert, solange dies aktiv ist.",
     confirmTitle: "Diese Voreinstellung anwenden?",
     confirmText: "Ein Link möchte „{0}“ anwenden. Deine aktuellen Einstellungen bleiben erhalten, damit du es rückgängig machen kannst.",
     unknownLink: "Dieser Stellaria-Link wird nicht erkannt.",

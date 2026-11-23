@@ -214,6 +214,8 @@ export default {
     statusBattery: "バッテリー",
     statusNetwork: "ネットワーク",
     statusNotifications: "通知",
+    optVisualiser: "オーディオビジュアライザー",
+    optVisualiserText: "壁紙の上で音楽に合わせて動くバー。オンのときだけ音を解析します。",
     confirmTitle: "このプリセットを適用しますか?",
     confirmText: "リンクから「{0}」の適用が要求されています。元に戻せるよう、現在の設定は保持されます。",
     unknownLink: "この Stellaria リンクは認識できません。",
