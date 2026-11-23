@@ -3251,3 +3251,36 @@ button.chip .icon {
     display: none;
   }
 }
+
+.news-feature.with-film {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+}
+
+@media (min-width: 1500px) {
+  .news-feature.with-film {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr);
+    grid-template-areas:
+      "head film"
+      "title film"
+      "lead film"
+      "highlights film"
+      "actions film";
+    grid-template-rows: auto auto auto 1fr auto;
+    column-gap: 40px;
+  }
+
+  .news-feature.with-film .news-feature-head { grid-area: head; }
+  .news-feature.with-film > h2 { grid-area: title; }
+  .news-feature.with-film .news-lead { grid-area: lead; }
+  .news-feature.with-film .news-highlights { grid-area: highlights; align-self: start; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .news-feature.with-film .actions { grid-area: actions; }
+
+  .news-feature.with-film .news-film {
+    grid-area: film;
+    align-self: center;
+    width: 100%;
+    margin: 0;
+  }
+}

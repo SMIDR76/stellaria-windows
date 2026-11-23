@@ -1930,7 +1930,8 @@ function newsFilmTile(item) {
 
 function newsFeature(item) {
   const kind = newsKind(item);
-  return element('article', { class: `news-feature hero kind-${kind}` }, [
+  const film = newsFilmTile(item);
+  return element('article', { class: `news-feature hero kind-${kind}${film ? ' with-film' : ''}` }, [
     element('div', { class: 'hero-ornament' }, shape(7, 0.12)),
     element('div', { class: 'news-feature-head' }, [
       element('div', { class: 'hero-mark news-mark' }, [shape(9, 0.07), icon(newsKinds[kind][0])]),
@@ -1938,7 +1939,7 @@ function newsFeature(item) {
     ]),
     element('h2', { text: local(item.title) }),
     element('p', { class: 'news-lead', text: local(item.body) }),
-    newsFilmTile(item),
+    film,
     newsHighlights(item),
     item.url ? element('div', { class: 'actions' }, [button(t('readMore'), 'open_in_new', openNews(item), { variant: 'filled' })]) : null,
   ]);
